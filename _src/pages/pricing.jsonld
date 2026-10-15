@@ -1,0 +1,77 @@
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "무료 요금제는 언제까지 무료인가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "사이트 표시 · 이미지 표시(한 번에 3장) · 증빙서는 계속 무료입니다. 표시는 많이 퍼질수록 좋은 공공재에 가깝다고 보기 때문입니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "결제는 어떻게 하나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "정식으로 열리면 카드 · 간편결제로 월 또는 연 단위로 결제합니다. 비즈니스와 기관은 세금계산서 발행과 계약서 작성을 함께 도와 드립니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "표시 이행 기록은 어디에 쓰나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "언제 어떤 표시를 어디에 붙였는지 남겨 둔 기록입니다. 고객 문의, 거래처 요구, 감독 기관의 확인 요청이 왔을 때 보여 줄 수 있습니다. 법적 의무 이행을 보증하지는 않습니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "학교 · 학회 단체로 쓸 수 있나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "네. 학생 · 회원 수에 맞춘 단체 계정과 제출된 증빙서를 한곳에서 보는 확인 화면을 제공합니다. 기관 문의를 남겨 주세요."
+     }
+    }
+   ]
+  },
+  {
+   "@type": "Product",
+   "name": "AIMarker",
+   "brand": {
+    "@type": "Brand",
+    "name": "AIMarker"
+   },
+   "description": "사이트 · 이미지 · 제출물에 AI 활용 표시를 붙이는 도구. 표시는 무료, 기록 · 증명 · 대량 처리는 유료.",
+   "offers": [
+    {
+     "@type": "Offer",
+     "name": "무료",
+     "price": "0",
+     "priceCurrency": "KRW"
+    },
+    {
+     "@type": "Offer",
+     "name": "플러스(월)",
+     "price": "2900",
+     "priceCurrency": "KRW"
+    },
+    {
+     "@type": "Offer",
+     "name": "프로(월)",
+     "price": "9900",
+     "priceCurrency": "KRW"
+    },
+    {
+     "@type": "Offer",
+     "name": "비즈니스(월, 부터)",
+     "price": "49000",
+     "priceCurrency": "KRW"
+    }
+   ]
+  }
+ ]
+}

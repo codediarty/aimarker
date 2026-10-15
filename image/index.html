@@ -1,0 +1,83 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AI 생성 이미지 표시 · 확인 도구 | AIMarker</title><meta name="description" content="AI로 만든 이미지인지 C2PA · IPTC 메타데이터로 확인하고, 'AI 생성' 표시와 출처 정보를 넣어 내려받으세요. 파일은 서버로 보내지 않습니다. 무료."><link rel="canonical" href="https://aimarker.kr/image/"><meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker"><meta property="og:title" content="이미지 AI 표시 · 끌어다 놓으면 AI 이미지인지 먼저 알아봅니다"><meta property="og:description" content="AI로 만든 이미지인지 C2PA · IPTC 메타데이터로 확인하고, 'AI 생성' 표시와 출처 정보를 넣어 내려받으세요. 파일은 서버로 보내지 않습니다. 무료."><meta property="og:url" content="https://aimarker.kr/image/"><meta property="og:image" content="https://aimarker.kr/assets/og.png"><meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#0E2A6B"><link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="../assets/apple-touch-icon.png"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><link rel="stylesheet" href="../assets/am.css?v=20261009a"></head><body data-page="image" data-root="../"><header class="hd" id="hd"><div class="wrap"><a class="brand" href="../" aria-label="AIMarker 홈"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#0E2A6B"/><path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/><rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg><span><b>AI</b>Marker</span></a><nav class="nav" aria-label="주 메뉴"><a href="../site/">사이트 표시</a><a href="../image/" aria-current="page">이미지 표시</a><a href="../proof/">AI 활용 증빙서</a><a href="../pricing/">요금</a><a href="../business/">기업 · 플랫폼</a><a href="../guide/">AI 표시 가이드</a></nav><div class="hd-cta"><a class="btn btn-g btn-s" href="../business/#ask">도입 문의</a><a class="btn btn-p btn-s" href="../site/">무료로 시작</a></div><button class="menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div></header><nav class="mnav" id="mnav" aria-label="모바일 메뉴"><a href="../site/">사이트 표시</a><a href="../image/">이미지 표시</a><a href="../proof/">AI 활용 증빙서</a><a href="../pricing/">요금</a><a href="../business/">기업 · 플랫폼</a><a href="../guide/">AI 표시 가이드</a><a class="btn btn-p" href="../site/">무료로 시작하기</a><a class="btn btn-g" href="../business/#ask">기업 · 기관 도입 문의</a></nav><main id="main">
+<section class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">이미지 표시 · 확인 · 무료</span>
+    <h1>끌어다 놓으면, AI 이미지인지 먼저 알아봅니다</h1>
+    <p class="lead">AI 생성 기록이 있으면 바로, 없으면 한 번만 묻고 'AI 생성' 표시를 굽습니다. 상세 페이지 · SNS에 올리기 전에 써 보세요.</p>
+  </div>
+</section>
+
+<section class="sec-s">
+  <div class="wrap tool-wrap tool-wide">
+    <div>
+      <label class="drop" id="drop" for="files">
+        <input type="file" id="files" accept="image/jpeg,image/png,image/webp" multiple hidden>
+        <span class="drop-ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg></span>
+        <b>이미지를 끌어다 놓거나 눌러서 고르세요</b>
+        <span>JPG · PNG · WebP · 무료는 한 번에 3장 · 파일은 이 브라우저 밖으로 나가지 않습니다</span>
+      </label>
+      <div id="list" class="mt16"></div>
+    </div>
+    <div class="sticky">
+      <div class="panel">
+        <h2>표시 모양</h2>
+        <div class="field mt16"><div class="lbl">표시 문구</div>
+          <div class="chips" id="optText">
+            <label class="pick"><input type="radio" name="text" value="auto" checked><span>자동</span></label>
+            <label class="pick"><input type="radio" name="text" value="AI 생성"><span>AI 생성</span></label>
+            <label class="pick"><input type="radio" name="text" value="AI 편집"><span>AI 편집</span></label>
+            <label class="pick"><input type="radio" name="text" value="가상인물"><span>가상인물</span></label>
+          </div></div>
+        <div class="field mt16"><div class="lbl">위치</div>
+          <div class="chips" id="optPos">
+            <label class="pick"><input type="radio" name="pos" value="tl" checked><span>왼쪽 위</span></label>
+            <label class="pick"><input type="radio" name="pos" value="tr"><span>오른쪽 위</span></label>
+            <label class="pick"><input type="radio" name="pos" value="bl"><span>왼쪽 아래</span></label>
+            <label class="pick"><input type="radio" name="pos" value="br"><span>오른쪽 아래</span></label>
+          </div></div>
+        <div class="grid g2 mt16">
+          <div class="field"><label for="optTheme">색</label><select class="sel" id="optTheme"><option value="dark">어둡게</option><option value="light">밝게</option></select></div>
+          <div class="field"><label for="optSize">크기</label><select class="sel" id="optSize"><option value="s">작게</option><option value="m" selected>보통</option><option value="l">크게</option></select></div>
+        </div>
+        <label class="consent mt16"><input type="checkbox" id="optMeta" checked><span>파일 속에 'AI 생성' 출처 정보(IPTC)도 넣기</span></label>
+        <label class="consent mt8"><input type="checkbox" id="optCredit" checked disabled><span>작은 'AIMarker' 표기 <span class="chip chip-b" style="height:22px;font-size:11.5px">플러스에서 끄기</span></span></label>
+        <div class="row mt24">
+          <button class="btn btn-p" type="button" id="dlAll" disabled><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg><span>모두 내려받기</span></button>
+          <button class="btn btn-g" type="button" id="clear" disabled>비우기</button>
+        </div>
+        <p class="note mt12">'가상인물'은 AI로 만든 사람이 추천 · 보증하는 광고에 씁니다(공정위 지침, 2026.6.1 시행).</p>
+      </div>
+      <div class="upsell mt16">
+        <div><b>한 번에 50장 · 표기 없이 · 원본 해상도</b><span>플러스(월 2,900원). 사전 신청하시면 열릴 때 먼저 알려 드립니다.</span></div>
+        <a class="btn btn-p btn-s" href="../pricing/?plan=plus#pre" data-plan="플러스">사전 신청</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-s">
+  <div class="wrap" style="max-width:900px">
+    <div class="grid g2">
+      <div class="callout"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><div><b>어떻게 알아보나요?</b><br>파일 속 출처 정보(C2PA), IPTC의 'AI 생성' 기록, 생성 도구가 남긴 흔적(EXIF · PNG 설명)을 읽습니다. 저장하거나 캡처하면서 기록이 지워진 파일은 알 수 없어 한 번 묻습니다.</div></div>
+      <div class="callout m"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><div><b>파일은 어디로도 가지 않습니다</b><br>판별과 표시 굽기는 모두 이 브라우저 안에서 일어납니다. 원본 파일에 C2PA 출처 정보가 있다면 새 파일에는 남지 않을 수 있으니 원본도 보관하세요.</div></div>
+    </div>
+  </div>
+</section>
+
+<style>
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:260px;border:2px dashed var(--line-2);border-radius:var(--r-l);background:#fff;text-align:center;padding:28px;cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--blue);background:var(--blue-50)}
+.drop b{font-size:18px}.drop span{color:var(--mute);font-size:14px}
+.drop-ic{width:56px;height:56px;border-radius:16px;background:var(--blue-50);color:var(--blue);display:flex;align-items:center;justify-content:center}
+.drop-ic .ico{width:26px;height:26px}
+.item{display:grid;grid-template-columns:180px minmax(0,1fr);gap:18px;background:#fff;border:1px solid var(--line);border-radius:var(--r-l);padding:16px;margin-top:14px;box-shadow:var(--sh-1)}
+.item canvas{width:100%;height:auto;max-height:320px;object-fit:contain;border-radius:10px;background:repeating-conic-gradient(#F1F4F9 0 25%,#fff 0 50%) 50%/16px 16px}
+.item .fn{font-weight:750;word-break:break-all}
+.item .meta{font-size:13px;color:var(--faint);margin-top:2px}
+.item .res{margin-top:10px;font-size:14.5px}
+.item .ask{margin-top:10px}
+.item .ask p{font-weight:750;font-size:14.5px;margin-bottom:8px}
+.item .act{margin-top:12px}
+@media (max-width:640px){.item{grid-template-columns:1fr}}
+</style>
+</main><footer class="ft"><div class="wrap"><div class="top"><div><a class="brand" href="../" aria-label="AIMarker 홈"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#0E2A6B"/><path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/><rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg><span><b>AI</b>Marker</span></a><p class="about">AI로 만든 글 · 이미지 · 영상 · 상담을 먼저 밝히는 일을 쉽게 만듭니다. 고르지 않아도 찾아 주고, 한 줄이면 붙습니다.</p><div id="aimarker" class="ft-label"></div></div><div class="cols"><div><b>도구</b><a href="../site/">사이트 표시</a><a href="../image/">이미지 표시 · 확인</a><a href="../proof/">AI 활용 증빙서</a></div><div><b>서비스</b><a href="../pricing/">요금</a><a href="../business/">기업 · 기관 · 플랫폼</a><a href="../guide/">AI 표시 가이드</a></div><div><b>안내</b><a href="../terms/">이용약관</a><a href="../privacy/"><b style="display:inline;color:#DDE5F2;margin:0">개인정보처리방침</b></a><a href="../business/?type=ad#ask">제휴 · 광고 문의</a></div></div></div><div class="biz"><span>운영 성균관컨설팅</span><span>대표 이채연</span><span>통신판매업 신고 제2026-경기송탄-0622</span><span>문의 <a href="mailto:contact@skkc.co.kr">contact@skkc.co.kr</a></span><br><span>표시 문구 기준 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a></span><span>AIMarker 와 위원회는 개별 사이트 · 콘텐츠를 심사 · 보증하지 않으며, 이 서비스는 법률 자문을 대신하지 않습니다.</span><br><span>© 2026 AIMarker</span></div></div></footer><script src="../assets/am.js?v=20261009a" defer></script><script src="../assets/vendor/jszip.min.js?v=20261009a" defer></script><script src="../assets/image.js?v=20261009a" defer></script><script src="../m.js?v=20261009a" data-name="AIMarker" data-use="text" data-level="assist" data-review="all" data-privacy="1" data-style="inline" data-theme="dark" data-date="2026-10" defer></script></body></html>

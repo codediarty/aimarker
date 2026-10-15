@@ -1,0 +1,116 @@
+<!--
+path: proof/
+key: proof
+title: AI 활용 증빙서 · AI 사용 선언문 만들기(과제 · 논문 · 보고서) | AIMarker
+ogtitle: AI 활용 증빙서 · 대화 링크만 넣으면 완성
+desc: 과제 · 학위논문 · 학술지 투고 · 업무 보고서에 붙일 생성형 AI 활용 증빙서와 AI 사용 선언문(국문 · 영문)을 무료로 만드세요. 대화 링크로 도구를 알아서 채웁니다.
+scripts: assets/proof.js
+selflabel: footer
+-->
+<section class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">AI 활용 증빙서 · 무료</span>
+    <h1>대화 링크만 붙이면, 증빙서가 완성됩니다</h1>
+    <p class="lead">어떤 AI를 언제, 무엇에 썼고 무엇을 직접 확인했는지. 과제 · 논문 · 보고서에 붙이는 증빙서와 선언문을 1분 만에 만듭니다.</p>
+  </div>
+</section>
+
+<section class="sec-s">
+  <div class="wrap tool-wrap">
+    <div class="no-print">
+      <div class="panel">
+        <h2><span class="n">1</span>무엇을 내나요?</h2>
+        <div class="chips mt16" id="kind">
+          <label class="pick"><input type="radio" name="kind" value="assign" checked><span>과제 · 보고서</span></label>
+          <label class="pick"><input type="radio" name="kind" value="thesis"><span>학위논문</span></label>
+          <label class="pick"><input type="radio" name="kind" value="journal"><span>학술지 투고</span></label>
+          <label class="pick"><input type="radio" name="kind" value="work"><span>업무 보고 · 기획서</span></label>
+        </div>
+      </div>
+      <div class="panel">
+        <h2><span class="n">2</span>대화 링크를 붙여 넣으세요 <span class="chip chip-b">자동 채움</span></h2>
+        <p class="desc">ChatGPT · Claude · Gemini · 퍼플렉시티 · 뤼튼의 공유 링크를 넣으면 도구를 알아서 고릅니다. 여러 개면 줄을 바꿔 넣으세요.</p>
+        <textarea class="txt mt12" id="links" rows="3" placeholder="https://chatgpt.com/share/…"></textarea>
+        <div class="lbl mt16">쓴 도구</div>
+        <div class="chips" id="tools"></div>
+        <div class="grid mt16" style="gap:14px">
+          <div class="field"><label for="d1">쓴 날짜 <small>여러 날이면 끝 날짜도</small></label><div class="row" style="flex-wrap:wrap;gap:8px"><input class="inp" id="d1" type="date" style="flex:1 1 140px;min-width:0" aria-label="쓴 날짜"><span class="note">~</span><input class="inp" id="d2" type="date" style="flex:1 1 140px;min-width:0" aria-label="끝 날짜(선택)"></div></div>
+          <div class="field"><label for="ver">도구 버전 <small>선택</small></label><input class="inp" id="ver" placeholder="예: GPT-5, Claude Opus"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2><span class="n">3</span>무엇에 썼고, 무엇을 직접 했나요?</h2>
+        <div class="lbl mt16">쓴 목적</div>
+        <div class="chips" id="purposes"></div>
+        <div class="field mt16"><label for="scope">쓴 범위 <small>선택 · 한두 문장</small></label><textarea class="txt" id="scope" rows="2" placeholder="예: 선행연구 키워드를 정리할 때 아이디어를 얻었고, 본문은 직접 썼습니다."></textarea></div>
+        <div class="lbl mt16">직접 확인 · 고친 것</div>
+        <div class="chips" id="checks"></div>
+        <details class="mt16">
+          <summary style="cursor:pointer;font-weight:750;color:var(--blue)">제출 정보 넣기(이름 · 과목 · 제목)</summary>
+          <div class="grid g2 mt16">
+            <div class="field"><label for="who">이름</label><input class="inp" id="who" maxlength="30"></div>
+            <div class="field"><label for="org">학번 · 소속</label><input class="inp" id="org" maxlength="40"></div>
+            <div class="field"><label for="course">과목 · 학술지 · 제출처</label><input class="inp" id="course" maxlength="60"></div>
+            <div class="field"><label for="title">제출물 제목</label><input class="inp" id="title" maxlength="80"></div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="sticky">
+      <div class="panel" id="outPanel">
+        <div data-tabs id="outTabs">
+          <div class="tabs no-print" role="tablist" aria-label="결과 형식">
+            <button type="button" role="tab" data-k="doc" aria-selected="true">증빙서</button>
+            <button type="button" role="tab" data-k="decl" aria-selected="false">선언문(국 · 영)</button>
+            <button type="button" role="tab" data-k="note" aria-selected="false">각주 한 줄</button>
+          </div>
+          <div class="tabpane on"><div id="docOut" class="doc"></div></div>
+          <div class="tabpane"><div id="declOut" class="doc"></div></div>
+          <div class="tabpane"><div id="noteOut" class="doc"></div></div>
+        </div>
+        <div class="row mt16 no-print">
+          <button class="btn btn-p" type="button" id="copyBtn">{{ico:copy}}<span>복사</span></button>
+          <button class="btn btn-g" type="button" id="printBtn">{{ico:printer}}<span>인쇄 · PDF 저장</span></button>
+        </div>
+        <p class="note mt12 no-print">입력한 내용은 이 브라우저에만 잠시 저장되고, 어디로도 보내지 않습니다.</p>
+      </div>
+      <div class="grid mt16 no-print" style="gap:12px">
+        <a class="upsell" href="https://www.skkc.co.kr/ai-detector" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+          <div><b>제출 전에 AI 활용 정도가 궁금하다면</b><span>문장 단위 AI 사용 여부 점검 · 카피클린(제휴)</span></div><span class="btn btn-g btn-s">점검하기</span></a>
+        <a class="upsell" href="https://kaiec.kr/expert/" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
+          <div><b>AI를 책임 있게 쓰는 역량을 이력에</b><span>AI윤리전문가(AIEP) 과정 · 한국AI윤리위원회</span></div><span class="btn btn-g btn-s">살펴보기</span></a>
+      </div>
+      <form class="panel mt16 no-print" data-lead="ext" autocomplete="on">
+        <h2 style="font-size:17px">쓰는 순간 자동 기록되는 크롬 확장, 먼저 받아 보세요</h2>
+        <p class="desc">AI와 대화할 때마다 도구 · 날짜 · 링크가 저절로 쌓이고, 제출할 때 증빙서가 채워집니다.</p>
+        <input type="hidden" name="plan" value="크롬 확장">
+        <div class="row mt12"><label class="sr" for="extMail">이메일</label><input class="inp" id="extMail" name="contact" type="email" placeholder="이메일" style="flex:1;min-width:180px" required><button class="btn btn-n" type="submit">출시 알림 받기</button></div>
+        <label class="consent mt8"><input type="checkbox" name="agree"><span>출시 안내를 위해 이메일을 받는 데 동의합니다(<a href="{{root}}privacy/">처리방침</a>)</span></label>
+        <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="msg mt8" role="status"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div class="mbar no-print" data-watch="#outPanel" aria-hidden="true"><a class="btn btn-p" href="#outPanel">{{ico:file}}<span>증빙서 보기</span></a><button class="btn btn-g" type="button" id="mCopy">{{ico:copy}}<span>복사</span></button></div>
+
+<section class="sec-s no-print">
+  <div class="wrap" style="max-width:900px">
+    <div class="callout">{{ico:info}}<div>학교 · 학과 · 학술지마다 요구하는 형식이 다를 수 있습니다. 제출처의 생성형 AI 지침을 먼저 확인하고, 이 증빙서는 그 형식에 맞춰 고쳐 쓰세요. 예: 명지대학교는 2026년 8월 가이드라인에서 과제에 'AI 활용 서면 증빙서'와 도구 · 일시 · 목적 · 대화 기록을 요구하고, Elsevier는 투고 원고에 AI 사용 선언문을 요구합니다. <a href="{{root}}guide/#school">자세히</a></div></div>
+  </div>
+</section>
+
+<style>
+.doc{font-size:14.5px;line-height:1.75;color:var(--ink-2);margin-top:14px;max-height:620px;overflow:auto}
+.doc h3{font-size:18px;font-weight:850;text-align:center;margin:4px 0 14px;color:var(--ink)}
+.doc table{width:100%;border-collapse:collapse;font-size:13.5px}
+.doc th,.doc td{border:1px solid var(--line-2);padding:8px 10px;text-align:left;vertical-align:top}
+.doc th{background:var(--soft);width:112px;font-weight:750;color:var(--ink)}
+.doc .sign{margin-top:18px;text-align:right}
+.doc p+p{margin-top:10px}
+.doc .ph{color:var(--faint)}
+.doc .en{font-family:Georgia,"Times New Roman",serif;font-size:14.5px}
+@media print{.doc .ph{visibility:hidden}.doc .note{display:none}.page-hero{display:none}.tool-wrap{display:block}.panel{border:0;box-shadow:none;padding:0}.doc{max-height:none;overflow:visible;font-size:12pt}.tabpane{display:none !important}.tabpane.on{display:block !important}}
+</style>

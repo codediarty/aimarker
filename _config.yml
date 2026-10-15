@@ -1,0 +1,4 @@
+# GitHub Pages: 원본(_src)과 안내 글은 공개 주소에 올리지 않음
+exclude:
+  - README.md
+  - _src
