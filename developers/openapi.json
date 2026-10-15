@@ -1,0 +1,604 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AIMarker API",
+    "version": "2026.10.15",
+    "description": "AI 콘텐츠 출고 관리 API. 한국 광고 규칙(KR-AdLaw 규칙 팩)으로 광고 문구를 점검하고, 표시 문구 · 승인 링크 · 원장 기록을 다룹니다. 모든 요청은 같은 주소로 POST 하고 본문의 action 으로 동작을 고릅니다(Content-Type: text/plain, 본문은 JSON). Apps Script 주소라 302 넘겨주기를 따라가야 합니다. 위험 후보와 근거를 주는 도구이며 법률 자문이 아닙니다.",
+    "contact": {
+      "name": "AIMarker",
+      "email": "contact@skkc.co.kr",
+      "url": "https://aimarker.kr/developers/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY"
+    }
+  ],
+  "paths": {
+    "/exec": {
+      "post": {
+        "operationId": "aimarker",
+        "summary": "action 으로 고르는 AIMarker 요청",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "text/plain": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CheckRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/BatchRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/LabelRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ScanRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ShareRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/StatusRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/StampRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/VerifyRequest"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "action"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok:true 와 결과, 또는 ok:false · code · message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/CheckResult"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Finding": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "규칙 번호(예: C01, F02, D11)"
+          },
+          "cat": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "description": "1 AI 사용 근거 · 표시, 2 가상인물 · 딥페이크, 3 업종별 금지 · 과장, 4 추천 · 보증, 5 저작권 · 초상권, 6 브랜드 가이드"
+          },
+          "lv": {
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3
+            ],
+            "description": "3 높음 · 2 주의 · 1 참고"
+          },
+          "s": {
+            "type": "integer",
+            "description": "시작 위치(보낸 문구 기준, 필수 표시는 -1)"
+          },
+          "e": {
+            "type": "integer"
+          },
+          "t": {
+            "type": "string",
+            "description": "찾은 표현"
+          },
+          "why": {
+            "type": "string"
+          },
+          "law": {
+            "type": "string"
+          },
+          "reps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "바꿀 말 후보('(삭제)'는 빼기)"
+          },
+          "tip": {
+            "type": "string"
+          }
+        }
+      },
+      "CheckRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "const": "am.check"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^amk_[0-9a-f]{32}$"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 5000
+          },
+          "ind": {
+            "type": "string",
+            "enum": [
+              "",
+              "gen",
+              "food",
+              "hfood",
+              "cos",
+              "med",
+              "fin"
+            ],
+            "description": "빈 값이면 업종 자동"
+          },
+          "flags": {
+            "type": "object",
+            "properties": {
+              "sponsored": {
+                "type": "boolean"
+              },
+              "aiPerson": {
+                "type": "boolean"
+              },
+              "aiMedia": {
+                "type": "boolean"
+              }
+            }
+          },
+          "guide": {
+            "type": "object",
+            "properties": {
+              "ban": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "must": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "action",
+          "key",
+          "text"
+        ]
+      },
+      "BatchRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "const": "am.batch"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^amk_[0-9a-f]{32}$"
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "ind": {
+                  "type": "string",
+                  "enum": [
+                    "",
+                    "gen",
+                    "food",
+                    "hfood",
+                    "cos",
+                    "med",
+                    "fin"
+                  ],
+                  "description": "빈 값이면 업종 자동"
+                },
+                "flags": {
+                  "type": "object",
+                  "properties": {
+                    "sponsored": {
+                      "type": "boolean"
+                    },
+                    "aiPerson": {
+                      "type": "boolean"
+                    },
+                    "aiMedia": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "text"
+              ]
+            }
+          },
+          "guide": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "action",
+          "key",
+          "items"
+        ]
+      },
+      "LabelRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "const": "am.label"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^amk_[0-9a-f]{32}$"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "image",
+              "video",
+              "person",
+              "text",
+              "sponsor"
+            ]
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "gen",
+              "edit"
+            ]
+          }
+        },
+        "required": [
+          "action",
+          "key",
+          "kind"
+        ]
+      },
+      "ScanRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "const": "am.scan"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^amk_[0-9a-f]{32}$"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "key",
+          "url"
+        ]
+      },
+      "ShareRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "const": "am.share"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^amk_[0-9a-f]{32}$"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "brand": {
+                "type": "string"
+              },
+              "channel": {
+                "type": "string"
+              },
+              "ind": {
+                "type": "string",
+                "enum": [
+                  "",
+                  "gen",
+                  "food",
+                  "hfood",
+                  "cos",
+                  "med",
+                  "fin"
+                ],
+                "description": "빈 값이면 업종 자동"
+              },
+              "copy": {
+                "type": "string",
+                "maxLength": 3000
+              },
+              "score": {
+                "type": "integer"
+              },
+              "dec": {
+                "type": "string"
+              },
+              "fnd": {
+                "type": "array",
+                "maxItems": 30,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "lv": {
+                      "type": "integer"
+                    },
+                    "cat": {
+                      "type": "integer"
+                    },
+                    "why": {
+                      "type": "string"
+                    },
+                    "t": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "h": {
+                "type": "string",
+                "description": "문구 SHA-256"
+              }
+            }
+          }
+        },
+        "required": [
+          "action",
+          "key",
+          "data"
+        ]
+      },
+      "StatusRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "const": "am.status"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^amk_[0-9a-f]{32}$"
+          },
+          "ids": {
+            "type": "array",
+            "maxItems": 60,
+            "items": {
+              "type": "string",
+              "pattern": "^AP\\d{6}-[A-Z0-9]{8}$"
+            }
+          }
+        },
+        "required": [
+          "action",
+          "key",
+          "ids"
+        ]
+      },
+      "StampRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "const": "am.stamp"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^amk_[0-9a-f]{32}$"
+          },
+          "h": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "n": {
+            "type": "integer"
+          },
+          "k": {
+            "type": "string",
+            "enum": [
+              "report",
+              "version",
+              "approval"
+            ]
+          }
+        },
+        "required": [
+          "action",
+          "key",
+          "h"
+        ]
+      },
+      "VerifyRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "const": "am.verify"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^amk_[0-9a-f]{32}$"
+          },
+          "h": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "action",
+          "key"
+        ]
+      },
+      "CheckResult": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "const": true
+          },
+          "pack": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "ver": {
+                "type": "string"
+              },
+              "rules": {
+                "type": "integer"
+              }
+            }
+          },
+          "ind": {
+            "type": "string"
+          },
+          "indName": {
+            "type": "string"
+          },
+          "auto": {
+            "type": "boolean"
+          },
+          "score": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "fix",
+              "expert",
+              "review",
+              "clear"
+            ]
+          },
+          "counts": {
+            "type": "object",
+            "properties": {
+              "high": {
+                "type": "integer"
+              },
+              "mid": {
+                "type": "integer"
+              },
+              "info": {
+                "type": "integer"
+              }
+            }
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Finding"
+            }
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "long": {
+                  "type": "string"
+                },
+                "where": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "const": false
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "KEY",
+              "QUOTA",
+              "TEXT",
+              "BUSY",
+              "HASH",
+              "ID",
+              "NOT_FOUND",
+              "EMPTY",
+              "KIND",
+              "URL",
+              "FETCH",
+              "ORIGIN"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

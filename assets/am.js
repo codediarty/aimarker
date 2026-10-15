@@ -26,6 +26,7 @@
   if (mb && mn) {
     mb.addEventListener('click', function () {
       var on = !mn.classList.contains('on');
+      if (on && hd) mn.style.top = Math.max(0, Math.round(hd.getBoundingClientRect().bottom)) + 'px';
       mn.classList.toggle('on', on); mb.setAttribute('aria-expanded', on ? 'true' : 'false');
       document.body.style.overflow = on ? 'hidden' : '';
     });
@@ -68,20 +69,24 @@
       var kind = f.getAttribute('data-lead');
       var d = { kind: kind, plan: val(f, 'plan'), name: val(f, 'name'), org: val(f, 'org'), contact: val(f, 'contact'), site: val(f, 'site'), memo: val(f, 'memo'), type: val(f, 'type'), hp: val(f, 'hp'), ms: Date.now() - t0, src: (location.pathname + location.search).slice(0, 80) + (document.referrer ? ' < ' + document.referrer.replace(/^https?:\/\//, '').slice(0, 60) : '') };
       if (!EMAIL_RE.test(d.contact) && !TEL_RE.test(d.contact)) { show(f, 'err', '이메일이나 휴대전화 번호를 적어 주세요.'); f.elements.contact && f.elements.contact.focus(); return; }
-      if (kind === 'biz' && d.org.length < 2) { show(f, 'err', '회사 · 기관 이름을 적어 주세요.'); f.elements.org && f.elements.org.focus(); return; }
+      if ((kind === 'biz' || kind === 'pilot') && d.org.length < 2) { show(f, 'err', '회사 · 기관 이름을 적어 주세요.'); f.elements.org && f.elements.org.focus(); return; }
+      // 파일럿: 업종 · 월 소재 수 같은 추가 칸은 내용(memo) 앞에 붙여 보냄
+      var extra = Array.prototype.filter.call(f.querySelectorAll('[data-extra]'), function (el) { return (el.type !== 'radio' || el.checked) && String(el.value || '').trim(); })
+        .map(function (el) { return '[' + el.getAttribute('data-extra') + '] ' + String(el.value).trim(); });
+      if (extra.length) d.memo = (extra.join(' · ') + (d.memo ? '\n' + d.memo : '')).slice(0, 1000);
       var agree = f.querySelector('input[name="agree"]');
       if (agree && !agree.checked) { show(f, 'err', '개인정보 수집 · 이용에 동의해 주세요.'); return; }
       var btn = f.querySelector('button[type="submit"]'); if (btn) { btn.disabled = true; btn.setAttribute('data-t', btn.innerHTML); btn.innerHTML = '보내는 중…'; }
       AM.call('am.lead', d).then(function (r) {
         if (r && r.ok) {
-          show(f, 'ok', (kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : '베타 신청이 접수되었습니다. 2026년 12월 베타가 열리면 신청한 순서대로 연결 안내를 보내 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
+          show(f, 'ok', (kind === 'pilot' ? '파일럿 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 인터뷰와 샘플 소재 점검 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
           f.reset(); t0 = Date.now();
           if (window.gtag) try { window.gtag('event', 'generate_lead', { method: kind }); } catch (eG) { /* 무시 */ }
         } else if (r && r.message && /^(CONTACT|ORG|NAME|SLOW|BUSY|MEMO)$/.test(r.code || '')) {
           show(f, 'err', r.message);
         } else { throw new Error(r && r.message || 'fail'); }
       }).catch(function () {
-        var subj = '[AIMarker] ' + (kind === 'biz' ? '도입 문의' : '베타 신청') + (d.plan ? ' · ' + d.plan : '');
+        var subj = '[AIMarker] ' + (kind === 'pilot' ? '파일럿 신청' : kind === 'biz' ? '도입 문의' : '신청') + (d.plan ? ' · ' + d.plan : '');
         var bodyTxt = ['이름: ' + d.name, '회사 · 기관: ' + d.org, '연락처: ' + d.contact, '사이트: ' + d.site, '요금제: ' + d.plan, '구분: ' + d.type, '내용: ' + d.memo].join('\n');
         show(f, 'err', '지금 연결이 원활하지 않아요. <a href="mailto:' + AM.MAIL + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(bodyTxt) + '">메일로 보내기</a>를 눌러 주시면 같은 내용이 전달됩니다.');
       }).finally(function () { if (btn) { btn.disabled = false; btn.innerHTML = btn.getAttribute('data-t'); } });
@@ -99,9 +104,9 @@
   /* 주소로 넘어온 요금제 · 문의 종류 채우기: ?plan=pro · ?type=install */
   (function () {
     var q = new URLSearchParams(location.search);
-    var plan = { pro: '프로 베타', biz: '비즈니스 베타', free: '무료' }[q.get('plan') || ''];
-    var type = { install: '설치 도움', api: '플랫폼 · API', agency: '광고 · 대행사', univ: '대학 · 학회', org: '기업 · 기관', edu: '교육 · 컨설팅', ad: '제휴 · 광고' }[q.get('type') || ''];
-    if (plan) { var ps = document.querySelector('form[data-lead] select[name="plan"]'); if (ps) ps.value = plan; }
+    var plan = { starter: 'Starter', business: 'Business', enterprise: 'Enterprise', expert: 'Expert', api: 'API', free: '무료', pro: 'Starter', biz: 'Business' }[q.get('plan') || ''];
+    var type = { install: '설치 도움', api: '플랫폼 · API', agency: '광고대행사 · 제작사', brand: '브랜드 · 이커머스', ai: 'AI 서비스 사업자', enterprise: '기업 · 기관', univ: '대학 · 학회', org: '기업 · 기관', edu: '교육 · 컨설팅', ad: '제휴 · 광고' }[q.get('type') || ''];
+    if (plan) { var ps = document.querySelector('form[data-lead] [name="plan"]'); if (ps) { if (ps.tagName === 'SELECT') ps.value = plan; else { var pr = document.querySelector('form[data-lead] input[name="plan"][value="' + plan + '"]'); if (pr) pr.checked = true; else ps.value = plan; } } }
     var site = (q.get('site') || '').replace(/[^\w.\-:/가-힣]/g, '').slice(0, 120);
     if (site) { var si = document.querySelector('form[data-lead] input[name="site"]'); if (si && !si.value) si.value = site; }
     if (type) {
@@ -156,7 +161,7 @@
     if (history.replaceState) history.replaceState(null, '', '#scan');
   });
 
-  /* 홈 무료 진단(am.scan) */
+  /* 홈 무료 진단(am.scan 2판 · 보수적 판정) */
   if (homeScan) {
     var out = document.getElementById('scanOut');
     var I = {
@@ -166,53 +171,78 @@
     };
     var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
     var root = AM.root || '';
-    var card = function (head, items, foot, why) {
-      return '<div class="res">' + head + (items.length ? '<ul>' + items.map(function (it) { return '<li class="' + it[0] + '">' + I[it[0]] + '<span>' + it[1] + '</span></li>'; }).join('') + '</ul>' : '') + (why ? '<p class="why">' + why + '</p>' : '') + (foot ? '<div class="res-f">' + foot + '</div>' : '') + '</div>';
-    };
+    var LV = { confirmed: ['AI 사용 확인됨', 4], high: ['AI 사용 가능성 높음', 3], check: ['확인 필요', 2], low: ['단서 적음', 1] };
     var show = function (html) { out.hidden = false; out.innerHTML = html; };
     var btn = homeScan.querySelector('button[type="submit"]');
     var hostOf = function (u) { return u.replace(/^https?:\/\//i, '').replace(/[\/?#].*$/, '').toLowerCase(); };
+    var simple = function (title, msg, foot) { return '<div class="res2"><div class="res2-h"><b>' + title + '</b></div><ul><li class="warn">' + I.warn + '<span>' + msg + '</span></li></ul>' + (foot ? '<div class="res2-f">' + foot + '</div>' : '<div style="height:12px"></div>') + '</div>'; };
     homeScan.addEventListener('submit', function (e) {
       e.preventDefault();
       var url = String(homeScan.elements.url.value || '').trim();
-      if (!/^(https?:\/\/)?[^\s\/?#:@]+\.[^\s\/?#:@]{2,}(\/\S*)?$/i.test(url)) {
-        show(card('<div class="res-h"><b>사이트 주소를 확인해 주세요</b></div>', [['info', '예: <b>myshop.co.kr</b> 처럼 주소만 넣으면 됩니다.']]));
-        homeScan.elements.url.focus();
-        return;
-      }
+      if (!/^(https?:\/\/)?[^\s\/?#:@]+\.[^\s\/?#:@]{2,}(\/\S*)?$/i.test(url)) { show(simple('사이트 주소를 확인해 주세요', '예: <b>myshop.co.kr</b> 처럼 주소만 넣으면 됩니다.')); homeScan.elements.url.focus(); return; }
       var host = hostOf(url);
       btn.disabled = true; btn.querySelector('span').textContent = '진단 중…';
-      show('<div class="res"><div class="wait"><span class="spin"></span><span><b>' + esc(host) + '</b> 첫 화면을 읽고 있어요. 10초쯤 걸립니다.</span></div></div>');
-      AM.call('am.scan', { url: url }, 45000).then(function (r) {
-        if (!r || !r.ok) {
-          show(card('<div class="res-h"><b>지금은 진단하지 못했어요</b></div>', [['warn', esc((r && r.message) || '사이트가 응답하지 않거나 외부 접속을 막고 있어요.')]],
-            '<a class="btn btn-p" href="' + root + 'site/">표시 바로 만들기</a><a class="btn btn-g" href="' + root + 'beta/?site=' + encodeURIComponent(host) + '">베타 신청</a>'));
-          return;
-        }
-        var items = [], need = 0;
-        if (r.platform && r.platform.name) items.push(['info', '<b>' + esc(r.platform.name) + '</b>(으)로 만든 사이트예요. ' + (r.platform.key === 'imweb' ? '아임웹 앱이나 코드 한 줄로 붙일 수 있어요.' : '코드 한 줄로 붙일 수 있어요.')]);
-        if (r.labeled) items.push(['ok', '이미 AI 표시가 붙어 있어요. 자동 탐지를 켜면 앞으로 올라올 콘텐츠도 빠짐없이 표시됩니다.']);
-        else { items.push(['warn', '아직 사이트에서 AI 표시를 찾지 못했어요.']); need++; }
-        if (r.chat && r.chat.length) {
-          var names = r.chat.slice(0, 3).map(esc).join(', ');
-          items.push(r.chatAi ? ['warn', 'AI 상담 창(' + names + ')이 있어요. 대화 전에 \'AI가 답변합니다\'를 알려야 할 수 있어요.'] : ['info', '상담 창(' + names + ')이 있어요. AI가 답한다면 대화 전 안내가 필요해요.']);
-          if (r.chatAi) need++;
-        }
-        if (r.images && r.images.checked) {
-          if (r.images.ai) { items.push(['warn', '이미지 ' + r.images.checked + '장 중 <b>' + r.images.ai + '장에서 AI 생성 기록</b>을 찾았어요.' + (r.images.c2pa ? ' 출처 정보(C2PA)가 든 이미지도 ' + r.images.c2pa + '장 있어요.' : '')]); need++; }
-          else items.push(['info', '이미지 ' + r.images.checked + '장에서는 AI 생성 기록을 찾지 못했어요. 올릴 때 기록이 지워지는 경우가 많아, 여러 신호로 찾는 자동 탐지가 필요한 이유예요.']);
-        }
-        if (r.cues && r.cues.length) items.push(['info', '페이지에서 \'' + r.cues.slice(0, 3).map(esc).join('\', \'') + '\' 같은 AI 관련 문구를 찾았어요.']);
+      show('<div class="res2"><div style="padding:18px;display:flex;gap:12px;align-items:center;color:var(--mute)"><span class="spin"></span><span><b>' + esc(host) + '</b> 첫 화면과 이미지 12장까지 살피는 중이에요. 10~20초 걸립니다.</span></div></div>');
+      AM.call('am.scan', { url: url }, 60000).then(function (r) {
+        if (!r || !r.ok) { show(simple('지금은 진단하지 못했어요', esc((r && r.message) || '사이트가 응답하지 않거나 외부 접속을 막고 있어요.'), '<a class="btn btn-p" href="' + root + 'check/">광고 문구 검사</a><a class="btn btn-g" href="' + root + 'app/">작업 공간 열기</a>')); return; }
+        var im = r.images || {}, lv = r.level || (im.ai ? 'confirmed' : 'check'), L = LV[lv] || LV.check, items = [];
+        // 이미지 막대: AI 기록 · 이름 · 주소 단서 · 크기 단서 · 편집 도구 · 확인 불가 · 카메라
+        var seg = [['c-ai', im.ai || 0, 'AI 기록'], ['c-cue', (im.aiName || 0) + (im.aiHost || 0), 'AI 흔적(이름 · 주소)'], ['c-ed', (im.aiSize || 0) + (im.edited || 0), '크기 · 편집 도구 단서'], ['c-unk', (im.stripped || 0) + (im.failed || 0), '기록 없음 · 확인 불가'], ['c-cam', im.camera || 0, '카메라 원본']];
+        var tot = Math.max(1, seg.reduce(function (a, x) { return a + x[1]; }, 0));
+        var bar = (im.checked || im.failed) ? '<div class="imgbar"><div class="t"><span>이미지 ' + (im.checked + (im.failed || 0)) + '장 살핌</span><small>찾은 이미지 ' + (im.found || im.checked) + '장 중</small></div><div class="bar2">' + seg.filter(function (x) { return x[1]; }).map(function (x) { return '<i class="' + x[0] + '" style="width:' + (x[1] / tot * 100) + '%"></i>'; }).join('') + '</div>' +
+          '<div class="lg">' + seg.filter(function (x) { return x[1]; }).map(function (x) { return '<span><i class="' + x[0] + '"></i>' + x[2] + ' ' + x[1] + '</span>'; }).join('') + '</div></div>' : '';
+        if (r.platform && r.platform.name) items.push(['info', '<b>' + esc(r.platform.name) + '</b>(으)로 만든 사이트예요.' + (r.platform.key === 'imweb' ? ' 아임웹은 올린 이미지의 파일 기록을 지우는 경우가 많아, 기록이 없어도 AI를 쓰지 않았다는 뜻은 아니에요.' : '')]);
+        (r.signals || []).forEach(function (sg) { items.push([/확인 불가|읽지 못함/.test(sg) ? 'info' : /카메라/.test(sg) ? 'ok' : 'warn', esc(sg)]); });
+        if (r.chat && r.chat.length && !r.chatAi) items.push(['info', '상담 창(' + r.chat.slice(0, 3).map(esc).join(', ') + ')이 있어요. AI가 답한다면 대화 전에 알려야 할 수 있어요.']);
+        if (r.labeled || r.disclosed) items.push(['ok', '사이트에서 AI 사용을 밝히는 표시 · 문구를 찾았어요.']);
+        else if (lv === 'confirmed' || lv === 'high') items.push(['warn', 'AI 사용 단서가 있는데 사이트에서 밝히는 표시를 찾지 못했어요.']);
+        if (r.ad && r.ad.items && r.ad.items.length) items.push([r.ad.high ? 'warn' : 'info', '광고 표현 확인 후보 ' + r.ad.n + '곳<div class="adl">' + r.ad.items.slice(0, 6).map(function (a) { return '<span class="' + (a.lv === 'high' ? 'hi' : '') + '" title="' + esc(a.why) + '">' + esc(a.t) + '</span>'; }).join('') + '</div>']);
         var name = r.siteName ? esc(String(r.siteName).slice(0, 40)) : esc(host);
-        var gauge = need ? '<span class="gauge g-warn">확인할 것 ' + need + '개</span>' : '<span class="gauge g-ok">좋아요</span>';
-        var head = '<div class="res-h"><div class="who"><b>' + name + '</b></div>' + gauge + '</div>';
-        var foot = '<a class="btn btn-p" href="' + root + 'beta/?site=' + encodeURIComponent(host) + '">이 사이트로 베타 신청</a><a class="btn btn-g" href="' + root + 'site/?url=' + encodeURIComponent(url) + '">무료 표시 바로 만들기</a>';
-        show(card(head, items, foot, '공개된 첫 화면만 읽은 결과입니다. 자동 탐지는 새로 올라오는 콘텐츠를 계속 살핍니다.'));
-        if (window.gtag) try { window.gtag('event', 'scan', { result: need ? 'needs' : 'ok' }); } catch (eG) { /* 무시 */ }
+        var meter = '<div class="res2-meter ' + lv + '">' + [1, 2, 3, 4].map(function (k) { return '<span class="' + (k <= L[1] ? 'on' : '') + '"></span>'; }).join('') + '</div><div class="lbls"><span>단서 적음</span><span>확인 필요</span><span>가능성 높음</span><span>확인됨</span></div>';
+        var head = '<div class="res2-h"><div style="min-width:0"><b>' + name + '</b><small>' + esc(host) + '</small></div><span class="lvl2 ' + lv + '"><i></i>' + L[0] + '</span></div>';
+        var foot = '<a class="btn btn-p" href="' + root + 'app/">소재째로 점검하기(무료)</a><a class="btn btn-g" href="' + root + 'site/?url=' + encodeURIComponent(url) + '">AI 표시 · 자동 태그 붙이기</a>';
+        show('<div class="res2">' + head + meter + bar + '<ul>' + items.map(function (it) { return '<li class="' + it[0] + '">' + I[it[0] === 'warn' ? 'warn' : it[0] === 'ok' ? 'ok' : 'info'] + '<span>' + it[1] + '</span></li>'; }).join('') + '</ul>' +
+          '<p class="why">보수적으로 판단해요. 파일 기록이 지워진 이미지는 \'없음\'이 아니라 \'확인 불가\'로 세고, 광고 표현은 위험 후보일 뿐 위반 판단이 아니에요. 공개된 첫 화면만 읽었습니다.</p><div class="res2-f">' + foot + '</div></div>');
+        if (window.gtag) try { window.gtag('event', 'scan', { result: lv }); } catch (eG) { /* 무시 */ }
       }).catch(function () {
-        show(card('<div class="res-h"><b>지금은 진단이 어려워요</b></div>', [['info', '잠시 뒤 다시 시도하거나, 업종만 골라 바로 표시를 만들 수 있어요.']],
-          '<a class="btn btn-p" href="' + root + 'site/">표시 바로 만들기</a><a class="btn btn-g" href="' + root + 'beta/?site=' + encodeURIComponent(host) + '">베타 신청</a>'));
+        show(simple('지금은 진단이 어려워요', '잠시 뒤 다시 시도해 주세요. 광고 문구 검사는 바로 쓸 수 있어요.', '<a class="btn btn-p" href="' + root + 'check/">광고 문구 검사</a>'));
       }).finally(function () { btn.disabled = false; btn.querySelector('span').textContent = '무료 진단'; });
     });
   }
+
+  /* 화면에 들어오면 막대 · 숫자 움직이기 */
+  var counters = document.querySelectorAll('[data-count]'), inv = document.querySelectorAll('[data-inview]');
+  function countUp(el) {
+    var to = parseFloat(el.getAttribute('data-count')), dec = +(el.getAttribute('data-dec') || 0), suf = el.getAttribute('data-suffix') || '', t0 = 0, D = 1100;
+    function fmt(v) { return (dec ? v.toFixed(dec) : Math.round(v).toLocaleString('ko-KR')) + suf; }
+    function step(ts) { if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / D), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(to * e); if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(to); }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (!en.isIntersecting) return; var el = en.target; io.unobserve(el); if (el.hasAttribute('data-count')) countUp(el); else el.classList.add('inview'); }); }, { threshold: 0.35 });
+    Array.prototype.forEach.call(counters, function (el) { io.observe(el); });
+    Array.prototype.forEach.call(inv, function (el) { io.observe(el); });
+  } else { Array.prototype.forEach.call(inv, function (el) { el.classList.add('inview'); }); }
+
+  /* ROI 계산기 */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-roi]'), function (box) {
+    var $r = function (id) { return box.querySelector('#' + id); }, cut = 0.5;
+    var PLANS = [[100, 'Starter', 99000], [1000, 'Business', 290000], [Infinity, 'Enterprise', 990000]];
+    function won(n) { return Math.round(n).toLocaleString('ko-KR') + '원'; }
+    function calc() {
+      var cnt = +$r('rCnt').value, min = +$r('rMin').value, wage = +$r('rWage').value;
+      var hours = cnt * min / 60, cost = hours * wage, save = cost * cut, plan = PLANS.filter(function (p) { return cnt <= p[0]; })[0];
+      var after = cost - save + plan[2], x = save / plan[2];
+      $r('oCnt').textContent = cnt.toLocaleString('ko-KR') + '개'; $r('oMin').textContent = min + '분'; $r('oWage').textContent = won(wage);
+      $r('oSave').textContent = won(save);
+      $r('oX').textContent = '추천 요금제 ' + plan[1] + ' · ' + (x >= 1 ? '투자 대비 ' + x.toFixed(1) + '배' : '소재가 늘면 효과가 커져요');
+      $r('vNow').textContent = won(cost); $r('vAfter').textContent = won(after);
+      var mx = Math.max(cost, after, 1); $r('bNow').style.width = (cost / mx * 100) + '%'; $r('bAfter').style.width = (after / mx * 100) + '%';
+      $r('oHours').textContent = (Math.round(hours * 10) / 10) + '시간 → ' + (Math.round(hours * (1 - cut) * 10) / 10) + '시간';
+      $r('oPlan').textContent = plan[1] + ' 월 ' + won(plan[2]) + (plan[1] === 'Enterprise' ? '부터' : '');
+    }
+    ['rCnt', 'rMin', 'rWage'].forEach(function (id) { $r(id).addEventListener('input', calc); });
+    $r('rCut').addEventListener('click', function (e) { var b = e.target.closest('[data-v]'); if (!b) return; cut = +b.getAttribute('data-v'); Array.prototype.forEach.call($r('rCut').querySelectorAll('button'), function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); calc(); });
+    calc();
+  });
 })();

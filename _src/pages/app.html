@@ -1,0 +1,43 @@
+<!--
+path: app/
+key: app
+title: AIMarker 검수 작업 공간 · 광고 · 콘텐츠 자동 점검과 승인
+ogtitle: AIMarker 검수 작업 공간 · 올리면 자동 점검, 승인 링크, 보고서까지
+desc: 광고 · 상세페이지 · SNS 문구와 이미지를 올리면 AI 사용 근거 · 표시 요건 · 광고 표현 위험을 자동으로 점검하고, 수정 문구 적용 · 광고주 승인 링크 · 보고서 원장 기록까지 한곳에서. 회원가입 없이 무료로 시작.
+layout: app
+styles: assets/app.css
+scripts: assets/amui.js, assets/prov.js, assets/app.js
+manifest: 1
+selflabel: none
+-->
+<div class="ap" id="ap">
+  <aside class="ap-side">
+    <a class="ap-brand" href="{{root}}" aria-label="AIMarker 홈">{{logo}}<span><b>AI</b>Marker</span></a>
+    <div class="ap-ws"><small>작업 공간</small><b id="wsName">내 작업 공간</b></div>
+    <nav class="ap-nav" aria-label="작업 공간 메뉴">
+      <a href="#/inbox" data-r="inbox">{{ico:inbox}}검수함<em id="nInbox"></em></a>
+      <a class="ap-new" href="#/new" data-r="new">{{ico:plus}}새 소재</a>
+      <a href="#/approvals" data-r="approvals">{{ico:send}}승인 현황<em id="nAppr"></em></a>
+      <a href="#/reports" data-r="reports">{{ico:file}}보고서 · 원장</a>
+      <a href="#/guide" data-r="guide">{{ico:palette}}브랜드 가이드</a>
+      <a href="#/settings" data-r="settings">{{ico:sliders}}설정 · 데이터</a>
+    </nav>
+    <div class="ap-foot">
+      <div class="ap-plan"><b>무료 · 공개 베타</b><span>데이터는 이 브라우저에만 저장됩니다. 팀 공유 · 클라우드 보관은 파일럿에서 엽니다.</span></div>
+      <button type="button" id="installBtn" hidden>{{ico:download}}앱으로 설치</button>
+      <a href="{{root}}developers/">{{ico:code}}API · 자동화 연동</a>
+      <a href="{{root}}pilot/">팀으로 쓰기 · 파일럿</a>
+    </div>
+  </aside>
+  <main class="ap-main" id="view" aria-live="polite"><div class="empty3"><b>작업 공간을 여는 중…</b></div></main>
+  <nav class="ap-tab" aria-label="아래 메뉴">
+    <a href="#/inbox" data-r="inbox">{{ico:inbox}}검수함</a>
+    <a href="#/approvals" data-r="approvals">{{ico:send}}승인</a>
+    <a class="new" href="#/new" data-r="new">{{ico:plus}}새 소재</a>
+    <a href="#/reports" data-r="reports">{{ico:file}}보고서</a>
+    <a href="#/settings" data-r="settings">{{ico:sliders}}설정</a>
+  </nav>
+</div>
+<div class="sheet3" id="sheet"></div>
+<div class="toast3" id="toast" role="status"></div>
+<noscript><p style="padding:24px">검수 작업 공간은 자바스크립트를 켜야 쓸 수 있어요.</p></noscript>

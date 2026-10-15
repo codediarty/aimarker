@@ -48,7 +48,7 @@
     return {
       name: $('#name').value.trim(), use: uses.join(','), level: $('#level').value, review: $('#review').value,
       privacy: $('#privacy').checked ? '1' : '', contact: $('#contact').value.trim(), style: $('#style').value,
-      side: $('#side').value, theme: $('#theme').value, date: ym
+      side: $('#side').value, theme: $('#theme').value, date: ym, auto: $('#autotag') ? $('#autotag').checked : true
     };
   }
   function attrEsc(s) { return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
@@ -63,6 +63,7 @@
     if (c.style !== 'badge') a.push('data-style="' + c.style + '"');
     if (c.side === 'right') a.push('data-side="right"');
     if (c.theme === 'dark') a.push('data-theme="dark"');
+    if (c.auto === false) a.push('data-auto="0"');
     a.push('data-date="' + c.date + '"');
     return '<script src="https://aimarker.kr/m.js" ' + a.join(' ') + ' async></script>';
   }
@@ -107,7 +108,7 @@
   });
 
   ['#name', '#contact'].forEach(function (s) { $(s).addEventListener('input', update); });
-  ['#review', '#level', '#style', '#side', '#theme', '#privacy'].forEach(function (s) { $(s).addEventListener('change', update); });
+  ['#review', '#level', '#style', '#side', '#theme', '#privacy', '#autotag'].forEach(function (s) { $(s).addEventListener('change', update); });
   useBox.addEventListener('change', update);
 
   /* 자동 진단 */
