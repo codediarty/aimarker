@@ -143,6 +143,15 @@
     }).finally(function () { btn.disabled = false; btn.querySelector('span').textContent = '자동으로 채우기'; });
   });
 
-  function start() { applyBiz('shop'); }
+  function start() {
+    applyBiz('shop');
+    /* 홈 무료 진단에서 넘어온 주소: ?url=myshop.co.kr → 바로 자동 채우기 */
+    var u = new URLSearchParams(location.search).get('url');
+    if (u && /^(https?:\/\/)?[^\s\/?#:@]+\.[^\s\/?#:@]{2,}(\/\S*)?$/i.test(u.trim())) {
+      $('#scanUrl').value = u.trim().slice(0, 200);
+      var f = $('#scanForm');
+      if (f.requestSubmit) f.requestSubmit(); else f.dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+  }
   if (window.AIMarker) start(); else window.addEventListener('load', start);
 })();

@@ -74,15 +74,15 @@
       var btn = f.querySelector('button[type="submit"]'); if (btn) { btn.disabled = true; btn.setAttribute('data-t', btn.innerHTML); btn.innerHTML = '보내는 중…'; }
       AM.call('am.lead', d).then(function (r) {
         if (r && r.ok) {
-          show(f, 'ok', (kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : '신청되었습니다. 열리는 날 가장 먼저 알려 드릴게요.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
+          show(f, 'ok', (kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : '베타 신청이 접수되었습니다. 2026년 12월 베타가 열리면 신청한 순서대로 연결 안내를 보내 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
           f.reset(); t0 = Date.now();
           if (window.gtag) try { window.gtag('event', 'generate_lead', { method: kind }); } catch (eG) { /* 무시 */ }
         } else if (r && r.message && /^(CONTACT|ORG|NAME|SLOW|BUSY|MEMO)$/.test(r.code || '')) {
           show(f, 'err', r.message);
         } else { throw new Error(r && r.message || 'fail'); }
       }).catch(function () {
-        var subj = '[AIMarker] ' + (kind === 'biz' ? '도입 문의' : '사전 신청') + (d.plan ? ' · ' + d.plan : '');
-        var bodyTxt = ['이름: ' + d.name, '회사 · 기관: ' + d.org, '연락처: ' + d.contact, '사이트: ' + d.site, '요금제: ' + d.plan, '내용: ' + d.memo].join('\n');
+        var subj = '[AIMarker] ' + (kind === 'biz' ? '도입 문의' : '베타 신청') + (d.plan ? ' · ' + d.plan : '');
+        var bodyTxt = ['이름: ' + d.name, '회사 · 기관: ' + d.org, '연락처: ' + d.contact, '사이트: ' + d.site, '요금제: ' + d.plan, '구분: ' + d.type, '내용: ' + d.memo].join('\n');
         show(f, 'err', '지금 연결이 원활하지 않아요. <a href="mailto:' + AM.MAIL + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(bodyTxt) + '">메일로 보내기</a>를 눌러 주시면 같은 내용이 전달됩니다.');
       }).finally(function () { if (btn) { btn.disabled = false; btn.innerHTML = btn.getAttribute('data-t'); } });
     });
@@ -99,9 +99,11 @@
   /* 주소로 넘어온 요금제 · 문의 종류 채우기: ?plan=pro · ?type=install */
   (function () {
     var q = new URLSearchParams(location.search);
-    var plan = { plus: '플러스', pro: '프로', biz: '비즈니스', api: '플랫폼 · 기관' }[q.get('plan') || ''];
-    var type = { install: '설치 도움', api: '플랫폼 · API', agency: '광고 · 대행사', univ: '대학 · 학회', org: '기업 · 기관', ad: '제휴 · 광고' }[q.get('type') || ''];
+    var plan = { pro: '프로 베타', biz: '비즈니스 베타', free: '무료' }[q.get('plan') || ''];
+    var type = { install: '설치 도움', api: '플랫폼 · API', agency: '광고 · 대행사', univ: '대학 · 학회', org: '기업 · 기관', edu: '교육 · 컨설팅', ad: '제휴 · 광고' }[q.get('type') || ''];
     if (plan) { var ps = document.querySelector('form[data-lead] select[name="plan"]'); if (ps) ps.value = plan; }
+    var site = (q.get('site') || '').replace(/[^\w.\-:/가-힣]/g, '').slice(0, 120);
+    if (site) { var si = document.querySelector('form[data-lead] input[name="site"]'); if (si && !si.value) si.value = site; }
     if (type) {
       var r = document.querySelector('form[data-lead] input[name="type"][value="' + type + '"]');
       if (r) r.checked = true;
@@ -132,4 +134,85 @@
     var b = box && box.querySelector('.tabs button[data-k="' + key + '"]');
     if (b) b.click();
   };
+
+  /* 머리글 펼침 메뉴(무료 도구): 누르면 열고, 밖을 누르거나 Esc면 닫기 */
+  Array.prototype.forEach.call(document.querySelectorAll('.nav .dd'), function (dd) {
+    var b = dd.querySelector('button');
+    function set(on) { dd.classList.toggle('open', on); b.setAttribute('aria-expanded', on ? 'true' : 'false'); }
+    b.addEventListener('click', function (e) { e.stopPropagation(); set(!dd.classList.contains('open')); });
+    document.addEventListener('click', function (e) { if (!dd.contains(e.target)) set(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dd.classList.contains('open')) { set(false); b.focus(); } });
+    dd.addEventListener('focusout', function (e) { if (!e.relatedTarget || !dd.contains(e.relatedTarget)) set(false); });
+  });
+
+  /* '무료로 시작' · '무료 진단' 단추: 홈에서는 진단 칸으로 내려가 바로 입력 */
+  var homeScan = document.querySelector('[data-home-scan]');
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href$="#scan"]');
+    if (!a || !homeScan) return;
+    e.preventDefault();
+    homeScan.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var inp = homeScan.querySelector('input'); if (inp) setTimeout(function () { try { inp.focus({ preventScroll: true }); } catch (eF) { inp.focus(); } }, 450);
+    if (history.replaceState) history.replaceState(null, '', '#scan');
+  });
+
+  /* 홈 무료 진단(am.scan) */
+  if (homeScan) {
+    var out = document.getElementById('scanOut');
+    var I = {
+      ok: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+      warn: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+      info: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>'
+    };
+    var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+    var root = AM.root || '';
+    var card = function (head, items, foot, why) {
+      return '<div class="res">' + head + (items.length ? '<ul>' + items.map(function (it) { return '<li class="' + it[0] + '">' + I[it[0]] + '<span>' + it[1] + '</span></li>'; }).join('') + '</ul>' : '') + (why ? '<p class="why">' + why + '</p>' : '') + (foot ? '<div class="res-f">' + foot + '</div>' : '') + '</div>';
+    };
+    var show = function (html) { out.hidden = false; out.innerHTML = html; };
+    var btn = homeScan.querySelector('button[type="submit"]');
+    var hostOf = function (u) { return u.replace(/^https?:\/\//i, '').replace(/[\/?#].*$/, '').toLowerCase(); };
+    homeScan.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var url = String(homeScan.elements.url.value || '').trim();
+      if (!/^(https?:\/\/)?[^\s\/?#:@]+\.[^\s\/?#:@]{2,}(\/\S*)?$/i.test(url)) {
+        show(card('<div class="res-h"><b>사이트 주소를 확인해 주세요</b></div>', [['info', '예: <b>myshop.co.kr</b> 처럼 주소만 넣으면 됩니다.']]));
+        homeScan.elements.url.focus();
+        return;
+      }
+      var host = hostOf(url);
+      btn.disabled = true; btn.querySelector('span').textContent = '진단 중…';
+      show('<div class="res"><div class="wait"><span class="spin"></span><span><b>' + esc(host) + '</b> 첫 화면을 읽고 있어요. 10초쯤 걸립니다.</span></div></div>');
+      AM.call('am.scan', { url: url }, 45000).then(function (r) {
+        if (!r || !r.ok) {
+          show(card('<div class="res-h"><b>지금은 진단하지 못했어요</b></div>', [['warn', esc((r && r.message) || '사이트가 응답하지 않거나 외부 접속을 막고 있어요.')]],
+            '<a class="btn btn-p" href="' + root + 'site/">표시 바로 만들기</a><a class="btn btn-g" href="' + root + 'beta/?site=' + encodeURIComponent(host) + '">베타 신청</a>'));
+          return;
+        }
+        var items = [], need = 0;
+        if (r.platform && r.platform.name) items.push(['info', '<b>' + esc(r.platform.name) + '</b>(으)로 만든 사이트예요. ' + (r.platform.key === 'imweb' ? '아임웹 앱이나 코드 한 줄로 붙일 수 있어요.' : '코드 한 줄로 붙일 수 있어요.')]);
+        if (r.labeled) items.push(['ok', '이미 AI 표시가 붙어 있어요. 자동 탐지를 켜면 앞으로 올라올 콘텐츠도 빠짐없이 표시됩니다.']);
+        else { items.push(['warn', '아직 사이트에서 AI 표시를 찾지 못했어요.']); need++; }
+        if (r.chat && r.chat.length) {
+          var names = r.chat.slice(0, 3).map(esc).join(', ');
+          items.push(r.chatAi ? ['warn', 'AI 상담 창(' + names + ')이 있어요. 대화 전에 \'AI가 답변합니다\'를 알려야 할 수 있어요.'] : ['info', '상담 창(' + names + ')이 있어요. AI가 답한다면 대화 전 안내가 필요해요.']);
+          if (r.chatAi) need++;
+        }
+        if (r.images && r.images.checked) {
+          if (r.images.ai) { items.push(['warn', '이미지 ' + r.images.checked + '장 중 <b>' + r.images.ai + '장에서 AI 생성 기록</b>을 찾았어요.' + (r.images.c2pa ? ' 출처 정보(C2PA)가 든 이미지도 ' + r.images.c2pa + '장 있어요.' : '')]); need++; }
+          else items.push(['info', '이미지 ' + r.images.checked + '장에서는 AI 생성 기록을 찾지 못했어요. 올릴 때 기록이 지워지는 경우가 많아, 여러 신호로 찾는 자동 탐지가 필요한 이유예요.']);
+        }
+        if (r.cues && r.cues.length) items.push(['info', '페이지에서 \'' + r.cues.slice(0, 3).map(esc).join('\', \'') + '\' 같은 AI 관련 문구를 찾았어요.']);
+        var name = r.siteName ? esc(String(r.siteName).slice(0, 40)) : esc(host);
+        var gauge = need ? '<span class="gauge g-warn">확인할 것 ' + need + '개</span>' : '<span class="gauge g-ok">좋아요</span>';
+        var head = '<div class="res-h"><div class="who"><b>' + name + '</b></div>' + gauge + '</div>';
+        var foot = '<a class="btn btn-p" href="' + root + 'beta/?site=' + encodeURIComponent(host) + '">이 사이트로 베타 신청</a><a class="btn btn-g" href="' + root + 'site/?url=' + encodeURIComponent(url) + '">무료 표시 바로 만들기</a>';
+        show(card(head, items, foot, '공개된 첫 화면만 읽은 결과입니다. 자동 탐지는 새로 올라오는 콘텐츠를 계속 살핍니다.'));
+        if (window.gtag) try { window.gtag('event', 'scan', { result: need ? 'needs' : 'ok' }); } catch (eG) { /* 무시 */ }
+      }).catch(function () {
+        show(card('<div class="res-h"><b>지금은 진단이 어려워요</b></div>', [['info', '잠시 뒤 다시 시도하거나, 업종만 골라 바로 표시를 만들 수 있어요.']],
+          '<a class="btn btn-p" href="' + root + 'site/">표시 바로 만들기</a><a class="btn btn-g" href="' + root + 'beta/?site=' + encodeURIComponent(host) + '">베타 신청</a>'));
+      }).finally(function () { btn.disabled = false; btn.querySelector('span').textContent = '무료 진단'; });
+    });
+  }
 })();

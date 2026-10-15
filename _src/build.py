@@ -21,7 +21,10 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261009a"
+VER = "20261015a"
+TODAY = "2026-10-15"
+# 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
+BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
 
 ICONS = {
@@ -52,6 +55,14 @@ ICONS = {
     "scale": '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
     "megaphone": '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
     "plug": '<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/>',
+    "chev": '<path d="m6 9 6 6 6-6"/>',
+    "radar": '<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/>',
+    "tag": '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
+    "ledger": '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="m9 9.5 2 2 4-4"/>',
+    "eye": '<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>',
+    "flag": '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/>',
+    "sliders": '<path d="M21 4h-7"/><path d="M10 4H3"/><path d="M21 12h-9"/><path d="M8 12H3"/><path d="M21 20h-5"/><path d="M12 20H3"/><path d="M14 2v4"/><path d="M8 10v4"/><path d="M16 18v4"/>',
+    "store": '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/>',
     "refresh": '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
 }
 SPARK = '<path d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.5l-1.9-5.4a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8z" fill="currentColor"/>'
@@ -59,8 +70,12 @@ LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40
         '<path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/>'
         '<rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg>')
 
-NAV = [("site/", "site", "사이트 표시"), ("image/", "image", "이미지 표시"), ("proof/", "proof", "AI 활용 증빙서"),
-       ("pricing/", "pricing", "요금"), ("business/", "business", "기업 · 플랫폼"), ("guide/", "guide", "AI 표시 가이드")]
+NAV = [("how/", "how", "작동 방식"), ("tools", "tools", "무료 도구"), ("pricing/", "pricing", "요금"),
+       ("business/", "business", "기업 · 플랫폼"), ("guide/", "guide", "AI 표시 가이드")]
+TOOLS = [("#scan", "scan", "search", "무료 진단", "주소만 넣으면 10초 만에 진단"),
+         ("site/", "site", "globe", "사이트 표시 만들기", "코드 한 줄 · 아임웹 앱으로 붙이기"),
+         ("image/", "image", "image", "이미지 표시 · 확인", "출처 정보 읽기 · AI 생성 표시 넣기"),
+         ("proof/", "proof", "file", "AI 활용 증빙서", "과제 · 논문 · 공모전 제출용")]
 
 
 def ico(name, cls="ico"):
@@ -74,25 +89,47 @@ def brand(root):
 
 
 def header(root, key):
-    links = "".join('<a href="%s%s"%s>%s</a>' % (root, href, ' aria-current="page"' if k == key else "", label) for href, k, label in NAV)
-    mlinks = "".join('<a href="%s%s">%s</a>' % (root, href, label) for href, k, label in NAV)
+    tool_keys = [k for _, k, _, _, _ in TOOLS]
+    items = []
+    for href, k, label in NAV:
+        if k == "tools":
+            cur = ' class="cur"' if key in tool_keys else ""
+            menu = "".join('<a href="%s%s"><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ico(ic), t, d) for h, _, ic, t, d in TOOLS)
+            items.append('<div class="dd"><button type="button"%s aria-haspopup="true" aria-expanded="false">%s%s</button><div class="menu">%s</div></div>' % (cur, label, ico("chev"), menu))
+        else:
+            items.append('<a href="%s%s"%s>%s</a>' % (root, href, ' aria-current="page"' if k == key else "", label))
+    mtools = "".join('<a href="%s%s">%s</a>' % (root, h, t) for h, _, _, t, _ in TOOLS)
     return ('<header class="hd" id="hd"><div class="wrap">%s<nav class="nav" aria-label="주 메뉴">%s</nav>'
-            '<div class="hd-cta"><a class="btn btn-g btn-s" href="%sbusiness/#ask">도입 문의</a><a class="btn btn-p btn-s" href="%ssite/">무료로 시작</a></div>'
+            '<div class="hd-cta"><a class="btn btn-g btn-s" href="%sbusiness/#ask">도입 문의</a><a class="btn btn-p btn-s" href="%s#scan" data-scan-link>무료로 시작</a></div>'
             '<button class="menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">%s</button></div></header>'
-            '<nav class="mnav" id="mnav" aria-label="모바일 메뉴">%s<a class="btn btn-p" href="%ssite/">무료로 시작하기</a><a class="btn btn-g" href="%sbusiness/#ask">기업 · 기관 도입 문의</a></nav>'
-            % (brand(root), links, root, root, ico("menu"), mlinks, root, root))
+            '<nav class="mnav" id="mnav" aria-label="모바일 메뉴"><a href="%show/">작동 방식</a><span class="grp">무료 도구</span>%s'
+            '<span class="grp">서비스</span><a href="%spricing/">요금</a><a href="%sbusiness/">기업 · 플랫폼</a><a href="%sguide/">AI 표시 가이드</a><a href="%strust/">신뢰 · 판단 기준</a>'
+            '<a class="btn btn-p" href="%sbeta/">자동 탐지 베타 신청</a><a class="btn btn-g" href="%sbusiness/#ask">기업 · 기관 도입 문의</a></nav>'
+            % (brand(root), "".join(items), root, root, ico("menu"), root, mtools, root, root, root, root, root, root))
 
 
 def footer(root):
+    b = BIZ
+    biz = ['<span>운영 %s</span>' % b["name"], '<span>대표 %s</span>' % b["ceo"]]
+    if b["no"]:
+        biz.append('<span>사업자등록번호 %s</span>' % b["no"])
+    if b["ecom"]:
+        biz.append('<span>통신판매업 신고 %s</span>' % b["ecom"])
+    if b["addr"]:
+        biz.append('<span>%s</span>' % b["addr"])
+    biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
     return ('<footer class="ft"><div class="wrap"><div class="top"><div>%s'
-            '<p class="about">AI로 만든 글 · 이미지 · 영상 · 상담을 먼저 밝히는 일을 쉽게 만듭니다. 고르지 않아도 찾아 주고, 한 줄이면 붙습니다.</p><div id="aimarker" class="ft-label"></div></div>'
-            '<div class="cols"><div><b>도구</b><a href="%ssite/">사이트 표시</a><a href="%simage/">이미지 표시 · 확인</a><a href="%sproof/">AI 활용 증빙서</a></div>'
-            '<div><b>서비스</b><a href="%spricing/">요금</a><a href="%sbusiness/">기업 · 기관 · 플랫폼</a><a href="%sguide/">AI 표시 가이드</a></div>'
-            '<div><b>안내</b><a href="%sterms/">이용약관</a><a href="%sprivacy/"><b style="display:inline;color:#DDE5F2;margin:0">개인정보처리방침</b></a><a href="%sbusiness/?type=ad#ask">제휴 · 광고 문의</a></div></div></div>'
-            '<div class="biz"><span>운영 성균관컨설팅</span><span>대표 이채연</span><span>통신판매업 신고 제2026-경기송탄-0622</span><span>문의 <a href="mailto:contact@skkc.co.kr">contact@skkc.co.kr</a></span><br>'
+            '<p class="about">AI로 만든 이미지 · 영상 · 글 · 상담을 자동으로 찾아 표시하고, 표시한 내역을 기록으로 남깁니다. 표시는 무료, 자동화와 기록은 구독으로.</p><div id="aimarker" class="ft-label"></div></div>'
+            '<div class="cols">'
+            '<div><b>제품</b><a href="%show/">작동 방식</a><a href="%sbeta/">자동 탐지 베타</a><a href="%spricing/">요금</a><a href="%sbusiness/">기업 · 플랫폼 · API</a></div>'
+            '<div><b>무료 도구</b><a href="%s#scan">무료 진단</a><a href="%ssite/">사이트 표시 만들기</a><a href="%simage/">이미지 표시 · 확인</a><a href="%sproof/">AI 활용 증빙서</a></div>'
+            '<div><b>자료</b><a href="%sguide/">AI 표시 가이드</a><a href="%strust/">신뢰 · 판단 기준</a><a href="%strust/#report">오류 신고</a></div>'
+            '<div><b>안내</b><a href="%sterms/">이용약관</a><a href="%sprivacy/"><b style="display:inline;color:#DDE5F2;margin:0">개인정보처리방침</b></a><a href="%sbusiness/?type=ad#ask">제휴 · 광고 문의</a></div>'
+            '</div></div>'
+            '<div class="biz">%s<br>'
             '<span>표시 문구 기준 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a></span><span>AIMarker 와 위원회는 개별 사이트 · 콘텐츠를 심사 · 보증하지 않으며, 이 서비스는 법률 자문을 대신하지 않습니다.</span><br>'
             '<span>© 2026 AIMarker</span></div></div></footer>'
-            % (brand(root), root, root, root, root, root, root, root, root, root))
+            % (brand(root), root, root, root, root, root, root, root, root, root, root, root, root, root, root, "".join(biz)))
 
 
 def page(meta, body):
@@ -119,14 +156,14 @@ def page(meta, body):
     head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>%s</title><meta name="description" content="%s">%s<link rel="canonical" href="%s%s">'
             '<meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker"><meta property="og:title" content="%s">'
-            '<meta property="og:description" content="%s"><meta property="og:url" content="%s%s"><meta property="og:image" content="%sassets/og.png">'
-            '<meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#0E2A6B">'
+            '<meta property="og:description" content="%s"><meta property="og:url" content="%s%s"><meta property="og:image" content="%sassets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
+            '<meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="%sassets/og.jpg"><meta name="theme-color" content="#0E2A6B">'
             '<link rel="icon" href="%sassets/favicon.svg" type="image/svg+xml"><link rel="icon" href="%sassets/favicon-32.png" sizes="32x32" type="image/png">'
             '<link rel="apple-touch-icon" href="%sassets/apple-touch-icon.png">'
             '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>'
             '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">'
             '<link rel="stylesheet" href="%sassets/am.css?v=%s">%s%s</head>'
-            % (title, desc, noindex, SITE, path, meta.get("ogtitle", title), desc, SITE, path, SITE, root, root, root, root, VER, jsonld, pre))
+            % (title, desc, noindex, SITE, path, meta.get("ogtitle", title), desc, SITE, path, SITE, SITE, root, root, root, root, VER, jsonld, pre))
     html = (head + '<body data-page="%s" data-root="%s">' % (meta.get("key", ""), root) + header(root, meta.get("key", "")) +
             '<main id="main">' + body + '</main>' + footer(root) +
             '<script src="%sassets/am.js?v=%s" defer></script>' % (root, VER) + scripts + '</body></html>\n')
@@ -166,7 +203,7 @@ def main():
     urls = [b[:-len("index.html")] for b in built if b.endswith("index.html") and "404" not in b]
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u in sorted(urls, key=lambda x: (x.count("/"), x)):
-        sm.append("<url><loc>%s%s</loc><lastmod>2026-10-09</lastmod></url>" % (SITE, u))
+        sm.append("<url><loc>%s%s</loc><lastmod>%s</lastmod></url>" % (SITE, u, TODAY))
     sm.append("</urlset>")
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write("\n".join(sm) + "\n")

@@ -2,10 +2,10 @@
  "@context": "https://schema.org",
  "@type": "Article",
  "headline": "누가, 언제, 어떻게 AI를 표시해야 할까요? AI 표시 가이드(2026년 10월 기준)",
- "description": "AI 기본법 제31조 투명성 의무, 공정위 가상인물 광고 표시, 정보통신망법 개정 추진, EU AI Act, 대학 · 학술지의 AI 사용 표기를 정리했습니다.",
+ "description": "AI 기본법 제31조 투명성 의무, 공정위 가상인물 광고 표시, 정보통신망법 개정 추진과 2026년 7월 개정안, EU AI Act, 출처 정보 · 워터마크 기술, 대학 · 학술지의 AI 사용 표기를 정리했습니다.",
  "inLanguage": "ko-KR",
  "datePublished": "2026-10-09",
- "dateModified": "2026-10-09",
+ "dateModified": "2026-10-15",
  "mainEntityOfPage": "https://aimarker.kr/guide/",
  "author": {
   "@type": "Organization",
@@ -20,5 +20,5 @@
    "url": "https://aimarker.kr/assets/icon-512.png"
   }
  },
- "image": "https://aimarker.kr/assets/og.png"
+ "image": "https://aimarker.kr/assets/og.jpg"
 }

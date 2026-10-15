@@ -1,44 +1,138 @@
 {
-  "@context": "https://schema.org",
-  "@graph": [
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://aimarker.kr/#org",
+   "name": "AIMarker",
+   "alternateName": "에이아이마커",
+   "url": "https://aimarker.kr/",
+   "logo": "https://aimarker.kr/assets/icon-512.png",
+   "email": "contact@skkc.co.kr",
+   "parentOrganization": {
+    "@type": "Organization",
+    "name": "성균관컨설팅",
+    "url": "https://www.skkc.co.kr/"
+   }
+  },
+  {
+   "@type": "WebSite",
+   "@id": "https://aimarker.kr/#site",
+   "url": "https://aimarker.kr/",
+   "name": "AIMarker",
+   "inLanguage": "ko-KR",
+   "publisher": {
+    "@id": "https://aimarker.kr/#org"
+   }
+  },
+  {
+   "@type": "SoftwareApplication",
+   "@id": "https://aimarker.kr/#app",
+   "name": "AIMarker",
+   "applicationCategory": "BusinessApplication",
+   "operatingSystem": "Web",
+   "url": "https://aimarker.kr/",
+   "image": "https://aimarker.kr/assets/og.jpg",
+   "description": "웹사이트 · 쇼핑몰 · 플랫폼에 올라오는 이미지 · 영상 · 글 · AI 상담 창의 AI 사용을 자동으로 찾아 법 기준에 맞게 표시하고, 표시한 내역을 고칠 수 없는 기록으로 남기는 서비스.",
+   "featureList": [
+    "다섯 겹 신호 자동 탐지(출처 정보 · 워터마크 · 생성 연동 · 지문 등록부 · AI 판별 모델)",
+    "확정 · 높음 · 불확실 세 단계 판단",
+    "AI 성분표 표시(사람 작성 · AI 도움 · AI 생성)",
+    "이행 원장과 월간 이행 리포트",
+    "무료 사이트 진단과 무료 표시 도구"
+   ],
+   "offers": [
     {
-      "@type": "Organization",
-      "@id": "https://aimarker.kr/#org",
-      "name": "AIMarker",
-      "alternateName": "에이아이 마커",
-      "url": "https://aimarker.kr/",
-      "logo": "https://aimarker.kr/assets/apple-touch-icon.png",
-      "email": "contact@skkc.co.kr",
-      "parentOrganization": { "@type": "Organization", "name": "성균관컨설팅" }
+     "@type": "Offer",
+     "name": "무료",
+     "price": "0",
+     "priceCurrency": "KRW"
     },
     {
-      "@type": "WebSite",
-      "@id": "https://aimarker.kr/#site",
-      "url": "https://aimarker.kr/",
-      "name": "AIMarker",
-      "inLanguage": "ko-KR",
-      "publisher": { "@id": "https://aimarker.kr/#org" }
+     "@type": "Offer",
+     "name": "프로(월)",
+     "price": "9900",
+     "priceCurrency": "KRW"
     },
     {
-      "@type": "SoftwareApplication",
-      "name": "AIMarker",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "url": "https://aimarker.kr/",
-      "description": "사이트 · 이미지 · 과제와 논문에 AI 활용 표시를 붙이는 도구. AI 흔적을 먼저 찾아 주고 한 줄이면 붙습니다.",
-      "offers": [
-        { "@type": "Offer", "name": "무료", "price": "0", "priceCurrency": "KRW" },
-        { "@type": "Offer", "name": "프로", "price": "9900", "priceCurrency": "KRW" }
-      ],
-      "publisher": { "@id": "https://aimarker.kr/#org" }
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        { "@type": "Question", "name": "AIMarker는 정말 무료인가요?", "acceptedAnswer": { "@type": "Answer", "text": "사이트 표시, 이미지 표시(한 번에 3장), AI 활용 증빙서는 회원가입 없이 무료입니다. 대량 처리나 표시 이력 · 월간 기록이 필요할 때만 유료 요금제를 고르면 됩니다." } },
-        { "@type": "Question", "name": "AI 표시만 하면 법적 의무를 다한 건가요?", "acceptedAnswer": { "@type": "Answer", "text": "아닙니다. AIMarker는 고객에게 AI 활용을 먼저 알리는 출발점이며 적용 대상과 방식은 사업 내용에 따라 다릅니다. 법률 자문을 대신하지 않습니다." } },
-        { "@type": "Question", "name": "AI로 만든 이미지인지 어떻게 알아내나요?", "acceptedAnswer": { "@type": "Answer", "text": "파일 속 출처 정보(C2PA), IPTC 메타데이터의 AI 생성 기록, 생성 도구가 남긴 흔적을 읽습니다. 흔적이 지워진 파일은 한 번 묻습니다." } }
-      ]
+     "@type": "Offer",
+     "name": "비즈니스(월, 부터)",
+     "price": "49000",
+     "priceCurrency": "KRW"
     }
-  ]
+   ],
+   "publisher": {
+    "@id": "https://aimarker.kr/#org"
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "우리 사이트도 AI 표시 의무가 있나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "AI기본법 제31조는 AI 제품 · 서비스를 이용자에게 직접 제공하는 사업자에게 사전 고지와 생성물 표시를 요구합니다. 사이트에 AI 상담 창처럼 AI 기능을 직접 제공하면 대상이 될 수 있고, AI로 만든 이미지를 올리기만 한 경우는 지금은 대상이 아닐 수 있습니다. 다만 콘텐츠를 올리는 사람과 플랫폼으로 의무를 넓히는 법 개정이 추진되고 있습니다. 이 안내는 법률 자문이 아니며, 자세한 내용은 AI 표시 가이드에 정리했습니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "자동 탐지가 틀리면 어떻게 되나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "근거가 분명한 '확정'만 자동으로 붙이고, 판별 점수에 기대는 경우는 운영자가 고른 방식대로 자동 표시하거나 버튼 한 번으로 확인합니다. 근거가 약하면 콘텐츠마다 표시하지 않고 사이트 안내로 처리합니다. 잘못 붙은 표시는 바로 고칠 수 있고, 고친 내역도 기록에 남습니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "글(텍스트)도 AI로 작성했는지 찾아 주나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "글은 판별 점수만으로 표시하지 않습니다. 글 판별은 사람이 쓴 글을 AI로 잘못 보는 일이 잦기 때문입니다. AI 글쓰기 도구와 연동된 기록이 있을 때만 'AI 도움 · AI 생성'으로 표시하고, 나머지는 사이트 전체 안내로 처리합니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "방문자의 개인정보를 모으나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아니요. 사이트에 붙는 표시는 쿠키나 방문자 정보를 쓰지 않습니다. 무료 이미지 확인은 파일을 서버로 보내지 않고 브라우저 안에서만 처리합니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "지금 바로 쓸 수 있는 것은 무엇인가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "무료 진단, 사이트 표시 만들기(코드 한 줄), 이미지 표시 · 확인, AI 활용 증빙서는 지금 회원가입 없이 무료로 쓸 수 있습니다. 새 콘텐츠를 자동으로 찾아 표시하고 기록하는 기능은 2026년 12월 베타로 엽니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "베타는 언제 시작하고, 비용은 얼마인가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "2026년 12월 시작 예정입니다. 신청한 사이트부터 차례로 연결을 도와드리고, 베타 기간 첫 3개월은 무료입니다. 베타가 끝나도 자동으로 결제되지 않으며, 계속 쓰실 때만 요금제를 고르시면 됩니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "아임웹 말고 다른 곳에서도 되나요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "코드 한 줄을 넣을 수 있는 사이트라면 어디서나 됩니다. 아임웹은 앱으로 더 쉽게 붙일 수 있도록 준비하고 있고, 카페24 · 워드프레스 앱은 2027년에 차례로 엽니다."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "한국AI윤리위원회가 인증해 주는 건가요?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "아닙니다. 표시 문구와 모양을 위원회 기준에 맞췄을 뿐, AIMarker와 위원회는 개별 사이트나 콘텐츠를 심사 · 보증하지 않습니다. 표시는 운영자가 스스로 밝히는 안내입니다."
+     }
+    }
+   ]
+  }
+ ]
 }

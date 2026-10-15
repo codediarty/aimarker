@@ -1,0 +1,136 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>작동 방식 · 탐지 · 판단 · 표시 · 기록 | AIMarker</title><meta name="description" content="AIMarker는 출처 정보 · 워터마크 · 생성 연동 · 지문 등록부 · AI 판별 모델 다섯 겹 신호로 AI 사용을 찾고, 확정 · 높음 · 불확실 세 단계로 판단해 표시하고, 고칠 수 없는 이행 기록으로 남깁니다."><link rel="canonical" href="https://aimarker.kr/how/"><meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker"><meta property="og:title" content="AIMarker 작동 방식 · 다섯 겹 탐지부터 이행 기록까지"><meta property="og:description" content="AIMarker는 출처 정보 · 워터마크 · 생성 연동 · 지문 등록부 · AI 판별 모델 다섯 겹 신호로 AI 사용을 찾고, 확정 · 높음 · 불확실 세 단계로 판단해 표시하고, 고칠 수 없는 이행 기록으로 남깁니다."><meta property="og:url" content="https://aimarker.kr/how/"><meta property="og:image" content="https://aimarker.kr/assets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://aimarker.kr/assets/og.jpg"><meta name="theme-color" content="#0E2A6B"><link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="../assets/apple-touch-icon.png"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><link rel="stylesheet" href="../assets/am.css?v=20261015a"></head><body data-page="how" data-root="../"><header class="hd" id="hd"><div class="wrap"><a class="brand" href="../" aria-label="AIMarker 홈"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#0E2A6B"/><path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/><rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg><span><b>AI</b>Marker</span></a><nav class="nav" aria-label="주 메뉴"><a href="../how/" aria-current="page">작동 방식</a><div class="dd"><button type="button" aria-haspopup="true" aria-expanded="false">무료 도구<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="menu"><a href="../#scan"><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></i><span><b>무료 진단</b><small>주소만 넣으면 10초 만에 진단</small></span></a><a href="../site/"><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></i><span><b>사이트 표시 만들기</b><small>코드 한 줄 · 아임웹 앱으로 붙이기</small></span></a><a href="../image/"><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg></i><span><b>이미지 표시 · 확인</b><small>출처 정보 읽기 · AI 생성 표시 넣기</small></span></a><a href="../proof/"><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></i><span><b>AI 활용 증빙서</b><small>과제 · 논문 · 공모전 제출용</small></span></a></div></div><a href="../pricing/">요금</a><a href="../business/">기업 · 플랫폼</a><a href="../guide/">AI 표시 가이드</a></nav><div class="hd-cta"><a class="btn btn-g btn-s" href="../business/#ask">도입 문의</a><a class="btn btn-p btn-s" href="../#scan" data-scan-link>무료로 시작</a></div><button class="menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button></div></header><nav class="mnav" id="mnav" aria-label="모바일 메뉴"><a href="../how/">작동 방식</a><span class="grp">무료 도구</span><a href="../#scan">무료 진단</a><a href="../site/">사이트 표시 만들기</a><a href="../image/">이미지 표시 · 확인</a><a href="../proof/">AI 활용 증빙서</a><span class="grp">서비스</span><a href="../pricing/">요금</a><a href="../business/">기업 · 플랫폼</a><a href="../guide/">AI 표시 가이드</a><a href="../trust/">신뢰 · 판단 기준</a><a class="btn btn-p" href="../beta/">자동 탐지 베타 신청</a><a class="btn btn-g" href="../business/#ask">기업 · 기관 도입 문의</a></nav><main id="main">
+<section class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">작동 방식</span>
+    <h1>탐지 · 판단 · 표시 · 기록,<br>네 단계가 자동으로 돌아갑니다</h1>
+    <p class="lead">사이트를 한 번 연결하면 새 콘텐츠가 올라올 때마다 아래 과정이 자동으로 일어납니다. 운영자는 애매한 것만 한 번 확인하면 됩니다.</p>
+    <div class="flowimg"><img src="../assets/img/d1-1920.webp" srcset="../assets/img/d1-1200.webp 1200w, ../assets/img/d1-1920.webp 1920w" sizes="(max-width: 1120px) 100vw, 1072px" width="1920" height="820" alt="다섯 가지 신호(출처 정보 · 워터마크 · 생성 연동 · 지문 등록부 · AI 판별 모델)가 AIMarker 판단 엔진으로 모여 확정은 바로 자동 표시, 높음은 자동 또는 1클릭 확인, 불확실은 사이트 안내로 처리하고, 사람과 기계가 보는 표시를 붙인 뒤 이행 원장과 월간 리포트로 기록하는 흐름도"></div>
+  </div>
+</section>
+
+<section class="sec" id="detect">
+  <div class="wrap">
+    <span class="stepno"><b>01</b>DETECT · 탐지</span>
+    <h2 class="h2">다섯 겹 신호로 찾습니다</h2>
+    <p class="lead">싼 신호부터 차례로 확인하고, 같은 파일은 한 번만 판정합니다. 그래서 빠르고, 비용이 적게 듭니다.</p>
+    <div class="sig-cards">
+      <div class="sig-card"><span class="bdg bdg-beta"><i></i>베타</span><span class="n">1</span><h3>출처 정보 읽기</h3><p>파일 속 C2PA · IPTC · XMP 기록과 생성 도구가 남긴 흔적을 읽습니다.</p><dl><dt>강한 곳</dt><dd>AI 도구가 만든 파일을 그대로 올렸을 때</dd></dl></div>
+      <div class="sig-card"><span class="bdg bdg-soon">순차 추가</span><span class="n">2</span><h3>워터마크 판독</h3><p>생성 도구가 넣은 보이지 않는 워터마크를 공개된 검출 수단으로 확인합니다.</p><dl><dt>강한 곳</dt><dd>캡처 · 압축 뒤에도 대부분 남음</dd></dl></div>
+      <div class="sig-card"><span class="bdg bdg-beta"><i></i>베타</span><span class="n">3</span><h3>생성 연동</h3><p>AI 상세페이지 · 모델 이미지 · 글쓰기 도구가 만든 순간의 기록을 연동으로 받습니다.</p><dl><dt>강한 곳</dt><dd>기록 없는 파일도 연동 도구로 만들었다면</dd></dl></div>
+      <div class="sig-card"><span class="bdg bdg-soon">2027</span><span class="n">4</span><h3>지문 등록부</h3><p>한 번 표시한 콘텐츠의 지문을 등록해 두고, 캡처 · 재업로드로 다시 올라오면 표시를 되찾습니다.</p><dl><dt>강한 곳</dt><dd>기록이 지워진 채 다시 올라왔을 때</dd></dl></div>
+      <div class="sig-card"><span class="bdg bdg-soon">2027</span><span class="n">5</span><h3>AI 판별 모델</h3><p>이미지 · 영상 · 음성의 AI 생성 가능성을 점수로 냅니다. 다른 근거가 없을 때 1클릭 확인에 씁니다.</p><dl><dt>강한 곳</dt><dd>처음부터 기록이 없을 때</dd></dl></div>
+      <div class="sig-card ctx"><span class="bdg bdg-beta"><i></i>베타</span><span class="n">+</span><h3>사이트 맥락</h3><p>AI 상담 창 · AI 생성 앱 설치처럼 콘텐츠 밖의 단서도 찾아, 상담 창 사전 고지까지 자동으로 붙입니다.</p><dl><dt>강한 곳</dt><dd>AI 기능을 고객에게 직접 제공할 때</dd></dl></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-soft" id="decide">
+  <div class="wrap">
+    <span class="stepno"><b>02</b>DECIDE · 판단</span>
+    <h2 class="h2">확실할 때만 자동, 애매하면 한 번 묻습니다</h2>
+    <p class="lead">판별은 틀릴 수 있고 표시 책임은 운영자에게 있습니다. 그래서 근거의 세기에 따라 처리 방식을 나눕니다.</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th style="width:16%">판단</th><th>근거</th><th>처리</th><th style="width:22%">운영자 할 일</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><b>확정</b></td><td>출처 기록 · 워터마크 · 생성 연동 · 등록부 일치</td><td>바로 자동 표시</td><td>없음</td></tr>
+          <tr><td><b>높음</b></td><td>판별 점수 + 보조 근거</td><td>운영자가 고른 방식: 자동 표시 또는 1클릭 확인</td><td>정한 기간 안에 버튼 한 번</td></tr>
+          <tr><td><b>불확실</b></td><td>근거가 약하거나 서로 엇갈림</td><td>개별 표시 없이 사이트 전체 'AI 활용 안내'</td><td>없음</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout mt24"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div><b>글은 다르게 다룹니다.</b> 글 판별은 사람이 쓴 글을 AI로 잘못 보는 일이 잦아, 판별 점수만으로는 표시하지 않습니다. AI 글쓰기 도구와 연동된 기록이 있을 때만 'AI 도움 · AI 생성'으로 표시합니다.</div></div>
+    <div class="callout m mt12"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg><div>운영자가 동의한 확인 결과는 판별을 더 정확하게 만드는 데 씁니다. 쓸수록 정확도는 오르고 비용은 내려갑니다.</div></div>
+  </div>
+</section>
+
+<section class="sec" id="mark">
+  <div class="wrap">
+    <span class="stepno"><b>03</b>MARK · 표시</span>
+    <h2 class="h2">사람도, 기계도 알아보는 표시</h2>
+    <p class="lead">방문자가 보는 'AI 성분표'와, 다른 플랫폼에서도 읽히는 파일 속 표시를 함께 붙입니다.</p>
+    <div class="grid g3 mt32">
+      <div class="lvl lvl-h"><h3>사람 작성</h3><p>사람이 직접 만들었고, AI는 맞춤법 · 번역 확인처럼 거들기만 했습니다.</p><small>Human</small></div>
+      <div class="lvl lvl-a"><h3>AI 도움</h3><p>사람이 만들되 초안 · 보정 · 배경 등 일부에 AI를 사용했고, 사람이 확인했습니다.</p><small>AI-assisted</small></div>
+      <div class="lvl lvl-g"><h3>AI 생성</h3><p>내용의 대부분을 AI로 만들었습니다. 사람이 확인했더라도 이 단계로 밝힙니다.</p><small>AI-generated</small></div>
+    </div>
+    <div class="kv">
+      <div><h3><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></i>보이는 표시</h3><p>콘텐츠 옆 라벨과 'AI 활용 정보' 창에 확인 근거 · 사람 확인 · 기록 번호를 보여 줍니다.</p></div>
+      <div><h3><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></i>기계가 읽는 표시</h3><p>파일에 C2PA · IPTC 형식의 기록을 넣어, 다른 플랫폼과 검색에서도 AI 생성 여부가 읽히게 합니다.</p></div>
+      <div><h3><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg></i>기준 자동 반영</h3><p>법이나 표시 기준이 바뀌면 연결된 모든 사이트의 문구 · 모양이 자동으로 바뀝니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-soft" id="prove">
+  <div class="wrap">
+    <span class="stepno"><b>04</b>PROVE · 기록</span>
+    <h2 class="h2">고칠 수 없는 이행 기록</h2>
+    <p class="lead">무엇을, 언제, 어떤 근거로, 어떻게 표시했는지 남깁니다. 확인 요청이 오면 리포트 한 장으로 답합니다.</p>
+    <div class="kv">
+      <div><h3><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="m9 9.5 2 2 4-4"/></svg></i>이행 원장</h3><p>탐지 근거 · 판단 · 표시 · 수정 이력을 해시로 잇고 시간 도장을 찍어, 한 줄만 고쳐도 드러납니다.</p></div>
+      <div><h3><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg></i>월간 이행 리포트</h3><p>이번 달 AI 사용 · 표시 완료 · 이행률과 원장 검증 결과를 PDF로 받습니다. 거래처 · 광고주 요청에도 바로 냅니다.</p></div>
+      <div><h3><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg></i>표시 복원 등록부</h3><p>캡처 · 재업로드로 기록이 지워져도, 한 번 표시한 콘텐츠라면 표시를 되찾습니다. <span class="st soon"><i></i>2027</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="connect">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">연결 방법</span>
+      <h2 class="h2">쓰는 곳에 맞춰 1분 안에 연결합니다</h2>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>방법</th><th>대상</th><th style="width:22%">상태</th></tr></thead>
+        <tbody>
+          <tr><td><b>코드 한 줄</b></td><td>스크립트를 넣을 수 있는 모든 사이트</td><td><span class="st now"><i></i>지금 · 사이트 안내</span></td></tr>
+          <tr><td><b>아임웹 앱</b></td><td>아임웹으로 만든 사이트 · 쇼핑몰</td><td><span class="st beta"><i></i>앱스토어 심사 중</span></td></tr>
+          <tr><td><b>카페24 · 워드프레스 · 고도몰</b></td><td>각 플랫폼 앱 · 플러그인</td><td><span class="st soon"><i></i>2027 차례로</span></td></tr>
+          <tr><td><b>API · SDK</b></td><td>사이트 빌더 · 쇼핑몰 솔루션 · 커뮤니티 · 광고 매체</td><td><span class="st soon"><i></i>2027 베타</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-soft" id="status">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">제품 상태</span>
+      <h2 class="h2">지금 되는 것과 곧 될 것</h2>
+      <p class="lead">약속은 날짜와 함께 적고, 바뀌면 이 표를 먼저 고칩니다.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>기능</th><th style="width:20%">지금 · 무료</th><th style="width:20%">2026.12 베타</th><th style="width:20%">2027</th></tr></thead>
+        <tbody>
+          <tr><td>무료 사이트 진단 · 사이트 'AI 활용 안내' 표시</td><td class="c y">●</td><td class="c y">●</td><td class="c y">●</td></tr>
+          <tr><td>이미지 출처 정보 확인 · 표시 넣기 (브라우저 안에서 처리)</td><td class="c y">●</td><td class="c y">●</td><td class="c y">●</td></tr>
+          <tr><td>AI 활용 증빙서</td><td class="c y">●</td><td class="c y">●</td><td class="c y">●</td></tr>
+          <tr><td>새 콘텐츠 자동 탐지 (출처 정보 · 생성 연동 · 사이트 맥락)</td><td class="c n">-</td><td class="c y">●</td><td class="c y">●</td></tr>
+          <tr><td>확정 신호 자동 표시 · 1클릭 확인</td><td class="c n">-</td><td class="c y">●</td><td class="c y">●</td></tr>
+          <tr><td>이행 원장 · 월간 이행 리포트</td><td class="c n">-</td><td class="c y">●</td><td class="c y">●</td></tr>
+          <tr><td>워터마크 판독 · 지문 등록부(표시 되찾기)</td><td class="c n">-</td><td class="c n">일부</td><td class="c y">●</td></tr>
+          <tr><td>자체 AI 판별 모델</td><td class="c n">-</td><td class="c n">-</td><td class="c y">●</td></tr>
+          <tr><td>카페24 · 워드프레스 연동 · 플랫폼 API</td><td class="c n">-</td><td class="c n">-</td><td class="c y">●</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="sec-s" style="padding-bottom:96px">
+  <div class="wrap">
+    <div class="final">
+      <h2>먼저 지금 우리 사이트 상태부터 보세요</h2>
+      <p>무료 진단은 10초면 끝납니다. 자동 탐지 베타는 첫 3개월 무료입니다.</p>
+      <div class="row">
+        <a class="btn btn-g btn-l" href="../#scan">무료 진단 받기<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        <a class="btn btn-p btn-l" href="../beta/">자동 탐지 베타 신청</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main><footer class="ft"><div class="wrap"><div class="top"><div><a class="brand" href="../" aria-label="AIMarker 홈"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#0E2A6B"/><path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/><rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg><span><b>AI</b>Marker</span></a><p class="about">AI로 만든 이미지 · 영상 · 글 · 상담을 자동으로 찾아 표시하고, 표시한 내역을 기록으로 남깁니다. 표시는 무료, 자동화와 기록은 구독으로.</p><div id="aimarker" class="ft-label"></div></div><div class="cols"><div><b>제품</b><a href="../how/">작동 방식</a><a href="../beta/">자동 탐지 베타</a><a href="../pricing/">요금</a><a href="../business/">기업 · 플랫폼 · API</a></div><div><b>무료 도구</b><a href="../#scan">무료 진단</a><a href="../site/">사이트 표시 만들기</a><a href="../image/">이미지 표시 · 확인</a><a href="../proof/">AI 활용 증빙서</a></div><div><b>자료</b><a href="../guide/">AI 표시 가이드</a><a href="../trust/">신뢰 · 판단 기준</a><a href="../trust/#report">오류 신고</a></div><div><b>안내</b><a href="../terms/">이용약관</a><a href="../privacy/"><b style="display:inline;color:#DDE5F2;margin:0">개인정보처리방침</b></a><a href="../business/?type=ad#ask">제휴 · 광고 문의</a></div></div></div><div class="biz"><span>운영 성균관컨설팅</span><span>대표 이채연</span><span>사업자등록번호 272-32-01885</span><span>통신판매업 신고 제2026-경기송탄-0622</span><span>연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리</span><span>문의 <a href="mailto:contact@skkc.co.kr">contact@skkc.co.kr</a></span><br><span>표시 문구 기준 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a></span><span>AIMarker 와 위원회는 개별 사이트 · 콘텐츠를 심사 · 보증하지 않으며, 이 서비스는 법률 자문을 대신하지 않습니다.</span><br><span>© 2026 AIMarker</span></div></div></footer><script src="../assets/am.js?v=20261015a" defer></script><script src="../m.js?v=20261015a" data-name="AIMarker" data-use="text" data-level="assist" data-review="all" data-privacy="1" data-style="inline" data-theme="dark" data-date="2026-10" defer></script></body></html>

@@ -235,7 +235,7 @@
       var n = document.createElement('div'); n.className = 'callout a mt16';
       n.innerHTML = '<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div>' +
         (skipped ? 'JPG · PNG · WebP 가 아닌 파일 ' + skipped + '개는 뺐어요(아이폰 HEIC 는 JPG 로 바꿔 올려 주세요). ' : '') +
-        (over ? '무료는 한 번에 ' + MAX_FREE + '장까지예요. 나머지 ' + over + '장은 내려받은 뒤 비우고 다시 올려 주세요. <a href="' + (document.body.getAttribute('data-root') || '') + 'pricing/?plan=plus#pre" data-plan="플러스">플러스는 한 번에 50장</a>' : '') + '</div>';
+        (over ? '무료는 한 번에 ' + MAX_FREE + '장까지예요. 나머지 ' + over + '장은 내려받은 뒤 비우고 다시 올려 주세요. <a href="' + (document.body.getAttribute('data-root') || '') + 'pricing/">대량 처리는 요금 안내</a>' : '') + '</div>';
       list.prepend(n); setTimeout(function () { n.remove(); }, 9000);
     }
     arr.forEach(function (file) {
