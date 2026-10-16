@@ -1,0 +1,9 @@
+{
+  "aimarker_check": "am.check",
+  "aimarker_check_batch": "am.batch",
+  "aimarker_label": "am.label",
+  "aimarker_scan_site": "am.scan",
+  "aimarker_approval_status": "am.status",
+  "aimarker_stamp": "am.stamp",
+  "aimarker_verify": "am.verify"
+}

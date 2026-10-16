@@ -1,0 +1,13 @@
+{
+  "name": "aimarker-mcp",
+  "version": "1.0.0",
+  "description": "AIMarker MCP server: AI 에이전트가 광고 · 콘텐츠 문구를 올리기 전에 한국 광고 규칙으로 검수하고, 표시 문구 · 승인 링크 · 증거 원장을 다루게 합니다.",
+  "type": "module",
+  "bin": { "aimarker-mcp": "aimarker-mcp.mjs" },
+  "files": ["aimarker-mcp.mjs", "README.md"],
+  "engines": { "node": ">=18" },
+  "keywords": ["mcp", "model-context-protocol", "aimarker", "ad-compliance", "korean", "ai-content"],
+  "homepage": "https://aimarker.kr/developers/#mcp",
+  "license": "MIT",
+  "author": "AIMarker (성균관컨설팅) <contact@skkc.co.kr>"
+}

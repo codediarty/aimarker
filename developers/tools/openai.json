@@ -1,0 +1,276 @@
+[
+  {
+    "type": "function",
+    "name": "aimarker_check",
+    "description": "광고 · 상세페이지 · SNS 문구를 올리기 전에 한국 광고 규칙(표시광고법 · 식품 · 건강기능식품 · 화장품 · 의료 · 금융 광고 규제)과 협찬 · 가상인물 · AI 표시 기준으로 검수합니다. 위험 후보마다 근거 법령 · 이유 · 바꿀 말(reps)과 붙일 표시, 출고 결정(decision: fix 수정 후 출고 · expert 전문가 검토 권장 · review 확인 후 출고 · clear 큰 위험 후보 없음)을 돌려줍니다. 문구를 쓴 뒤 내보내기 전에 부르세요. 결과는 위험 후보이며 법률 자문이 아닙니다.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "검수할 문구(5,000자까지)"
+        },
+        "ind": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "gen",
+            "food",
+            "hfood",
+            "cos",
+            "med",
+            "fin"
+          ],
+          "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."
+        },
+        "flags": {
+          "type": "object",
+          "description": "콘텐츠 정보(모르면 비움).",
+          "properties": {
+            "sponsored": {
+              "type": "boolean",
+              "description": "대가(제품 · 원고료 · 할인)를 받은 콘텐츠인지"
+            },
+            "aiPerson": {
+              "type": "boolean",
+              "description": "AI로 만든 인물 · 목소리 · 아바타가 나오는지"
+            },
+            "aiMedia": {
+              "type": "boolean",
+              "description": "AI로 만든 이미지 · 영상을 쓰는지"
+            }
+          }
+        },
+        "guide": {
+          "type": "object",
+          "description": "브랜드 정책(선택).",
+          "properties": {
+            "ban": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "쓰지 않을 말"
+            },
+            "must": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "꼭 넣을 문구"
+            }
+          }
+        }
+      },
+      "required": [
+        "text"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "aimarker_check_batch",
+    "description": "문구를 한 번에 최대 20건 검수합니다. 결과는 results 배열(id · score · decision · findings)입니다.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "maxItems": 20,
+          "description": "검수할 문구 목록(20건까지)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "ind": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "gen",
+                  "food",
+                  "hfood",
+                  "cos",
+                  "med",
+                  "fin"
+                ],
+                "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."
+              },
+              "flags": {
+                "type": "object",
+                "description": "콘텐츠 정보(모르면 비움).",
+                "properties": {
+                  "sponsored": {
+                    "type": "boolean",
+                    "description": "대가(제품 · 원고료 · 할인)를 받은 콘텐츠인지"
+                  },
+                  "aiPerson": {
+                    "type": "boolean",
+                    "description": "AI로 만든 인물 · 목소리 · 아바타가 나오는지"
+                  },
+                  "aiMedia": {
+                    "type": "boolean",
+                    "description": "AI로 만든 이미지 · 영상을 쓰는지"
+                  }
+                }
+              }
+            },
+            "required": [
+              "text"
+            ]
+          }
+        },
+        "guide": {
+          "type": "object",
+          "description": "브랜드 정책(선택).",
+          "properties": {
+            "ban": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "쓰지 않을 말"
+            },
+            "must": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "꼭 넣을 문구"
+            }
+          }
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "aimarker_label",
+    "description": "붙일 표시 문구를 받습니다(한국AI윤리위원회 기준). kind: image · video · person(가상인물) · text · sponsor(광고 · 협찬). 짧은 표시 · 긴 문장 · HTML · 마크다운 · IPTC 값을 돌려줍니다.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "image",
+            "video",
+            "person",
+            "text",
+            "sponsor"
+          ]
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "gen",
+            "edit"
+          ],
+          "description": "gen: AI로 만듦 · edit: AI로 고침"
+        }
+      },
+      "required": [
+        "kind"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "aimarker_scan_site",
+    "description": "공개된 사이트 첫 화면과 이미지 12장까지 살펴 AI 사용 흔적 · AI 상담 창 · 광고 표현 위험 후보를 보수적으로 진단합니다(10~20초).",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "사이트 주소(예: myshop.co.kr)"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "aimarker_approval_status",
+    "description": "광고주 승인 링크 id(AP로 시작)들의 상태(대기 · 승인 · 수정 요청)와 답한 사람 · 시각 · 메모를 확인합니다.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "maxItems": 60,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "ids"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "aimarker_stamp",
+    "description": "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려줍니다.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "기록할 내용(실행 코드가 해시로 바꿈)"
+        },
+        "k": {
+          "type": "string",
+          "enum": [
+            "report",
+            "version",
+            "approval"
+          ],
+          "description": "기록 종류"
+        },
+        "n": {
+          "type": "integer",
+          "description": "보고서에 든 소재 수(선택)"
+        }
+      },
+      "required": [
+        "content"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "aimarker_verify",
+    "description": "원장 번호(id, LG로 시작)나 내용(content, 실행 코드가 해시로 바꿈)으로 증거 원장 기록을 확인합니다.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "원장 번호"
+        },
+        "content": {
+          "type": "string",
+          "description": "확인할 내용"
+        }
+      }
+    },
+    "strict": false
+  }
+]

@@ -79,14 +79,14 @@
       var btn = f.querySelector('button[type="submit"]'); if (btn) { btn.disabled = true; btn.setAttribute('data-t', btn.innerHTML); btn.innerHTML = '보내는 중…'; }
       AM.call('am.lead', d).then(function (r) {
         if (r && r.ok) {
-          show(f, 'ok', (kind === 'pilot' ? '파일럿 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 인터뷰와 샘플 소재 점검 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
+          show(f, 'ok', (kind === 'pilot' ? '도입 상담 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 상담과 소재 20건 무료 검수 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
           f.reset(); t0 = Date.now();
           if (window.gtag) try { window.gtag('event', 'generate_lead', { method: kind }); } catch (eG) { /* 무시 */ }
         } else if (r && r.message && /^(CONTACT|ORG|NAME|SLOW|BUSY|MEMO)$/.test(r.code || '')) {
           show(f, 'err', r.message);
         } else { throw new Error(r && r.message || 'fail'); }
       }).catch(function () {
-        var subj = '[AIMarker] ' + (kind === 'pilot' ? '파일럿 신청' : kind === 'biz' ? '도입 문의' : '신청') + (d.plan ? ' · ' + d.plan : '');
+        var subj = '[AIMarker] ' + (kind === 'pilot' ? '도입 상담 · 파일럿' : kind === 'biz' ? '도입 문의' : '신청') + (d.plan ? ' · ' + d.plan : '');
         var bodyTxt = ['이름: ' + d.name, '회사 · 기관: ' + d.org, '연락처: ' + d.contact, '사이트: ' + d.site, '요금제: ' + d.plan, '구분: ' + d.type, '내용: ' + d.memo].join('\n');
         show(f, 'err', '지금 연결이 원활하지 않아요. <a href="mailto:' + AM.MAIL + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(bodyTxt) + '">메일로 보내기</a>를 눌러 주시면 같은 내용이 전달됩니다.');
       }).finally(function () { if (btn) { btn.disabled = false; btn.innerHTML = btn.getAttribute('data-t'); } });
@@ -101,17 +101,23 @@
     if (sel) { sel.value = a.getAttribute('data-plan'); }
   });
 
+  /* 예전 문의 주소(솔루션 쪽 #ask)는 도입 상담 쪽으로, 주소 뒤 조건은 그대로 */
+  if (document.body.getAttribute('data-page') === 'business' && location.hash === '#ask') {
+    location.replace((document.body.getAttribute('data-root') || '../') + 'contact/' + location.search);
+  }
+
   /* 주소로 넘어온 요금제 · 문의 종류 채우기: ?plan=pro · ?type=install */
   (function () {
     var q = new URLSearchParams(location.search);
-    var plan = { starter: 'Starter', business: 'Business', enterprise: 'Enterprise', expert: 'Expert', api: 'API', free: '무료', pro: 'Starter', biz: 'Business' }[q.get('plan') || ''];
-    var type = { install: '설치 도움', api: '플랫폼 · API', agency: '광고대행사 · 제작사', brand: '브랜드 · 이커머스', ai: 'AI 서비스 사업자', enterprise: '기업 · 기관', univ: '대학 · 학회', org: '기업 · 기관', edu: '교육 · 컨설팅', ad: '제휴 · 광고' }[q.get('type') || ''];
+    var plan = { starter: 'Starter', business: 'Business', agency: 'Agency', enterprise: 'Enterprise', api: 'API', private: 'Private', expert: 'Expert', free: 'Starter', pro: 'Business', biz: 'Business' }[q.get('plan') || ''];
+    var type = { install: '설치 도움', api: '플랫폼 · SaaS', platform: '플랫폼 · SaaS', agency: '광고대행사 · 브랜드', brand: '광고대행사 · 브랜드', commerce: '이커머스 · 쇼핑몰', ai: '플랫폼 · SaaS', enterprise: '기업 · 기관', univ: '기업 · 기관', org: '기업 · 기관', edu: '교육 · 컨설팅', ad: '제휴' }[q.get('type') || ''];
     if (plan) { var ps = document.querySelector('form[data-lead] [name="plan"]'); if (ps) { if (ps.tagName === 'SELECT') ps.value = plan; else { var pr = document.querySelector('form[data-lead] input[name="plan"][value="' + plan + '"]'); if (pr) pr.checked = true; else ps.value = plan; } } }
     var site = (q.get('site') || '').replace(/[^\w.\-:/가-힣]/g, '').slice(0, 120);
     if (site) { var si = document.querySelector('form[data-lead] input[name="site"]'); if (si && !si.value) si.value = site; }
     if (type) {
       var r = document.querySelector('form[data-lead] input[name="type"][value="' + type + '"]');
       if (r) r.checked = true;
+      else { var mm = document.querySelector('form[data-lead] [name="memo"]'); if (mm && !mm.value) mm.value = '[' + type + '] '; }
     }
   })();
 
@@ -123,6 +129,30 @@
     function sync() { var on = past && !seen; bar.classList.toggle('on', on); bar.setAttribute('aria-hidden', on ? 'false' : 'true'); }
     new IntersectionObserver(function (es) { seen = es[0].isIntersecting; sync(); }).observe(target);
     window.addEventListener('scroll', function () { var p = window.scrollY > 520; if (p !== past) { past = p; sync(); } }, { passive: true });
+  });
+
+  /* 하위 쪽 차례: 지금 읽는 곳 강조 */
+  var toc = document.querySelector('.toc4');
+  if (toc && 'IntersectionObserver' in window) {
+    var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+    var map = {};
+    links.forEach(function (a) { var t = document.getElementById(a.getAttribute('href').slice(1)); if (t) map[t.id] = a; });
+    var io2 = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) { a.classList.remove('on'); });
+        var a = map[e.target.id]; if (a) { a.classList.add('on'); var w = a.parentNode; if (w.scrollWidth > w.clientWidth) w.scrollTo({ left: a.offsetLeft - w.clientWidth / 2 + a.clientWidth / 2, behavior: 'smooth' }); }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(map).forEach(function (id) { io2.observe(document.getElementById(id)); });
+  }
+  /* 좁은 화면에서 표를 카드처럼 쌓을 때 쓸 칸 이름(머리글 글자)을 붙임 */
+  Array.prototype.forEach.call(document.querySelectorAll('.kvt-wrap table'), function (t) {
+    var hs = Array.prototype.map.call(t.querySelectorAll('thead th'), function (h) { return h.textContent.trim(); });
+    if (!hs.length) return;
+    Array.prototype.forEach.call(t.querySelectorAll('tbody tr'), function (tr) {
+      Array.prototype.forEach.call(tr.children, function (c, i) { if (i && hs[i] && !c.hasAttribute('data-l')) c.setAttribute('data-l', hs[i]); });
+    });
   });
 
   /* 탭 */
@@ -191,7 +221,7 @@
         var tot = Math.max(1, seg.reduce(function (a, x) { return a + x[1]; }, 0));
         var bar = (im.checked || im.failed) ? '<div class="imgbar"><div class="t"><span>이미지 ' + (im.checked + (im.failed || 0)) + '장 살핌</span><small>찾은 이미지 ' + (im.found || im.checked) + '장 중</small></div><div class="bar2">' + seg.filter(function (x) { return x[1]; }).map(function (x) { return '<i class="' + x[0] + '" style="width:' + (x[1] / tot * 100) + '%"></i>'; }).join('') + '</div>' +
           '<div class="lg">' + seg.filter(function (x) { return x[1]; }).map(function (x) { return '<span><i class="' + x[0] + '"></i>' + x[2] + ' ' + x[1] + '</span>'; }).join('') + '</div></div>' : '';
-        if (r.platform && r.platform.name) items.push(['info', '<b>' + esc(r.platform.name) + '</b>(으)로 만든 사이트예요.' + (r.platform.key === 'imweb' ? ' 아임웹은 올린 이미지의 파일 기록을 지우는 경우가 많아, 기록이 없어도 AI를 쓰지 않았다는 뜻은 아니에요.' : '')]);
+        if (r.platform && r.platform.name) items.push(['info', '<b>' + esc(r.platform.name) + '</b>(으)로 만든 사이트예요.' + (r.platform.key === 'imweb' ? ' 아임웹은 올린 이미지의 파일 기록을 지우는 경우가 많아, 기록이 없어도 AI를 사용하지 않았다는 뜻은 아니에요.' : '')]);
         (r.signals || []).forEach(function (sg) { items.push([/확인 불가|읽지 못함/.test(sg) ? 'info' : /카메라/.test(sg) ? 'ok' : 'warn', esc(sg)]); });
         if (r.chat && r.chat.length && !r.chatAi) items.push(['info', '상담 창(' + r.chat.slice(0, 3).map(esc).join(', ') + ')이 있어요. AI가 답한다면 대화 전에 알려야 할 수 있어요.']);
         if (r.labeled || r.disclosed) items.push(['ok', '사이트에서 AI 사용을 밝히는 표시 · 문구를 찾았어요.']);

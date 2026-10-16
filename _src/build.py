@@ -21,13 +21,13 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261015d"
-TODAY = "2026-10-15"
+VER = "20261016a"
+TODAY = "2026-10-16"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
 # 옮긴 주소(2.0 → 3.0): 베타 → 파일럿, 작동 방식 → 제품
-REDIRECTS = [("beta/", "pilot/"), ("how/", "product/")]
+REDIRECTS = [("beta/", "contact/"), ("pilot/", "contact/"), ("how/", "product/"), ("mcp/", "developers/#mcp")]
 
 ICONS = {
     "check": '<path d="M20 6 9 17l-5-5"/>',
@@ -79,28 +79,52 @@ ICONS = {
     "video": '<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
     "cpu": '<rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/>',
     "sparkle": '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>',
+    "fingerprint": '<path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/>',
+    "branch": '<line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
+    "flow": '<rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/>',
+    "db": '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>',
+    "server": '<rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/>',
+    "key": '<path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>',
+    "bars": '<line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/>',
+    "dash": '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
+    "scanx": '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-1.9-1.9"/>',
+    "scroll": '<path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/>',
+    "target": '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+    "mail": '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+    "hash": '<line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/>',
+    "webhook": '<path d="M18 16.98h-5.99c-1.1 0-1.95.94-2.48 1.9A4 4 0 0 1 2 17c.01-.7.2-1.4.57-2"/><path d="m6 17 3.13-5.78c.53-.97.1-2.18-.5-3.1a4 4 0 1 1 6.89-4.06"/><path d="m12 6 3.13 5.73C15.66 12.7 16.9 13 18 13a4 4 0 0 1 0 8"/>',
+    "cloud": '<path d="M12 13v8"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="m8 17 4-4 4 4"/>',
+    "rocket": '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
+    "check2": '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    "dot": '<circle cx="12" cy="12" r="4" fill="currentColor"/>',
 }
 SPARK = '<path d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.5l-1.9-5.4a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8z" fill="currentColor"/>'
 LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#0E2A6B"/>'
         '<path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/>'
         '<rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg>')
 
-NAV = [("product/", "product", "제품", None),
+# 메뉴(4.0): 제품 · 솔루션 · 기술 · 요금 · 회사 + 도입 상담
+# 펼침 메뉴 항목: (주소, 아이콘, 제목, 설명) · 묶음 제목은 ("#", None, "묶음 이름", None)
+NAV = [("product", "product", "제품", [
+           ("#", None, "플랫폼", None),
+           ("product/", "layers", "제품 개요", "검증 · 검수 · 승인 · 증빙을 한 흐름으로"),
+           ("app/", "inbox", "검수 작업 공간", "지금 무료로 쓰는 웹 앱"),
+           ("developers/", "code", "API · AI 연동", "API · MCP · SDK · 함수 호출"),
+           ("verify/", "ledger", "증거 원장 검증", "보고서 · 승인 기록 위변조 확인"),
+           ("#", None, "무료 도구", None),
+           ("check/", "megaphone", "광고 문구 검사", "붙여 넣으면 위험 표현과 바꿀 말"),
+           ("scan/", "radar", "사이트 진단", "AI 사용 흔적 · 광고 표현 진단"),
+           ("site/", "tag", "AI 표시 · 자동 태그", "코드 한 줄 · 아임웹 앱"),
+           ("image/", "image", "이미지 출처 확인", "파일 속 C2PA · IPTC 기록 읽기")]),
        ("solutions", "business", "솔루션", [
-           ("business/#agency", "megaphone", "광고대행사 · 제작사", "검수 시간을 줄이고 검수 보고서를 새 상품으로"),
-           ("business/#brand", "store", "브랜드 · 이커머스", "뷰티 · 식품 · 건기식 · 의료 · 금융 광고"),
-           ("business/#api", "code", "플랫폼 · 광고 매체 API", "입점사 콘텐츠를 올리는 순간 점검"),
-           ("business/#ai", "cpu", "AI 서비스 사업자", "AI기본법 사전 고지 · 생성물 표시 체계")]),
-       ("tools", "tools", "무료 도구", [
-           ("check/", "megaphone", "광고 문구 검사", "올리기 전 30초, 위험 표현과 고칠 문구"),
-           ("#scan", "radar", "사이트 무료 진단", "AI 사용 흔적 · 광고 표현을 보수적으로"),
-           ("site/", "globe", "AI 표시 만들기", "코드 한 줄 · 아임웹 앱으로 붙이기"),
-           ("image/", "image", "이미지 출처 확인", "파일 속 AI 기록 읽기 · 표시 넣기"),
-           ("proof/", "file", "AI 활용 증빙서", "과제 · 논문 · 공모전 제출용")]),
+           ("business/#agency", "megaphone", "광고대행사 · 브랜드 마케팅", "소재 대량 검수 · 승인 · 납품 보고서"),
+           ("business/#commerce", "store", "이커머스 · 쇼핑몰", "상품 콘텐츠를 올리는 순간 자동 분석"),
+           ("business/#platform", "plug", "플랫폼 · SaaS", "API · SDK로 우리 서비스에 내장 · 재판매")]),
+       ("technology/", "technology", "기술", None),
        ("pricing/", "pricing", "요금", None),
-       ("guide/", "guide", "가이드", None)]
-TOOL_KEYS = ["check", "scan", "site", "image", "proof"]
-ANNOUNCE = ("pilot/", "2026.12 유료 파일럿", "광고대행사 · 브랜드와 함께할 파일럿 기업을 모집합니다")
+       ("company/", "company", "회사", None)]
+PRODUCT_KEYS = ["product", "app", "developers", "verify", "check", "scan", "site", "image", "proof"]
+ANNOUNCE = ("contact/", "파일럿 모집", "2026년 12월 유료 파일럿 기업을 모집합니다. 신청하면 소재 20건 무료 검수 보고서를 먼저 드립니다")
 
 
 def ico(name, cls="ico"):
@@ -117,25 +141,32 @@ def header(root, key):
     items = []
     for href, k, label, sub in NAV:
         if sub:
-            cur = ' class="cur"' if (k == key or (k == "tools" and key in TOOL_KEYS)) else ""
-            menu = "".join('<a href="%s%s"%s><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ' data-scan-link' if h == "#scan" else "", ico(ic), t, d) for h, ic, t, d in sub)
-            items.append('<div class="dd"><button type="button"%s aria-haspopup="true" aria-expanded="false">%s%s</button><div class="menu">%s</div></div>' % (cur, label, ico("chev"), menu))
+            cur = ' class="cur"' if (k == key or (k == "product" and key in PRODUCT_KEYS)) else ""
+            parts, mega = [], any(h == "#" for h, _, _, _ in sub)
+            for h, ic, t, d in sub:
+                if h == "#":
+                    parts.append('<span class="mg">%s</span>' % t)
+                else:
+                    parts.append('<a href="%s%s"><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ico(ic), t, d))
+            items.append('<div class="dd%s"><button type="button"%s aria-haspopup="true" aria-expanded="false">%s%s</button><div class="menu">%s</div></div>'
+                         % (" dd-mega" if mega else "", cur, label, ico("chev"), "".join(parts)))
         else:
             items.append('<a href="%s%s"%s>%s</a>' % (root, href, ' aria-current="page"' if k == key else "", label))
     mgroups = ""
     for href, k, label, sub in NAV:
         if sub:
-            mgroups += '<span class="grp">%s</span>' % label + "".join('<a href="%s%s">%s</a>' % (root, h, t) for h, _, t, _ in sub)
+            mgroups += '<span class="grp">%s</span>' % label + "".join(
+                ('<span class="grp2">%s</span>' % t) if h == "#" else ('<a href="%s%s">%s</a>' % (root, h, t)) for h, _, t, _ in sub)
         else:
             mgroups += '<a href="%s%s">%s</a>' % (root, href, label)
     ah, ab, at = ANNOUNCE
-    bar = ('<a class="annc" href="%s%s"><span class="annc-in"><b>%s</b><span>%s</span><em>파일럿 신청%s</em></span></a>' % (root, ah, ab, at, ico("arrow"))) if key not in ("pilot", "404") else ""
+    bar = ('<a class="annc" href="%s%s"><span class="annc-in"><b>%s</b><span>%s</span><em>신청하기%s</em></span></a>' % (root, ah, ab, at, ico("arrow"))) if key not in ("contact", "404") else ""
     return (bar + '<header class="hd" id="hd"><div class="wrap">%s<nav class="nav" aria-label="주 메뉴">%s</nav>'
-            '<div class="hd-cta"><a class="btn btn-g btn-s" href="%sbusiness/#ask">도입 문의</a><a class="btn btn-p btn-s" href="%spilot/">파일럿 신청</a></div>'
+            '<div class="hd-cta"><a class="btn btn-g btn-s" href="%sapp/">무료로 시작</a><a class="btn btn-p btn-s" href="%scontact/">도입 상담</a></div>'
             '<button class="menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">%s</button></div></header>'
-            '<nav class="mnav" id="mnav" aria-label="모바일 메뉴">%s<span class="grp">자료</span><a href="%strust/">신뢰 · 판단 기준</a>'
-            '<a class="btn btn-p" href="%spilot/">파일럿 신청</a><a class="btn btn-g" href="%sbusiness/#ask">도입 문의</a></nav>'
-            % (brand(root), "".join(items), root, root, ico("menu"), mgroups, root, root, root))
+            '<nav class="mnav" id="mnav" aria-label="모바일 메뉴">%s'
+            '<a class="btn btn-p" href="%scontact/">도입 상담</a><a class="btn btn-g" href="%sapp/">무료로 시작</a></nav>'
+            % (brand(root), "".join(items), root, root, ico("menu"), mgroups, root, root))
 
 
 def footer(root):
@@ -148,27 +179,28 @@ def footer(root):
     if b["addr"]:
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
-    r = root
-    return ('<footer class="ft"><div class="wrap"><div class="top"><div>%s'
-            '<p class="about">AI 콘텐츠 출고 관리 플랫폼. 광고 · 상세페이지 · SNS 콘텐츠를 내보내기 전에 AI 사용 근거 · 표시 요건 · 광고 표현 위험을 점검하고, 승인과 증빙까지 한 번에 끝냅니다.</p><div id="aimarker" class="ft-label"></div></div>'
-            '<div class="cols">'
-            '<div><b>제품</b><a href="%sproduct/">제품 소개</a><a href="%spricing/">요금</a><a href="%spilot/">파일럿 신청</a><a href="%sbusiness/">솔루션 · 도입 문의</a></div>'
-            '<div><b>무료 도구</b><a href="%scheck/">광고 문구 검사</a><a href="%s#scan">사이트 무료 진단</a><a href="%ssite/">AI 표시 만들기</a><a href="%simage/">이미지 출처 확인</a><a href="%sproof/">AI 활용 증빙서</a></div>'
-            '<div><b>자료</b><a href="%sguide/">AI 표시 · 광고 규칙 가이드</a><a href="%strust/">신뢰 · 판단 기준</a><a href="%strust/#report">오류 신고</a></div>'
-            '<div><b>안내</b><a href="%sterms/">이용약관</a><a href="%sprivacy/"><b style="display:inline;color:#DDE5F2;margin:0">개인정보처리방침</b></a><a href="%sbusiness/?type=ad#ask">제휴 문의</a></div>'
-            '</div></div>'
+    cols = [("제품", [("product/", "제품 개요"), ("app/", "검수 작업 공간"), ("pricing/", "요금"), ("verify/", "증거 원장 검증")]),
+            ("솔루션", [("business/#agency", "광고대행사 · 브랜드"), ("business/#commerce", "이커머스 · 쇼핑몰"), ("business/#platform", "플랫폼 · SaaS")]),
+            ("기술 · 개발자", [("technology/", "기술"), ("developers/", "API · AI 연동"), ("developers/#mcp", "MCP 서버"), ("llms.txt", "llms.txt"), ("developers/openapi.json", "OpenAPI 명세")]),
+            ("무료 도구", [("check/", "광고 문구 검사"), ("scan/", "사이트 진단"), ("site/", "AI 표시 만들기"), ("image/", "이미지 출처 확인"), ("proof/", "AI 활용 증빙서")]),
+            ("회사", [("company/", "회사 소개"), ("contact/", "도입 상담"), ("trust/", "신뢰 · 판단 기준"), ("guide/", "광고 · AI 표시 가이드"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
+    colhtml = "".join('<div><b class="ct">%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
+    return ('<footer class="ft"><div class="wrap"><div class="top"><div class="ft-a">%s'
+            '<p class="about">AIMarker는 기업이 만들고 유통하는 AI 콘텐츠를 분석하고, 검수하고, 기록하는 AI 콘텐츠 신뢰 인프라입니다.</p><div id="aimarker" class="ft-label"></div></div>'
+            '<div class="cols">%s</div></div>'
             '<div class="biz">%s<br>'
             '<span>AIMarker 는 위험 후보와 근거를 보여 주는 도구이며 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
             '<span>© 2026 AIMarker</span></div></div></footer>'
-            % (brand(root), r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, "".join(biz)))
+            % (brand(root), colhtml, "".join(biz)))
 
 
 def page(meta, body):
     path = meta.get("path", "")
     depth = len([p for p in path.split("/") if p])
     root = "/" if meta.get("absroot") else "../" * depth
+    body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
     body = body.replace("{{root}}", root).replace("{{logo}}", LOGO)
-    body = re.sub(r"\{\{ico:([a-z]+)\}\}", lambda m: ico(m.group(1)), body)
+    body = re.sub(r"\{\{ico:([a-z0-9]+)\}\}", lambda m: ico(m.group(1)), body)
     title = meta["title"]
     desc = meta.get("desc", "")
     scripts = "".join('<script src="%s%s?v=%s" defer></script>' % (root, s.strip(), VER) for s in meta.get("scripts", "").split(",") if s.strip())
@@ -197,8 +229,9 @@ def page(meta, body):
             '<link rel="apple-touch-icon" href="%sassets/apple-touch-icon.png">'
             '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>'
             '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">'
-            '<link rel="stylesheet" href="%sassets/am.css?v=%s">%s%s</head>'
-            % (title, desc, noindex, SITE, path, meta.get("ogtitle", title), desc, SITE, path, SITE, SITE, root, root, root, root, VER, jsonld, pre))
+            '<link rel="stylesheet" href="%sassets/am.css?v=%s">%s%s%s</head>'
+            % (title, desc, noindex, SITE, path, meta.get("ogtitle", title), desc, SITE, path, SITE, SITE, root, root, root, root, VER,
+               ('' if meta.get("layout") == "app" else '<link rel="stylesheet" href="%sassets/site4.css?v=%s">' % (root, VER)), jsonld, pre))
     if meta.get("layout") == "app":   # 작업 공간 · 승인 화면: 머리글 · 바닥글 없이
         return (head + '<body class="app" data-page="%s" data-root="%s">' % (meta.get("key", ""), root) + body +
                 '<script src="%sassets/am.js?v=%s" defer></script>' % (root, VER) + scripts + '</body></html>\n')
@@ -221,6 +254,90 @@ def parse(src):
         with open(os.path.join(HERE, "pages", meta["jsonld_file"]), encoding="utf-8") as f:
             meta["jsonld"] = '<script type="application/ld+json">' + json.dumps(json.load(f), ensure_ascii=False) + '</script>'
     return meta, src
+
+
+# ---------- AI 연동 자료(4.0): MCP 서버 · SDK · 함수 호출 도구 정의 · llms.txt ----------
+MCP_VER = "1.0.0"
+_IND = {"type": "string", "enum": ["auto", "gen", "food", "hfood", "cos", "med", "fin"],
+        "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."}
+_FLAGS = {"type": "object", "description": "콘텐츠 정보(모르면 비움).", "properties": {
+    "sponsored": {"type": "boolean", "description": "대가(제품 · 원고료 · 할인)를 받은 콘텐츠인지"},
+    "aiPerson": {"type": "boolean", "description": "AI로 만든 인물 · 목소리 · 아바타가 나오는지"},
+    "aiMedia": {"type": "boolean", "description": "AI로 만든 이미지 · 영상을 쓰는지"}}}
+_GUIDE = {"type": "object", "description": "브랜드 정책(선택).", "properties": {
+    "ban": {"type": "array", "items": {"type": "string"}, "description": "쓰지 않을 말"},
+    "must": {"type": "array", "items": {"type": "string"}, "description": "꼭 넣을 문구"}}}
+# (이름, API 동작, 설명, 입력 속성, 필수) · 도구 입력은 API 본문과 같고, content 만 실행 코드가 SHA-256 으로 바꿔 h 로 보냄
+FC_TOOLS = [
+    ("aimarker_check", "am.check", "광고 · 상세페이지 · SNS 문구를 올리기 전에 한국 광고 규칙(표시광고법 · 식품 · 건강기능식품 · 화장품 · 의료 · 금융 광고 규제)과 협찬 · 가상인물 · AI 표시 기준으로 검수합니다. 위험 후보마다 근거 법령 · 이유 · 바꿀 말(reps)과 붙일 표시, 출고 결정(decision: fix 수정 후 출고 · expert 전문가 검토 권장 · review 확인 후 출고 · clear 큰 위험 후보 없음)을 돌려줍니다. 문구를 쓴 뒤 내보내기 전에 부르세요. 결과는 위험 후보이며 법률 자문이 아닙니다.",
+     {"text": {"type": "string", "description": "검수할 문구(5,000자까지)"}, "ind": _IND, "flags": _FLAGS, "guide": _GUIDE}, ["text"]),
+    ("aimarker_check_batch", "am.batch", "문구를 한 번에 최대 20건 검수합니다. 결과는 results 배열(id · score · decision · findings)입니다.",
+     {"items": {"type": "array", "maxItems": 20, "description": "검수할 문구 목록(20건까지)", "items": {"type": "object", "properties": {"id": {"type": "string"}, "text": {"type": "string"}, "ind": _IND, "flags": _FLAGS}, "required": ["text"]}}, "guide": _GUIDE}, ["items"]),
+    ("aimarker_label", "am.label", "붙일 표시 문구를 받습니다(한국AI윤리위원회 기준). kind: image · video · person(가상인물) · text · sponsor(광고 · 협찬). 짧은 표시 · 긴 문장 · HTML · 마크다운 · IPTC 값을 돌려줍니다.",
+     {"kind": {"type": "string", "enum": ["image", "video", "person", "text", "sponsor"]}, "level": {"type": "string", "enum": ["gen", "edit"], "description": "gen: AI로 만듦 · edit: AI로 고침"}}, ["kind"]),
+    ("aimarker_scan_site", "am.scan", "공개된 사이트 첫 화면과 이미지 12장까지 살펴 AI 사용 흔적 · AI 상담 창 · 광고 표현 위험 후보를 보수적으로 진단합니다(10~20초).",
+     {"url": {"type": "string", "description": "사이트 주소(예: myshop.co.kr)"}}, ["url"]),
+    ("aimarker_approval_status", "am.status", "광고주 승인 링크 id(AP로 시작)들의 상태(대기 · 승인 · 수정 요청)와 답한 사람 · 시각 · 메모를 확인합니다.",
+     {"ids": {"type": "array", "maxItems": 60, "items": {"type": "string"}}}, ["ids"]),
+    ("aimarker_stamp", "am.stamp", "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려줍니다.",
+     {"content": {"type": "string", "description": "기록할 내용(실행 코드가 해시로 바꿈)"}, "k": {"type": "string", "enum": ["report", "version", "approval"], "description": "기록 종류"}, "n": {"type": "integer", "description": "보고서에 든 소재 수(선택)"}}, ["content"]),
+    ("aimarker_verify", "am.verify", "원장 번호(id, LG로 시작)나 내용(content, 실행 코드가 해시로 바꿈)으로 증거 원장 기록을 확인합니다.",
+     {"id": {"type": "string", "description": "원장 번호"}, "content": {"type": "string", "description": "확인할 내용"}}, []),
+]
+
+
+def _gemini_schema(x):
+    """Gemini 함수 선언용: 지원하지 않을 수 있는 키(minLength · maxLength · pattern)를 뺌"""
+    if isinstance(x, dict):
+        return {k: _gemini_schema(v) for k, v in x.items() if k not in ("minLength", "maxLength", "pattern")}
+    if isinstance(x, list):
+        return [_gemini_schema(v) for v in x]
+    return x
+
+
+def build_ai_assets():
+    import shutil
+    import tarfile
+    import io
+    os.makedirs(os.path.join(ROOT, "mcp"), exist_ok=True)
+    os.makedirs(os.path.join(ROOT, "sdk"), exist_ok=True)
+    os.makedirs(os.path.join(ROOT, "developers", "tools"), exist_ok=True)
+    src_mcp = os.path.join(HERE, "mcp")
+    shutil.copyfile(os.path.join(src_mcp, "aimarker-mcp.mjs"), os.path.join(ROOT, "mcp", "aimarker-mcp.mjs"))
+    # npx 용 꾸러미(npm pack 과 같은 모양: package/ 아래 파일, 시각 고정)
+    tgz = os.path.join(ROOT, "mcp", "aimarker-mcp-%s.tgz" % MCP_VER)
+    buf = io.BytesIO()
+    import gzip
+    with gzip.GzipFile(fileobj=buf, mode="wb", mtime=0) as gz:
+        with tarfile.open(fileobj=gz, mode="w", format=tarfile.USTAR_FORMAT) as tar:
+            for name in ("package.json", "aimarker-mcp.mjs", "README.md"):
+                data = open(os.path.join(src_mcp, name), "rb").read()
+                ti = tarfile.TarInfo("package/" + name)
+                ti.size, ti.mtime, ti.mode = len(data), 499162500, 0o755 if name.endswith(".mjs") else 0o644
+                tar.addfile(ti, io.BytesIO(data))
+    old = open(tgz, "rb").read() if os.path.exists(tgz) else b""
+    if old != buf.getvalue():
+        open(tgz, "wb").write(buf.getvalue())
+    for name in ("aimarker.mjs", "aimarker.py"):
+        shutil.copyfile(os.path.join(HERE, "sdk", name), os.path.join(ROOT, "sdk", name))
+    # 함수 호출 도구 정의 세 가지 모양
+    def params(props, req):
+        o = {"type": "object", "properties": props}
+        if req:
+            o["required"] = req
+        return o
+    openai = [{"type": "function", "name": n, "description": d, "parameters": params(pr, rq), "strict": False} for n, a, d, pr, rq in FC_TOOLS]
+    anthropic = [{"name": n, "description": d, "input_schema": params(pr, rq)} for n, a, d, pr, rq in FC_TOOLS]
+    gemini = {"functionDeclarations": [{"name": n, "description": d, "parameters": _gemini_schema(params(pr, rq))} for n, a, d, pr, rq in FC_TOOLS]}
+    actions = {n: a for n, a, d, pr, rq in FC_TOOLS}
+    for fname, data in (("openai.json", openai), ("anthropic.json", anthropic), ("gemini.json", gemini), ("actions.json", actions)):
+        with open(os.path.join(ROOT, "developers", "tools", fname), "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+    # AI가 읽는 문서
+    for name in ("llms.txt", "llms-full.txt"):
+        shutil.copyfile(os.path.join(HERE, "ai", name), os.path.join(ROOT, name))
+    shutil.copyfile(os.path.join(HERE, "ai", "openapi.json"), os.path.join(ROOT, "developers", "openapi.json"))
 
 
 def main():
@@ -263,6 +380,7 @@ def main():
         sw2 = re.sub(r"var V = 'am-app-[^']*';", "var V = 'am-app-%s';" % VER, sw)
         if sw2 != sw:
             open(swp, "w", encoding="utf-8").write(sw2)
+    build_ai_assets()
     print("만든 페이지:", ", ".join(built))
 
 
