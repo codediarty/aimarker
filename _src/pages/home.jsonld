@@ -9,8 +9,8 @@
    "url": "https://aimarker.kr/",
    "logo": "https://aimarker.kr/assets/icon-512.png",
    "email": "contact@skkc.co.kr",
-   "slogan": "AI Content Trust Infrastructure",
-   "description": "기업이 만들고 유통하는 AI 콘텐츠를 분석하고, 검수하고, 기록하는 AI 콘텐츠 신뢰 인프라.",
+   "slogan": "AI로 만든 콘텐츠, 이제는 확인하고 표시합니다",
+   "description": "콘텐츠의 AI 사용 여부와 활용 범위를 확인하고, 근거가 붙은 디지털 마크를 발급 · 관리하는 AI 콘텐츠 투명성 기술 플랫폼.",
    "parentOrganization": {
     "@type": "Organization",
     "name": "성균관컨설팅",
@@ -35,43 +35,44 @@
    "operatingSystem": "Web",
    "url": "https://aimarker.kr/",
    "image": "https://aimarker.kr/assets/og.jpg",
-   "description": "AI 콘텐츠의 출처 확인 · 정책 검수 · 승인 · 게시 · 감사 대응을 하나의 흐름으로 연결하는 기업용 SaaS와 API. Origin · Fingerprint · Policy · Workflow 엔진과 Evidence Ledger로 구성됩니다.",
+   "description": "콘텐츠 분석 엔진(C2PA 서명 재검증 · IPTC · EXIF · 생성 기록 판독), 마킹 발급 엔진(근거 맞춤 발급 · 전자서명 마크), 사용 이력 관리 시스템(마크 확인 · 변경 이력 · 원장 · 공개 타임스탬프), 기업용 API · MCP로 구성된 AI 콘텐츠 투명성 기술 플랫폼.",
    "featureList": [
-    "AI 콘텐츠 출처 확인(C2PA · IPTC · XMP)",
-    "한국 광고 규칙 팩 자동 검수(KR-AdLaw 66항목 · 6개 업종)",
-    "브랜드 정책 자동 적용",
-    "로그인 없는 광고주 승인 링크",
-    "해시 기반 증거 원장과 공개 검증",
-    "API · MCP 서버 · SDK"
+    "AI 사용 여부 · 범위 확인(이미지 · 영상 · 오디오 · PDF · 글)",
+    "C2PA 서명 · 인증서 사슬 · 파일 결합 서버 재검증",
+    "근거와 맞는 표시만 발급하는 AI 마크(근거 등급: 서명 검증 · 파일 기록 · 발급자 신고)",
+    "전자서명 마크(JWS · Ed25519)와 공개키",
+    "마크 확인 쪽 · QR · 삽입 배지 · 파일 속 기록(XMP)",
+    "변경 이력 · 원장 · 매일 공개 타임스탬프(OpenTimestamps)",
+    "기업용 API · MCP 서버 · 대량 마킹",
+    "부가 기능: 광고 문구 검수 · 위험 분석 · 보고서 자동화"
    ],
    "offers": [
     {
      "@type": "Offer",
-     "name": "Starter",
+     "name": "개인",
      "price": "0",
-     "priceCurrency": "KRW",
-     "url": "https://aimarker.kr/app/"
+     "priceCurrency": "KRW"
     },
     {
      "@type": "Offer",
-     "name": "Business(월, 예상 요금부터)",
-     "price": "149000",
+     "name": "Business",
+     "price": "99000",
      "priceCurrency": "KRW",
-     "url": "https://aimarker.kr/pricing/"
+     "description": "월 요금부터 · 예상 요금"
     },
     {
      "@type": "Offer",
-     "name": "Agency(월, 예상 요금부터)",
-     "price": "490000",
+     "name": "Scale",
+     "price": "390000",
      "priceCurrency": "KRW",
-     "url": "https://aimarker.kr/pricing/"
+     "description": "월 요금부터 · 예상 요금"
     },
     {
      "@type": "Offer",
-     "name": "Enterprise(연, 예상 요금부터)",
+     "name": "Enterprise",
      "price": "12000000",
      "priceCurrency": "KRW",
-     "url": "https://aimarker.kr/pricing/"
+     "description": "연 요금부터 · 예상 요금"
     }
    ]
   }

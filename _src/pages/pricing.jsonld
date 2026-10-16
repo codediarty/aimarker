@@ -1,114 +1,62 @@
 {
  "@context": "https://schema.org",
- "@graph": [
+ "@type": "Product",
+ "name": "AIMarker",
+ "description": "콘텐츠의 AI 사용 여부와 범위를 확인하고 근거가 붙은 디지털 마크를 발급 · 관리하는 AI 콘텐츠 투명성 기술 플랫폼. 정식 출시 전 예상 요금.",
+ "brand": {
+  "@type": "Brand",
+  "name": "AIMarker"
+ },
+ "url": "https://aimarker.kr/pricing/",
+ "offers": [
   {
-   "@type": "FAQPage",
-   "mainEntity": [
-    {
-     "@type": "Question",
-     "name": "지금 결제할 수 있나요?",
-     "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "아직 결제를 받지 않습니다. 무료 기능은 지금 바로 사용할 수 있고, 유료 상품은 2026년 12월 파일럿부터 엽니다. 파일럿 조건은 상담 뒤 정합니다."
-     }
-    },
-    {
-     "@type": "Question",
-     "name": "무료(Starter)로 어디까지 쓸 수 있나요?",
-     "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "혼자 사용하는 검수 작업 공간(데이터는 브라우저에 저장), 광고 문구 검사, 사이트 진단, 광고주 승인 링크, 보고서 원장 기록, AI 표시 · 자동 태그, API 하루 300회까지 무료입니다."
-     }
-    },
-    {
-     "@type": "Question",
-     "name": "처리 건수를 넘기면 어떻게 되나요?",
-     "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "이미 한 검수와 기록은 그대로입니다. 넘은 만큼 상품별 건당 요금(Business 150원 · Agency 50원)을 더하고, 자주 넘으면 상위 상품을 먼저 안내합니다."
-     }
-    },
-    {
-     "@type": "Question",
-     "name": "계약서 · 세금계산서가 되나요?",
-     "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "네. 운영사 성균관컨설팅이 견적서 · 계약서 · 세금계산서로 진행합니다. 연간 계약 조건은 상담에서 정합니다."
-     }
-    },
-    {
-     "@type": "Question",
-     "name": "대행사가 광고주에게 다시 팔 수 있나요?",
-     "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Agency 이상은 보고서에 대행사 이름을 넣을 수 있어 '광고 안전 검수 보고서'를 광고주 부가 서비스로 제공할 수 있습니다. 재판매 · 파트너 조건은 상담으로 정합니다."
-     }
-    },
-    {
-     "@type": "Question",
-     "name": "API만 따로 쓸 수 있나요?",
-     "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "무료 키로 하루 300회까지 바로 사용할 수 있습니다. 그보다 많이 쓰거나 자사 서비스에 넣어 재판매하려면 API 계약(기본 계약료 + 사용량)을 상담하세요."
-     }
-    },
-    {
-     "@type": "Question",
-     "name": "우리 콘텐츠와 데이터는 어떻게 되나요?",
-     "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "검수할 문구는 점검할 때만 보내고 저장하지 않습니다. 승인 링크를 만들 때만 그 소재의 문구 · 요약을 90일 보관하고, 원장에는 해시만 남깁니다. 모델 학습에는 따로 동의한 데이터만 씁니다."
-     }
-    },
-    {
-     "@type": "Question",
-     "name": "법률 검토를 대신하나요?",
-     "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "아닙니다. AIMarker는 위험 후보와 근거 법령 · 바꿀 말을 보여 주는 도구이며 법률 자문이 아닙니다. 애매한 표현은 '전문가 검토 권장'으로 따로 표시합니다."
-     }
-    }
-   ]
+   "@type": "Offer",
+   "name": "개인",
+   "price": "0",
+   "priceCurrency": "KRW",
+   "description": "AI 사용 확인 · 마크 발급 · 마크 확인 쪽 · QR · 삽입 배지"
   },
   {
-   "@type": "Product",
-   "name": "AIMarker",
-   "brand": {
-    "@type": "Brand",
-    "name": "AIMarker"
-   },
-   "image": "https://aimarker.kr/assets/og.jpg",
-   "description": "AI Content Trust Infrastructure. 기업의 AI 콘텐츠를 분석하고, 검수하고, 기록하는 자동화 인프라. 정식 출시 전 예상 요금.",
-   "offers": [
-    {
-     "@type": "Offer",
-     "name": "Starter(무료)",
-     "price": "0",
-     "priceCurrency": "KRW",
-     "url": "https://aimarker.kr/app/"
-    },
-    {
-     "@type": "Offer",
-     "name": "Business(월, 예상 요금)",
-     "price": "149000",
-     "priceCurrency": "KRW",
-     "url": "https://aimarker.kr/pricing/"
-    },
-    {
-     "@type": "Offer",
-     "name": "Agency(월, 예상 요금)",
-     "price": "490000",
-     "priceCurrency": "KRW",
-     "url": "https://aimarker.kr/pricing/"
-    },
-    {
-     "@type": "Offer",
-     "name": "Enterprise(연, 예상 요금)",
-     "price": "12000000",
-     "priceCurrency": "KRW",
-     "url": "https://aimarker.kr/pricing/"
-    }
-   ]
+   "@type": "Offer",
+   "name": "Business",
+   "price": "99000",
+   "priceCurrency": "KRW",
+   "description": "월 요금부터 · 마크 월 1,000건 · 예상 요금(부가세 별도)",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": "99000",
+    "priceCurrency": "KRW",
+    "unitText": "월",
+    "valueAddedTaxIncluded": false
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "Scale",
+   "price": "390000",
+   "priceCurrency": "KRW",
+   "description": "월 요금부터 · 마크 월 10,000건 · API · MCP 자동 발급 · 예상 요금(부가세 별도)",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": "390000",
+    "priceCurrency": "KRW",
+    "unitText": "월",
+    "valueAddedTaxIncluded": false
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "Enterprise",
+   "price": "12000000",
+   "priceCurrency": "KRW",
+   "description": "연 요금부터 · 전용 한도 · 라이선스 · 예상 요금(부가세 별도)",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": "12000000",
+    "priceCurrency": "KRW",
+    "unitText": "년",
+    "valueAddedTaxIncluded": false
+   }
   }
  ]
 }

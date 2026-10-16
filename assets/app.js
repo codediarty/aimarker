@@ -18,7 +18,7 @@
     check: U.I.check, wand: U.I.wand, spark: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>',
     menu: '<path d="M4 6h16M4 12h16M4 18h16"/>', link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>'
   };
-  var ST = { draft: '작성 중', fix: '수정 필요', review: '확인 필요', ready: '출고 준비', sent: '승인 대기', approved: '승인 완료', changes: '수정 요청', published: '게시 완료' };
+  var ST = { draft: '작성 중', fix: '수정 필요', ready: '출고 준비', sent: '승인 요청함', approved: '승인 완료', changes: '수정 요청', published: '게시 완료' };   // 5.0 '확인 필요' 단계 없음: 자동 수정 뒤 출고 준비 아니면 반려(수정 필요)
 
   /* ---------- 저장 ---------- */
   function blank() { return { v: 1, name: '내 작업 공간', me: '', ind: 'auto', guide: { ban: [], must: [], note: '' }, items: [], reports: [], created: Date.now() }; }
@@ -39,7 +39,7 @@
     if (!it.check) return 'draft';
     var d = it.check.decision;
     if (d === 'fix' || d === 'expert') return 'fix';
-    if (d === 'review' && !it.internal) return 'review';
+    if (d === 'review' && !it.internal) return 'fix';   // 자동 수정 뒤에도 남은 '주의' 후보: 반려(내부 확인으로 넘길 수 있음)
     return 'ready';
   }
   function stChip(st) { return '<span class="st3 ' + st + '"><i></i>' + ST[st] + '</span>'; }
@@ -77,7 +77,17 @@
 
   /* ---------- 점검 ---------- */
   var busy = {};
-  function runCheck(it, force) {
+  /* 5.0 자동 수정: 점검 결과가 '출고 준비'가 아니면 서버(am.auto)가 고치기 · 다시 점검을 끝까지 하고, 그래도 남으면 반려(이유와 함께) */
+  function runAuto(it, flags, guide) {
+    var text = it.copy || '';
+    return AM.call('am.auto', { text: text, ind: it.ind === 'auto' ? (it.indGuess || '') : it.ind, flags: flags, guide: guide, cid: U.cid() }, 30000).then(function (r) {
+      if (!r || !r.ok) throw new Error((r && r.message) || '자동 수정하지 못했어요');
+      it.autoRes = { at: Date.now(), outcome: r.outcome, outcomeKo: r.outcomeKo, n: (r.applied || []).length, left: (r.left || []).length, from: text };
+      if (r.changed && r.text && r.text !== text) { setCopy(it, r.text); addEvent(it, 'fix', '자동 수정 ' + (r.applied || []).length + '곳 · ' + r.outcomeKo); it.autoRes.to = r.text; return true; }
+      save(); return false;
+    }).catch(function () { return false; });
+  }
+  function runCheck(it, force, noAuto) {
     var text = it.copy || '';
     if (text.replace(/\s+/g, '').length < 2) { it.check = null; save(); paintResult(it); return Promise.resolve(null); }
     autoFlags(it);
@@ -97,6 +107,10 @@
           if (!prev || prev.score !== r.score || prev.decision !== r.decision || !last || last.h !== ch) addEvent(it, 'check', '점수 ' + r.score + ' · ' + U.DEC[r.decision].t, { ch: ch });
           save(); return it.check;
         });
+      }).then(function (c) {
+        // 출고 준비가 아니면 자동 수정까지(같은 문구는 한 번만)
+        if (!c || noAuto || S.noAuto || c.decision === 'clear' || it.internal || (it.autoRes && it.autoRes.from === text)) return c;
+        return runAuto(it, flags, guide).then(function (changed) { if (changed) { busy[it.id] = false; return runCheck(it, true, true); } return c; });
       }).catch(function (e) { toast(e && e.message ? e.message : '지금은 점검하지 못했어요. 잠시 뒤 다시 시도해 주세요.'); return null; })
         .then(function (x) { busy[it.id] = false; paintBusy(it); paintResult(it); paintSide(); return x; });
     });
@@ -126,7 +140,7 @@
     else html += '<div class="quick1" id="qbox"><input type="text" id="qtext" placeholder="광고 문구를 붙여 넣고 Enter, 이미지는 여기로 끌어다 놓기" aria-label="새 소재 문구"><button class="btn btn-p btn-s" id="qgo" type="button">' + ico(I.spark) + '바로 점검</button><label class="btn btn-g btn-s">' + ico(I.upload) + '이미지<input type="file" id="qfile" accept="image/*" multiple hidden></label></div>';
     if (n) {
       html += '<div class="kp5"><div><b>' + n + '</b><span>전체 소재</span></div><div class="hi"><b>' + k.fix + '</b><span>수정 필요</span></div><div class="bl"><b>' + k.sent + '</b><span>승인 대기</span></div><div class="ok"><b>' + k.ok + '</b><span>승인 · 게시 완료</span></div><div class="mid"><b>' + k.avg + '</b><span>평균 위험 점수</span></div></div>';
-      html += '<div class="flt3"><div class="pills" id="stf">' + [['all', '전체'], ['fix', '수정 필요'], ['review', '확인 필요'], ['ready', '출고 준비'], ['sent', '승인 대기'], ['approved', '승인 완료'], ['published', '게시 완료']].map(function (p) { return '<button type="button" data-st="' + p[0] + '" aria-pressed="' + (FIL.st === p[0]) + '">' + p[1] + '</button>'; }).join('') + '</div>' +
+      html += '<div class="flt3"><div class="pills" id="stf">' + [['all', '전체'], ['fix', '수정 필요'], ['ready', '출고 준비'], ['sent', '승인 요청함'], ['approved', '승인 완료'], ['published', '게시 완료']].map(function (p) { return '<button type="button" data-st="' + p[0] + '" aria-pressed="' + (FIL.st === p[0]) + '">' + p[1] + '</button>'; }).join('') + '</div>' +
         '<input class="inp" id="q" placeholder="제목 · 브랜드 · 문구 검색" value="' + esc(FIL.q) + '"></div>';
       html += '<table class="itbl"><thead><tr><th>소재</th><th>업종</th><th>위험</th><th>상태</th><th>바뀐 때</th></tr></thead><tbody id="rows"></tbody></table>';
     }
@@ -244,7 +258,8 @@
       imgs = it.files.map(function (f) { var L = P.LEVEL[f.det.level]; return '<div class="fd"><div class="fd-h"><span class="sv ' + (L.c === 'hi' ? 'high' : L.c === 'mid' ? 'mid' : 'info') + '">이미지</span><span class="cat">AI 사용 근거</span><q>' + esc(f.name) + '</q></div><p>' + esc(L.t) + (f.det.signals.length ? ' · ' + esc(f.det.signals.join(' · ')) : ' · 파일 속 기록이 없어 AI 사용 여부를 확인할 수 없습니다(올릴 때 지워졌을 수 있음)') + '</p></div>'; }).join('');
     }
     var labels = (r.labels || []).length ? '<div class="lbls3">' + r.labels.map(function (l) { return '<div><span><b>붙일 표시</b> <code>' + esc(l.text) + '</code> · ' + esc(l.where) + '</span><button class="btn btn-g btn-s" type="button" data-copytext="' + esc(l.long) + '">' + ico(I.copy) + '문장 복사</button></div>'; }).join('') + '</div>' : '';
-    box.innerHTML = '<h2>' + ico(U.I.scale) + '점검 결과<small>' + esc(r.pack ? r.pack.name + ' ' + r.pack.ver : '') + '</small></h2><div class="mt12">' + U.summary(r) + '</div>' +
+    var ar = it.autoRes, auto = ar && (ar.to === r.copy || ar.from === r.copy) ? '<p class="note mt8"><b>자동 처리:</b> ' + esc(ar.outcomeKo || '') + (ar.n ? ' · ' + ar.n + '곳을 고쳤습니다' : '') + (ar.outcome === 'return' ? ' · 자동으로 고칠 수 없는 표현 ' + ar.left + '곳이 남아 반려했습니다. 아래 후보를 고치면 다시 자동으로 점검합니다.' : '') + '</p>' : '';
+    box.innerHTML = '<h2>' + ico(U.I.scale) + '점검 결과<small>' + esc(r.pack ? r.pack.name + ' ' + r.pack.ver : '') + '</small></h2><div class="mt12">' + U.summary(r) + '</div>' + auto +
       (fresh ? '' : '<p class="note mt8">문구가 바뀌었어요. 멈추면 자동으로 다시 점검합니다.</p>') +
       cats + '<div class="prev3" id="prev">' + U.highlight(r.copy, r.findings) + '</div>' +
       '<div class="actbar"><button class="btn btn-p" type="button" id="fixall"' + (fresh ? '' : ' disabled') + '>' + ico(I.wand) + '한 번에 고치기</button><button class="btn btn-g" type="button" id="recheck">다시 점검</button></div>' +

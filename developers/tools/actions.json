@@ -1,9 +1,14 @@
 {
+  "aimarker_analyze_file": "am.analyze",
+  "aimarker_analyze_text": "am.analyze",
+  "aimarker_mark": "am.mark",
+  "aimarker_mark_info": "am.markinfo",
+  "aimarker_find_marks": "am.lookup",
+  "aimarker_verify_mark": "am.pubkey",
+  "aimarker_anchor": "am.anchor",
   "aimarker_check": "am.check",
-  "aimarker_check_batch": "am.batch",
+  "aimarker_auto_fix": "am.auto",
   "aimarker_label": "am.label",
-  "aimarker_scan_site": "am.scan",
-  "aimarker_approval_status": "am.status",
   "aimarker_stamp": "am.stamp",
   "aimarker_verify": "am.verify"
 }

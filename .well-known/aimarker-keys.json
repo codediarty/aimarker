@@ -1,0 +1,15 @@
+{
+  "issuer": "https://aimarker.kr",
+  "about": "AIMarker 마크 서명 공개키(JWS · EdDSA/Ed25519). 마크의 kid 와 같은 키로 서명을 확인하세요. https://aimarker.kr/developers/#verify",
+  "keys": [
+    {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "x": "XdbkQ_O_R4Aq19ugDnJVpMcCX5OYPAV1NobuLhL-AEA",
+      "kid": "amk1-f4e2e03c4c04",
+      "use": "sig",
+      "alg": "EdDSA",
+      "since": "2026-10-16"
+    }
+  ]
+}

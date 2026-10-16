@@ -72,7 +72,7 @@
     r.label = r.type === 'edit' ? 'AI 편집' : (r.type || r.nameHint) ? 'AI 생성' : '';
     return r;
   }
-  P.LEVEL = { confirmed: { t: 'AI 기록 있음', c: 'hi' }, likely: { t: 'AI 흔적(이름)', c: 'mid' }, check: { t: '확인 필요', c: 'blue' }, camera: { t: '카메라 원본', c: 'ok' }, unknown: { t: '기록 없음 · 확인 불가', c: 'grey' } };
+  P.LEVEL = { confirmed: { t: 'AI 기록 있음', c: 'hi' }, likely: { t: 'AI 흔적(이름)', c: 'mid' }, check: { t: '참고 단서만 있음', c: 'blue' }, camera: { t: '카메라 원본', c: 'ok' }, unknown: { t: '기록 없음 · 확인 불가', c: 'grey' } };
 
   function loadImg(file) {
     return new Promise(function (ok, bad) { var url = URL.createObjectURL(file), img = new Image(); img.onload = function () { ok(img); }; img.onerror = function () { URL.revokeObjectURL(url); bad(new Error('decode')); }; img.src = url; img._url = url; });

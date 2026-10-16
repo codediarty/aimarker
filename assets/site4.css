@@ -874,11 +874,36 @@
 .kvt.mono tbody th { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13.5px; font-weight: 700; white-space: nowrap; }
 .dev-note { margin-top: 14px; font-size: 14px; color: var(--mute); line-height: 1.7; }
 .dev-note code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; background: var(--paper); border: 1px solid var(--hair); padding: 1px 6px; border-radius: 6px; word-break: break-all; }
+/* 5.0 개발자: 동작 순서 · 불러 보기 · 부가 기능 줄 */
+.dev-flow { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; counter-reset: dvf; border-top: 2px solid var(--n2); }
+.dev-flow li { counter-increment: dvf; position: relative; padding: 22px 22px 6px 0; display: flex; flex-direction: column; gap: 8px; }
+.dev-flow li + li { padding-left: 22px; border-left: 1px solid var(--hair); }
+.dev-flow li::before { content: counter(dvf); font-size: 12.5px; font-weight: 850; color: var(--blue); letter-spacing: .02em; }
+.dev-flow b { font-size: 17px; font-weight: 850; color: var(--ink); }
+.dev-flow span { font-size: 14.5px; line-height: 1.7; color: var(--ink-2); }
+.dev-flow code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; background: var(--paper); border: 1px solid var(--hair); padding: 1px 6px; border-radius: 6px; }
+.dev-try { gap: 18px; padding: 18px 2px 4px; align-items: start; }
+.dev-try .form3 { color: var(--ink); background: #fff; border-radius: 14px; padding: 18px; font-family: var(--font); font-size: 15px; white-space: normal; }
+.dev-try .form3 .txt, .dev-try .form3 .sel, .dev-try .form3 .inp { font-family: var(--font); }
+.dev-try .form3 label[for], .dev-try .form3 .field > label { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; }
+.dev-try .drop3 { display: grid; justify-items: center; gap: 4px; padding: 22px 16px; border: 2px dashed var(--hair); border-radius: 14px; background: var(--paper); text-align: center; cursor: pointer; color: var(--ink-2); font-family: var(--font) !important; font-size: 14px !important; }
+.dev-try .drop3:hover, .dev-try .drop3.over { border-color: var(--blue); background: #EEF3FF; }
+.dev-try .drop3 .ico { width: 24px; height: 24px; color: var(--blue); }
+.dev-try .drop3 b { font-size: 15px; color: var(--ink); word-break: break-all; }
+.dev-try .drop3 span { font-size: 13px; color: var(--mute); }
+.dev-try .form3 label { color: var(--ink); }
+.dev-try .dev-note { color: #C9D6F2; }
+.dev-try .form3 .dev-note { color: var(--mute); }
+.dev-try > .code { margin: 0; }
+.kvt tr.sub th, .kvt tr.sub td { color: var(--mute); background: var(--paper); }
+.dl3.six { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 900px) {
   .q3 { grid-template-columns: minmax(0, 1fr); }
   .q3 li { border-left: 0; border-top: 1px solid var(--hair); padding: 20px 20px 18px; }
   .q3 li:first-child { border-top: 0; }
-  .dl3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dl3, .dl3.six { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dev-flow { grid-template-columns: minmax(0, 1fr); border-top: 0; }
+  .dev-flow li, .dev-flow li + li { padding: 16px 0 16px 18px; border-left: 2px solid var(--n2); }
 }
 @media (max-width: 520px) {
   .dl3 a { grid-template-columns: minmax(0, 1fr); padding: 14px 14px 12px; }

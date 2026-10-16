@@ -79,7 +79,7 @@
       var btn = f.querySelector('button[type="submit"]'); if (btn) { btn.disabled = true; btn.setAttribute('data-t', btn.innerHTML); btn.innerHTML = '보내는 중…'; }
       AM.call('am.lead', d).then(function (r) {
         if (r && r.ok) {
-          show(f, 'ok', (kind === 'pilot' ? '도입 상담 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 상담과 소재 20건 무료 검수 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
+          show(f, 'ok', (kind === 'pilot' ? '기업 상담 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 상담과 콘텐츠 100건 AI 사용 확인 리포트 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
           f.reset(); t0 = Date.now();
           if (window.gtag) try { window.gtag('event', 'generate_lead', { method: kind }); } catch (eG) { /* 무시 */ }
         } else if (r && r.message && /^(CONTACT|ORG|NAME|SLOW|BUSY|MEMO)$/.test(r.code || '')) {
@@ -109,8 +109,8 @@
   /* 주소로 넘어온 요금제 · 문의 종류 채우기: ?plan=pro · ?type=install */
   (function () {
     var q = new URLSearchParams(location.search);
-    var plan = { starter: 'Starter', business: 'Business', agency: 'Agency', enterprise: 'Enterprise', api: 'API', private: 'Private', expert: 'Expert', free: 'Starter', pro: 'Business', biz: 'Business' }[q.get('plan') || ''];
-    var type = { install: '설치 도움', api: '플랫폼 · SaaS', platform: '플랫폼 · SaaS', agency: '광고대행사 · 브랜드', brand: '광고대행사 · 브랜드', commerce: '이커머스 · 쇼핑몰', ai: '플랫폼 · SaaS', enterprise: '기업 · 기관', univ: '기업 · 기관', org: '기업 · 기관', edu: '교육 · 컨설팅', ad: '제휴' }[q.get('type') || ''];
+    var plan = { business: 'Business', scale: 'Scale', agency: 'Scale', enterprise: 'Enterprise', license: 'Enterprise', private: 'Enterprise', expert: 'Enterprise', api: 'API', bulk: '대량 처리', ad: '광고 검수', addon: '광고 검수', pilot: '파일럿', starter: '파일럿', free: '파일럿', pro: 'Business', biz: 'Business' }[q.get('plan') || ''];
+    var type = { commerce: '쇼핑몰 · 이커머스', shop: '쇼핑몰 · 이커머스', media: '언론 · 미디어', news: '언론 · 미디어', agency: '광고대행사 · 브랜드', brand: '광고대행사 · 브랜드', api: '플랫폼 · AI 서비스', platform: '플랫폼 · AI 서비스', ai: '플랫폼 · AI 서비스', enterprise: '공공 · 교육 · 기관', public: '공공 · 교육 · 기관', univ: '공공 · 교육 · 기관', org: '공공 · 교육 · 기관', edu: '공공 · 교육 · 기관', invest: '투자 · 제휴', partner: '투자 · 제휴', ad: '투자 · 제휴', install: '기타', creator: '기타' }[q.get('type') || ''];
     if (plan) { var ps = document.querySelector('form[data-lead] [name="plan"]'); if (ps) { if (ps.tagName === 'SELECT') ps.value = plan; else { var pr = document.querySelector('form[data-lead] input[name="plan"][value="' + plan + '"]'); if (pr) pr.checked = true; else ps.value = plan; } } }
     var site = (q.get('site') || '').replace(/[^\w.\-:/가-힣]/g, '').slice(0, 120);
     if (site) { var si = document.querySelector('form[data-lead] input[name="site"]'); if (si && !si.value) si.value = site; }
@@ -201,7 +201,7 @@
     };
     var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
     var root = AM.root || '';
-    var LV = { confirmed: ['AI 사용 확인됨', 4], high: ['AI 사용 가능성 높음', 3], check: ['확인 필요', 2], low: ['단서 적음', 1] };
+    var LV = { confirmed: ['AI 사용 확인됨', 4], high: ['AI 사용 가능성 높음', 3], check: ['단서 있음', 2], low: ['단서 적음', 1] };
     var show = function (html) { out.hidden = false; out.innerHTML = html; };
     var btn = homeScan.querySelector('button[type="submit"]');
     var hostOf = function (u) { return u.replace(/^https?:\/\//i, '').replace(/[\/?#].*$/, '').toLowerCase(); };
@@ -228,7 +228,7 @@
         else if (lv === 'confirmed' || lv === 'high') items.push(['warn', 'AI 사용 단서가 있는데 사이트에서 밝히는 표시를 찾지 못했어요.']);
         if (r.ad && r.ad.items && r.ad.items.length) items.push([r.ad.high ? 'warn' : 'info', '광고 표현 확인 후보 ' + r.ad.n + '곳<div class="adl">' + r.ad.items.slice(0, 6).map(function (a) { return '<span class="' + (a.lv === 'high' ? 'hi' : '') + '" title="' + esc(a.why) + '">' + esc(a.t) + '</span>'; }).join('') + '</div>']);
         var name = r.siteName ? esc(String(r.siteName).slice(0, 40)) : esc(host);
-        var meter = '<div class="res2-meter ' + lv + '">' + [1, 2, 3, 4].map(function (k) { return '<span class="' + (k <= L[1] ? 'on' : '') + '"></span>'; }).join('') + '</div><div class="lbls"><span>단서 적음</span><span>확인 필요</span><span>가능성 높음</span><span>확인됨</span></div>';
+        var meter = '<div class="res2-meter ' + lv + '">' + [1, 2, 3, 4].map(function (k) { return '<span class="' + (k <= L[1] ? 'on' : '') + '"></span>'; }).join('') + '</div><div class="lbls"><span>단서 적음</span><span>단서 있음</span><span>가능성 높음</span><span>확인됨</span></div>';
         var head = '<div class="res2-h"><div style="min-width:0"><b>' + name + '</b><small>' + esc(host) + '</small></div><span class="lvl2 ' + lv + '"><i></i>' + L[0] + '</span></div>';
         var foot = '<a class="btn btn-p" href="' + root + 'app/">소재째로 점검하기(무료)</a><a class="btn btn-g" href="' + root + 'site/?url=' + encodeURIComponent(url) + '">AI 표시 · 자동 태그 붙이기</a>';
         show('<div class="res2">' + head + meter + bar + '<ul>' + items.map(function (it) { return '<li class="' + it[0] + '">' + I[it[0] === 'warn' ? 'warn' : it[0] === 'ok' ? 'ok' : 'info'] + '<span>' + it[1] + '</span></li>'; }).join('') + '</ul>' +

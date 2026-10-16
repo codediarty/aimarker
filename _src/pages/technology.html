@@ -1,62 +1,107 @@
 <!--
 path: technology/
 key: technology
-title: 기술 · 다섯 엔진으로 만든 AI 콘텐츠 신뢰 인프라 | AIMarker
-ogtitle: AIMarker 기술 · Origin · Fingerprint · Policy · Workflow · Evidence Ledger
-desc: AIMarker는 출처 엔진 · 지문 엔진 · 정책 엔진 · 워크플로 엔진 · 증거 원장을 하나로 연결합니다. 지금 구현된 기능과 개발 중인 기능, 개발 단계별 목표, 성능 검증 계획, 데이터 원칙과 한계를 공개합니다.
-scripts: assets/home.js, assets/tech.js
+title: 기술 · AI 사용을 추측하지 않고 근거로 확인합니다 | AIMarker
+ogtitle: AIMarker 기술 · 출처 판정 엔진 AMP · 전자서명 마크 · 공개 앵커 원장
+desc: AIMarker 핵심 기술: 기기 안 출처 판독기(aim-extract), C2PA 서명을 서버에서 다시 검증하는 출처 판정 엔진 AMP, 근거 맞춤 발급과 전자서명 마크(Ed25519), 하루치 원장을 공개 타임스탬프에 고정하는 원장, 지문으로 다시 찾기. 검증 결과와 한계를 공개합니다.
+scripts: assets/tech.js
+styles: assets/mark.css, assets/home5.css
 selflabel: footer
 -->
 <section class="p4h">
   <div class="wrap">
     <span class="crumb">기술</span>
-    <h1>여러 신호를 한 판단으로,<br>모든 판단을 검증할 수 있는 기록으로</h1>
-    <p class="lead4">AIMarker는 AI 탐지기 하나가 아닙니다. 출처 신호를 읽는 엔진, 변형을 추적하는 엔진, 정책을 적용하는 엔진, 업무를 잇는 엔진, 판단을 기록하는 원장이 한 시스템으로 움직입니다. 지금 되는 것과 만들고 있는 것을 나눠 적었습니다.</p>
-    <div class="row"><a class="btn btn-w btn-l" href="#engines">다섯 엔진 보기{{ico:arrow}}</a><a class="btn btn-gl btn-l" href="#metrics">검증 계획 보기</a></div>
+    <h1>AI 사용을 추측하지 않고,<br>근거로 확인합니다</h1>
+    <p class="lead4">AIMarker 의 기술은 다섯 부분으로 이어집니다. 기기 안에서 출처 기록을 읽는 판독기, 서명을 서버에서 다시 검증하고 판정하는 엔진, 근거와 맞는 표시만 서명해 내보내는 발급기, 누구도 몰래 고칠 수 없는 원장, 표시가 지워져도 다시 찾는 지문입니다.</p>
+    <div class="row"><a class="btn btn-w btn-l" href="{{root}}mark/">직접 확인해 보기</a><a class="btn btn-gl btn-l" href="{{root}}developers/">API · MCP</a></div>
   </div>
 </section>
 
-<nav class="toc4" aria-label="이 쪽 차례"><div class="wrap">
-  <a href="#problem">문제와 기존 방식</a><a href="#architecture">아키텍처</a><a href="#engines">다섯 엔진</a><a href="#status">구현 현황</a><a href="#stages">개발 단계</a><a href="#metrics">검증 지표</a><a href="#moat">경쟁우위</a><a href="#data">데이터 원칙</a><a href="#limits">한계</a>
-</div></nav>
+<nav class="toc4" aria-label="이 쪽 차례">
+  <div class="wrap"><a href="#arch">구조</a><a href="#reader">판독기</a><a href="#amp">판정 엔진</a><a href="#sign">서명된 마크</a><a href="#anchor">공개 원장</a><a href="#fp">지문</a><a href="#metrics">검증 결과</a><a href="#limits">한계</a><a href="#ip">지식재산</a></div>
+</nav>
 
-<section class="blk" id="problem">
+<section class="blk" id="arch">
   <div class="wrap">
-    <div class="blk-h"><span class="k">해결하려는 문제</span><h2>AI로 만드는 속도와 사람이 확인하는 속도의 차이</h2>
-      <p>생성형 AI로 기업의 콘텐츠 생산량은 크게 늘었지만, 출처 확인 · 정책 검수 · 승인 · 기록은 여전히 사람이 따로따로 합니다. 문제는 한 단계의 정확도가 아니라, 단계 사이가 끊겨 있다는 데 있습니다.</p></div>
-    <div class="kvt-wrap"><table class="kvt">
-      <thead><tr><th>기존 방식</th><th>기술적 한계</th><th>AIMarker의 접근</th></tr></thead>
-      <tbody>
-        <tr><th>만드는 단계의 워터마크 · 출처 기록</th><td>업로드 · 캡처 · 압축 과정에서 지워지고, 대개 자기 도구가 만든 콘텐츠만 확인합니다.</td><td>여러 출처 신호를 함께 읽고, 지워진 경우는 '확인 불가'로 따로 셉니다. 등록 콘텐츠는 지문으로 다시 찾습니다.</td></tr>
-        <tr><th>AI 판별 API</th><td>확률 점수만 줍니다. 점수는 틀릴 수 있고, 정책 · 승인 · 기록과 이어지지 않습니다.</td><td>점수는 보조 신호로만 쓰고, 근거가 분명한 신호를 우선합니다. 판단은 정책과 사람 승인으로 넘깁니다.</td></tr>
-        <tr><th>금지어 목록 검사</th><td>업종 · 문맥 · 면책 문장 · 띄어 쓴 표현을 모릅니다. 놓치거나 잘못 찾는 경우가 많습니다.</td><td>업종 팩 · 콘텐츠 정보에 따라 규칙과 수준이 바뀌고, 면책 · 부정 문장은 빼고, 근거 법령과 바꿀 말을 붙입니다.</td></tr>
-        <tr><th>협업 도구 · 메신저 승인</th><td>승인 이력이 흩어지고, 나중에 고쳐도 흔적이 남지 않습니다.</td><td>판단 근거 · 승인 · 정책 버전을 해시와 서버 시각으로 남겨 누구나 검증합니다.</td></tr>
-      </tbody></table></div>
+    <div class="blk-h"><span class="k">구조</span><h2>원본은 기기에, 판단과 서명은 서버에</h2><p>파일 원본은 사용자 기기를 떠나지 않습니다. 서버는 특징값과 서명 검증에 필요한 출처 기록 조각만 받아 판정하고, 결과를 서명해 돌려줍니다.</p></div>
+    <ol class="fl5 ar5">
+      <li><b>판독기</b><span>aim-extract · 기기 안 · 공개</span></li>
+      <li><b>신뢰 목록</b><span>C2PA 공식 · 임시 목록 · 7일마다 갱신</span></li>
+      <li><b>판정 엔진 AMP</b><span>서명 재검증 · 도구 지문 · 판정 규칙 · 서버 전용</span></li>
+      <li><b>발급기</b><span>근거 맞춤 발급 · 전자서명(Ed25519)</span></li>
+      <li><b>원장</b><span>해시 기록 · 하루치 사슬 · 공개 타임스탬프</span></li>
+      <li><b>등록 색인</b><span>SHA-256 · 표시본 해시 · 지각 해시</span></li>
+      <li><b>확인</b><span>마크 확인 쪽 · 공개키 · 누구나</span></li>
+    </ol>
   </div>
 </section>
 
-<section class="s4 s-tech" id="architecture">
+<section class="blk soft" id="reader">
   <div class="wrap">
-    <div class="hd4"><h2>하나의 아키텍처</h2><p>Workflow Engine이 업무 흐름을 잡고, 그 안에서 Origin · Fingerprint · Policy 엔진이 차례로 판단을 만들고, Evidence Ledger가 모든 판단을 기록합니다. 엔진을 누르면 자세한 내용이 나옵니다.</p></div>
-    {{inc:arch.inc}}
-  </div>
-</section>
-
-<section class="blk" id="engines">
-  <div class="wrap">
-    <div class="blk-h"><span class="k">다섯 엔진</span><h2>엔진마다 무엇이 들어가고, 무엇이 나오는가</h2><p>각 엔진의 입력 · 처리 · 출력과 지금 상태입니다. 직접 확인할 수 있는 것은 링크를 달았습니다.</p></div>
-    <div class="eng4" id="eng-origin">
-      <div class="eng4-h"><i>{{ico:scanx}}</i><div><h3>Origin Engine <small>출처 엔진</small></h3><p>파일 속 출처 기록과 생성 흔적을 신호별로 나눠 세고, 네 단계 신뢰 수준으로 알려 줍니다.</p></div><a class="btn btn-g btn-s" href="{{root}}image/">이미지 출처 확인 해 보기</a></div>
-      <div class="eng4-b">
-        <div><b>읽는 신호</b><ul class="dotl"><li>C2PA 매니페스트(JUMBF) · 서명 존재</li><li>IPTC digitalSourceType(trainedAlgorithmicMedia · compositeWithTrainedAlgorithmicMedia)</li><li>XMP · EXIF의 생성 도구 · 편집 도구 기록</li><li>PNG 텍스트 덩어리의 생성 설정값</li><li>파일 이름 · 주소의 생성 도구 흔적, 생성물에 흔한 크기</li><li>카메라 원본 기록(촬영 기기 · 노출)</li></ul></div>
-        <div><b>판정 단계</b><ul class="lv4"><li><span class="st s-done">확인됨</span>서명 · IPTC · 생성 설정값처럼 근거가 분명한 기록</li><li><span class="st s-hi">가능성 높음</span>파일 이름 · 주소의 생성 도구 흔적</li><li><span class="st s-wait">확인 필요</span>생성물에 흔한 크기 · 편집 도구 기록만</li><li><span class="st s-run0">확인 불가</span>기록이 지워졌거나 읽을 수 없음</li></ul></div>
-      </div>
-      <p class="eng4-n"><span class="stt is-live">운영 중</span> 브라우저 안 판독(파일을 서버로 보내지 않음) · 사이트 진단 <span class="stt is-dev">개발 중</span> 공개 워터마크 검출기 · 생성 도구 API 연동 <span class="stt is-plan">계획</span> 원본 · 변형 관계, 영상 · 음성</p>
+    <div class="blk-h"><span class="k">판독기 aim-extract</span><h2>15가지 넘는 형식에서 출처 기록을 찾습니다</h2><p>공개 라이브러리입니다. 브라우저 · Node 에서 같은 코드로 돌고, 의존성이 없습니다. 판단은 하지 않고 읽기만 합니다.</p></div>
+    <div class="sec5">
+      <article><b>C2PA 출처 기록</b><p>JPEG · PNG · WebP · GIF · TIFF · AVIF · HEIC · SVG · MP4 · MOV · M4A · MP3 · WAV · FLAC · PDF 안의 JUMBF 기록, 서명 · 클레임 · 단정 해시 · 파일 결합(데이터 · BMFF)을 읽고 무결성을 먼저 봅니다.</p></article>
+      <article><b>IPTC · XMP · EXIF</b><p>디지털 소스 유형, 사용한 AI 시스템, 편집 이력, 촬영 기기 정보를 읽습니다.</p></article>
+      <article><b>생성 도구 흔적</b><p>Stable Diffusion · ComfyUI · NovelAI · Midjourney 같은 도구가 PNG · EXIF 에 남기는 설정값을 찾습니다(프롬프트 내용은 서버로 보내지 않음).</p></article>
+      <article><b>보내는 것은 최소</b><p>서버에는 특징값 · 해시 · 서명 검증에 필요한 조각(196KB 이하)만 보냅니다. 썸네일 · 위치 정보 · 작성자 정보는 빼고 보냅니다.</p></article>
     </div>
+  </div>
+</section>
 
-    <div class="eng4" id="eng-fingerprint">
-      <div class="eng4-h"><i>{{ico:fingerprint}}</i><div><h3>Fingerprint Engine <small>지문 엔진</small></h3><p>표시가 지워지거나 크기 · 밝기 · 화질이 바뀌어도, 등록된 원본과의 관계를 찾습니다.</p></div><span class="stt is-dev">시험판 · 아래에서 실제 계산</span></div>
-      <div class="fp" data-fp>
+<section class="blk" id="amp">
+  <div class="wrap">
+    <div class="blk-h"><span class="k">출처 판정 엔진 AMP</span><h2>서명을 다시 검증하고, 근거의 세기까지 판정합니다</h2><p>판정 규칙과 AI 도구 지문 DB는 서버에만 있습니다. 공개 코드만으로는 같은 판정을 만들 수 없게 나눠 두었습니다.</p></div>
+    <div class="mods4">
+      <article class="mod4"><header><span class="mod4-ic">{{ico:key}}</span><div><h3>서명 재검증</h3><small>클라이언트를 믿지 않음</small></div></header><p>기기에서 보낸 판독 결과를 그대로 믿지 않고, 서버가 서명 · 클레임 · 단정 해시를 처음부터 다시 계산합니다. ECDSA(P-256 · P-384 · P-521) · RSA-PSS · Ed25519 의 7가지 서명 방식을 직접 구현했습니다.</p></article>
+      <article class="mod4"><header><span class="mod4-ic">{{ico:shield}}</span><div><h3>인증서 사슬 · 신뢰 목록</h3><small>누가 서명했는지</small></div></header><p>서명 인증서 사슬을 C2PA 공식 신뢰 목록과 임시 신뢰 목록에 대어 보고, 용도(EKU) · 기간 · 타임스탬프까지 확인합니다. 목록은 7일마다 자동으로 새로 받습니다.</p></article>
+      <article class="mod4"><header><span class="mod4-ic">{{ico:fingerprint}}</span><div><h3>도구 지문 · 서명자 분류</h3><small>무엇으로 만들었는지</small></div></header><p>생성 도구 · 편집기 · 카메라 · 플랫폼을 나눠 아는 지문 DB로, AI 생성 · 편집 · 합성 · 보정 · 촬영 원본을 가릅니다. 이름만 맞는 약한 단서는 판정을 좁히지 않습니다.</p></article>
+      <article class="mod4"><header><span class="mod4-ic">{{ico:scale}}</span><div><h3>충돌 규칙 · 오염 막기</h3><small>틀린 표시를 막는 규칙</small></div></header><p>AI 흔적이 하나라도 있으면 'AI 미사용'을 막고, 신뢰된 촬영 원본 서명이 있으면 AI 표시를 막습니다. 남이 등록한 표시본 해시나 비슷한 이미지의 마크는 참고로만 써, 등록 기록으로 다른 사람의 표시를 막을 수 없게 했습니다.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="blk soft" id="sign">
+  <div class="wrap">
+    <div class="blk-h"><span class="k">서명된 마크</span><h2>AIMarker 가 낸 마크인지, 누구나 서버 없이 확인</h2><p>마크를 발급할 때 표시 · 근거 · 파일 지문 · 원장 번호를 표준 형식(JWS · EdDSA)으로 서명합니다. 서명 키는 서버가 스스로 만들어 서버 밖으로 내보내지 않고, 공개키만 공개합니다.</p></div>
+    <div class="h5-biz" style="margin-top:32px">
+      <div class="h5-code" aria-label="마크 서명 내용 예시"><span class="c">// 머리: { alg: 'EdDSA', typ: 'JWT', kid: 'amk1-…' }</span>
+{
+  <span class="s">"iss"</span>: <span class="s">"https://aimarker.kr"</span>,
+  <span class="s">"sub"</span>: <span class="s">"AM-7Q2K9MXR4T"</span>,
+  <span class="s">"label"</span>: <span class="s">"ai_generated"</span>,
+  <span class="s">"basis"</span>: <span class="s">"verified"</span>,
+  <span class="s">"kind"</span>: <span class="s">"image"</span>,
+  <span class="s">"sha256"</span>: <span class="s">"05a807f5…"</span>,
+  <span class="s">"dhash"</span>: <span class="s">"8f1c3a…"</span>,
+  <span class="s">"ledger"</span>: <span class="s">"LG261016-…"</span>
+}</div>
+      <ul class="use5">
+        <li><b>공개키</b><span><a href="{{root}}.well-known/aimarker-keys.json">/.well-known/aimarker-keys.json</a> · API am.pubkey</span></li>
+        <li><b>어디서나 확인</b><span>마크 확인 쪽은 이 기기에서 서명을 확인합니다. 표준 JWT 도구로도 확인할 수 있습니다.</span></li>
+        <li><b>파일 속에도</b><span>마크를 넣은 이미지는 XMP 안에 서명을 함께 담아, 파일만 있어도 확인됩니다.</span></li>
+        <li><b>흉내 낸 마크</b><span>서명이 없거나 맞지 않으면 마크 확인 쪽이 바로 알려 줍니다.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="blk" id="anchor">
+  <div class="wrap">
+    <div class="blk-h"><span class="k">공개 원장</span><h2>AIMarker 도 지난 기록을 몰래 고칠 수 없게</h2><p>발급 · 변경 · 철회는 원장에 해시와 서버 시각으로 남습니다. 날마다 그날 원장 줄을 한 편의 글로 묶어 앞날 뿌리 해시와 이어 붙이고, 그 글의 SHA-256 을 공개 타임스탬프 서비스(OpenTimestamps)에 올려 비트코인 블록체인 시각에 고정합니다.</p></div>
+    <ol class="fl5 ar5" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      <li><b>1 기록</b><span>원장 번호 · 시각 · 해시 · 종류</span></li>
+      <li><b>2 하루 묶기</b><span>그날 줄 + 앞날 뿌리 해시로 사슬</span></li>
+      <li><b>3 고정</b><span>뿌리 해시를 공개 달력 서버 셋에 보냄</span></li>
+      <li><b>4 확인</b><span>그날 원장 글 · .ots 증명을 받아 누구나 확인</span></li>
+    </ol>
+    <p class="note" style="margin-top:16px">하루치 원장은 다음 날 0시 10분 뒤 첫 시간 작업에서 묶입니다. 마크 확인 쪽과 <a href="{{root}}verify/">원장 확인</a>에서 그날 글과 증명 파일을 받을 수 있습니다.</p>
+  </div>
+</section>
+
+<section class="blk soft" id="fp">
+  <div class="wrap">
+    <div class="blk-h"><span class="k">지문</span><h2>표시가 지워진 사본도 원래 마크를 찾습니다</h2><p>정확히 같은 파일은 SHA-256 으로, 마크를 넣은 파일은 표시본 해시로, 크기 · 화질만 바뀐 이미지는 지각 해시로 찾습니다. 아래 값은 이 브라우저가 방금 계산한 것입니다.</p></div>
+    <div class="fp" data-fp>
         <div class="fp-imgs">
           <figure><img src="{{root}}assets/img/fp-a.webp" width="420" height="351" alt="원본: AI 생성 표시가 붙은 코트 상품 이미지" data-fpimg="a"><figcaption><b>A · 등록된 원본</b><span>'AI 생성' 표시 있음</span><canvas class="fp-grid" width="96" height="96" data-fpg="a" aria-hidden="true"></canvas></figcaption></figure>
           <figure><img src="{{root}}assets/img/fp-b.jpg" width="300" height="251" alt="재업로드본: 표시를 지우고 크기 · 밝기 · 화질을 바꾼 같은 코트 이미지" data-fpimg="b"><figcaption><b>B · 다시 올라온 파일</b><span>표시 지움 · 크기 · 밝기 · 화질 변경</span><canvas class="fp-grid" width="96" height="96" data-fpg="b" aria-hidden="true"></canvas></figcaption></figure>
@@ -66,140 +111,64 @@ selflabel: footer
           <div class="fp-row"><span>A ↔ B</span><b data-fpd="ab">계산 중</b><em data-fpv="ab"></em></div>
           <div class="fp-row"><span>A ↔ C</span><b data-fpd="ac">계산 중</b><em data-fpv="ac"></em></div>
           <div class="fp-row sha"><span>파일 SHA-256</span><b data-fpsha>계산 중</b><em>정확 일치 해시는 한 바이트만 달라도 완전히 달라집니다</em></div>
-          <p class="fp-note">이미지를 9 × 8 회색조로 줄여 이웃 밝기 차이로 64비트 지문(dHash)을 만들고, 다른 비트 수로 가까움을 잽니다. 이 브라우저에서 방금 계산한 값입니다. 이 단순 지문은 크게 자르거나 뒤집은 파일을 놓칠 수 있어, 정식 엔진은 여러 지문과 등록 색인을 함께 씁니다.</p>
+          <p class="fp-note">이미지를 9 × 8 회색조로 줄여 이웃 밝기 차이로 64비트 지문(dHash)을 만들고, 다른 비트 수로 가까움을 잽니다. 이 브라우저에서 방금 계산한 값입니다. 이 단순 지문은 크게 자르거나 뒤집은 파일을 놓칠 수 있어, 마크 등록 색인은 정확 일치(SHA-256) · 표시본 해시 · 지각 해시를 함께 씁니다.</p>
         </div>
       </div>
-      <p class="eng4-n"><span class="stt is-live">운영 중</span> SHA-256 정확 일치(원장 · 검증) <span class="stt is-dev">개발 중</span> 이미지 지각 해시 <span class="stt is-plan">계획</span> 텍스트 지문 · 영상 프레임 지문 · 계보 그래프 · 표시 복원</p>
-      <p class="eng4-w">{{ico:info}}<span>등록된 콘텐츠 범위 안에서만 찾습니다. 인터넷에 있는 모든 콘텐츠를 추적한다고 말하지 않습니다.</span></p>
-    </div>
+  </div>
+</section>
 
-    <div class="eng4" id="eng-policy">
-      <div class="eng4-h"><i>{{ico:scroll}}</i><div><h3>Policy Engine <small>정책 엔진</small></h3><p>업종 규칙 · 기업 정책 · 표시 기준을 적용해 위험 후보 · 근거 · 바꿀 말 · 출고 결정을 냅니다.</p></div><a class="btn btn-g btn-s" href="{{root}}check/">광고 문구 검사 해 보기</a></div>
-      <ol class="steps7">
-        <li><b>글자 정리</b><span>전각 · 보이지 않는 글자를 정리하고 원문 위치를 지켜 둡니다</span></li>
-        <li><b>쪼갠 표현 잇기</b><span>'부.작.용 없는'처럼 띄어 쓰거나 기호로 피한 표현을 다시 찾습니다</span></li>
-        <li><b>업종 · 콘텐츠 정보</b><span>업종 6팩과 협찬 · AI 인물 · AI 이미지 여부로 규칙과 수준을 고릅니다</span></li>
-        <li><b>면책 · 부정 빼기</b><span>'의약품이 아닙니다' · '보장하지 않습니다'는 후보에서 뺍니다</span></li>
-        <li><b>필수 표시 확인</b><span>[광고] · [가상인물] · AI 생성 · 업종별 필수 안내가 있는지 봅니다</span></li>
-        <li><b>겹친 후보 정리</b><span>같은 범주에서는 더 구체적인 규칙 하나만 남깁니다</span></li>
-        <li><b>점수 · 결정</b><span>수정 후 출고 · 확인 후 출고 · 전문가 검토 권장 · 큰 위험 후보 없음</span></li>
-      </ol>
-      <p class="eng4-n"><span class="stt is-live">운영 중</span> KR-AdLaw 규칙 팩 66항목 · 6개 업종 · 6개 범주 · 브랜드 정책 · 배포마다 정답 시험 자동 채점 <span class="stt is-dev">개발 중</span> 정책 버전 관리 · 언어모델을 더한 문맥 판단 <span class="stt is-plan">계획</span> 일본 · EU 정책 매핑 · 이미지 속 글자</p>
-      <p class="eng4-w">{{ico:info}}<span>규칙은 공개 코드가 아니라 서버에서만 돌고, 화면 · API에는 결과만 내려갑니다. 규정 변경은 검토 · 승인한 정책 업데이트로만 반영합니다.</span></p>
-    </div>
-
-    <div class="eng4" id="eng-workflow">
-      <div class="eng4-h"><i>{{ico:flow}}</i><div><h3>Workflow Engine <small>워크플로 엔진</small></h3><p>업로드 이벤트부터 분석 · 검수 요청 · 승인 · 표시 · 게시 · 보고서까지 반복 업무를 잇습니다.</p></div><a class="btn btn-g btn-s" href="{{root}}developers/">API · AI 연동 보기</a></div>
-      <div class="kvt-wrap"><table class="kvt">
-        <thead><tr><th>입구</th><th>지금</th><th>다음</th></tr></thead>
-        <tbody>
-          <tr><th>사람</th><td>검수 작업 공간(브라우저 저장) · 로그인 없는 광고주 승인 링크</td><td>기업 계정 · 팀 초대 · 역할 권한 · 다단계 승인 · 클라우드 보관(2026.12 파일럿)</td></tr>
-          <tr><th>시스템</th><td>REST API 8종 · 일괄 검수(요청당 20건) · 구글 시트 함수 · n8n · Make</td><td>Webhook · 대량 업로드 · 게시 시스템 연동</td></tr>
-          <tr><th>AI 에이전트</th><td>MCP 서버 · 함수 호출 도구 정의 · llms.txt</td><td>원격 MCP · 에이전트용 승인 흐름</td></tr>
-          <tr><th>사이트</th><td>자동 표시 스크립트(m.js) · 아임웹 앱(심사 중)</td><td>쇼핑몰 솔루션 · CMS 플러그인 · SDK 정식</td></tr>
-        </tbody></table></div>
-    </div>
-
-    <div class="eng4" id="eng-ledger">
-      <div class="eng4-h"><i>{{ico:ledger}}</i><div><h3>Evidence Ledger <small>증거 원장</small></h3><p>판단 근거 · 승인 · 정책 버전을 내용 대신 해시와 서버 시각으로 남겨, 나중에도 그때 그대로인지 증명합니다.</p></div><a class="btn btn-g btn-s" href="{{root}}verify/">원장 검증 해 보기</a></div>
-      <div class="cols2" style="margin-top:20px">
-        <div class="col-it"><b>일반 데이터베이스 기록</b><p>운영자가 값을 고치면 고친 흔적이 남지 않습니다. 감사 때 '이 기록이 그때 그대로인가'를 증명하기 어렵습니다.</p></div>
-        <div class="col-it"><b>위변조가 드러나는 감사 로그</b><p>기록마다 정렬한 내용의 SHA-256 해시와 서버 시각을 남기고, 앞 기록의 해시를 다음 기록에 이어 한 줄만 바뀌어도 뒤 기록이 모두 어긋나게 합니다. 하루 단위 요약 해시를 밖에 공개하면 운영자도 몰래 고칠 수 없습니다.</p></div>
-      </div>
-      <p class="eng4-n"><span class="stt is-live">운영 중</span> 해시 · 서버 시각 기록 · 공개 검증 · 내용 대신 해시만 저장 <span class="stt is-dev">개발 중</span> 해시 체인 · 감사 증거 패키지 <span class="stt is-plan">계획</span> 머클 루트 외부 공개 · RFC 3161 시간 도장</p>
-      <p class="eng4-w">{{ico:info}}<span>블록체인은 쓰지 않습니다. 비용 · 속도 · 개인정보를 고려해 해시 체인과 외부 시간 도장을 택했습니다.</span></p>
+<section class="blk" id="metrics">
+  <div class="wrap">
+    <div class="blk-h"><span class="k">검증 결과</span><h2>지금 확인한 것만 적습니다</h2><p>목표치가 아니라 개발 중 실제로 돌려 본 시험 결과입니다. 정확도를 과장하지 않기 위해 시험 범위도 함께 적습니다.</p></div>
+    <div class="cmp5" style="margin-top:28px">
+      <article><h3>C2PA 판정 일치</h3><p class="p">50 / 50</p><p>C2PA 공개 시험 파일과 자체로 만든 정상 · 변조 파일 50개에서 기준 구현(c2pa-rs)과 같은 서명 · 무결성 판정.</p></article>
+      <article><h3>서명 방식</h3><p class="p">7가지</p><p>ES256 · ES384 · ES512 · PS256 · PS384 · PS512 · Ed25519 를 서버에서 다시 검증. 실제 신뢰 목록 인증서(Truepic · Adobe)로 사슬 확인.</p></article>
+      <article><h3>변조 찾기</h3><p class="p">클레임 · 단정 · 픽셀</p><p>서명 뒤 클레임 · 단정 · 픽셀을 바꾼 시험 파일을 모두 '바뀜'으로 판정.</p></article>
+      <article><h3>마크 서명</h3><p class="p">표준과 일치</p><p>마크 서명은 표준 Ed25519 구현과 같은 값을 내고, 일반 JWT 도구로 확인됩니다.</p></article>
     </div>
   </div>
 </section>
 
-<section class="blk soft" id="status">
-  <div class="wrap">
-    <div class="blk-h"><span class="k">구현 현황</span><h2>지금 직접 확인할 수 있는 것</h2><p>2026년 10월 공개 베타 기준입니다. '운영 중'은 누구나 아래 주소에서 확인할 수 있는 기능만 적었습니다.</p></div>
-    <div class="kvt-wrap"><table class="kvt">
-      <thead><tr><th>기능</th><th>엔진</th><th>상태</th><th>확인하는 곳</th></tr></thead>
-      <tbody>
-        <tr><th>광고 · 콘텐츠 문구 검수(66항목 · 6개 업종)</th><td>Policy</td><td><span class="stt is-live">운영 중</span></td><td><a href="{{root}}check/">광고 문구 검사</a> · API am.check · am.batch</td></tr>
-        <tr><th>이미지 출처 판독(C2PA · IPTC · XMP · 생성 설정값)</th><td>Origin</td><td><span class="stt is-live">운영 중</span></td><td><a href="{{root}}image/">이미지 출처 확인</a></td></tr>
-        <tr><th>사이트 진단(첫 화면 · 이미지 12장)</th><td>Origin · Policy</td><td><span class="stt is-live">운영 중</span></td><td><a href="{{root}}scan/">사이트 진단</a> · API am.scan</td></tr>
-        <tr><th>검수 작업 공간 · 광고주 승인 링크 · 보고서</th><td>Workflow</td><td><span class="stt is-live">운영 중</span></td><td><a href="{{root}}app/">검수 작업 공간</a></td></tr>
-        <tr><th>해시 원장 · 공개 검증</th><td>Ledger</td><td><span class="stt is-live">운영 중</span></td><td><a href="{{root}}verify/">원장 검증</a> · API am.stamp · am.verify</td></tr>
-        <tr><th>MCP 서버 · 함수 호출 도구 · SDK(베타)</th><td>Workflow</td><td><span class="stt is-live">운영 중</span></td><td><a href="{{root}}developers/">API · AI 연동</a></td></tr>
-        <tr><th>기업 계정 · 역할 권한 · 다단계 승인 · Webhook</th><td>Workflow</td><td><span class="stt is-dev">개발 중</span></td><td>2026.12 유료 파일럿</td></tr>
-        <tr><th>해시 체인 · 감사 증거 패키지</th><td>Ledger</td><td><span class="stt is-dev">개발 중</span></td><td>2026.12 유료 파일럿</td></tr>
-        <tr><th>이미지 지각 해시</th><td>Fingerprint</td><td><span class="stt is-dev">시험판</span></td><td>이 쪽 지문 엔진 시연</td></tr>
-        <tr><th>텍스트 지문 · 계보 · 표시 복원</th><td>Fingerprint</td><td><span class="stt is-plan">계획</span></td><td>2027 하반기 목표</td></tr>
-      </tbody></table></div>
-  </div>
-</section>
-
-<section class="blk" id="stages">
-  <div class="wrap">
-    <div class="blk-h"><span class="k">개발 단계</span><h2>단계마다 증명할 것을 정해 두고 갑니다</h2><p>아래 일정과 수치는 목표이며, 앞 단계의 검증을 통과한 뒤 다음 단계에 투자합니다.</p></div>
-    <div class="stg">
-      <div class="stg-c"><span class="stg-t">1단계 · 2026.4분기 ~ 2027 상반기</span><h3>상용화 기반</h3><ul class="dotl"><li>정책 엔진: 규칙에 언어모델 문맥 판단을 더함</li><li>출처 엔진: 신호 통합 · 워터마크 검출기 연동</li><li>워크플로: 기업 계정 · 다단계 승인 · Webhook</li><li>원장: 해시 체인 · 감사 증거 패키지</li></ul><p class="stg-g"><b>관문</b>파일럿 기업에서 검수 시간 30% 이상 절감 측정</p></div>
-      <div class="stg-c"><span class="stg-t">2단계 · 2027 하반기 ~ 2028 상반기</span><h3>재식별 · 플랫폼</h3><ul class="dotl"><li>지문 엔진 1.0: 지각 해시 · 텍스트 지문 · 등록 색인</li><li>콘텐츠 계보 · 지워진 표시 복원</li><li>플랫폼 API · SDK · 화이트라벨 실증</li><li>한국어 광고 · 상거래 콘텐츠 시험 세트 구축</li></ul><p class="stg-g"><b>관문</b>변형 콘텐츠 재식별률 85% 이상(시험 세트 기준)</p></div>
-      <div class="stg-c"><span class="stg-t">3단계 · 2028 하반기 ~</span><h3>멀티모달 · 해외</h3><ul class="dotl"><li>이미지 · 영상 속 글자 · 인물 정책 검수</li><li>나라별 정책 팩(일본 약기법 · EU AI Act 제50조)</li><li>게시 후 감시</li><li>Private 구축형</li></ul><p class="stg-g"><b>관문</b>해외 고객 · 플랫폼 실증 1건 이상</p></div>
+<section class="blk soft" id="limits">
+  <div class="wrap mk-limits">
+    <div>
+      <h2>한계</h2>
+      <ul class="mk-ul no">
+        <li>화면 캡처 · 다시 촬영 · 저장 과정에서 출처 기록이 지워지면 AI 사용을 기술로 확인할 수 없습니다. 이때는 '발급자 신고'로 표시합니다.</li>
+        <li>글의 AI 사용은 기술로 판정하지 않습니다. 'AI로 작성' 같은 표현이 있으면 확인을 한 번 더 묻습니다.</li>
+        <li>서명 없는 메타데이터는 누구나 고칠 수 있습니다. 그래서 '파일 기록'은 '서명 검증'보다 낮은 근거로 표시합니다.</li>
+        <li>지각 해시는 크게 자르거나 뒤집은 이미지를 놓칠 수 있습니다.</li>
+        <li>신뢰 목록은 C2PA 가 정하며 바뀔 수 있습니다. 목록 밖 서명은 '서명은 맞지만 신뢰 목록 밖'으로 따로 적습니다.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>원칙</h2>
+      <ul class="mk-ul ok">
+        <li>근거가 없으면 추측하지 않고, 근거의 세기를 숨기지 않습니다.</li>
+        <li>원본 파일 · 글 · 프롬프트는 받지 않습니다.</li>
+        <li>판정 규칙은 공개하지 않지만, 판정 결과의 근거는 마크마다 공개합니다.</li>
+        <li>마크는 표시와 근거의 기록이며 법적 적합성을 보증하지 않습니다.</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<section class="blk soft" id="metrics">
+<section class="blk" id="ip">
   <div class="wrap">
-    <div class="blk-h"><span class="k">검증 지표</span><h2>성능은 이렇게 재고, 이렇게 공개합니다</h2><p>아래 '목표'는 실험으로 검증하기 전의 값이며 성과가 아닙니다. 검증한 값은 시험 세트와 측정 방법을 함께 공개합니다.</p></div>
-    <div class="kvt-wrap"><table class="kvt">
-      <thead><tr><th>지표</th><th>정의</th><th>재는 방법</th><th>지금</th><th>목표(1단계 → 2단계)</th></tr></thead>
-      <tbody>
-        <tr><th>출처 확인 정밀도</th><td>'확인됨' 판정 가운데 실제로 AI로 만든 비율</td><td>C2PA · IPTC · 생성 설정값이 있는 시험 파일 1,000건</td><td>측정 준비</td><td>99.0% → 99.5%</td></tr>
-        <tr><th>등록 콘텐츠 재식별률</th><td>크기 변경 · 압축 · 10% 자르기 · 표시 제거 뒤 원본을 다시 찾은 비율</td><td>변형 시험 세트</td><td>시험판</td><td>85% → 95%</td></tr>
-        <tr><th>오탐률</th><td>평범한 광고 문구에서 위험 후보를 잘못 낸 비율</td><td>평범한 문구 시험 세트(15문장 → 1,000문장으로 확대)</td><td>내부 시험 운영</td><td>2% 이하 → 1% 이하</td></tr>
-        <tr><th>미탐률</th><td>정답으로 정한 위험 표현을 놓친 비율</td><td>정답 시험 문장(96문장 → 2,000문장으로 확대)</td><td>내부 시험 운영</td><td>10% 이하 → 5% 이하</td></tr>
-        <tr><th>콘텐츠당 처리 시간</th><td>문구 1건 요청부터 응답까지(p95)</td><td>서버 로그</td><td>왕복 약 3초(현 서버 구조)</td><td>1.5초 → 0.5초</td></tr>
-        <tr><th>API 처리 비용</th><td>월 서버 · 모델 비용 ÷ 처리 건수</td><td>원가 장부</td><td>측정 준비</td><td>건당 2원 → 0.5원(이미지 포함)</td></tr>
-        <tr><th>검수 시간 절감률</th><td>도입 전후 소재당 사람 검수 시간</td><td>파일럿 4주 전후 비교</td><td>파일럿 전</td><td>30% → 50%</td></tr>
-        <tr><th>검수 자동화율</th><td>사람 확인 없이 통과 · 수정된 콘텐츠 비율</td><td>작업 공간 처리 기록</td><td>파일럿 전</td><td>40% → 60%</td></tr>
-        <tr><th>정책 적용 오류율</th><td>적용해야 할 정책 버전 · 규칙이 잘못 적용된 비율</td><td>정책 버전 감사</td><td>측정 준비</td><td>1% 이하 → 0.5% 이하</td></tr>
-      </tbody></table></div>
-    <p class="note mt12">내부 시험: 배포할 때마다 정답 시험 문장과 평범한 문구로 자동 채점하고, 하나라도 틀리면 배포하지 않습니다. 시험 세트가 작아 외부 성능으로 말하지 않습니다.</p>
-  </div>
-</section>
-
-<section class="blk" id="moat">
-  <div class="wrap">
-    <div class="blk-h"><span class="k">경쟁우위</span><h2>'AI가 만든 것을 찾는다'는 기능만으로는 오래 가지 않습니다</h2><p>탐지 기능 하나는 쉽게 따라 할 수 있습니다. AIMarker는 오래 쓸수록 바꾸기 어려운 네 가지에서 차이를 만듭니다.</p></div>
-    <div class="cols2">
-      <div class="col-it"><b>여러 출처 신호의 통합</b><p>서명 · 메타데이터 · 생성 흔적 · 지문 · 판별 점수를 신호별 신뢰도로 맞춰 한 판단으로 묶습니다. 신호 하나가 지워져도 판단이 무너지지 않습니다.</p></div>
-      <div class="col-it"><b>생성부터 게시까지 이어진 워크플로 데이터</b><p>어떤 콘텐츠가 어떤 근거로 고쳐지고 누가 승인했는지가 한 흐름으로 남습니다. 단계별 도구를 따로 쓰면 생기지 않는 데이터입니다.</p></div>
-      <div class="col-it"><b>기존 시스템과의 깊은 연동</b><p>API · SDK · MCP · Webhook으로 고객의 업로드 · 게시 단계에 들어갑니다. 연동 범위가 넓을수록 바꾸는 비용이 커집니다.</p></div>
-      <div class="col-it"><b>쌓이는 관리 인프라</b><p>기업별 정책과 버전, 검수 · 승인 이력, 콘텐츠 계보, 연동 범위, 조직별 운영 효율 기록이 고객 계정 안에 쌓입니다.</p></div>
-    </div>
-    <p class="note mt16">데이터가 쌓인다고 정확도가 저절로 오른다고 말하지 않습니다. 정확도는 시험 세트로 따로 재고, 고객 데이터는 아래 원칙에 따라서만 씁니다.</p>
-  </div>
-</section>
-
-<section class="blk soft" id="data">
-  <div class="wrap">
-    <div class="blk-h"><span class="k">데이터 원칙</span><h2>고객 콘텐츠는 고객의 것입니다</h2></div>
-    <div class="cols3">
-      <div class="col-it"><b>검수 문구는 저장하지 않음</b><p>검수할 때만 서버로 보내고 남기지 않습니다. 승인 링크를 만들 때만 그 소재의 문구 · 요약을 90일 보관합니다.</p></div>
-      <div class="col-it"><b>이미지는 브라우저 안에서</b><p>출처 판독과 표시 넣기는 파일을 서버로 보내지 않고 이용자의 브라우저에서 처리합니다.</p></div>
-      <div class="col-it"><b>판정 의견은 최소한만</b><p>'맞아요 · 틀려요' 의견은 규칙 번호 · 판정 · 업종만 모읍니다. 문구 원문은 모으지 않습니다.</p></div>
-      <div class="col-it"><b>학습은 동의한 것만</b><p>모델 학습에는 고객이 따로 동의한 데이터만 쓰고, 고객별로 나눠 관리합니다.</p></div>
-      <div class="col-it"><b>정책은 고객별로 분리</b><p>한 고객의 정책 · 브랜드 가이드 · 이력은 다른 고객의 판정에 쓰지 않습니다. 영업비밀을 보호합니다.</p></div>
-      <div class="col-it"><b>해지하면 내보내고 지움</b><p>계약이 끝나면 고객 데이터를 내보내 드리고 정해진 기간 안에 지웁니다. 원장에는 해시만 남습니다.</p></div>
+    <div class="blk-h"><span class="k">지식재산 · 연구</span><h2>베끼기 어려운 부분을 권리로</h2><p>아래는 출원 준비 중인 내용입니다. 출원 · 등록이 끝난 것처럼 쓰지 않습니다.</p></div>
+    <div class="sec5">
+      <article><b>근거 등급별 발급 제한</b><p>출처 기록의 검증 수준에 따라 발급할 수 있는 AI 표시를 정하고 충돌 표시를 막는 방법(출원 준비)</p></article>
+      <article><b>서명 마크 · 지문 결합 확인</b><p>전자서명 마크와 정확 · 지각 지문, 표시본 해시를 함께 써 사본을 원래 마크에 잇는 방법(출원 준비)</p></article>
+      <article><b>공개 앵커 원장</b><p>하루치 표시 원장을 사슬로 잇고 공개 타임스탬프에 고정하는 방법(출원 준비)</p></article>
+      <article><b>상표 · 연구</b><p>'AIMarker' 상표 출원 준비, 보이지 않는 워터마크 연구</p></article>
     </div>
   </div>
 </section>
 
-<section class="blk" id="limits">
+<section class="h5-end">
   <div class="wrap">
-    <div class="blk-h"><span class="k">한계</span><h2>먼저 말해 두는 것</h2></div>
-    <ul class="lim">
-      <li>AIMarker는 위험 후보와 근거를 보여 주는 도구이며, 법률 자문을 대신하거나 콘텐츠의 적법성을 보증하지 않습니다.</li>
-      <li>AI로 만들었다는 사실만으로 허위광고나 저작권 침해를 판단하지 않습니다. 위험마다 따로 근거와 정책 규칙으로 구분합니다.</li>
-      <li>글은 판별 점수만으로 'AI가 썼다'고 표시하지 않습니다. 생성 기록이 있을 때만 표시를 권합니다.</li>
-      <li>지문 엔진은 등록된 콘텐츠 범위 안에서만 다시 찾습니다.</li>
-      <li>현재 서버는 문구 1건에 왕복 약 3초가 걸립니다. 대량 처리는 일괄 요청과 전용 서버로 개선합니다.</li>
-    </ul>
-    <div class="cta4 mt48"><div><h2>기술 검토가 필요하신가요</h2><p>보안 질문지 · 데이터 처리 흐름 · 연동 구조를 도입 상담에서 함께 확인합니다.</p></div><div class="row"><a class="btn btn-w" href="{{root}}contact/">도입 상담</a><a class="btn btn-gl" href="{{root}}developers/">API 문서</a></div></div>
+    <h2>기술을 직접 확인해 보세요</h2>
+    <p>파일 하나를 넣으면 판독 · 서명 검증 · 판정 · 서명된 마크까지 그대로 볼 수 있습니다.</p>
+    <div class="h5-cta"><a class="btn btn-w btn-l" href="{{root}}mark/">AI 사용 확인하기</a><a class="btn btn-gl btn-l" href="{{root}}developers/">개발자 문서</a></div>
   </div>
 </section>

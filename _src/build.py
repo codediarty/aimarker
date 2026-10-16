@@ -21,13 +21,15 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261016a"
+VER = "20261016b"
 TODAY = "2026-10-16"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
 # 옮긴 주소(2.0 → 3.0): 베타 → 파일럿, 작동 방식 → 제품
-REDIRECTS = [("beta/", "contact/"), ("pilot/", "contact/"), ("how/", "product/"), ("mcp/", "developers/#mcp")]
+REDIRECTS = [("beta/", "contact/"), ("pilot/", "contact/"), ("how/", "product/"), ("mcp/", "developers/#mcp"), ("image/", "mark/")]
+# 마크 서명 공개키(서버 am.pubkey 와 같은 값. 서버가 스스로 만든 키, 비밀 키는 서버 밖으로 나오지 않음)
+MARK_KEYS = [{"kty": "OKP", "crv": "Ed25519", "x": "XdbkQ_O_R4Aq19ugDnJVpMcCX5OYPAV1NobuLhL-AEA", "kid": "amk1-f4e2e03c4c04", "use": "sig", "alg": "EdDSA", "since": "2026-10-16"}]
 
 ICONS = {
     "check": '<path d="M20 6 9 17l-5-5"/>',
@@ -103,28 +105,33 @@ LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40
         '<path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/>'
         '<rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg>')
 
-# 메뉴(4.0): 제품 · 솔루션 · 기술 · 요금 · 회사 + 도입 상담
+# 메뉴(5.0): AI 사용 확인 · 마크 확인 · 제품 · 솔루션 · 기술 · 요금 · 회사 + 기업 상담
 # 펼침 메뉴 항목: (주소, 아이콘, 제목, 설명) · 묶음 제목은 ("#", None, "묶음 이름", None)
-NAV = [("product", "product", "제품", [
-           ("#", None, "플랫폼", None),
-           ("product/", "layers", "제품 개요", "검증 · 검수 · 승인 · 증빙을 한 흐름으로"),
-           ("app/", "inbox", "검수 작업 공간", "지금 무료로 쓰는 웹 앱"),
-           ("developers/", "code", "API · AI 연동", "API · MCP · SDK · 함수 호출"),
-           ("verify/", "ledger", "증거 원장 검증", "보고서 · 승인 기록 위변조 확인"),
-           ("#", None, "무료 도구", None),
-           ("check/", "megaphone", "광고 문구 검사", "붙여 넣으면 위험 표현과 바꿀 말"),
+NAV = [("mark/", "mark", "AI 사용 확인", None),
+       ("m/", "mcheck", "마크 확인", None),
+       ("product", "product", "제품", [
+           ("#", None, "핵심", None),
+           ("product/", "layers", "제품 개요", "확인 · 마킹 · 관리 네 가지 엔진"),
+           ("mark/", "badge", "AI 사용 확인 · 마크 발급", "파일 · 글 확인, 근거 맞춤 마크"),
+           ("m/", "search", "마크 확인", "표시 · 근거 · 서명 · 이력 확인"),
+           ("developers/", "code", "기업용 API · MCP", "올리는 순간 자동 확인 · 대량 마킹"),
+           ("verify/", "ledger", "원장 · 공개 타임스탬프", "발급 기록 위변조 확인"),
+           ("#", None, "부가 기능", None),
+           ("check/", "megaphone", "광고 문구 검수", "위험 후보 · 바꿀 말 · 자동 수정"),
+           ("app/", "inbox", "검수 작업 공간", "소재 묶음 검수 · 광고주 승인"),
            ("scan/", "radar", "사이트 진단", "AI 사용 흔적 · 광고 표현 진단"),
-           ("site/", "tag", "AI 표시 · 자동 태그", "코드 한 줄 · 아임웹 앱"),
-           ("image/", "image", "이미지 출처 확인", "파일 속 C2PA · IPTC 기록 읽기")]),
+           ("site/", "tag", "AI 표시 · 자동 태그", "코드 한 줄 · 아임웹 앱")]),
        ("solutions", "business", "솔루션", [
-           ("business/#agency", "megaphone", "광고대행사 · 브랜드 마케팅", "소재 대량 검수 · 승인 · 납품 보고서"),
-           ("business/#commerce", "store", "이커머스 · 쇼핑몰", "상품 콘텐츠를 올리는 순간 자동 분석"),
-           ("business/#platform", "plug", "플랫폼 · SaaS", "API · SDK로 우리 서비스에 내장 · 재판매")]),
+           ("business/#commerce", "store", "쇼핑몰 · 이커머스", "상품 콘텐츠를 올리는 순간 자동 마킹"),
+           ("business/#media", "scroll", "언론 · 미디어", "기사 이미지 · 영상 AI 고지와 출처"),
+           ("business/#agency", "megaphone", "광고대행사 · 브랜드", "캠페인 소재 대량 확인 · 납품 증빙"),
+           ("business/#platform", "plug", "플랫폼 · AI 서비스", "생성 결과에 마크 · API 재판매"),
+           ("business/#creator", "user", "개인 크리에이터", "내 작품 AI 사용 밝히기 · 무료")]),
        ("technology/", "technology", "기술", None),
        ("pricing/", "pricing", "요금", None),
        ("company/", "company", "회사", None)]
-PRODUCT_KEYS = ["product", "app", "developers", "verify", "check", "scan", "site", "image", "proof"]
-ANNOUNCE = ("contact/", "파일럿 모집", "2026년 12월 유료 파일럿 기업을 모집합니다. 신청하면 소재 20건 무료 검수 보고서를 먼저 드립니다")
+PRODUCT_KEYS = ["product", "app", "developers", "verify", "check", "scan", "site", "proof"]
+ANNOUNCE = ("contact/", "기업 파일럿", "2026년 12월 유료 파일럿 기업을 모집합니다. 신청하면 우리 콘텐츠 100건의 AI 사용 확인 리포트를 먼저 드립니다")
 
 
 def ico(name, cls="ico"):
@@ -162,10 +169,10 @@ def header(root, key):
     ah, ab, at = ANNOUNCE
     bar = ('<a class="annc" href="%s%s"><span class="annc-in"><b>%s</b><span>%s</span><em>신청하기%s</em></span></a>' % (root, ah, ab, at, ico("arrow"))) if key not in ("contact", "404") else ""
     return (bar + '<header class="hd" id="hd"><div class="wrap">%s<nav class="nav" aria-label="주 메뉴">%s</nav>'
-            '<div class="hd-cta"><a class="btn btn-g btn-s" href="%sapp/">무료로 시작</a><a class="btn btn-p btn-s" href="%scontact/">도입 상담</a></div>'
+            '<div class="hd-cta"><a class="btn btn-g btn-s" href="%smark/">무료로 확인</a><a class="btn btn-p btn-s" href="%scontact/">기업 상담</a></div>'
             '<button class="menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">%s</button></div></header>'
             '<nav class="mnav" id="mnav" aria-label="모바일 메뉴">%s'
-            '<a class="btn btn-p" href="%scontact/">도입 상담</a><a class="btn btn-g" href="%sapp/">무료로 시작</a></nav>'
+            '<a class="btn btn-p" href="%scontact/">기업 상담</a><a class="btn btn-g" href="%smark/">무료로 확인</a></nav>'
             % (brand(root), "".join(items), root, root, ico("menu"), mgroups, root, root))
 
 
@@ -179,17 +186,17 @@ def footer(root):
     if b["addr"]:
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
-    cols = [("제품", [("product/", "제품 개요"), ("app/", "검수 작업 공간"), ("pricing/", "요금"), ("verify/", "증거 원장 검증")]),
-            ("솔루션", [("business/#agency", "광고대행사 · 브랜드"), ("business/#commerce", "이커머스 · 쇼핑몰"), ("business/#platform", "플랫폼 · SaaS")]),
-            ("기술 · 개발자", [("technology/", "기술"), ("developers/", "API · AI 연동"), ("developers/#mcp", "MCP 서버"), ("llms.txt", "llms.txt"), ("developers/openapi.json", "OpenAPI 명세")]),
-            ("무료 도구", [("check/", "광고 문구 검사"), ("scan/", "사이트 진단"), ("site/", "AI 표시 만들기"), ("image/", "이미지 출처 확인"), ("proof/", "AI 활용 증빙서")]),
-            ("회사", [("company/", "회사 소개"), ("contact/", "도입 상담"), ("trust/", "신뢰 · 판단 기준"), ("guide/", "광고 · AI 표시 가이드"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
+    cols = [("제품", [("mark/", "AI 사용 확인 · 마크 발급"), ("m/", "마크 확인"), ("product/", "제품 개요"), ("pricing/", "요금"), ("verify/", "원장 · 공개 타임스탬프")]),
+            ("솔루션", [("business/#commerce", "쇼핑몰 · 이커머스"), ("business/#media", "언론 · 미디어"), ("business/#agency", "광고대행사 · 브랜드"), ("business/#platform", "플랫폼 · AI 서비스"), ("business/#creator", "개인 크리에이터")]),
+            ("기술 · 개발자", [("technology/", "기술"), ("developers/", "API · AI 연동"), ("developers/#mcp", "MCP 서버"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("llms.txt", "llms.txt"), ("developers/openapi.json", "OpenAPI 명세")]),
+            ("부가 기능", [("check/", "광고 문구 검수"), ("app/", "검수 작업 공간"), ("scan/", "사이트 진단"), ("site/", "AI 표시 · 자동 태그"), ("proof/", "AI 활용 증빙서")]),
+            ("회사", [("company/", "회사 소개"), ("contact/", "기업 상담"), ("trust/", "신뢰 · 판단 기준"), ("guide/", "광고 · AI 표시 가이드"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b class="ct">%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
     return ('<footer class="ft"><div class="wrap"><div class="top"><div class="ft-a">%s'
-            '<p class="about">AIMarker는 기업이 만들고 유통하는 AI 콘텐츠를 분석하고, 검수하고, 기록하는 AI 콘텐츠 신뢰 인프라입니다.</p><div id="aimarker" class="ft-label"></div></div>'
+            '<p class="about">AIMarker는 콘텐츠의 AI 사용 여부와 활용 범위를 확인하고, 근거가 붙은 디지털 마크를 발급 · 관리하는 AI 콘텐츠 투명성 기술 플랫폼입니다.</p><div id="aimarker" class="ft-label"></div></div>'
             '<div class="cols">%s</div></div>'
             '<div class="biz">%s<br>'
-            '<span>AIMarker 는 위험 후보와 근거를 보여 주는 도구이며 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
+            '<span>AIMarker 마크는 표시와 그 근거를 기록하는 것이며, 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. 광고 검수 결과는 위험 후보와 근거입니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
             '<span>© 2026 AIMarker</span></div></div></footer>'
             % (brand(root), colhtml, "".join(biz)))
 
@@ -257,7 +264,7 @@ def parse(src):
 
 
 # ---------- AI 연동 자료(4.0): MCP 서버 · SDK · 함수 호출 도구 정의 · llms.txt ----------
-MCP_VER = "1.0.0"
+MCP_VER = "2.0.0"
 _IND = {"type": "string", "enum": ["auto", "gen", "food", "hfood", "cos", "med", "fin"],
         "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."}
 _FLAGS = {"type": "object", "description": "콘텐츠 정보(모르면 비움).", "properties": {
@@ -267,19 +274,33 @@ _FLAGS = {"type": "object", "description": "콘텐츠 정보(모르면 비움)."
 _GUIDE = {"type": "object", "description": "브랜드 정책(선택).", "properties": {
     "ban": {"type": "array", "items": {"type": "string"}, "description": "쓰지 않을 말"},
     "must": {"type": "array", "items": {"type": "string"}, "description": "꼭 넣을 문구"}}}
-# (이름, API 동작, 설명, 입력 속성, 필수) · 도구 입력은 API 본문과 같고, content 만 실행 코드가 SHA-256 으로 바꿔 h 로 보냄
+_LABEL = {"type": "string", "enum": ["auto", "ai_generated", "ai_edited", "ai_assisted", "no_ai"],
+          "description": "auto(파일 근거로 정함, 근거가 없으면 발급하지 않음) · ai_generated(AI 생성) · ai_edited(AI 편집 · 합성) · ai_assisted(AI 보조) · no_ai(AI 미사용, 사용자가 그렇다고 말했을 때만). 근거와 맞지 않는 표시는 서버가 막습니다."}
+_TOOLS = {"type": "array", "items": {"type": "string"}, "description": "사용한 AI 도구 이름(예: Midjourney · ChatGPT). AI 미사용이면 비움"}
+# (이름, API 동작, 설명, 입력 속성, 필수) · path 는 실행 코드가 파일을 읽어 aim-extract 특징값(features · pack)으로 바꿔 보내고, content 는 SHA-256 으로 바꿔 h 로 보냄
 FC_TOOLS = [
-    ("aimarker_check", "am.check", "광고 · 상세페이지 · SNS 문구를 올리기 전에 한국 광고 규칙(표시광고법 · 식품 · 건강기능식품 · 화장품 · 의료 · 금융 광고 규제)과 협찬 · 가상인물 · AI 표시 기준으로 검수합니다. 위험 후보마다 근거 법령 · 이유 · 바꿀 말(reps)과 붙일 표시, 출고 결정(decision: fix 수정 후 출고 · expert 전문가 검토 권장 · review 확인 후 출고 · clear 큰 위험 후보 없음)을 돌려줍니다. 문구를 쓴 뒤 내보내기 전에 부르세요. 결과는 위험 후보이며 법률 자문이 아닙니다.",
+    ("aimarker_analyze_file", "am.analyze", "이미지 · 영상 · 오디오 · 문서 파일의 AI 사용 근거(C2PA 서명 재검증 · 생성 도구 기록 · 메타데이터)를 확인합니다. 판정(verdict.ai: used · not_used · unknown), 근거(basis: verified 서명 검증 · record 파일 기록 · none), 고를 수 있는 표시(allowed), 근거로 정해지는 표시(suggest), 같은 · 비슷한 파일의 기존 마크를 돌려줍니다. 파일은 실행 환경에서 읽고 원본은 보내지 않습니다.",
+     {"path": {"type": "string", "description": "파일 경로"}}, ["path"]),
+    ("aimarker_analyze_text", "am.analyze", "글의 해시와 AI 활용을 밝히는 표현 여부로 같은 글의 기존 마크와 주의할 점을 확인합니다. 글은 파일 기록이 없어 AI 사용 여부를 글만으로 판정하지 않습니다. 원문은 보내지 않습니다.",
+     {"text": {"type": "string", "description": "확인할 글"}}, ["text"]),
+    ("aimarker_mark", "am.mark", "파일(path) 또는 글(text)에 서명된 AIMarker 마크를 발급합니다. 마크 번호 · 확인 주소(aimarker.kr/m/) · 관리 키(한 번만) · 서명(JWS) · 원장 번호를 돌려줍니다. 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지에 AI 마크가 있으면 CONFIRM(사용자가 확인한 뒤 confirm: true). 이 대화에서 AI가 만들거나 고친 콘텐츠는 AI 사용 표시를 고르고 tools 에 적으세요.",
+     {"path": {"type": "string", "description": "파일 경로(path 와 text 가운데 하나)"}, "text": {"type": "string", "description": "글(원문은 보내지 않음)"}, "label": _LABEL, "tools": _TOOLS,
+      "title": {"type": "string", "description": "콘텐츠 이름(선택)"}, "issuer": {"type": "string", "description": "발급자 이름(선택)"}, "confirm": {"type": "boolean", "description": "CONFIRM 질문을 사용자가 확인했을 때만 true"}}, ["label"]),
+    ("aimarker_mark_info", "am.markinfo", "마크 번호(AM-로 시작)로 표시 · 근거 · 상태(유효 · 철회) · 공개 근거 · 이력과 서명(cred)을 확인합니다. 누구나 쓸 수 있습니다.",
+     {"id": {"type": "string", "description": "마크 번호"}}, ["id"]),
+    ("aimarker_find_marks", "am.lookup", "파일(path) 또는 SHA-256 · 지각 해시(dhash)로 이미 발급된 마크를 찾습니다(같은 파일 · 발급자가 등록한 표시본 · 비슷한 이미지).",
+     {"path": {"type": "string"}, "sha256": {"type": "string", "description": "소문자 16진수 64자"}, "dhash": {"type": "string", "description": "16진수 16자"}}, []),
+    ("aimarker_verify_mark", "am.pubkey", "마크 서명(JWS · EdDSA)을 AIMarker 공개키로 확인합니다. 실행 코드가 공개키(https://aimarker.kr/.well-known/aimarker-keys.json)로 직접 확인하고 서명 내용(마크 번호 · 표시 · 근거 · 원본 해시)을 돌려줍니다.",
+     {"credential": {"type": "string", "description": "마크 서명(JWS) 문자열"}}, ["credential"]),
+    ("aimarker_anchor", "am.anchor", "하루치 원장을 묶은 뿌리 해시와 OpenTimestamps 증명(공개 앵커)을 확인합니다. date(YYYY-MM-DD) 또는 원장 번호(id, LG로 시작).",
+     {"date": {"type": "string"}, "id": {"type": "string"}}, []),
+    ("aimarker_check", "am.check", "부가 기능: 광고 · 상세페이지 · SNS 문구를 한국 광고 규칙(표시광고법 · 식품 · 건강기능식품 · 화장품 · 의료 · 금융 광고 규제)과 협찬 · 가상인물 · AI 표시 기준으로 검수합니다. 위험 후보마다 근거 법령 · 이유 · 바꿀 말(reps)과 붙일 표시, 출고 결정(fix · expert · review · clear)을 돌려줍니다. 결과는 위험 후보이며 법률 자문이 아닙니다.",
      {"text": {"type": "string", "description": "검수할 문구(5,000자까지)"}, "ind": _IND, "flags": _FLAGS, "guide": _GUIDE}, ["text"]),
-    ("aimarker_check_batch", "am.batch", "문구를 한 번에 최대 20건 검수합니다. 결과는 results 배열(id · score · decision · findings)입니다.",
-     {"items": {"type": "array", "maxItems": 20, "description": "검수할 문구 목록(20건까지)", "items": {"type": "object", "properties": {"id": {"type": "string"}, "text": {"type": "string"}, "ind": _IND, "flags": _FLAGS}, "required": ["text"]}}, "guide": _GUIDE}, ["items"]),
+    ("aimarker_auto_fix", "am.auto", "부가 기능: 검수 · 고치기 · 다시 검수를 서버에서 끝까지 자동으로 합니다. outcome(pass 그대로 출고 가능 · fixed 자동 수정 후 출고 가능 · return 반려), 고친 문구(text), 바꾼 곳(applied), 남은 위험 후보(left)를 돌려줍니다.",
+     {"text": {"type": "string"}, "ind": _IND, "flags": _FLAGS, "guide": _GUIDE, "stamp": {"type": "boolean", "description": "고친 문구의 해시를 원장에 남길지"}}, ["text"]),
     ("aimarker_label", "am.label", "붙일 표시 문구를 받습니다(한국AI윤리위원회 기준). kind: image · video · person(가상인물) · text · sponsor(광고 · 협찬). 짧은 표시 · 긴 문장 · HTML · 마크다운 · IPTC 값을 돌려줍니다.",
      {"kind": {"type": "string", "enum": ["image", "video", "person", "text", "sponsor"]}, "level": {"type": "string", "enum": ["gen", "edit"], "description": "gen: AI로 만듦 · edit: AI로 고침"}}, ["kind"]),
-    ("aimarker_scan_site", "am.scan", "공개된 사이트 첫 화면과 이미지 12장까지 살펴 AI 사용 흔적 · AI 상담 창 · 광고 표현 위험 후보를 보수적으로 진단합니다(10~20초).",
-     {"url": {"type": "string", "description": "사이트 주소(예: myshop.co.kr)"}}, ["url"]),
-    ("aimarker_approval_status", "am.status", "광고주 승인 링크 id(AP로 시작)들의 상태(대기 · 승인 · 수정 요청)와 답한 사람 · 시각 · 메모를 확인합니다.",
-     {"ids": {"type": "array", "maxItems": 60, "items": {"type": "string"}}}, ["ids"]),
-    ("aimarker_stamp", "am.stamp", "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려줍니다.",
+    ("aimarker_stamp", "am.stamp", "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려주고, 하루치 원장은 다음 날 공개 앵커로 묶입니다.",
      {"content": {"type": "string", "description": "기록할 내용(실행 코드가 해시로 바꿈)"}, "k": {"type": "string", "enum": ["report", "version", "approval"], "description": "기록 종류"}, "n": {"type": "integer", "description": "보고서에 든 소재 수(선택)"}}, ["content"]),
     ("aimarker_verify", "am.verify", "원장 번호(id, LG로 시작)나 내용(content, 실행 코드가 해시로 바꿈)으로 증거 원장 기록을 확인합니다.",
      {"id": {"type": "string", "description": "원장 번호"}, "content": {"type": "string", "description": "확인할 내용"}}, []),
@@ -303,7 +324,15 @@ def build_ai_assets():
     os.makedirs(os.path.join(ROOT, "sdk"), exist_ok=True)
     os.makedirs(os.path.join(ROOT, "developers", "tools"), exist_ok=True)
     src_mcp = os.path.join(HERE, "mcp")
-    shutil.copyfile(os.path.join(src_mcp, "aimarker-mcp.mjs"), os.path.join(ROOT, "mcp", "aimarker-mcp.mjs"))
+    # 2.0: 출처 판독기(aim-extract)를 MCP 파일 안에 넣어 파일 하나로 돌게 함
+    with open(os.path.join(src_mcp, "aimarker-mcp.src.mjs"), encoding="utf-8") as f:
+        mcp_src = f.read()
+    with open(os.path.join(HERE, "lib", "aim-extract.js"), encoding="utf-8") as f:
+        aim_src = f.read()
+    assert "/*@@AIM_EXTRACT@@*/" in mcp_src and "VERSION = '%s'" % MCP_VER in mcp_src
+    mcp_out = mcp_src.replace("/*@@AIM_EXTRACT@@*/", aim_src.rstrip("\n"))
+    with open(os.path.join(ROOT, "mcp", "aimarker-mcp.mjs"), "w", encoding="utf-8") as f:
+        f.write(mcp_out)
     # npx 용 꾸러미(npm pack 과 같은 모양: package/ 아래 파일, 시각 고정)
     tgz = os.path.join(ROOT, "mcp", "aimarker-mcp-%s.tgz" % MCP_VER)
     buf = io.BytesIO()
@@ -311,15 +340,21 @@ def build_ai_assets():
     with gzip.GzipFile(fileobj=buf, mode="wb", mtime=0) as gz:
         with tarfile.open(fileobj=gz, mode="w", format=tarfile.USTAR_FORMAT) as tar:
             for name in ("package.json", "aimarker-mcp.mjs", "README.md"):
-                data = open(os.path.join(src_mcp, name), "rb").read()
+                data = mcp_out.encode("utf-8") if name == "aimarker-mcp.mjs" else open(os.path.join(src_mcp, name), "rb").read()
                 ti = tarfile.TarInfo("package/" + name)
                 ti.size, ti.mtime, ti.mode = len(data), 499162500, 0o755 if name.endswith(".mjs") else 0o644
                 tar.addfile(ti, io.BytesIO(data))
     old = open(tgz, "rb").read() if os.path.exists(tgz) else b""
     if old != buf.getvalue():
         open(tgz, "wb").write(buf.getvalue())
-    for name in ("aimarker.mjs", "aimarker.py"):
-        shutil.copyfile(os.path.join(HERE, "sdk", name), os.path.join(ROOT, "sdk", name))
+    # SDK 1.0: JavaScript 는 aim-extract 를 넣어 파일 하나로, Python 은 그대로
+    with open(os.path.join(HERE, "sdk", "aimarker.src.mjs"), encoding="utf-8") as f:
+        sdk_src = f.read()
+    assert "/*@@AIM_EXTRACT@@*/" in sdk_src
+    with open(os.path.join(ROOT, "sdk", "aimarker.mjs"), "w", encoding="utf-8") as f:
+        f.write(sdk_src.replace("/*@@AIM_EXTRACT@@*/", aim_src.rstrip("\n")))
+    shutil.copyfile(os.path.join(HERE, "sdk", "aimarker.py"), os.path.join(ROOT, "sdk", "aimarker.py"))
+    shutil.copyfile(os.path.join(HERE, "sdk", "aimarker-tools.mjs"), os.path.join(ROOT, "sdk", "aimarker-tools.mjs"))
     # 함수 호출 도구 정의 세 가지 모양
     def params(props, req):
         o = {"type": "object", "properties": props}
@@ -338,6 +373,16 @@ def build_ai_assets():
     for name in ("llms.txt", "llms-full.txt"):
         shutil.copyfile(os.path.join(HERE, "ai", name), os.path.join(ROOT, name))
     shutil.copyfile(os.path.join(HERE, "ai", "openapi.json"), os.path.join(ROOT, "developers", "openapi.json"))
+    # 5.0 공개 판독기 · 마크 삽입 배지 · 마크 서명 공개키
+    os.makedirs(os.path.join(ROOT, "lib"), exist_ok=True)
+    shutil.copyfile(os.path.join(HERE, "lib", "aim-extract.js"), os.path.join(ROOT, "lib", "aim-extract.js"))
+    os.makedirs(os.path.join(ROOT, "m"), exist_ok=True)
+    shutil.copyfile(os.path.join(HERE, "m", "embed.js"), os.path.join(ROOT, "m", "embed.js"))
+    os.makedirs(os.path.join(ROOT, ".well-known"), exist_ok=True)
+    with open(os.path.join(ROOT, ".well-known", "aimarker-keys.json"), "w", encoding="utf-8") as f:
+        json.dump({"issuer": "https://aimarker.kr", "about": "AIMarker 마크 서명 공개키(JWS · EdDSA/Ed25519). 마크의 kid 와 같은 키로 서명을 확인하세요. https://aimarker.kr/developers/#verify",
+                   "keys": MARK_KEYS}, f, ensure_ascii=False, indent=2)
+        f.write("\n")
 
 
 def main():

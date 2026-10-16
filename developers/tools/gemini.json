@@ -1,8 +1,157 @@
 {
   "functionDeclarations": [
     {
+      "name": "aimarker_analyze_file",
+      "description": "이미지 · 영상 · 오디오 · 문서 파일의 AI 사용 근거(C2PA 서명 재검증 · 생성 도구 기록 · 메타데이터)를 확인합니다. 판정(verdict.ai: used · not_used · unknown), 근거(basis: verified 서명 검증 · record 파일 기록 · none), 고를 수 있는 표시(allowed), 근거로 정해지는 표시(suggest), 같은 · 비슷한 파일의 기존 마크를 돌려줍니다. 파일은 실행 환경에서 읽고 원본은 보내지 않습니다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "파일 경로"
+          }
+        },
+        "required": [
+          "path"
+        ]
+      }
+    },
+    {
+      "name": "aimarker_analyze_text",
+      "description": "글의 해시와 AI 활용을 밝히는 표현 여부로 같은 글의 기존 마크와 주의할 점을 확인합니다. 글은 파일 기록이 없어 AI 사용 여부를 글만으로 판정하지 않습니다. 원문은 보내지 않습니다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "확인할 글"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      }
+    },
+    {
+      "name": "aimarker_mark",
+      "description": "파일(path) 또는 글(text)에 서명된 AIMarker 마크를 발급합니다. 마크 번호 · 확인 주소(aimarker.kr/m/) · 관리 키(한 번만) · 서명(JWS) · 원장 번호를 돌려줍니다. 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지에 AI 마크가 있으면 CONFIRM(사용자가 확인한 뒤 confirm: true). 이 대화에서 AI가 만들거나 고친 콘텐츠는 AI 사용 표시를 고르고 tools 에 적으세요.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "파일 경로(path 와 text 가운데 하나)"
+          },
+          "text": {
+            "type": "string",
+            "description": "글(원문은 보내지 않음)"
+          },
+          "label": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "ai_generated",
+              "ai_edited",
+              "ai_assisted",
+              "no_ai"
+            ],
+            "description": "auto(파일 근거로 정함, 근거가 없으면 발급하지 않음) · ai_generated(AI 생성) · ai_edited(AI 편집 · 합성) · ai_assisted(AI 보조) · no_ai(AI 미사용, 사용자가 그렇다고 말했을 때만). 근거와 맞지 않는 표시는 서버가 막습니다."
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "사용한 AI 도구 이름(예: Midjourney · ChatGPT). AI 미사용이면 비움"
+          },
+          "title": {
+            "type": "string",
+            "description": "콘텐츠 이름(선택)"
+          },
+          "issuer": {
+            "type": "string",
+            "description": "발급자 이름(선택)"
+          },
+          "confirm": {
+            "type": "boolean",
+            "description": "CONFIRM 질문을 사용자가 확인했을 때만 true"
+          }
+        },
+        "required": [
+          "label"
+        ]
+      }
+    },
+    {
+      "name": "aimarker_mark_info",
+      "description": "마크 번호(AM-로 시작)로 표시 · 근거 · 상태(유효 · 철회) · 공개 근거 · 이력과 서명(cred)을 확인합니다. 누구나 쓸 수 있습니다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "마크 번호"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    },
+    {
+      "name": "aimarker_find_marks",
+      "description": "파일(path) 또는 SHA-256 · 지각 해시(dhash)로 이미 발급된 마크를 찾습니다(같은 파일 · 발급자가 등록한 표시본 · 비슷한 이미지).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "description": "소문자 16진수 64자"
+          },
+          "dhash": {
+            "type": "string",
+            "description": "16진수 16자"
+          }
+        }
+      }
+    },
+    {
+      "name": "aimarker_verify_mark",
+      "description": "마크 서명(JWS · EdDSA)을 AIMarker 공개키로 확인합니다. 실행 코드가 공개키(https://aimarker.kr/.well-known/aimarker-keys.json)로 직접 확인하고 서명 내용(마크 번호 · 표시 · 근거 · 원본 해시)을 돌려줍니다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "credential": {
+            "type": "string",
+            "description": "마크 서명(JWS) 문자열"
+          }
+        },
+        "required": [
+          "credential"
+        ]
+      }
+    },
+    {
+      "name": "aimarker_anchor",
+      "description": "하루치 원장을 묶은 뿌리 해시와 OpenTimestamps 증명(공개 앵커)을 확인합니다. date(YYYY-MM-DD) 또는 원장 번호(id, LG로 시작).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
       "name": "aimarker_check",
-      "description": "광고 · 상세페이지 · SNS 문구를 올리기 전에 한국 광고 규칙(표시광고법 · 식품 · 건강기능식품 · 화장품 · 의료 · 금융 광고 규제)과 협찬 · 가상인물 · AI 표시 기준으로 검수합니다. 위험 후보마다 근거 법령 · 이유 · 바꿀 말(reps)과 붙일 표시, 출고 결정(decision: fix 수정 후 출고 · expert 전문가 검토 권장 · review 확인 후 출고 · clear 큰 위험 후보 없음)을 돌려줍니다. 문구를 쓴 뒤 내보내기 전에 부르세요. 결과는 위험 후보이며 법률 자문이 아닙니다.",
+      "description": "부가 기능: 광고 · 상세페이지 · SNS 문구를 한국 광고 규칙(표시광고법 · 식품 · 건강기능식품 · 화장품 · 의료 · 금융 광고 규제)과 협찬 · 가상인물 · AI 표시 기준으로 검수합니다. 위험 후보마다 근거 법령 · 이유 · 바꿀 말(reps)과 붙일 표시, 출고 결정(fix · expert · review · clear)을 돌려줍니다. 결과는 위험 후보이며 법률 자문이 아닙니다.",
       "parameters": {
         "type": "object",
         "properties": {
@@ -68,59 +217,43 @@
       }
     },
     {
-      "name": "aimarker_check_batch",
-      "description": "문구를 한 번에 최대 20건 검수합니다. 결과는 results 배열(id · score · decision · findings)입니다.",
+      "name": "aimarker_auto_fix",
+      "description": "부가 기능: 검수 · 고치기 · 다시 검수를 서버에서 끝까지 자동으로 합니다. outcome(pass 그대로 출고 가능 · fixed 자동 수정 후 출고 가능 · return 반려), 고친 문구(text), 바꾼 곳(applied), 남은 위험 후보(left)를 돌려줍니다.",
       "parameters": {
         "type": "object",
         "properties": {
-          "items": {
-            "type": "array",
-            "maxItems": 20,
-            "description": "검수할 문구 목록(20건까지)",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "text": {
-                  "type": "string"
-                },
-                "ind": {
-                  "type": "string",
-                  "enum": [
-                    "auto",
-                    "gen",
-                    "food",
-                    "hfood",
-                    "cos",
-                    "med",
-                    "fin"
-                  ],
-                  "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."
-                },
-                "flags": {
-                  "type": "object",
-                  "description": "콘텐츠 정보(모르면 비움).",
-                  "properties": {
-                    "sponsored": {
-                      "type": "boolean",
-                      "description": "대가(제품 · 원고료 · 할인)를 받은 콘텐츠인지"
-                    },
-                    "aiPerson": {
-                      "type": "boolean",
-                      "description": "AI로 만든 인물 · 목소리 · 아바타가 나오는지"
-                    },
-                    "aiMedia": {
-                      "type": "boolean",
-                      "description": "AI로 만든 이미지 · 영상을 쓰는지"
-                    }
-                  }
-                }
+          "text": {
+            "type": "string"
+          },
+          "ind": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "gen",
+              "food",
+              "hfood",
+              "cos",
+              "med",
+              "fin"
+            ],
+            "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."
+          },
+          "flags": {
+            "type": "object",
+            "description": "콘텐츠 정보(모르면 비움).",
+            "properties": {
+              "sponsored": {
+                "type": "boolean",
+                "description": "대가(제품 · 원고료 · 할인)를 받은 콘텐츠인지"
               },
-              "required": [
-                "text"
-              ]
+              "aiPerson": {
+                "type": "boolean",
+                "description": "AI로 만든 인물 · 목소리 · 아바타가 나오는지"
+              },
+              "aiMedia": {
+                "type": "boolean",
+                "description": "AI로 만든 이미지 · 영상을 쓰는지"
+              }
             }
           },
           "guide": {
@@ -142,10 +275,14 @@
                 "description": "꼭 넣을 문구"
               }
             }
+          },
+          "stamp": {
+            "type": "boolean",
+            "description": "고친 문구의 해시를 원장에 남길지"
           }
         },
         "required": [
-          "items"
+          "text"
         ]
       }
     },
@@ -180,43 +317,8 @@
       }
     },
     {
-      "name": "aimarker_scan_site",
-      "description": "공개된 사이트 첫 화면과 이미지 12장까지 살펴 AI 사용 흔적 · AI 상담 창 · 광고 표현 위험 후보를 보수적으로 진단합니다(10~20초).",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "사이트 주소(예: myshop.co.kr)"
-          }
-        },
-        "required": [
-          "url"
-        ]
-      }
-    },
-    {
-      "name": "aimarker_approval_status",
-      "description": "광고주 승인 링크 id(AP로 시작)들의 상태(대기 · 승인 · 수정 요청)와 답한 사람 · 시각 · 메모를 확인합니다.",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "ids": {
-            "type": "array",
-            "maxItems": 60,
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "ids"
-        ]
-      }
-    },
-    {
       "name": "aimarker_stamp",
-      "description": "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려줍니다.",
+      "description": "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려주고, 하루치 원장은 다음 날 공개 앵커로 묶입니다.",
       "parameters": {
         "type": "object",
         "properties": {

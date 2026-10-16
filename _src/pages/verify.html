@@ -1,34 +1,47 @@
 <!--
 path: verify/
 key: verify
-title: 원장 검증 · 보고서와 승인 기록이 바뀌지 않았는지 확인 | AIMarker
-ogtitle: AIMarker 원장 검증 · 누구나 확인하는 검수 · 승인 기록
-desc: AIMarker 보고서 · 승인 기록의 원장 번호나 해시, 검증용 파일로 서버 시각과 위변조 여부를 확인합니다.
-styles: assets/app.css
+title: 원장 · 공개 앵커 확인 · 기록이 그때 그대로인지 누구나 | AIMarker
+ogtitle: AIMarker 원장 · 공개 앵커 확인 · 마크 발급 기록이 바뀌지 않았는지 누구나 확인
+desc: AIMarker 는 마크 발급 · 변경 · 철회와 보고서 · 승인 기록을 해시로 원장에 남기고, 하루치 원장을 다음 날 OpenTimestamps 공개 앵커로 묶습니다. 원장 번호 · 해시 · 날짜로 확인하고 원장 글과 증명 파일(.ots)을 받습니다.
+styles: assets/mark.css
 scripts: assets/amui.js, assets/verify.js
 selflabel: footer
 -->
-<section class="ph">
-  <div class="wrap" style="max-width:860px">
-    <span class="eyebrow">원장 검증</span>
-    <h1>이 보고서, 그때 그대로인가요?</h1>
-    <p class="lead">AIMarker 는 보고서와 승인 기록의 해시(SHA-256)를 서버 시각과 함께 원장에 남깁니다. 번호나 해시를 넣거나 검증용 파일을 올리면 누구나 확인할 수 있습니다.</p>
+<section class="p4h">
+  <div class="wrap">
+    <span class="crumb">원장 · 공개 앵커</span>
+    <h1>기록이 그때 그대로인지,<br>누구나 확인합니다</h1>
+    <p class="lead4">마크 발급 · 표시 변경 · 철회, 보고서 · 승인 기록은 해시와 서버 시각으로 원장에 남습니다. 하루치 원장은 다음 날 뿌리 해시 하나로 묶여 OpenTimestamps 공개 앵커에 올라가므로, AIMarker 도 지난 기록을 몰래 고칠 수 없습니다.</p>
   </div>
 </section>
-<section class="sec-s">
-  <div class="wrap" style="max-width:860px">
-    <div class="form3">
+
+<section class="blk">
+  <div class="wrap" style="max-width:980px">
+    <div class="mv-card">
       <form id="vf" class="form" autocomplete="off">
-        <div class="field"><label for="vq">원장 번호(LG…) · 승인 번호(AP…) · 해시(64자리)</label>
-          <div class="row"><input class="inp" id="vq" name="q" style="flex:1 1 300px" placeholder="예: LG261015-3F9A2C1B" spellcheck="false"><button class="btn btn-p" type="submit">{{ico:search}}<span>확인</span></button></div></div>
+        <div class="field"><label for="vq">원장 번호(LG…) · 승인 번호(AP…) · 마크 번호(AM-…) · 해시(64자리) · 날짜(2026-10-16)</label>
+          <div class="mv-find" style="margin-top:8px"><input id="vq" name="q" placeholder="예: LG261016-40F06928" spellcheck="false" autocapitalize="characters"><button class="btn btn-p btn-l" type="submit">{{ico:search}}<span>확인</span></button></div></div>
       </form>
       <label class="drop3 mt16" id="vdrop">{{ico:upload}}검증용 파일(aimarker-report-….json)을 끌어다 놓거나 눌러서 고르세요<input type="file" id="vfile" accept="application/json,.json" hidden></label>
-      <div id="vout" class="mt16" aria-live="polite"></div>
     </div>
-    <div class="grid g3 mt32">
-      <div class="card"><h3>무엇을 남기나요</h3><p>보고서 · 승인 기록의 해시와 서버 시각만 남깁니다. 내용은 남기지 않아 원장만으로는 무엇이 적혔는지 알 수 없습니다.</p></div>
-      <div class="card"><h3>어떻게 확인하나요</h3><p>검증용 파일을 올리면 이 브라우저에서 해시를 다시 계산해 원장과 맞춰 봅니다. 한 글자만 바뀌어도 해시가 달라집니다.</p></div>
-      <div class="card"><h3>누가 쓰나요</h3><p>광고주 · 감사 담당 · 매체가 '언제 누가 무엇을 승인했는지'를 대행사에 묻지 않고 직접 확인할 때 씁니다.</p></div>
+    <div id="vout" class="mt24" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="blk soft" id="anchors">
+  <div class="wrap" style="max-width:980px">
+    <div class="blk-h"><span class="k">공개 앵커</span><h2>최근 묶인 날</h2><p>날짜를 누르면 그날 원장 글을 이 브라우저에서 다시 해시해 뿌리 해시와 맞춰 보고, 원장 글과 증명 파일을 받을 수 있습니다.</p></div>
+    <div id="vlist" class="vl-list mt24"><p class="dev-note">불러오는 중…</p></div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="wrap" style="max-width:980px">
+    <div class="grid g3">
+      <div class="mv-card"><h3>무엇을 남기나요</h3><p class="mt8">마크 번호 · 표시 · 근거 · 파일 해시, 보고서 · 승인 기록의 해시와 서버 시각만 남깁니다. 파일과 글 내용은 남기지 않아, 원장만으로는 무엇이 담겼는지 알 수 없습니다.</p></div>
+      <div class="mv-card"><h3>어떻게 묶나요</h3><p class="mt8">매일 0시 10분 뒤, 전날 원장 줄을 글 하나로 모아 SHA-256(뿌리 해시)을 만들고 OpenTimestamps 달력 서버 세 곳에 올립니다. 앞날 뿌리를 함께 넣어 날마다 사슬로 이어집니다.</p></div>
+      <div class="mv-card"><h3>직접 확인하려면</h3><p class="mt8">원장 글을 받아 SHA-256 이 뿌리 해시와 같은지 보고, 증명 파일(.ots)을 OpenTimestamps 클라이언트로 확인하세요. 방법은 <a href="{{root}}developers/#anchor">개발자 안내</a>에 있습니다.</p></div>
     </div>
   </div>
 </section>
