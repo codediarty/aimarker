@@ -1,6 +1,6 @@
 # AIMarker API · AI 연동 전체 설명
 
-> 이 문서는 AI 에이전트와 개발자가 한 번에 읽도록 만든 AIMarker API 설명서입니다. 사람용 안내는 https://aimarker.kr/developers/ 에 있습니다. 2026-10-17 기준: 서버 1.22.0 · 판정 엔진 AMP 1.1.0 · 출처 판독기 aim-extract 1.2.0 · 리포트 aim-report 1.0.1 · MCP 서버 2.1.0 · SDK 1.1.0 · 광고 규칙 팩 KR-AdLaw 2026.10.15(부가 기능).
+> 이 문서는 AI 에이전트와 개발자가 한 번에 읽도록 만든 AIMarker API 설명서입니다. 사람용 안내는 https://aimarker.kr/developers/ 에 있습니다. 2026-10-17 기준: 서버 1.22.0 · 판정 엔진 AMP 1.1.0 · 출처 판독기 aim-extract 1.2.0 · 리포트 aim-report 1.0.2 · MCP 서버 2.1.0 · SDK 1.1.0 · 광고 규칙 팩 KR-AdLaw 2026.10.15(부가 기능).
 
 AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 근거에 맞는 표시를 서명된 디지털 마크로 발급 · 관리하는 AI 콘텐츠 투명성 플랫폼입니다. 표시만 붙이는 것이 아니라, 무엇을 근거로 그 표시를 했는지 함께 발급합니다.
 
