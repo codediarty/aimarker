@@ -1,5 +1,5 @@
 /*
- * AIMarker SDK for JavaScript 1.0.0 · https://aimarker.kr/developers/#sdk
+ * AIMarker SDK for JavaScript 1.1.0 · https://aimarker.kr/developers/#sdk
  * Node.js 20+ · Deno · Bun · Cloudflare Workers 처럼 fetch 와 Web Crypto 가 있는 서버 환경에서 쓰세요.
  * API 키를 브라우저 코드에 넣지 마세요. 의존성 없음 · MIT
  *
@@ -15,6 +15,9 @@
  *   const marked = AIMarker.embedMark(bytes, m);                              // 마크 번호 · 서명을 넣은 표시본(JPEG · PNG)
  *   await am.markEdit(m.id, m.key, { alt: [await AIMarker.sha256(marked)] });   // 표시본 등록
  *   const v = await AIMarker.verifyMark(m.cred);                              // 공개키로 서명 확인(서버에 묻지 않음)
+ *   // 1.1: 많은 파일을 20건씩 확인하고 리포트로(발급은 하지 않음)
+ *   const entries = await am.analyzeFiles(['./upload/a.jpg', './upload/b.png']);
+ *   const R = report.build(entries, { org: '우리 회사' }); console.log(report.summaryText(R)); // report.html(R) · report.csv(R)
  *
  * 마크는 표시와 근거를 기록하고 서명한 것이며 법적 인증이 아닙니다. 광고 검수(부가 기능)는 위험 후보와 근거이며 법률 자문이 아닙니다.
  */
@@ -29,6 +32,13 @@ export const AIMExtract = (() => {
   const module = { exports: {} }, exports = module.exports;   // eslint-disable-line no-unused-vars
   const require = (n) => { const p = globalThis.process; if (p && typeof p.getBuiltinModule === 'function') return p.getBuiltinModule(n); throw new Error('require ' + n); };   // eslint-disable-line no-unused-vars
 /*@@AIM_EXTRACT@@*/
+  return module.exports;
+})();
+
+/* 일괄 확인 리포트 aim-report(내장): report.build(entries) · report.html(R) · report.csv(R) · report.summaryText(R) · report.parseDeclared(csv) */
+export const report = (() => {
+  const module = { exports: {} }, exports = module.exports;   // eslint-disable-line no-unused-vars
+/*@@AIM_REPORT@@*/
   return module.exports;
 })();
 
@@ -79,6 +89,63 @@ export class AIMarker {
   async analyzeFile(bytes, { name = '', dhash = '' } = {}) { const x = await AIMarker.features(bytes, { name, dhash }); return this.call('am.analyze', { features: x.features, pack: x.pack || undefined }); }
   /** 글의 확인(해시 · 표현만) */
   async analyzeText(text) { const x = await AIMarker.textFeatures(text); return this.call('am.analyze', { features: x.features }); }
+  /** 20건까지 한 번에 확인(발급하지 않음). items: [{ ref?, bytes, name } | { ref?, text } | { ref?, features, pack }] → { results: [{ ok, ref, verdict, … } | { ok: false, ref, code, msg }] } */
+  async analyzeBatch(items) {
+    if (!Array.isArray(items) || !items.length) throw new AIMarkerError('EMPTY', 'items 에 확인할 항목을 넣어 주세요.');
+    if (items.length > 20) throw new AIMarkerError('TOO_MANY', '한 번에 20건까지 보낼 수 있습니다. analyzeFiles 를 쓰면 알아서 나눕니다.');
+    const out = [];
+    for (const [i, it] of items.entries()) { const x = await this._input(it); out.push({ ref: String(it.ref != null ? it.ref : i), features: x.features, pack: x.pack || undefined }); }
+    return this.call('am.analyzebatch', { items: out });
+  }
+  /**
+   * 많은 파일을 20건씩(서명 묶음 90만 자) 나눠 동시에 3묶음씩 확인하고, report.build 에 바로 넣는 목록을 돌려줍니다.
+   * inputs: 파일 경로(Node) · { path } · { bytes, name } · { …, declared: 'ai_generated'|'ai_edited'|'ai_assisted'|'no_ai'|'none' }
+   * 돌려줌: [{ name, path, size, kind, sha256, dhash, result, error, declared }] (입력 순서 그대로)
+   */
+  async analyzeFiles(inputs, { concurrency = 3, onProgress } = {}) {
+    const entries = [];
+    for (const inp of inputs || []) {
+      const e = { name: '', path: '', size: 0, kind: 'other', sha256: '', dhash: '', result: null, error: '', declared: (inp && inp.declared) || '' };
+      try {
+        let bytes, name;
+        if (typeof inp === 'string' || (inp && inp.path && !inp.bytes)) {
+          const p = typeof inp === 'string' ? inp : inp.path, fs = await import('node:fs/promises');
+          bytes = new Uint8Array(await fs.readFile(p)); name = String(p).split(/[\\/]/).pop(); e.path = String(p);
+        } else { bytes = inp.bytes instanceof Uint8Array ? inp.bytes : new Uint8Array(inp.bytes); name = inp.name || ''; e.path = inp.path || ''; }
+        e.name = name; e.size = bytes.length;
+        const x = await AIMarker.features(bytes, { name, dhash: (inp && inp.dhash) || '' });
+        e.kind = x.features.kind || 'other'; e.sha256 = x.features.sha256; e.dhash = x.features.dhash || '';
+        e._f = x.features; e._p = x.pack || null; e._pl = e._p ? JSON.stringify(e._p).length : 0;
+      } catch (err) { e.error = '파일을 읽지 못했습니다: ' + ((err && err.message) || err); }
+      entries.push(e);
+    }
+    const todo = entries.filter((e) => e._f), batches = [];
+    let cur = [], budget = 900000;
+    for (const e of todo) { if (cur.length && (cur.length >= 20 || e._pl > budget)) { batches.push(cur); cur = []; budget = 900000; } cur.push(e); budget -= e._pl; }
+    if (cur.length) batches.push(cur);
+    let i = 0, done = entries.length - todo.length, stop = '';
+    const alone = [];
+    const run = async () => {
+      while (i < batches.length) {
+        const b = batches[i++];
+        if (stop) b.forEach((e) => { e.error = stop; });
+        else {
+          try {
+            const r = await this.call('am.analyzebatch', { items: b.map((e, k) => ({ ref: String(k), features: e._f, pack: e._p || undefined })) });
+            r.results.forEach((x, k) => { const e = b[+x.ref] || b[k]; if (x.ok) e.result = x; else if (x.code === 'TIME' || x.code === 'PACK_BUDGET') alone.push(e); else e.error = x.msg || x.code || '확인하지 못했습니다'; });
+          } catch (err) {
+            if (err && (err.code === 'QUOTA' || err.code === 'BUSY' || err.code === 'KEY')) stop = err.message;
+            b.forEach((e) => { e.error = (err && err.message) || '확인하지 못했습니다'; });
+          }
+        }
+        done += b.length; if (onProgress) onProgress(done, entries.length);
+      }
+    };
+    await Promise.all(new Array(Math.min(Math.max(1, concurrency), batches.length)).fill(0).map(run));
+    for (const e of alone) { try { e.result = await this.call('am.analyze', { features: e._f, pack: e._p || undefined }); } catch (err) { e.error = (err && err.message) || '확인하지 못했습니다'; } }
+    entries.forEach((e) => { delete e._f; delete e._p; delete e._pl; });
+    return entries;
+  }
   /**
    * 마크 발급. input: { bytes, name, dhash? } | { text } | { features, pack }
    * label: 'auto'(근거로 정함 · 근거 없으면 DECLARE 오류) | 'ai_generated' | 'ai_edited' | 'ai_assisted' | 'no_ai'

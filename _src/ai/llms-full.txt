@@ -1,6 +1,6 @@
 # AIMarker API · AI 연동 전체 설명
 
-> 이 문서는 AI 에이전트와 개발자가 한 번에 읽도록 만든 AIMarker API 설명서입니다. 사람용 안내는 https://aimarker.kr/developers/ 에 있습니다. 2026-10-16 기준: 서버 1.21.1 · 판정 엔진 AMP 1.1.0 · 출처 판독기 aim-extract 1.2.0 · MCP 서버 2.0.0 · SDK 1.0.0 · 광고 규칙 팩 KR-AdLaw 2026.10.15(부가 기능).
+> 이 문서는 AI 에이전트와 개발자가 한 번에 읽도록 만든 AIMarker API 설명서입니다. 사람용 안내는 https://aimarker.kr/developers/ 에 있습니다. 2026-10-17 기준: 서버 1.22.0 · 판정 엔진 AMP 1.1.0 · 출처 판독기 aim-extract 1.2.0 · 리포트 aim-report 1.0.0 · MCP 서버 2.1.0 · SDK 1.1.0 · 광고 규칙 팩 KR-AdLaw 2026.10.15(부가 기능).
 
 AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 근거에 맞는 표시를 서명된 디지털 마크로 발급 · 관리하는 AI 콘텐츠 투명성 플랫폼입니다. 표시만 붙이는 것이 아니라, 무엇을 근거로 그 표시를 했는지 함께 발급합니다.
 
@@ -100,6 +100,15 @@ AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 
 → {"ok":true,"issued":1,"results":[{"ref":"p-1","ok":true,"id":"AM-…","key":"mk_…","label":"ai_generated","basis":"record","cred":"…"},{"ref":"p-2","ok":false,"code":"DECLARE","msg":"파일 기록만으로 표시를 정할 수 없습니다. label 을 정해 보내 주세요.","analysis":{…}}]}
 - label 이 auto 이거나 비어 있으면 근거로 정하고, 근거가 없는 항목은 발급하지 않고 DECLARE 로 돌려줍니다.
 
+### am.analyzebatch · 20건까지 한 번에 확인(키 필요 · 발급하지 않음)
+
+{"action":"am.analyzebatch","key":"amk_…","items":[{"ref":"0","features":{…},"pack":{…}},{"ref":"1","features":{…}}]}
+→ {"ok":true,"count":2,"failed":0,"ms":2140,"results":[{"ok":true,"ref":"0","verdict":{"ai":"used","basis":"record",…},"signals":[…],"signer":{…},"registry":[…]},{"ok":true,"ref":"1","verdict":{"ai":"unknown",…},…}]}
+- 결과 하나하나는 am.analyze 와 같은 모양이고 ref 로 맞춥니다. 같은 특징값이면 am.analyze 와 같은 판정입니다.
+- 한 번에 20건(21건 이상은 TOO_MANY). 서명 묶음(pack)은 한 요청 합계 120만 자까지이고, 넘는 항목은 code PACK_BUDGET, 시간이 모자란 항목은 TIME 으로 돌려줍니다. 그 항목만 am.analyze 로 따로 보내세요.
+- 한도는 항목 수만큼 셉니다(API 키 하루 한도 · 브라우저 하나 시간당 300건). 넘은 요청은 세지 않습니다.
+- 리포트: aim-report(https://aimarker.kr/lib/aim-report.js, SDK 의 report)가 결과를 근거 등급 · 바로 표시 비율 · 먼저 확인할 점(지금 표시와 근거가 다름 · 표시 빠짐 · 같은 · 비슷한 이미지인데 근거가 다름 · 출처 기록 손상) · 도구 · 서명자 분포로 정리합니다. 화면: https://aimarker.kr/report/
+
 ### am.markinfo · 마크 정보(누구나)
 
 {"action":"am.markinfo","id":"AM-6K0DG5FBN1"}
@@ -178,30 +187,31 @@ am.stamp {"h":"<SHA-256>","k":"report","n":12} → {"id":"LG…","at":"<서버 �
 
 ok:false 와 code: KEY(API 키 · 관리 키 오류) · QUOTA(오늘 한도 초과) · BUSY(잠시 뒤 다시) · HASH(해시 형식 · 해시 없음) · ID · NOT_FOUND · EMPTY · BAD_LABEL · CONFLICT · CONFIRM · DECLARE(일괄 발급에서 근거 없음) · REVOKED(철회된 마크는 바꿀 수 없음) · TEXT · KIND · URL · FETCH
 
-## 7. MCP 서버 2.0
+## 7. MCP 서버 2.1
 
-- 실행: AIMARKER_KEY=amk_… npx -y https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz (Node.js 18+, 의존성 없음, stdio, 출처 판독기 내장. sharp 가 있으면 지각 해시도 만듦)
+- 실행: AIMARKER_KEY=amk_… npx -y https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz (Node.js 18+, 의존성 없음, stdio, 출처 판독기 내장. sharp 가 있으면 지각 해시도 만듦)
 - 파일 하나: https://aimarker.kr/mcp/aimarker-mcp.mjs → node aimarker-mcp.mjs
-- Claude Desktop · Cursor · Gemini CLI: {"mcpServers":{"aimarker":{"command":"npx","args":["-y","https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz"],"env":{"AIMARKER_KEY":"amk_…"}}}}
-- Claude Code: claude mcp add aimarker -e AIMARKER_KEY=amk_… -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz
-- 핵심 도구: aimarker_analyze_file · aimarker_analyze_text · aimarker_mark(write_copy 로 표시본 저장 · 등록) · aimarker_mark_batch · aimarker_mark_info · aimarker_verify_mark · aimarker_find_marks · aimarker_edit_mark · aimarker_anchor(save_dir 로 원장 글 · .ots 저장)
+- Claude Desktop · Cursor · Gemini CLI: {"mcpServers":{"aimarker":{"command":"npx","args":["-y","https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"],"env":{"AIMARKER_KEY":"amk_…"}}}}
+- Claude Code: claude mcp add aimarker -e AIMARKER_KEY=amk_… -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz
+- 핵심 도구: aimarker_analyze_file · aimarker_analyze_text · aimarker_analyze_folder(폴더째 20건씩 확인 · 리포트 HTML · CSV 저장 · declared_csv 로 지금 표시와 비교) · aimarker_mark(write_copy 로 표시본 저장 · 등록) · aimarker_mark_batch · aimarker_mark_info · aimarker_verify_mark · aimarker_find_marks · aimarker_edit_mark · aimarker_anchor(save_dir 로 원장 글 · .ots 저장)
 - 부가 도구: aimarker_check · aimarker_auto_fix · aimarker_check_batch · aimarker_label · aimarker_scan_site · aimarker_request_approval · aimarker_approval_status · aimarker_stamp · aimarker_verify
-- 프롬프트: mark_content · check_received_file · review_ad_copy
-- 1.0.0 꾸러미(https://aimarker.kr/mcp/aimarker-mcp-1.0.0.tgz)도 그대로 돕니다(광고 검수 도구만).
+- 프롬프트: mark_content · check_received_file · report_folder · review_ad_copy
+- 2.0.0 꾸러미(https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz) · 1.0.0 꾸러미(광고 검수 도구만)도 그대로 돕니다.
 
 ## 8. 함수 호출(OpenAI · Claude · Gemini)
 
 도구 정의: https://aimarker.kr/developers/tools/openai.json · anthropic.json · gemini.json · 도구 이름 → action: https://aimarker.kr/developers/tools/actions.json
 실행기: https://aimarker.kr/sdk/aimarker-tools.mjs(SDK 와 같은 폴더) → const result = await runAimarkerTool(name, args). path 는 실행 환경에서 파일을 읽어 특징값으로 바꾸고, text · content 는 해시로 바꿔 보냅니다. 오류는 { ok:false, code, message, allowed, related } 로 돌려주니 그대로 모델에 넘기세요.
 
-## 9. SDK 1.0
+## 9. SDK 1.1
 
 - JavaScript(Node 20+ · Deno · Bun · Workers): https://aimarker.kr/sdk/aimarker.mjs(aim-extract 내장)
-  new AIMarker({ key }) → analyzeFile(bytes, { name }) · analyzeText(text) · mark({ bytes, name } | { text } | { features, pack }, { label, tools, title, issuer, confirm }) · markBatch(items) · markInfo(id) · lookup({ sha256, dhash }) · markEdit(id, key, { label, title, issuer, alt, revoke }) · pubkey() · anchor({ date | id })
+  new AIMarker({ key }) → analyzeFile(bytes, { name }) · analyzeText(text) · mark({ bytes, name } | { text } | { features, pack }, { label, tools, title, issuer, confirm }) · markBatch(items) · analyzeBatch(items, 20건까지) · analyzeFiles(paths | [{ bytes, name }], { concurrency, onProgress })(20건씩 나눠 확인, report.build 에 바로 넣는 목록) · markInfo(id) · lookup({ sha256, dhash }) · markEdit(id, key, { label, title, issuer, alt, revoke }) · pubkey() · anchor({ date | id })
   정적: AIMarker.features(bytes) · textFeatures(text) · dhash(w, h, rgba) · verifyMark(jws, keys?) · embedMark(bytes, mark) · badgeHtml(mark) · sha256(x)
+  리포트: import { report } → report.build(entries, { org }) · report.html(R) · report.csv(R) · report.summaryText(R) · report.parseDeclared(csv)
   부가: check · auto · batch · label · scan · share · status · stamp · verify · AIMarker.applyFixes(text, findings)
 - Python 3.8+(표준 라이브러리만): https://aimarker.kr/sdk/aimarker.py
-  AIMarker(key) → analyze_text · mark_text · analyze_file · mark_file(파일 판독은 Node.js 로) · analyze_features · mark_features · mark_batch · mark_info · lookup · find_marks · mark_edit · pubkey · anchor · AIMarker.verify_mark(jws, keys=None)(Ed25519 직접 확인) · 부가: check · auto · batch · label · scan · status · stamp · verify · apply_fixes
+  AIMarker(key) → analyze_text · mark_text · analyze_file · mark_file(파일 판독은 Node.js 로) · analyze_features · analyze_batch(items) · analyze_files(paths) · mark_features · mark_batch · mark_info · lookup · find_marks · mark_edit · pubkey · anchor · AIMarker.verify_mark(jws, keys=None)(Ed25519 직접 확인) · 부가: check · auto · batch · label · scan · status · stamp · verify · apply_fixes
 
 ## 10. 요금 · 한도(정식 출시 전 예상 요금)
 

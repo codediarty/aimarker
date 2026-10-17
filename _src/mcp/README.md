@@ -1,4 +1,4 @@
-# AIMarker MCP 서버 2.0
+# AIMarker MCP 서버 2.1
 
 AI 에이전트(Claude · Cursor · VS Code · Codex · Gemini CLI 등)가 이미지 · 영상 · 오디오 · 글의 **AI 사용 여부를 파일 속 근거로 확인**하고, 근거에 맞는 **서명된 AIMarker 마크**를 발급 · 확인하게 하는 MCP 서버입니다.
 
@@ -6,6 +6,7 @@ AI 에이전트(Claude · Cursor · VS Code · Codex · Gemini CLI 등)가 이�
 - 판정은 근거로만 합니다: C2PA 서명 재검증(서명 검증) · 생성 도구 기록(파일 기록) · 기록이 없으면 발급자 신고. 근거와 맞지 않는 표시는 서버가 막습니다.
 - 마크마다 AIMarker 서버가 Ed25519 로 서명합니다(JWS). 이 서버는 공개키(https://aimarker.kr/.well-known/aimarker-keys.json)로 서명을 직접 확인합니다.
 - 하루치 원장은 다음 날 OpenTimestamps 공개 앵커로 묶입니다.
+- 2.1: 폴더째 확인해 리포트(HTML · CSV)로 정리하는 aimarker_analyze_folder(서버 일괄 확인 am.analyzebatch, 20건씩).
 - 부가 기능: 광고 문구 검수 · 자동 수정 · 표시 문구 · 사이트 진단 · 광고주 승인 링크 · 증거 원장.
 
 마크는 표시와 근거를 기록하고 서명한 것이며 법적 인증이 아닙니다. 광고 검수 결과는 위험 후보와 근거이며 법률 자문이 아닙니다.
@@ -24,19 +25,19 @@ Claude Desktop · Cursor · Gemini CLI (`mcpServers`):
   "mcpServers": {
     "aimarker": {
       "command": "npx",
-      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz"],
+      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"],
       "env": { "AIMARKER_KEY": "amk_발급받은_키" }
     }
   }
 }
 ```
 
-Windows 에서 `npx` 를 찾지 못하면 `"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz"]` 로 바꾸세요.
+Windows 에서 `npx` 를 찾지 못하면 `"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"]` 로 바꾸세요.
 
 Claude Code:
 
 ```bash
-claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz
+claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz
 ```
 
 파일 하나로 쓰려면 https://aimarker.kr/mcp/aimarker-mcp.mjs 를 내려받아 `"command": "node", "args": ["/경로/aimarker-mcp.mjs"]` 로 등록합니다.
@@ -47,6 +48,7 @@ claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://a
 | --- | --- |
 | aimarker_analyze_file | 파일의 AI 사용 근거 확인(판정 · 근거 등급 · 고를 수 있는 표시 · 기존 마크) |
 | aimarker_analyze_text | 글의 해시와 AI 활용 표현으로 기존 마크 · 주의할 점 확인(원문은 보내지 않음) |
+| aimarker_analyze_folder | 폴더 · 파일 목록을 20건씩 확인해 리포트로 정리(근거 등급 · 바로 표시 비율 · 먼저 확인할 점 · 도구 분포), 지금 표시 CSV 와 비교, HTML · CSV 저장 |
 | aimarker_mark | 서명된 마크 발급(근거와 맞지 않는 표시는 막힘) · 원하면 마크를 넣은 표시본(JPEG · PNG) 저장 |
 | aimarker_mark_batch | 20개까지 한 번에 확인 · 발급(근거 없는 항목은 DECLARE 로 돌려줌) |
 | aimarker_mark_info | 마크 번호로 표시 · 근거 · 상태 · 이력 확인, 서명 직접 확인 |
@@ -59,7 +61,7 @@ claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://a
 | aimarker_request_approval · aimarker_approval_status | 광고주 승인 링크 · 상태 |
 | aimarker_stamp · aimarker_verify | 증거 원장 기록 · 확인 |
 
-프롬프트: `mark_content`(확인하고 마크 받기) · `check_received_file`(받은 파일의 마크 확인) · `review_ad_copy`(광고 문구 검수)
+프롬프트: `mark_content`(확인하고 마크 받기) · `check_received_file`(받은 파일의 마크 확인) · `report_folder`(폴더 리포트) · `review_ad_copy`(광고 문구 검수)
 
 ## 에이전트가 지키는 원칙
 

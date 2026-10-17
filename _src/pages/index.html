@@ -153,7 +153,7 @@ selflabel: footer
       <p class="lead">쇼핑몰 · 미디어 · 대행사 · 플랫폼은 API와 MCP로 콘텐츠를 올릴 때 확인하고 마크를 발급합니다. 근거가 있는 콘텐츠는 바로 발급하고, 기록이 없는 콘텐츠는 발급자 신고로 처리합니다. 사람이 하나씩 붙잡고 있는 단계가 없습니다.</p>
     </div>
     <div class="h5-biz">
-      <div class="h5-code" aria-label="SDK 예시 코드"><span class="c">// SDK 1.0 · 파일은 우리 서버에서 읽고, 원본은 보내지 않음</span>
+      <div class="h5-code" aria-label="SDK 예시 코드"><span class="c">// SDK 1.1 · 파일은 우리 서버에서 읽고, 원본은 보내지 않음</span>
 <span class="k">const</span> am = <span class="k">new</span> AIMarker({ key: process.env.AIMARKER_KEY })
 <span class="k">const</span> r = <span class="k">await</span> am.markBatch([
   { bytes, name: <span class="s">'sku-1024.jpg'</span>, ref: <span class="s">'sku-1024'</span>, label: <span class="s">'auto'</span> }])
@@ -211,7 +211,7 @@ selflabel: footer
       <p class="lead">투자자와 고객이 판단할 수 있게, 운영 중인 기능과 계획을 나눠서 적습니다.</p>
     </div>
     <div class="h5-road">
-      <article><h3><i></i>운영 중</h3><ul><li>AI 사용 확인(C2PA 서명 재검증 · IPTC · EXIF · 생성 기록)</li><li>근거 맞춤 마크 발급 · 전자서명 · QR · 삽입 배지</li><li>마크 확인 쪽 · 변경 이력 · 철회</li><li>원장 · 매일 공개 타임스탬프</li><li>API · MCP 서버 2.0 · SDK(JavaScript · Python)</li><li>광고 문구 검수 · 자동 수정(부가 기능)</li></ul></article>
+      <article><h3><i></i>운영 중</h3><ul><li>AI 사용 확인(C2PA 서명 재검증 · IPTC · EXIF · 생성 기록)</li><li>근거 맞춤 마크 발급 · 전자서명 · QR · 삽입 배지</li><li>마크 확인 쪽 · 변경 이력 · 철회</li><li>원장 · 매일 공개 타임스탬프</li><li>일괄 확인 리포트(파일 · 폴더 · ZIP 200개 → HTML · PDF · CSV)</li><li>API(일괄 확인 포함) · MCP 서버 2.1 · SDK(JavaScript · Python)</li><li>광고 문구 검수 · 자동 수정(부가 기능)</li></ul></article>
       <article><h3><i></i>개발 중</h3><ul><li>기업 관리 화면(마크 목록 · 팀 · 권한)</li><li>확인된 발급자 이름(기업 계정)</li><li>더 빠른 전용 처리 서버</li></ul></article>
       <article><h3><i></i>계획</h3><ul><li>쇼핑몰 연동(올리는 순간 자동 마킹) · 웹훅</li><li>보이지 않는 워터마크(연구)</li><li>AIMarker 서명 C2PA 출처 기록 발급</li><li>온프레미스 · 라이선스형 판정 엔진</li></ul></article>
     </div>

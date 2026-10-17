@@ -1230,3 +1230,13 @@
   .cmp4 .pt tbody th[scope="row"] { width: 112px; font-size: 13px; }
 }
 .cmp4 .pt td.no { color: #A7B1C2; font-weight: 600; }
+
+/* 5.1 개발자: 여러 파일 일괄 확인(am.analyzebatch) */
+.dev-batch { margin-top: 36px; padding: 24px 26px; border: 1px solid var(--line); border-radius: 18px; background: #fff; }
+.dev-batch h3 { font-size: 19px; font-weight: 850; letter-spacing: -.02em; }
+.dev-batch p { color: var(--ink-2); font-size: 15px; margin-top: 8px; line-height: 1.7; }
+.dev-batch p code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px; background: var(--soft); border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; word-break: break-all; }
+.dev-batch pre.code-b { white-space: pre-wrap; word-break: break-all; margin: 0; }
+@media (max-width: 640px) { .dev-batch { padding: 18px 16px; } }
+.ct4-try { font-size: 14px; color: var(--ink-2); margin: -2px 0 10px; padding: 10px 12px; border-radius: 10px; background: var(--soft); }
+.ct4-try a { color: var(--blue); font-weight: 750; }

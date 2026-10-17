@@ -1,4 +1,4 @@
-"""AIMarker SDK for Python 1.0.0 · https://aimarker.kr/developers/#sdk
+"""AIMarker SDK for Python 1.1.0 · https://aimarker.kr/developers/#sdk
 
 표준 라이브러리만 씁니다(Python 3.8+). 서버에서 쓰고, API 키는 환경 변수에 두세요. MIT
 
@@ -19,6 +19,9 @@
     # 서명 확인(서버에 묻지 않음)
     v = AIMarker.verify_mark(m["cred"])          # {"ok": True, "kid": "...", "payload": {...}}
 
+    # 1.1: 여러 파일을 20건씩 확인(발급하지 않음). 리포트(HTML · CSV)는 JavaScript SDK · MCP 의 report 를 쓰세요
+    rows = am.analyze_files(["a.jpg", "b.png"])  # [{"name", "path", "kind", "sha256", "result", "error"}]
+
 마크는 표시와 근거를 기록하고 서명한 것이며 법적 인증이 아닙니다.
 광고 검수(부가 기능)는 위험 후보와 근거이며 법률 자문이 아닙니다.
 """
@@ -34,7 +37,7 @@ import urllib.request
 
 DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec"
 KEYS_URL = "https://aimarker.kr/.well-known/aimarker-keys.json"
-MCP_PKG = "https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz"
+MCP_PKG = "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"
 LABELS = ("ai_generated", "ai_edited", "ai_assisted", "no_ai")
 LABEL_KO = {"ai_generated": "AI 생성", "ai_edited": "AI 편집 · 합성", "ai_assisted": "AI 보조", "no_ai": "AI 미사용"}
 BASIS_KO = {"verified": "서명 검증", "record": "파일 기록", "declared": "발급자 신고", "none": "근거 없음"}
@@ -209,6 +212,65 @@ class AIMarker:
     def analyze_file(self, path):
         x = file_features(path)
         return self.call("am.analyze", features=x["features"], pack=x.get("pack"))
+
+    def analyze_batch(self, items):
+        """20건까지 한 번에 확인(발급하지 않음). items: [{"ref": "1", "features": …, "pack": …}] → {"results": [...]}"""
+        items = list(items)
+        if not items:
+            raise AIMarkerError("EMPTY", "items 에 확인할 항목을 넣어 주세요.")
+        if len(items) > 20:
+            raise AIMarkerError("TOO_MANY", "한 번에 20건까지 보낼 수 있습니다. analyze_files 를 쓰면 알아서 나눕니다.")
+        return self.call("am.analyzebatch", items=[{"ref": str(it.get("ref", i)), "features": it["features"], "pack": it.get("pack")} for i, it in enumerate(items)])
+
+    def analyze_files(self, paths, mcp=None):
+        """여러 파일을 읽어(Node.js 의 aim-extract) 20건씩(서명 묶음 90만 자) 나눠 확인합니다. 입력 순서대로 돌려줌:
+        [{"name", "path", "size", "kind", "sha256", "result"(판정) 또는 "error"}]"""
+        rows = []
+        for p in paths:
+            row = {"name": os.path.basename(str(p)), "path": str(p), "size": 0, "kind": "other", "sha256": "", "result": None, "error": ""}
+            try:
+                x = file_features(p, mcp=mcp)
+                f = x["features"]
+                row.update(size=f.get("size", 0), kind=f.get("kind", "other"), sha256=f.get("sha256", ""), _f=f, _p=x.get("pack"))
+                row["_pl"] = len(json.dumps(row["_p"])) if row["_p"] else 0
+            except AIMarkerError as e:
+                row["error"] = str(e)
+            rows.append(row)
+        todo, batches, cur, budget = [r for r in rows if "_f" in r], [], [], 900000
+        for r in todo:
+            if cur and (len(cur) >= 20 or r["_pl"] > budget):
+                batches.append(cur); cur, budget = [], 900000
+            cur.append(r); budget -= r["_pl"]
+        if cur:
+            batches.append(cur)
+        stop = ""
+        for b in batches:
+            if stop:
+                for r in b:
+                    r["error"] = stop
+                continue
+            try:
+                res = self.call("am.analyzebatch", items=[{"ref": str(k), "features": r["_f"], "pack": r["_p"]} for k, r in enumerate(b)])
+                for k, x in enumerate(res.get("results", [])):
+                    r = b[int(x.get("ref", k))]
+                    if x.get("ok"):
+                        r["result"] = x
+                    elif x.get("code") in ("TIME", "PACK_BUDGET"):
+                        try:
+                            r["result"] = self.call("am.analyze", features=r["_f"], pack=r["_p"])
+                        except AIMarkerError as e2:
+                            r["error"] = str(e2)
+                    else:
+                        r["error"] = x.get("msg") or x.get("code") or "확인하지 못했습니다"
+            except AIMarkerError as e:
+                if e.code in ("QUOTA", "BUSY", "KEY"):
+                    stop = str(e)
+                for r in b:
+                    r["error"] = str(e)
+        for r in rows:
+            for k in ("_f", "_p", "_pl"):
+                r.pop(k, None)
+        return rows
 
     def mark_features(self, features, pack=None, label="auto", tools=None, title="", issuer="", confirm=False):
         """label: auto(근거로 정함, 없으면 DECLARE) | ai_generated | ai_edited | ai_assisted | no_ai

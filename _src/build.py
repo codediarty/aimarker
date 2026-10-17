@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261016b"
+VER = "20261017a"
 TODAY = "2026-10-16"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -40,6 +40,7 @@ ICONS = {
     "shield": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
     "copy": '<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
     "download": '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
+    "folder": '<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>',
     "upload": '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>',
     "building": '<rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>',
     "cap": '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
@@ -114,6 +115,7 @@ NAV = [("mark/", "mark", "AI 사용 확인", None),
            ("product/", "layers", "제품 개요", "확인 · 마킹 · 관리 네 가지 엔진"),
            ("mark/", "badge", "AI 사용 확인 · 마크 발급", "파일 · 글 확인, 근거 맞춤 마크"),
            ("m/", "search", "마크 확인", "표시 · 근거 · 서명 · 이력 확인"),
+           ("report/", "bars", "일괄 확인 리포트", "콘텐츠 수백 건 근거 확인 · 리포트"),
            ("developers/", "code", "기업용 API · MCP", "올리는 순간 자동 확인 · 대량 마킹"),
            ("verify/", "ledger", "원장 · 공개 타임스탬프", "발급 기록 위변조 확인"),
            ("#", None, "부가 기능", None),
@@ -130,7 +132,7 @@ NAV = [("mark/", "mark", "AI 사용 확인", None),
        ("technology/", "technology", "기술", None),
        ("pricing/", "pricing", "요금", None),
        ("company/", "company", "회사", None)]
-PRODUCT_KEYS = ["product", "app", "developers", "verify", "check", "scan", "site", "proof"]
+PRODUCT_KEYS = ["product", "app", "developers", "verify", "check", "scan", "site", "proof", "report"]
 ANNOUNCE = ("contact/", "기업 파일럿", "2026년 12월 유료 파일럿 기업을 모집합니다. 신청하면 우리 콘텐츠 100건의 AI 사용 확인 리포트를 먼저 드립니다")
 
 
@@ -264,7 +266,7 @@ def parse(src):
 
 
 # ---------- AI 연동 자료(4.0): MCP 서버 · SDK · 함수 호출 도구 정의 · llms.txt ----------
-MCP_VER = "2.0.0"
+MCP_VER = "2.1.0"
 _IND = {"type": "string", "enum": ["auto", "gen", "food", "hfood", "cos", "med", "fin"],
         "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."}
 _FLAGS = {"type": "object", "description": "콘텐츠 정보(모르면 비움).", "properties": {
@@ -329,8 +331,10 @@ def build_ai_assets():
         mcp_src = f.read()
     with open(os.path.join(HERE, "lib", "aim-extract.js"), encoding="utf-8") as f:
         aim_src = f.read()
-    assert "/*@@AIM_EXTRACT@@*/" in mcp_src and "VERSION = '%s'" % MCP_VER in mcp_src
-    mcp_out = mcp_src.replace("/*@@AIM_EXTRACT@@*/", aim_src.rstrip("\n"))
+    with open(os.path.join(HERE, "lib", "aim-report.js"), encoding="utf-8") as f:
+        rep_src = f.read()
+    assert "/*@@AIM_EXTRACT@@*/" in mcp_src and "/*@@AIM_REPORT@@*/" in mcp_src and "VERSION = '%s'" % MCP_VER in mcp_src
+    mcp_out = mcp_src.replace("/*@@AIM_EXTRACT@@*/", aim_src.rstrip("\n")).replace("/*@@AIM_REPORT@@*/", rep_src.rstrip("\n"))
     with open(os.path.join(ROOT, "mcp", "aimarker-mcp.mjs"), "w", encoding="utf-8") as f:
         f.write(mcp_out)
     # npx 용 꾸러미(npm pack 과 같은 모양: package/ 아래 파일, 시각 고정)
@@ -350,9 +354,9 @@ def build_ai_assets():
     # SDK 1.0: JavaScript 는 aim-extract 를 넣어 파일 하나로, Python 은 그대로
     with open(os.path.join(HERE, "sdk", "aimarker.src.mjs"), encoding="utf-8") as f:
         sdk_src = f.read()
-    assert "/*@@AIM_EXTRACT@@*/" in sdk_src
+    assert "/*@@AIM_EXTRACT@@*/" in sdk_src and "/*@@AIM_REPORT@@*/" in sdk_src
     with open(os.path.join(ROOT, "sdk", "aimarker.mjs"), "w", encoding="utf-8") as f:
-        f.write(sdk_src.replace("/*@@AIM_EXTRACT@@*/", aim_src.rstrip("\n")))
+        f.write(sdk_src.replace("/*@@AIM_EXTRACT@@*/", aim_src.rstrip("\n")).replace("/*@@AIM_REPORT@@*/", rep_src.rstrip("\n")))
     shutil.copyfile(os.path.join(HERE, "sdk", "aimarker.py"), os.path.join(ROOT, "sdk", "aimarker.py"))
     shutil.copyfile(os.path.join(HERE, "sdk", "aimarker-tools.mjs"), os.path.join(ROOT, "sdk", "aimarker-tools.mjs"))
     # 함수 호출 도구 정의 세 가지 모양
@@ -376,6 +380,7 @@ def build_ai_assets():
     # 5.0 공개 판독기 · 마크 삽입 배지 · 마크 서명 공개키
     os.makedirs(os.path.join(ROOT, "lib"), exist_ok=True)
     shutil.copyfile(os.path.join(HERE, "lib", "aim-extract.js"), os.path.join(ROOT, "lib", "aim-extract.js"))
+    shutil.copyfile(os.path.join(HERE, "lib", "aim-report.js"), os.path.join(ROOT, "lib", "aim-report.js"))
     os.makedirs(os.path.join(ROOT, "m"), exist_ok=True)
     shutil.copyfile(os.path.join(HERE, "m", "embed.js"), os.path.join(ROOT, "m", "embed.js"))
     os.makedirs(os.path.join(ROOT, ".well-known"), exist_ok=True)

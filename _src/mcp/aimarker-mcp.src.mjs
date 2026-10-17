@@ -17,12 +17,12 @@
  */
 import { createInterface } from 'node:readline';
 import { createHash } from 'node:crypto';
-import { readFile, writeFile, stat, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, stat, mkdir, readdir } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 
-const VERSION = '2.0.0';
+const VERSION = '2.1.0';
 const API = process.env.AIMARKER_URL || 'https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec';
 const SITE = 'https://aimarker.kr';
 const KEYS_URL = process.env.AIMARKER_KEYS_URL || SITE + '/.well-known/aimarker-keys.json';
@@ -35,6 +35,12 @@ const MAX_FILE = 300 * 1024 * 1024;
 const AIM = (() => {
   const module = { exports: {} }, exports = module.exports, require = createRequire(import.meta.url);   // eslint-disable-line no-unused-vars
 /*@@AIM_EXTRACT@@*/
+  return module.exports;
+})();
+/* ---------- 일괄 확인 리포트 aim-report(내장) ---------- */
+const REP = (() => {
+  const module = { exports: {} }, exports = module.exports;   // eslint-disable-line no-unused-vars
+/*@@AIM_REPORT@@*/
   return module.exports;
 })();
 
@@ -59,6 +65,7 @@ const INSTRUCTIONS = [
   '이 대화에서 당신(AI)이 만들거나 고친 콘텐츠라면 AI 사용 표시(ai_generated · ai_edited · ai_assisted)를 고르고 tools 에 사용한 AI를 적으세요. no_ai(AI 미사용)는 사용자가 AI를 사용하지 않았다고 직접 말했을 때만 고르세요. 추측으로 고르지 마세요.',
   'CONFIRM 이 오면(비슷한 이미지에 AI 마크가 있음 등) 그 내용을 사용자에게 그대로 보여 주고, 사용자가 확인했을 때만 confirm: true 로 다시 보내세요. CONFLICT 는 근거와 맞지 않는 표시이니 allowed 에서 다시 고르세요.',
   '발급 결과의 관리 키(mk_…)는 한 번만 나옵니다. 사용자에게 비밀번호처럼 보관하라고 알리세요. 표시 변경 · 철회에 필요합니다.',
+  '폴더 · 여러 파일을 한꺼번에 확인해 정리할 때는 aimarker_analyze_folder(20건씩 확인 · 리포트 HTML · CSV 저장)를 쓰세요. 발급은 하지 않습니다.',
   '받은 파일 · 마크를 확인할 때는 aimarker_verify_mark(파일 속 서명 확인) · aimarker_mark_info(번호) · aimarker_find_marks(같은 · 비슷한 파일)를 쓰세요.',
   '부가 기능: 광고 · 상세페이지 · SNS 문구는 aimarker_check(또는 aimarker_auto_fix)로 검수할 수 있습니다. 결과는 위험 후보이며, 위반이라고 단정하지 말고 법률 자문이 아님을 알리세요.',
   '마크는 법적 인증이 아니라 표시와 근거의 기록입니다. 판정 정확도를 숫자로 말하지 마세요.'
@@ -87,6 +94,17 @@ const TOOLS = [
     description: '글은 파일 기록이 없어 AI 사용 여부를 파일만으로 확인할 수 없습니다. 글의 해시(SHA-256)와 AI 활용을 밝히는 표현이 있는지만 보내 같은 글의 기존 마크와 주의할 점을 돌려줍니다. 글 원문은 보내지 않습니다.',
     inputSchema: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 200000, description: '확인할 글' } }, required: ['text'] },
     annotations: { title: '글의 AI 사용 확인', ...RO } },
+  { name: 'aimarker_analyze_folder', title: '폴더 일괄 확인 리포트',
+    description: '폴더(또는 파일 목록)의 이미지 · 영상 · 오디오 · PDF 를 이 컴퓨터에서 읽어 20건씩 AI 사용 근거를 확인하고 리포트로 정리합니다: 근거 등급별 개수, 근거로 바로 표시할 수 있는 비율, 먼저 확인할 점(지금 표시와 근거가 다른 것 · 같은 파일인데 근거가 다른 것 · 출처 기록이 파일과 맞지 않는 것), 도구 · 서명자 분포. declared_csv(파일 이름, 지금 표시)를 주면 지금 붙인 표시가 근거와 맞는지도 비교하고, save_dir 을 주면 리포트(HTML) · CSV 를 저장합니다. 원본은 보내지 않고, 마크는 발급하지 않습니다.',
+    inputSchema: { type: 'object', properties: {
+      path: { type: 'string', description: '폴더 경로(또는 파일 하나)' },
+      paths: { type: 'array', maxItems: 200, items: { type: 'string' }, description: '파일 경로 목록(path 대신 쓸 때)' },
+      recursive: { type: 'boolean', description: '하위 폴더까지 볼지(기본 true)' },
+      max_files: { type: 'integer', minimum: 1, maximum: 200, description: '최대 파일 수(기본 200)' },
+      declared_csv: { type: 'string', description: '지금 표시 목록 CSV 경로(선택). 첫 칸 파일 이름, 둘째 칸 AI 생성 · AI 편집 · AI 보조 · AI 미사용 · 표시 없음' },
+      org: { type: 'string', maxLength: 60, description: '리포트 제목에 넣을 회사 · 브랜드 이름(선택)' },
+      save_dir: { type: 'string', description: '리포트 HTML · CSV 를 저장할 폴더(선택)' } } },
+    annotations: { title: '폴더 일괄 확인 리포트', readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true } },
   { name: 'aimarker_mark', title: 'AI 사용 마크 발급',
     description: '파일(path) 또는 글(text)에 서명된 AIMarker 마크를 발급합니다. 서버가 근거를 다시 확인해 맞지 않는 표시는 막습니다(CONFLICT). 마크 번호 · 확인 주소 · 관리 키(한 번만) · 서명(JWS) · 원장 번호를 돌려줍니다. write_copy 가 true 면 JPEG · PNG 파일 안에 마크 번호와 서명을 넣은 표시본을 만들어 저장하고 마크에 등록합니다.',
     inputSchema: { type: 'object', properties: {
@@ -169,6 +187,8 @@ const PROMPTS = [
     arguments: [{ name: 'path', description: '파일 경로', required: true }, { name: 'how_made', description: '만든 방법 · 사용한 AI 도구(알면)', required: false }] },
   { name: 'check_received_file', title: '받은 파일의 마크 확인', description: '파일 속 AIMarker 마크와 서명, 같은 · 비슷한 파일의 마크를 확인합니다.',
     arguments: [{ name: 'path', description: '파일 경로', required: true }] },
+  { name: 'report_folder', title: '폴더 콘텐츠 AI 사용 확인 리포트', description: '폴더 안 이미지 · 영상 · 오디오 · PDF 의 AI 사용 근거를 한꺼번에 확인하고, 바로 표시할 수 있는 것 · 물어봐야 할 것 · 고칠 것을 정리합니다.',
+    arguments: [{ name: 'path', description: '폴더 경로', required: true }, { name: 'save_dir', description: '리포트를 저장할 폴더(선택)', required: false }] },
   { name: 'review_ad_copy', title: '광고 문구 검수하고 고치기(부가 기능)', description: '문구를 AIMarker로 검수하고, 위험 후보를 근거와 함께 설명한 뒤 고친 문구를 제안합니다.',
     arguments: [{ name: 'text', description: '검수할 문구', required: true }, { name: 'industry', description: '업종(모르면 비움): 일반 · 식품 · 건강기능식품 · 화장품 · 의료 · 금융', required: false }] }
 ];
@@ -238,6 +258,52 @@ async function textInput(t) {
 async function input(a) {
   need(!!a.path !== (a.text != null && a.text !== ''), 'path(파일)와 text(글) 가운데 하나만 넣어 주세요.');
   return a.path ? fileInput(a.path) : textInput(a.text);
+}
+
+/* 폴더 일괄 확인: 파일 고르기 · 20건씩 확인(서명 묶음 90만 자) · 동시에 3묶음 */
+const EXT_RE = /\.(jpe?g|png|webp|gif|avif|heic|heif|tiff?|bmp|svg|mp4|m4v|mov|m4a|mp3|wav|flac|aac|ogg|webm|pdf)$/i;
+const SKIP_RE = /(^|\/)(\.|__MACOSX\/|node_modules\/|Thumbs\.db$|desktop\.ini$)/i;
+async function listFiles(dir, recursive, limit) {
+  const out = [];
+  async function walk(d) {
+    if (out.length >= limit) return;
+    let list; try { list = await readdir(d, { withFileTypes: true }); } catch { return; }
+    list.sort((x, y) => (x.name < y.name ? -1 : 1));
+    for (const de of list) {
+      if (out.length >= limit) return;
+      if (de.name.startsWith('.') || de.name === 'node_modules' || de.name === '__MACOSX') continue;
+      const fp = path.join(d, de.name);
+      if (de.isDirectory()) { if (recursive) await walk(fp); } else if (de.isFile()) out.push(fp);
+    }
+  }
+  await walk(dir);
+  return out;
+}
+async function analyzeEntries(entries) {
+  const todo = entries.filter((e) => !e.error && e._f), batches = [];
+  let cur = [], budget = 900000;
+  for (const e of todo) { if (cur.length && (cur.length >= 20 || e._pl > budget)) { batches.push(cur); cur = []; budget = 900000; } cur.push(e); budget -= e._pl; }
+  if (cur.length) batches.push(cur);
+  let i = 0, stop = '';
+  const alone = [];
+  const run = async () => {
+    while (i < batches.length) {
+      const b = batches[i++];
+      if (stop) { b.forEach((e) => { e.error = stop; }); continue; }
+      try {
+        const r = await api('am.analyzebatch', { items: b.map((e, k) => ({ ref: String(k), features: e._f, pack: e._p || undefined })) });
+        r.results.forEach((x, k) => { const e = b[+x.ref] || b[k]; if (x.ok) e.result = x; else if (x.code === 'TIME' || x.code === 'PACK_BUDGET') alone.push(e); else e.error = x.msg || x.code || '확인하지 못했습니다'; });
+      } catch (err) {
+        const code = err && err.body && err.body.code;
+        if (code === 'QUOTA' || code === 'BUSY' || code === 'KEY') stop = err.message;
+        b.forEach((e) => { e.error = err.message || '확인하지 못했습니다'; });
+      }
+    }
+  };
+  await Promise.all(new Array(Math.min(3, batches.length)).fill(0).map(run));
+  for (const e of alone) { try { e.result = await api('am.analyze', { features: e._f, pack: e._p || undefined }); } catch (err) { e.error = err.message || '확인하지 못했습니다'; } }
+  entries.forEach((e) => { delete e._f; delete e._p; delete e._pl; });
+  return entries;
 }
 
 /* 판정 모양 */
@@ -389,6 +455,54 @@ const RUN = {
     const s = shapeAnalysis(r, null);
     s.sha256 = src.features.sha256; s.disclosure = !!src.features.disclosure; s.hidden_chars = !!src.features.zw;
     return ok(analysisText(s) + (s.hidden_chars ? '\n참고: 글에 보이지 않는 문자(폭 없는 문자)가 들어 있습니다. 해시는 그 문자를 뺀 글로 계산했습니다.' : ''), s);
+  },
+  async aimarker_analyze_folder(a) {
+    const max = Math.min(200, Math.max(1, Math.floor(+a.max_files || 200)));
+    let files = [], root = '';
+    if (Array.isArray(a.paths) && a.paths.length) files = a.paths.slice(0, 1000).map((x) => resolvePath(String(x)));
+    else {
+      need(typeof a.path === 'string' && a.path.trim(), 'path(폴더) 또는 paths(파일 목록)를 넣어 주세요.');
+      root = resolvePath(a.path.trim());
+      let st; try { st = await stat(root); } catch { throw new ToolError('폴더를 찾지 못했습니다: ' + root); }
+      files = st.isDirectory() ? await listFiles(root, a.recursive !== false, 5000) : [root];
+    }
+    const skipped = { type: 0, over: 0 };
+    files = files.filter((f) => { if (SKIP_RE.test(f.split(path.sep).join('/'))) return false; if (!EXT_RE.test(f)) { skipped.type++; return false; } return true; });
+    if (files.length > max) { skipped.over = files.length - max; files = files.slice(0, max); }
+    need(files.length, '확인할 파일(이미지 · 영상 · 오디오 · PDF)이 없습니다' + (skipped.type ? '(지원하지 않는 형식 ' + skipped.type + '개는 건너뜀)' : '') + '.');
+    let decl = null;
+    if (a.declared_csv) { try { decl = REP.parseDeclared(await readFile(resolvePath(a.declared_csv), 'utf8')); } catch { throw new ToolError('지금 표시 목록 CSV 를 읽지 못했습니다: ' + a.declared_csv); } }
+    const entries = [];
+    for (const fp of files) {
+      const e = { name: path.basename(fp), path: root ? path.relative(root, fp) : fp, size: 0, kind: 'other', sha256: '', dhash: '', result: null, error: '' };
+      try {
+        const src = await fileInput(fp);
+        e.size = src.bytes.length; e.kind = src.rep.kind || 'other'; e.sha256 = src.features.sha256; e.dhash = src.features.dhash || '';
+        e._f = src.features; e._p = src.pack || null; e._pl = e._p ? JSON.stringify(e._p).length : 0;
+      } catch (err) { e.error = '읽지 못했습니다: ' + (err && err.message || err); }
+      if (decl) { const d = decl.map[e.name.toLowerCase()]; if (d) e.declared = d; }
+      entries.push(e);
+    }
+    await analyzeEntries(entries);
+    const R = REP.build(entries.map((e) => ({ name: e.name, path: e.path, size: e.size, kind: e.kind, sha256: e.sha256, dhash: e.dhash, result: e.result, error: e.error, declared: e.declared || '' })), { org: a.org || '', source: 'AIMarker MCP ' + VERSION });
+    const saved = [];
+    if (a.save_dir) {
+      const dir = resolvePath(a.save_dir); await mkdir(dir, { recursive: true });
+      const base = path.join(dir, 'aimarker-report-' + new Date().toISOString().slice(0, 10));
+      await writeFile(base + '.html', REP.html(R), 'utf8'); await writeFile(base + '.csv', REP.csv(R), 'utf8');
+      saved.push(base + '.html', base + '.csv');
+    }
+    const TAG = { conflict: '근거와 다름', missing: '표시 빠짐', group: '사본 불일치', tamper: '기록 손상', weaker: '표시 약함', near: '등록 이미지 참고' };
+    const iss = R.issues.filter((x) => x.type !== 'near');
+    const L = ['AIMarker 일괄 확인 리포트' + (R.org ? ' · ' + R.org : '') + (root ? ' · ' + root : ''), REP.summaryText(R)];
+    if (skipped.type || skipped.over) L.push('건너뜀: ' + [skipped.type ? '지원하지 않는 형식 ' + skipped.type + '개' : '', skipped.over ? '최대 수를 넘는 ' + skipped.over + '개' : ''].filter(Boolean).join(' · '));
+    if (iss.length) L.push('', '먼저 확인할 점', ...iss.slice(0, 12).map((x) => '- [' + TAG[x.type] + '] ' + (x.type === 'group' ? x.rows.map((r) => r.name).join(', ') : x.row.name) + ': ' + x.text), ...(iss.length > 12 ? ['- 외 ' + (iss.length - 12) + '건은 리포트에 있습니다.'] : []));
+    L.push('', '다음 단계: 근거가 있는 파일은 aimarker_mark_batch(label auto)로 발급할 수 있습니다. 근거가 없는 파일은 사용자에게 AI 사용 여부를 물어 발급자 신고로 표시하세요.');
+    if (saved.length) L.push('저장: ' + saved.join(' · '));
+    L.push(MARK_NOTE);
+    return ok(L.join('\n'), { n: R.n, ready_pct: R.readyPct, categories: R.cats, declared: R.declared ? R.decl : null, tools: R.tools, signers: R.signers, existing_marks: R.marks,
+      issues: iss.slice(0, 50).map((x) => ({ type: x.type, type_ko: TAG[x.type], files: x.type === 'group' ? x.rows.map((r) => r.path || r.name) : [x.row.path || x.row.name], text: x.text })),
+      files: R.rows.map((r) => ({ path: r.path || r.name, kind: r.kind, category: r.cat, basis: r.basis, allowed: r.allowed, tools: r.tools, signer: r.signer, declared: r.declared || '', note: r.cmp ? r.cmp[1] : (r.err || '') })), saved, skipped });
   },
   async aimarker_mark(a) {
     const src = await input(a);
@@ -633,6 +747,13 @@ function prompt(name, args) {
     if (!args.path) throw Object.assign(new Error('path 인자가 필요합니다.'), { code: -32602 });
     return { description: '받은 파일의 마크 확인', messages: [{ role: 'user', content: { type: 'text', text:
       '다음 파일의 AIMarker 마크를 확인해 주세요: ' + args.path + '\naimarker_verify_mark 로 파일 속 서명과 마크 상태를 보고, 마크가 없으면 aimarker_find_marks 로 같은 · 비슷한 파일의 마크를 찾아 주세요. 결과는 서명 유효 여부, 현재 표시, 원본과 같은 파일인지로 정리해 주세요.' } }] };
+  }
+  if (name === 'report_folder') {
+    if (!args.path) throw Object.assign(new Error('path 인자가 필요합니다.'), { code: -32602 });
+    return { description: '폴더 콘텐츠 AI 사용 확인 리포트', messages: [{ role: 'user', content: { type: 'text', text:
+      '다음 폴더를 aimarker_analyze_folder 로 확인해 주세요: ' + args.path + (args.save_dir ? '\n리포트(HTML · CSV)는 여기에 저장: ' + args.save_dir : '') + '\n' +
+      '1) 근거 등급별 개수와 바로 표시할 수 있는 비율을 짧게 말하고\n2) 먼저 확인할 점을 파일 이름과 함께 정리한 뒤\n3) 근거가 있는 파일은 마크를 발급할지 물어봐 주세요(발급은 aimarker_mark_batch, label auto).\n' +
+      "근거가 없는 파일은 'AI 미사용'으로 단정하지 말고 '근거 없음 · 확인 필요'라고 말해 주세요." } }] };
   }
   if (name === 'review_ad_copy') {
     if (!args.text) throw Object.assign(new Error('text 인자가 필요합니다.'), { code: -32602 });

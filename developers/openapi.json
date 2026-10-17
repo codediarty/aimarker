@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "AIMarker API",
-    "version": "2026.10.16-5.0",
+    "version": "2026.10.17-5.1",
     "summary": "AI 사용 확인 · 서명된 마크 발급 · 마크 확인 · 공개 앵커 API(부가: 광고 문구 검수)",
     "description": "AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 근거에 맞는 표시를 서명된 디지털 마크로 발급 · 관리하는 AI 콘텐츠 투명성 플랫폼입니다.\n\n- 모든 요청은 같은 주소(/exec)로 POST 하고 본문의 action 으로 동작을 고릅니다. 본문은 JSON 문자열, Content-Type: text/plain.\n- 서버가 302 로 결과 주소를 알려 주므로 리다이렉트를 따라가세요(POST → GET).\n- 파일 원본은 받지 않습니다. 출처 판독기 aim-extract(https://aimarker.kr/lib/aim-extract.js)가 만든 features(특징값) · pack(서명 검증용 조각)만 보냅니다.\n- 마크 서명(cred)은 JWS(EdDSA · Ed25519). 공개키: am.pubkey · https://aimarker.kr/.well-known/aimarker-keys.json\n- 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지 · 표시본에 AI 마크가 있으면 CONFIRM(사용자 확인 뒤 confirm: true).\n- 마크는 표시와 근거의 기록이며 법적 인증이 아닙니다. 광고 문구 검수(부가 기능)는 위험 후보와 근거이며 법률 자문이 아닙니다.\n- AI 에이전트용: MCP 서버 https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz · 한 파일 설명서 https://aimarker.kr/llms-full.txt",
     "contact": {
@@ -26,7 +26,7 @@
       "post": {
         "operationId": "aimarker",
         "summary": "action 으로 고르는 AIMarker 요청",
-        "description": "핵심: am.analyze(AI 사용 확인) · am.mark(마크 발급) · am.markbatch(20개 일괄) · am.markinfo(마크 정보, 누구나) · am.lookup(같은 · 비슷한 파일의 마크, 누구나) · am.markedit(관리 키로 변경 · 철회) · am.pubkey(서명 공개키, 누구나) · am.anchor(공개 앵커, 누구나)\n부가 기능: am.check(문구 검수) · am.auto(자동 수정) · am.batch(20건 검수) · am.label(표시 문구) · am.scan(사이트 진단) · am.share(광고주 승인 링크) · am.status(승인 상태) · am.stamp(원장 기록) · am.verify(원장 확인)",
+        "description": "핵심: am.analyze(AI 사용 확인) · am.analyzebatch(20건 일괄 확인, 발급 안 함) · am.mark(마크 발급) · am.markbatch(20개 일괄) · am.markinfo(마크 정보, 누구나) · am.lookup(같은 · 비슷한 파일의 마크, 누구나) · am.markedit(관리 키로 변경 · 철회) · am.pubkey(서명 공개키, 누구나) · am.anchor(공개 앵커, 누구나)\n부가 기능: am.check(문구 검수) · am.auto(자동 수정) · am.batch(20건 검수) · am.label(표시 문구) · am.scan(사이트 진단) · am.share(광고주 승인 링크) · am.status(승인 상태) · am.stamp(원장 기록) · am.verify(원장 확인)",
         "requestBody": {
           "required": true,
           "content": {
@@ -35,6 +35,9 @@
                 "oneOf": [
                   {
                     "$ref": "#/components/schemas/AnalyzeRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/AnalyzeBatchRequest"
                   },
                   {
                     "$ref": "#/components/schemas/MarkRequest"
@@ -241,6 +244,9 @@
                   "oneOf": [
                     {
                       "$ref": "#/components/schemas/AnalyzeResult"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AnalyzeBatchResult"
                     },
                     {
                       "$ref": "#/components/schemas/MarkResult"
@@ -1480,6 +1486,70 @@
           },
           "ms": {
             "type": "integer"
+          }
+        }
+      },
+      "AnalyzeBatchRequest": {
+        "type": "object",
+        "description": "20건까지 한 번에 확인(발급하지 않음). 서명 묶음(pack) 합계 120만 자까지, 한도는 항목 수만큼",
+        "properties": {
+          "action": {
+            "const": "am.analyzebatch"
+          },
+          "key": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "properties": {
+                "ref": {
+                  "type": "string",
+                  "description": "돌려받을 때 맞춰 볼 이름"
+                },
+                "features": {
+                  "$ref": "#/components/schemas/Features"
+                },
+                "pack": {
+                  "$ref": "#/components/schemas/Pack"
+                }
+              },
+              "required": [
+                "features"
+              ]
+            }
+          }
+        },
+        "required": [
+          "action",
+          "key",
+          "items"
+        ]
+      },
+      "AnalyzeBatchResult": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "failed": {
+            "type": "integer"
+          },
+          "ms": {
+            "type": "integer"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "성공하면 AnalyzeResult 와 같은 모양에 ok:true · ref. 실패하면 ok:false · ref · code(HASH · PACK_BUDGET · TIME …) · msg. PACK_BUDGET · TIME 항목은 am.analyze 로 따로 보내세요"
+            }
           }
         }
       },

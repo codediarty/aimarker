@@ -112,6 +112,10 @@
     var plan = { business: 'Business', scale: 'Scale', agency: 'Scale', enterprise: 'Enterprise', license: 'Enterprise', private: 'Enterprise', expert: 'Enterprise', api: 'API', bulk: '대량 처리', ad: '광고 검수', addon: '광고 검수', pilot: '파일럿', starter: '파일럿', free: '파일럿', pro: 'Business', biz: 'Business' }[q.get('plan') || ''];
     var type = { commerce: '쇼핑몰 · 이커머스', shop: '쇼핑몰 · 이커머스', media: '언론 · 미디어', news: '언론 · 미디어', agency: '광고대행사 · 브랜드', brand: '광고대행사 · 브랜드', api: '플랫폼 · AI 서비스', platform: '플랫폼 · AI 서비스', ai: '플랫폼 · AI 서비스', enterprise: '공공 · 교육 · 기관', public: '공공 · 교육 · 기관', univ: '공공 · 교육 · 기관', org: '공공 · 교육 · 기관', edu: '공공 · 교육 · 기관', invest: '투자 · 제휴', partner: '투자 · 제휴', ad: '투자 · 제휴', install: '기타', creator: '기타' }[q.get('type') || ''];
     if (plan) { var ps = document.querySelector('form[data-lead] [name="plan"]'); if (ps) { if (ps.tagName === 'SELECT') ps.value = plan; else { var pr = document.querySelector('form[data-lead] input[name="plan"][value="' + plan + '"]'); if (pr) pr.checked = true; else ps.value = plan; } } }
+    try {   // 일괄 확인 리포트에서 '이 결과로 상담 신청'을 누르면 요약을 내용 칸에(같은 창에서만, 서버로는 신청할 때만 감)
+      var rm = sessionStorage.getItem('am_report_memo'), mf = document.querySelector('form[data-lead] [name="memo"]');
+      if (rm && mf && !mf.value) { mf.value = rm.slice(0, 880); sessionStorage.removeItem('am_report_memo'); }
+    } catch (eR) { /* 무시 */ }
     var site = (q.get('site') || '').replace(/[^\w.\-:/가-힣]/g, '').slice(0, 120);
     if (site) { var si = document.querySelector('form[data-lead] input[name="site"]'); if (si && !si.value) si.value = site; }
     if (type) {

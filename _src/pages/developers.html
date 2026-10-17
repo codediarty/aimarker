@@ -3,7 +3,7 @@ path: developers/
 key: developers
 title: API · MCP · SDK · AI 사용 확인과 서명된 마크를 코드로 | AIMarker
 ogtitle: AIMarker API · AI 사용 확인과 서명된 마크를 코드 한 줄로
-desc: 파일의 AI 사용 근거 확인(am.analyze), 근거 맞춤 마크 발급(am.mark), 마크 확인 · 서명 확인 · 공개 앵커를 API · MCP 서버 2.0 · 함수 호출 · JavaScript · Python SDK 로. 원본 파일은 보내지 않고, 마크마다 Ed25519 서명. 무료 API 키 하루 300회.
+desc: 파일의 AI 사용 근거 확인(am.analyze), 근거 맞춤 마크 발급(am.mark), 여러 파일 일괄 확인(am.analyzebatch) · 마크 확인 · 서명 확인 · 공개 앵커를 API · MCP 서버 2.1 · 함수 호출 · JavaScript · Python SDK 로. 원본 파일은 보내지 않고, 마크마다 Ed25519 서명. 무료 API 키 하루 300회.
 styles: assets/app.css, assets/mark.css
 scripts: lib/aim-extract.js, assets/amui.js, assets/dev.js
 selflabel: footer
@@ -41,7 +41,7 @@ selflabel: footer
 
 <section class="blk soft" id="mcp">
   <div class="wrap">
-    <div class="blk-h"><span class="k">MCP 서버 2.0</span><h2>Claude · Cursor · VS Code · Codex 에 설정 한 번</h2><p>Node.js 18 이상에서 의존성 없이 돕니다. 출처 판독기가 들어 있어, 에이전트가 이 컴퓨터의 파일을 직접 확인하고 마크를 받고 표시본까지 저장합니다.</p></div>
+    <div class="blk-h"><span class="k">MCP 서버 2.1</span><h2>Claude · Cursor · VS Code · Codex 에 설정 한 번</h2><p>Node.js 18 이상에서 의존성 없이 돕니다. 출처 판독기가 들어 있어, 에이전트가 이 컴퓨터의 파일을 직접 확인하고 마크를 받고 표시본까지 저장합니다.</p></div>
     <div class="code mt24" data-tabs>
       <div class="tabs code-tabs" role="tablist" aria-label="MCP 설정">
         <button type="button" role="tab" aria-selected="true">Claude Desktop · Cursor · Gemini CLI</button>
@@ -54,38 +54,39 @@ selflabel: footer
   "mcpServers": {
     "aimarker": {
       "command": "npx",
-      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz"],
+      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"],
       "env": { "AIMARKER_KEY": "amk_발급받은_키" }
     }
   }
 }</pre></div>
-      <div class="tabpane" role="tabpanel"><div class="code-h"><span>터미널</span><button class="btn btn-g btn-s" type="button" data-copy="#mc2"><span>복사</span></button></div><pre class="code-b" id="mc2">claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz</pre></div>
+      <div class="tabpane" role="tabpanel"><div class="code-h"><span>터미널</span><button class="btn btn-g btn-s" type="button" data-copy="#mc2"><span>복사</span></button></div><pre class="code-b" id="mc2">claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz</pre></div>
       <div class="tabpane" role="tabpanel"><div class="code-h"><span>.vscode/mcp.json</span><button class="btn btn-g btn-s" type="button" data-copy="#mc3"><span>복사</span></button></div><pre class="code-b" id="mc3">{
   "inputs": [{ "type": "promptString", "id": "aimarker-key", "description": "AIMarker API 키", "password": true }],
   "servers": {
     "aimarker": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz"],
+      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"],
       "env": { "AIMARKER_KEY": "${input:aimarker-key}" }
     }
   }
 }</pre></div>
       <div class="tabpane" role="tabpanel"><div class="code-h"><span>~/.codex/config.toml</span><button class="btn btn-g btn-s" type="button" data-copy="#mc4"><span>복사</span></button></div><pre class="code-b" id="mc4">[mcp_servers.aimarker]
 command = "npx"
-args = ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz"]
+args = ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"]
 env = { AIMARKER_KEY = "amk_발급받은_키" }</pre></div>
       <div class="tabpane" role="tabpanel"><div class="code-h"><span>내려받아 직접 실행</span><button class="btn btn-g btn-s" type="button" data-copy="#mc5"><span>복사</span></button></div><pre class="code-b" id="mc5">curl -O https://aimarker.kr/mcp/aimarker-mcp.mjs
 # 설정: "command": "node", "args": ["/내/경로/aimarker-mcp.mjs"], "env": { "AIMARKER_KEY": "amk_…" }
 AIMARKER_KEY=amk_발급받은_키 node aimarker-mcp.mjs --help
 node aimarker-mcp.mjs --features 사진.jpg   # 서버로 보내는 특징값만 확인(키 필요 없음)</pre></div>
     </div>
-    <p class="dev-note">Windows 에서 npx 를 찾지 못하면 <code>"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz"]</code> 로 바꾸세요. 받기: <a href="{{root}}mcp/aimarker-mcp-2.0.0.tgz">npx 꾸러미</a> · <a href="{{root}}mcp/aimarker-mcp.mjs">파일 하나</a>. sharp 가 설치돼 있으면 비슷한 이미지 찾기에 쓰는 지각 해시도 만듭니다.</p>
+    <p class="dev-note">Windows 에서 npx 를 찾지 못하면 <code>"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"]</code> 로 바꾸세요. 받기: <a href="{{root}}mcp/aimarker-mcp-2.1.0.tgz">npx 꾸러미</a> · <a href="{{root}}mcp/aimarker-mcp.mjs">파일 하나</a>. sharp 가 설치돼 있으면 비슷한 이미지 찾기에 쓰는 지각 해시도 만듭니다.</p>
     <div class="kvt-wrap"><table class="kvt mono">
       <thead><tr><th>도구</th><th>하는 일</th><th>서버에 가는 것</th></tr></thead>
       <tbody>
         <tr><th>aimarker_analyze_file</th><td>파일의 AI 사용 근거 확인: 판정 · 근거 등급 · 고를 수 있는 표시 · 같은 · 비슷한 파일의 기존 마크</td><td>특징값 · 해시</td></tr>
         <tr><th>aimarker_analyze_text</th><td>글의 기존 마크 · AI 활용 표현 확인</td><td>글의 해시</td></tr>
+        <tr><th>aimarker_analyze_folder</th><td>폴더째 20건씩 확인해 리포트로: 근거 등급 · 바로 표시 비율 · 먼저 확인할 점 · 도구 분포, 지금 표시 CSV 와 비교, 리포트 HTML · CSV 저장(2.1)</td><td>특징값 · 해시</td></tr>
         <tr><th>aimarker_mark</th><td>근거 맞춤 마크 발급(맞지 않으면 막힘). write_copy 로 마크 번호 · 서명을 넣은 표시본(JPEG · PNG) 저장 · 등록</td><td>특징값 · 해시</td></tr>
         <tr><th>aimarker_mark_batch</th><td>20개까지 한 번에 확인 · 발급, 근거 없는 항목은 DECLARE 로 돌려줌</td><td>특징값 · 해시</td></tr>
         <tr><th>aimarker_verify_mark</th><td>파일 속 마크 서명을 공개키로 확인, 원본 · 표시본 대조, 철회 여부</td><td>마크 번호(조회)</td></tr>
@@ -94,18 +95,19 @@ node aimarker-mcp.mjs --features 사진.jpg   # 서버로 보내는 특징값만
         <tr><th>aimarker_anchor</th><td>하루치 원장의 뿌리 해시 · OpenTimestamps 증명 확인, .ots 저장</td><td>날짜(조회)</td></tr>
         <tr><th>부가 기능 9개</th><td>광고 문구 검수 · 자동 수정 · 일괄 검수 · 표시 문구 · 사이트 진단 · 광고주 승인 · 승인 상태 · 원장 기록 · 원장 확인</td><td>문구(저장 안 함)</td></tr>
       </tbody></table></div>
-    <p class="dev-note">프롬프트: <code>mark_content</code>(확인하고 마크 받기) · <code>check_received_file</code>(받은 파일의 마크 확인) · <code>review_ad_copy</code>(광고 문구 검수). 1.0.0 꾸러미도 그대로 돕니다.</p>
+    <p class="dev-note">프롬프트: <code>mark_content</code>(확인하고 마크 받기) · <code>check_received_file</code>(받은 파일의 마크 확인) · <code>report_folder</code>(폴더 리포트) · <code>review_ad_copy</code>(광고 문구 검수). 1.0.0 · 2.0.0 꾸러미도 그대로 돕니다.</p>
   </div>
 </section>
 
 <section class="blk" id="sdk">
   <div class="wrap">
-    <div class="blk-h"><span class="k">SDK 1.0</span><h2>파일 하나로 붙이는 JavaScript · Python 클라이언트</h2><p>의존성이 없습니다. JavaScript SDK 에는 출처 판독기가 들어 있어 파일 바이트를 그대로 넘기면 됩니다. Python SDK 는 글 · 서명 확인을 표준 라이브러리로 하고, 파일 판독은 Node.js 로 합니다. 서버 쪽 코드에서 사용하고 API 키는 환경 변수에 두세요.</p></div>
+    <div class="blk-h"><span class="k">SDK 1.1</span><h2>파일 하나로 붙이는 JavaScript · Python 클라이언트</h2><p>의존성이 없습니다. JavaScript SDK 에는 출처 판독기가 들어 있어 파일 바이트를 그대로 넘기면 됩니다. Python SDK 는 글 · 서명 확인을 표준 라이브러리로 하고, 파일 판독은 Node.js 로 합니다. 서버 쪽 코드에서 사용하고 API 키는 환경 변수에 두세요.</p></div>
     <div class="code mt24" data-tabs>
       <div class="tabs code-tabs" role="tablist" aria-label="SDK">
         <button type="button" role="tab" aria-selected="true">JavaScript</button>
         <button type="button" role="tab" aria-selected="false">Python</button>
         <button type="button" role="tab" aria-selected="false">상품 등록에 붙이기</button>
+        <button type="button" role="tab" aria-selected="false">여러 파일 리포트</button>
       </div>
       <div class="tabpane on" role="tabpanel"><div class="code-h"><span><a href="{{root}}sdk/aimarker.mjs">aimarker.mjs</a> · Node 20+ · Deno · Bun · Workers</span><button class="btn btn-g btn-s" type="button" data-copy="#sd1"><span>복사</span></button></div><pre class="code-b" id="sd1">import { AIMarker } from './aimarker.mjs';
 import { readFile, writeFile } from 'node:fs/promises';
@@ -153,6 +155,19 @@ export async function onProductImages(files, seller) {   // files: [{ bytes, nam
     else if (x.code === 'DECLARE') await askSeller(x.ref);   // 기록 없는 이미지: 판매자 신고로 발급
   }
 }</pre></div>
+      <div class="tabpane" role="tabpanel"><div class="code-h"><span>폴더 · 여러 파일을 20건씩 확인하고 리포트(HTML · CSV)로 · SDK 1.1</span><button class="btn btn-g btn-s" type="button" data-copy="#sd4"><span>복사</span></button></div><pre class="code-b" id="sd4">import { AIMarker, report } from './aimarker.mjs';
+import { readdir, writeFile } from 'node:fs/promises';
+
+const am = new AIMarker({ key: process.env.AIMARKER_KEY });
+const dir = './upload/2026-10';
+const files = (await readdir(dir)).filter((f) => /\.(jpe?g|png|webp|mp4|pdf)$/i.test(f)).map((f) => dir + '/' + f);
+
+// 20건씩 나눠 동시에 3묶음 확인(원본은 보내지 않음 · 발급하지 않음)
+const entries = await am.analyzeFiles(files, { onProgress: (n, all) => console.log(n + '/' + all) });
+const R = report.build(entries, { org: '우리 쇼핑몰' });
+console.log(report.summaryText(R));          // 바로 표시 가능 비율 · 확인할 점 · 주요 도구
+await writeFile('report.html', report.html(R)); // 혼자 열리는 리포트(인쇄 · PDF 가능)
+await writeFile('report.csv', report.csv(R));   // 파일마다 판정 · 근거 등급 · 고를 수 있는 표시</pre></div>
     </div>
   </div>
 </section>
@@ -228,6 +243,7 @@ while (res.output.some((o) =&gt; o.type === 'function_call')) {
       <thead><tr><th>action</th><th>하는 일</th><th>주요 입력</th><th>주요 출력</th></tr></thead>
       <tbody>
         <tr><th>am.analyze</th><td>AI 사용 확인</td><td>features · pack</td><td>verdict{ai · scope · basis · allowed · suggest} · signals[] · signer · registry[]</td></tr>
+        <tr><th>am.analyzebatch</th><td>20건까지 한 번에 확인(발급 안 함)</td><td>items[{ref · features · pack}]</td><td>results[{ok · ref · verdict · …} | {ok:false · code · msg}] · failed</td></tr>
         <tr><th>am.mark</th><td>마크 발급</td><td>features · pack · label · tools · title · issuer · confirm</td><td>id · url · key(관리 키) · cred(JWS) · kid · basis · ledger · xmp</td></tr>
         <tr><th>am.markbatch</th><td>20개까지 발급</td><td>items[{ref · features · pack · label(auto)}] · issuer</td><td>results[] · issued</td></tr>
         <tr><th>am.markinfo</th><td>마크 정보 · 누구나</td><td>id</td><td>status · label · basis · evidence[] · history[] · sha256 · alts · cred</td></tr>
@@ -244,6 +260,16 @@ while (res.output.some((o) =&gt; o.type === 'function_call')) {
       <div class="col-it"><b>표시 · 근거</b><p>label: ai_generated · ai_edited · ai_assisted · no_ai. basis: verified(서명 검증) · record(파일 기록) · declared(발급자 신고). 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지 · 표시본에 AI 마크가 있으면 CONFIRM.</p></div>
       <div class="col-it"><b>인증 · 한도</b><p>본문에 "key": "amk_…". 무료 키는 하루 300회(일괄은 항목 수만큼). 마크 확인 · 찾기 · 공개키 · 앵커는 키 없이, 마크 관리는 관리 키만으로 됩니다. 한도 상향은 <a href="{{root}}contact/?plan=api">상담</a>.</p></div>
       <div class="col-it"><b>오류</b><p>ok:false 와 code: KEY · QUOTA · BUSY · HASH · CONFLICT(allowed · reasons) · CONFIRM(related) · DECLARE · REVOKED · NOT_FOUND. 전체 설명은 <a href="{{root}}llms-full.txt">llms-full.txt</a>.</p></div>
+    </div>
+    <div class="dev-batch" id="batch">
+      <h3>여러 파일 일괄 확인 · am.analyzebatch</h3>
+      <p>한 번에 20건까지 확인합니다(발급은 하지 않음). 서명 묶음(pack)은 한 요청에 합계 120만 자까지이고, 넘거나 시간이 모자란 항목은 <code>PACK_BUDGET</code> · <code>TIME</code> 으로 돌려주니 그 항목만 <code>am.analyze</code> 로 따로 보내세요. 한도는 항목 수만큼 셉니다. SDK 의 <code>analyzeFiles</code> 와 MCP 의 <code>aimarker_analyze_folder</code> 는 이것을 알아서 나눠 부르고, 화면으로는 <a href="{{root}}report/">일괄 확인 리포트</a>가 같은 일을 합니다.</p>
+      <div class="code mt16"><div class="code-h"><span>터미널 · 특징값 만들기 → 20건까지 한 번에</span><button class="btn btn-g btn-s" type="button" data-copy="#bt1"><span>복사</span></button></div><pre class="code-b" id="bt1">API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec"
+# 1) 파일마다 특징값(원본은 이 컴퓨터에서만 읽음)
+for f in a.jpg b.png c.webp; do node aimarker-mcp.mjs --features "$f" &gt; "$f.json"; done
+# 2) 한 번에 확인: ref 는 돌려받을 때 맞춰 볼 이름
+jq -s '{action:"am.analyzebatch", key:"amk_발급받은_키", items:[to_entries[] | {ref:(.key|tostring), features:.value.features, pack:.value.pack}]}' a.jpg.json b.png.json c.webp.json \
+  | curl -sL -H 'Content-Type: text/plain' -d @- "$API" | jq '.results[] | {ref, ok, ai: .verdict.ai, basis: .verdict.basis}'</pre></div>
     </div>
   </div>
 </section>
