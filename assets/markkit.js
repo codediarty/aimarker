@@ -128,7 +128,35 @@
       img.src = url;
     });
   };
-  /* pos: tl · tr · bl · br, size: s · m · l, qr: true 면 배지 옆에 QR */
+  /* 광고 · 가상인물 꼬리표(흰 바탕 · 진한 글자). 돌려줌: 너비 */
+  MK.tagWidth = function (ctx, h, text) { ctx.save(); ctx.font = '850 ' + (h * 0.42) + 'px ' + FONT; var w = ctx.measureText(text).width + h * 0.62; ctx.restore(); return w; };
+  MK.drawTag = function (ctx, x, y, h, text) {
+    var w = MK.tagWidth(ctx, h, text);
+    ctx.save(); ctx.shadowColor = 'rgba(6,16,42,.24)'; ctx.shadowBlur = h * 0.3; ctx.shadowOffsetY = h * 0.05;
+    rr(ctx, x, y, w, h, h * 0.24); ctx.fillStyle = '#FFFFFF'; ctx.fill(); ctx.shadowColor = 'transparent';
+    ctx.lineWidth = Math.max(1, h * 0.04); ctx.strokeStyle = 'rgba(10,31,82,.9)'; ctx.stroke();
+    ctx.fillStyle = '#0A1F52'; ctx.font = '850 ' + (h * 0.42) + 'px ' + FONT; ctx.textBaseline = 'middle'; ctx.fillText(text, x + h * 0.31, y + h / 2 + h * 0.02);
+    ctx.restore(); return w;
+  };
+  /* 이미 그림이 그려진 캔버스에 마크를 얹음. o: { pos: tl · tr · bl · br, size: s · m · l, qr, tags: ['광고', '가상인물'] } */
+  MK.stampCanvas = function (c, m, o) {
+    o = o || {};
+    var x = c.getContext('2d'), tags = (o.tags || []).filter(Boolean);
+    var h = Math.round(Math.min(c.width, c.height) * ({ s: 0.06, m: 0.08, l: 0.105 })[o.size || 'm']); h = Math.max(18, Math.min(180, h));
+    var lay = function () {
+      var w = MK.measure(x, h, m, { short: true }), q = o.qr ? h * 1.6 : 0, gap = h * 0.2, tw = tags.reduce(function (a, t) { return a + MK.tagWidth(x, h, t) + gap; }, 0);
+      return { w: w, q: q, gap: gap, tw: tw, tot: tw + w + (q ? q + gap : 0) };
+    };
+    var mg = Math.max(8, Math.round(h * 0.3)), L = lay();
+    if (L.tot > c.width - mg * 2) { h = Math.max(14, Math.floor(h * (c.width - mg * 2) / L.tot)); mg = Math.max(6, Math.round(h * 0.3)); L = lay(); }
+    var pos = o.pos || 'bl', bx = /r$/.test(pos) ? c.width - mg - L.tot : mg, top = /^b/.test(pos) ? c.height - mg - Math.max(h, L.q) : mg;
+    var by = top + (L.q > h && /^b/.test(pos) ? L.q - h : 0), cx = bx;
+    tags.forEach(function (t) { cx += MK.drawTag(x, cx, by, h, t) + L.gap; });
+    MK.draw(x, cx, by, h, m, { short: true }); cx += L.w;
+    if (L.q) { var qx = cx + L.gap, qy = top; x.save(); rr(x, qx, qy, L.q, L.q, h * 0.12); x.fillStyle = '#FFFFFF'; x.fill(); x.restore(); MK.qrDraw(x, MK.markUrl(m.id || 'AM-0000000000'), qx + L.q * 0.06, qy + L.q * 0.06, L.q * 0.88); }
+    return c;
+  };
+  /* pos: tl · tr · bl · br, size: s · m · l, qr: true 면 배지 옆에 QR, tags: 광고 · 가상인물 꼬리표 */
   MK.stamp = function (img, m, o) {
     o = o || {};
     var W = img.naturalWidth || img.width, H = img.naturalHeight || img.height, k = Math.min(1, 8000 / Math.max(W, H), Math.sqrt(40000000 / (W * H)));
@@ -136,14 +164,24 @@
     var x = c.getContext('2d');
     if (o.flat) { x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, c.width, c.height); }
     x.drawImage(img, 0, 0, c.width, c.height);
-    if (o.visible !== false) {
-      var h = Math.round(Math.min(c.width, c.height) * ({ s: 0.06, m: 0.08, l: 0.105 })[o.size || 'm']); h = Math.max(26, Math.min(180, h));
-      var w = MK.measure(x, h, m, { short: true }), q = o.qr ? h * 1.6 : 0, mg = Math.max(8, Math.round(h * 0.3)), tot = w + (q ? q + h * 0.2 : 0);
-      if (tot > c.width - mg * 2) { h = Math.max(18, Math.floor(h * (c.width - mg * 2) / tot)); w = MK.measure(x, h, m, { short: true }); q = o.qr ? h * 1.6 : 0; tot = w + (q ? q + h * 0.2 : 0); }
-      var pos = o.pos || 'bl', bx = /r$/.test(pos) ? c.width - mg - tot : mg, by = /^b/.test(pos) ? c.height - mg - Math.max(h, q) : mg;
-      MK.draw(x, bx, by + (q > h ? (q - h) : 0) * (/^b/.test(pos) ? 1 : 0), h, m, { short: true });
-      if (q) { var qx = bx + w + h * 0.2, qy = by; x.save(); rr(x, qx, qy, q, q, h * 0.12); x.fillStyle = '#FFFFFF'; x.fill(); x.restore(); MK.qrDraw(x, MK.markUrl(m.id), qx + q * 0.06, qy + q * 0.06, q * 0.88); }
+    if (o.visible !== false) MK.stampCanvas(c, m, o);
+    return c;
+  };
+  /* 미리보기: 주어진 캔버스(가로 px)에 그림(없으면 견본 바탕)과 마크를 그림 */
+  MK.preview = function (c, img, m, o) {
+    var W = img ? (img.naturalWidth || img.width) : 1200, H = img ? (img.naturalHeight || img.height) : 900, cw = Math.max(200, Math.round(c.clientWidth || 360)), dpr = Math.min(2, window.devicePixelRatio || 1);
+    var k = cw / W; c.width = Math.round(cw * dpr); c.height = Math.round(Math.min(H * k, cw * 1.25) * dpr);
+    var x = c.getContext('2d'); x.save(); x.scale(dpr, dpr);
+    var vh = c.height / dpr;
+    if (img) { var s = Math.max(cw / W, vh / H); x.drawImage(img, (cw - W * s) / 2, (vh - H * s) / 2, W * s, H * s); }
+    else {
+      var g = x.createLinearGradient(0, 0, cw, vh); g.addColorStop(0, '#DCE6FF'); g.addColorStop(1, '#E7F7F3'); x.fillStyle = g; x.fillRect(0, 0, cw, vh);
+      x.fillStyle = 'rgba(14,42,107,.10)'; for (var i = 0; i < 7; i++) { x.beginPath(); x.arc(cw * (0.15 + i * 0.13), vh * (0.35 + 0.18 * Math.sin(i)), vh * (0.08 + 0.03 * (i % 3)), 0, Math.PI * 2); x.fill(); }
+      x.fillStyle = 'rgba(11,19,36,.45)'; x.font = '700 ' + Math.round(cw * 0.04) + 'px ' + FONT; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('견본 이미지', cw / 2, vh / 2);
     }
+    x.restore();
+    // 마크 크기는 실제 그림 비율 그대로(짧은 변 기준) 보이도록 같은 캔버스에 그림
+    if (o && o.visible !== false) MK.stampCanvas(c, m, o);
     return c;
   };
   MK.canvasBlob = function (c, type, q) { return new Promise(function (ok) { c.toBlob(ok, type, q); }); };

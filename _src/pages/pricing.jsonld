@@ -2,7 +2,7 @@
  "@context": "https://schema.org",
  "@type": "Product",
  "name": "AIMarker",
- "description": "콘텐츠의 AI 사용 여부와 범위를 확인하고 근거가 붙은 디지털 마크를 발급 · 관리하는 AI 콘텐츠 투명성 기술 플랫폼. 정식 출시 전 예상 요금.",
+ "description": "상품 · 콘텐츠를 AI 검색이 읽고 인용하기 쉬운 구조로 바꾸고(GEO), AI를 사용한 이미지 · 영상 · 글 · 문서에 근거 있는 표시를 자동으로 붙이는 플랫폼. 모든 요금은 정식 출시 전 출시 예정 요금이며, 기업 요금은 부가세 별도, 개인 요금은 부가세 포함. 유료는 2026년 12월 기업 파일럿부터.",
  "brand": {
   "@type": "Brand",
   "name": "AIMarker"
@@ -11,51 +11,134 @@
  "offers": [
   {
    "@type": "Offer",
-   "name": "개인",
-   "price": "0",
+   "name": "Starter",
+   "category": "기업",
+   "description": "소형 웹사이트 · 사이트 1개 · GEO 진단 월 50쪽 · 자동 마킹 월 300건 · 구조화 데이터 · llms.txt · AI 표시 태그 · 출시 예정 요금(부가세 별도)",
+   "price": 49000,
    "priceCurrency": "KRW",
-   "description": "AI 사용 확인 · 마크 발급 · 마크 확인 쪽 · QR · 삽입 배지"
-  },
-  {
-   "@type": "Offer",
-   "name": "Business",
-   "price": "99000",
-   "priceCurrency": "KRW",
-   "description": "월 요금부터 · 마크 월 1,000건 · 예상 요금(부가세 별도)",
+   "url": "https://aimarker.kr/pricing/#business",
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
-    "price": "99000",
+    "price": 49000,
     "priceCurrency": "KRW",
     "unitText": "월",
+    "unitCode": "MON",
     "valueAddedTaxIncluded": false
    }
   },
   {
    "@type": "Offer",
-   "name": "Scale",
-   "price": "390000",
+   "name": "Growth",
+   "category": "기업",
+   "description": "쇼핑몰 · 중소기업 · 사이트 3개 · GEO 진단 월 500쪽 · 자동 마킹 월 3,000건 · AI 상품 피드 · 광고 문구 검수 · 월간 리포트 · 출시 예정 요금(부가세 별도)",
+   "price": 149000,
    "priceCurrency": "KRW",
-   "description": "월 요금부터 · 마크 월 10,000건 · API · MCP 자동 발급 · 예상 요금(부가세 별도)",
+   "url": "https://aimarker.kr/pricing/#business",
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
-    "price": "390000",
+    "price": 149000,
     "priceCurrency": "KRW",
     "unitText": "월",
+    "unitCode": "MON",
+    "valueAddedTaxIncluded": false
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "Business",
+   "category": "기업",
+   "description": "브랜드 · 콘텐츠 기업 · 사이트 10개 · GEO 진단 월 3,000쪽 · 자동 마킹 월 2만 건 · API · MCP · 검토자 · 승인 기록 · 우선 지원 · 출시 예정 요금(부가세 별도)",
+   "price": 399000,
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#business",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": 399000,
+    "priceCurrency": "KRW",
+    "unitText": "월",
+    "unitCode": "MON",
     "valueAddedTaxIncluded": false
    }
   },
   {
    "@type": "Offer",
    "name": "Enterprise",
-   "price": "12000000",
+   "category": "기업",
+   "description": "대형 플랫폼 · 기관 · 월 100만 원부터 · 맞춤 한도 · 전용 규칙 · 감사 리포트 · 서비스 수준 협약 · 보안 검토 · 성과 연동 요금 선택 · 출시 예정 요금(부가세 별도)",
+   "price": 1000000,
    "priceCurrency": "KRW",
-   "description": "연 요금부터 · 전용 한도 · 라이선스 · 예상 요금(부가세 별도)",
+   "url": "https://aimarker.kr/pricing/#business",
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
-    "price": "12000000",
+    "price": 1000000,
+    "minPrice": 1000000,
     "priceCurrency": "KRW",
-    "unitText": "년",
+    "unitText": "월",
+    "unitCode": "MON",
     "valueAddedTaxIncluded": false
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "개인 무료",
+   "category": "개인",
+   "description": "가입 없이 · 휴머나이징 문체 점검 · 기본 다듬기 · AI 작성률 검사 · 자동 마킹 한 번에 50개 · 일괄 리포트 200개 · 마크 확인 · AI 활용 증빙서",
+   "price": 0,
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#personal"
+  },
+  {
+   "@type": "Offer",
+   "name": "개인 건당",
+   "category": "개인",
+   "description": "고급 휴머나이징 1회 3,500자까지 1,900원 · 긴 글 묶음 1만 자 · 검사 리포트 9,900원 · 원본 출처 확인 상세 리포트 · 출시 예정 요금(부가세 포함)",
+   "price": 1900,
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#personal",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": 1900,
+    "minPrice": 1900,
+    "maxPrice": 9900,
+    "priceCurrency": "KRW",
+    "unitText": "건",
+    "valueAddedTaxIncluded": true
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "개인 프로",
+   "category": "개인",
+   "description": "고급 휴머나이징 매달 30회 · 증빙서 PDF · 검사 리포트 · 마킹 기록 보관 · 대량 처리 · 출시 예정 요금(부가세 포함)",
+   "price": 9900,
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#personal",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": 9900,
+    "priceCurrency": "KRW",
+    "unitText": "월",
+    "unitCode": "MON",
+    "valueAddedTaxIncluded": true
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "개인 GEO 브랜딩",
+   "category": "개인",
+   "description": "프리랜서 · 강사 · 작가 · 전문가 · 프로필 · 포트폴리오 구조화 데이터 · AI 검색 노출 점검 · 월간 리포트 · 파일럿 · 출시 예정 요금(부가세 포함)",
+   "price": 19900,
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#personal",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": 19900,
+    "minPrice": 19900,
+    "maxPrice": 49900,
+    "priceCurrency": "KRW",
+    "unitText": "월",
+    "unitCode": "MON",
+    "valueAddedTaxIncluded": true
    }
   }
  ]

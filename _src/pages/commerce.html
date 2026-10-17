@@ -1,0 +1,207 @@
+<!--
+path: commerce/
+key: commerce
+title: AI 커머스 엔진 · 무료 AI 상품 피드 만들기 · AI 쇼핑 대응 | AIMarker
+ogtitle: AI가 상품을 고르는 시대, 우리 상품 정보를 AI가 읽게 · AIMarker AI 커머스 엔진
+desc: 상품 상세 주소를 넣으면 상품 이름 · 가격 · 브랜드 · 이미지를 뽑아 AI 검색 · 쇼핑에 넘길 상품 피드(CSV · JSON)를 무료로 만듭니다. 구조화 데이터와 AI 표시까지 갖추고, AI 콘텐츠 스튜디오 · AI 유입 · 전환 분석 · 경쟁사 비교는 2026년 12월 기업 파일럿으로 엽니다.
+scripts: assets/geo.js
+styles: assets/mark.css, assets/v6.css, assets/b2b.css
+selflabel: footer
+-->
+<section class="p6h" id="top">
+  <div class="wrap">
+    <div>
+      <p class="p6h-k"><i></i>AI 커머스 엔진 · 쇼핑몰 · 브랜드</p>
+      <h1>AI가 상품을 고릅니다.<br>우리 상품 정보를<br>AI가 읽게 하세요</h1>
+      <p class="lead">고객은 AI에게 "3만 원대 린넨 원피스 추천해 줘"라고 묻고, AI는 여러 상품 정보를 읽고 비교해 답합니다. 우리 상품 쪽에서 이름 · 가격 · 브랜드 · 이미지를 뽑아 AI 검색 · 쇼핑에 넘길 상품 피드로 만들고, 구조화 데이터와 AI 표시까지 갖추게 합니다.</p>
+      <div class="p6h-act"><a class="btn btn-p btn-l" href="#feed">{{ico:layers}}<span>피드 만들기</span></a><a class="btn btn-gl btn-l" href="{{root}}geo/">{{ico:search}}<span>무료 GEO 진단</span></a></div>
+      <p class="p6h-note"><span>{{ico:check}}가입 없이 무료</span><span>{{ico:lock}}공개된 상품 쪽만 읽음</span><span>{{ico:download}}CSV · JSON 으로 받기</span></p>
+    </div>
+    <div aria-hidden="true">
+      <div class="gcard">
+        <div class="gcard-h"><div class="gcard-ic">{{ico:layers}}</div><div><b>AI 상품 피드</b><span>상품 쪽 3개 · CSV · JSON</span></div></div>
+        <table class="feedv"><thead><tr><th>상품</th><th>가격</th><th>브랜드</th></tr></thead><tbody><tr><td>봄 린넨 원피스</td><td>39,000원</td><td>봄날상회</td></tr><tr><td>여름 샌들</td><td>59,000원</td><td>봄날상회</td></tr><tr><td>린넨 셔츠</td><td>42,000원</td><td>봄날상회</td></tr></tbody></table>
+        <div class="gcard-fix">
+          <p>{{ico:check}}이름 · 가격 · 브랜드 · 이미지를 자동으로 뽑음</p>
+          <p>{{ico:check}}상품 쪽마다 AI 검색 준비 점수</p>
+          <p>{{ico:check}}CSV · JSON 으로 바로 받기</p>
+        </div>
+      </div>
+      <p class="gcard-cap">예시 화면입니다. 상품과 브랜드는 가상입니다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="s6" id="feed">
+  <div class="wrap">
+    <div class="h6">
+      <span class="eyebrow">AI 상품 피드 · 지금 무료</span>
+      <h2>상품 주소를 넣으면, AI가 읽는 상품 피드로</h2>
+      <p class="lead">상품 상세 쪽 주소를 한 줄에 하나씩 넣으세요(최대 20개). 쪽마다 상품 이름 · 가격 · 브랜드 · 이미지를 뽑고 AI 검색 준비 점수를 매겨, CSV · JSON 피드로 드립니다.</p>
+    </div>
+    <div class="feed6">
+      <form id="feedForm">
+        <label for="feedUrls" class="sr">상품 주소</label>
+        <textarea id="feedUrls" placeholder="상품 상세 쪽 주소를 한 줄에 하나씩(최대 20개)"></textarea>
+        <div class="row"><button class="btn btn-p" type="submit">{{ico:layers}}<span>AI 상품 피드 만들기</span></button></div>
+      </form>
+      <aside class="feed6-side">
+        <b>AI 상품 피드란</b>
+        <p>상품마다 이름 · 설명 · 가격 · 재고 · 이미지 · 브랜드를 한 줄씩 정리한 목록입니다. AI 검색 · 쇼핑에 상품을 정확히 알리는 기본 자료입니다.</p>
+        <p>CSV 는 쇼핑 광고 · 판매자 센터처럼 상품 목록을 받는 곳에 올릴 때, JSON 은 사이트 구조화 데이터와 API 연동에 씁니다.</p>
+        <p class="note">공개된 상품 쪽만 읽고, 쪽 내용은 보관하지 않습니다.</p>
+      </aside>
+    </div>
+    <div class="feed6-out" id="feedOut" hidden></div>
+    <p class="note mt16">상품 쪽 하나의 크롤러 설정 · 구조화 데이터 · FAQ 고칠 거리를 자세히 보려면 <a href="{{root}}geo/">무료 GEO 진단</a>을 쓰세요.</p>
+  </div>
+</section>
+
+<section class="s6 soft" id="how">
+  <div class="wrap">
+    <div class="h6">
+      <span class="eyebrow">AI 검색에서 어떻게 쓰이나요</span>
+      <h2>AI 검색에 상품을 정확히 알리는 세 가지</h2>
+      <p class="lead">AI 검색 · 쇼핑은 상품 쪽을 읽고, 정리된 상품 정보를 비교하고, 믿을 만한 정보를 골라 답에 씁니다. 세 가지를 갖추면 AI가 우리 상품을 정확히 읽을 준비가 됩니다.</p>
+    </div>
+    <div class="why6">
+      <article><b>상품 피드</b><h3>AI 쇼핑은 상품을 목록으로 받습니다</h3><p>Google 쇼핑은 판매자 센터에 올린 상품 피드로 상품을 보여 주고, OpenAI 도 판매자가 ChatGPT 에 상품 정보를 CSV · JSON 피드로 보내는 방법을 공개했습니다. 이름 · 가격 · 재고가 정리된 피드가 있으면 이런 곳에 빨리 넘길 수 있습니다.</p><div class="go6"><span class="st6 now">지금 무료</span><a href="#feed">AI 상품 피드 만들기{{ico:arrow}}</a></div><small><a href="https://developers.openai.com/commerce/guides/key-concepts" target="_blank" rel="noopener">OpenAI 상거래 개발 문서</a></small></article>
+      <article><b>구조화 데이터</b><h3>상품 쪽 안의 정보를 정해진 형식으로</h3><p>Product · Offer 같은 schema.org 정보(JSON-LD)가 있으면 검색 엔진과 AI가 상품 이름 · 가격 · 브랜드 · 재고를 본문에서 짐작하지 않고 정해진 형식으로 읽을 수 있습니다. Google 검색 센터도 상품 구조화 데이터 넣는 법을 안내합니다.</p><div class="go6"><span class="st6 now">지금 무료</span><a href="{{root}}geo/">진단하고 코드 받기{{ico:arrow}}</a></div><small><a href="https://developers.google.com/search/docs/appearance/structured-data/product?hl=ko" target="_blank" rel="noopener">Google 검색 센터 · 상품 구조화 데이터</a></small></article>
+      <article><b>AI 표시가 붙은 상세페이지</b><h3>AI로 만든 이미지는 밝히고, 근거를 남깁니다</h3><p>네이버는 쇼핑 광고에서 AI로 만들거나 바꾼 콘텐츠에 AI 활용 표시를 의무로 하고, 어기면 쇼핑 검색 제외 같은 불이익을 줄 수 있다고 보도되었습니다. Google 판매자 센터도 AI로 만든 상품 이미지에 그 사실을 알리는 메타데이터를 넣고 지우지 말라고 안내합니다.</p><div class="go6"><span class="st6 now">지금 무료</span><a href="{{root}}mark/">상품 이미지 자동 마킹{{ico:arrow}}</a></div><small><a href="https://news.mtn.co.kr/news-detail/2026072417015682342" target="_blank" rel="noopener">MTN, 2026.7.25</a> · <a href="https://support.google.com/merchants/answer/14743464" target="_blank" rel="noopener">Google 판매자 센터 도움말</a></small></article>
+    </div>
+  </div>
+</section>
+
+<section class="s6" id="pilot">
+  <div class="wrap">
+    <div class="h6">
+      <span class="eyebrow">피드 다음은 자동으로</span>
+      <h2>만들고, 세고, 비교합니다</h2>
+      <p class="lead">AI 상품 피드는 지금 무료입니다. 기업 파일럿(2026년 12월 시작 예정)에서는 상세페이지를 만들고, AI 검색에서 들어온 구매를 세고, 경쟁사와 나란히 비교하는 세 가지 모듈을 함께 엽니다.</p>
+    </div>
+    <div class="flag6">
+      <article>
+        <div class="t">
+          <span class="flag6-n"><i>1</i>AI Content Studio</span>
+          <h3>상세페이지 · 광고 소재를 AI로 만들고, 표시까지 자동으로</h3>
+          <p>상품 정보와 브랜드 말투를 넣으면 상품 설명 · FAQ · 광고 문구 초안을 만들고, AI로 만든 이미지 · 글에는 AI 표시와 대체 텍스트를 자동으로 붙입니다. 내보내기 전에 광고 표현 위험 후보도 함께 짚습니다.</p>
+          <ul class="pts">
+            <li>{{ico:check}}<span>상품 설명 · FAQ · 광고 문구 초안</span><span class="st6 pilot">파일럿</span></li>
+            <li>{{ico:check}}<span>만든 콘텐츠에 AI 표시 · 대체 텍스트 자동</span><span class="st6 pilot">파일럿</span></li>
+            <li>{{ico:check}}<span>광고 문구 위험 후보와 근거(법률 자문 아님)</span><span class="st6 now">지금 무료</span></li>
+          </ul>
+          <div class="row"><a class="btn btn-p" href="{{root}}contact/?type=commerce&amp;plan=commerce">파일럿 신청</a><a class="btn btn-g" href="{{root}}check/">광고 문구 검수 해 보기</a></div>
+        </div>
+        <div class="flag6-v" aria-hidden="true">
+          <div class="passv">
+            <div><b>상품 설명 초안 · 봄 린넨 원피스</b><small>AI 생성 · 소재 · 가격 표기 확인</small><span class="st6 pilot">검토 중</span></div>
+            <div><b>자주 묻는 질문 5개</b><small>사이즈 · 세탁 · 배송 · FAQ 구조화 데이터 포함</small><span class="st6 now">준비됨</span></div>
+            <div><b>대표 이미지 배경 합성</b><small>AI 편집 표시 · 대체 텍스트 · 파일 속 정보</small><span class="st6 now">표시됨</span></div>
+          </div>
+          <span class="cap">예시 화면입니다. 상품과 브랜드는 가상입니다.</span>
+        </div>
+      </article>
+      <article>
+        <div class="t">
+          <span class="flag6-n"><i>2</i>AI Conversion Analytics</span>
+          <h3>AI 검색에서 들어온 손님과 구매를 따로 셉니다</h3>
+          <p>ChatGPT · Perplexity · Gemini 같은 AI 검색에서 들어온 방문을 다른 유입과 나눠 세고, 어느 상품 쪽으로 들어와 무엇을 샀는지 리포트로 보여 줍니다. GEO · 피드 작업에 들인 비용이 맞는지 숫자로 확인합니다.</p>
+          <ul class="pts">
+            <li>{{ico:check}}<span>AI 검색 유입 · 구매 전환 리포트</span><span class="st6 pilot">파일럿</span></li>
+            <li>{{ico:check}}<span>상품별 · AI 서비스별 나눠 보기</span><span class="st6 pilot">파일럿</span></li>
+            <li>{{ico:check}}<span>성과형 요금의 측정 기준으로 쓰기(제안)</span><span class="st6 pilot">파일럿</span></li>
+          </ul>
+          <div class="row"><a class="btn btn-p" href="{{root}}contact/?type=commerce&amp;plan=commerce">파일럿 신청</a></div>
+        </div>
+        <div class="flag6-v" aria-hidden="true">
+          <div class="srcv"><b>AI 검색에서 들어온 구매(예시)</b>
+            <div><span>ChatGPT</span><i style="--w:82%"></i><em>예시</em></div>
+            <div><span>Perplexity</span><i style="--w:46%"></i><em>예시</em></div>
+            <div><span>Gemini</span><i style="--w:31%"></i><em>예시</em></div>
+            <div><span>Copilot</span><i style="--w:15%"></i><em>예시</em></div>
+          </div>
+          <span class="cap">예시 화면입니다. 막대는 실제 값이 아닙니다.</span>
+        </div>
+      </article>
+      <article>
+        <div class="t">
+          <span class="flag6-n"><i>3</i>Competitor Intelligence</span>
+          <h3>같은 질문에서 경쟁사는 어떻게 나오는지 나란히 봅니다</h3>
+          <p>고객이 AI에게 물을 만한 질문을 정해 두고, 답에 우리와 경쟁사가 어떻게 나오는지, 경쟁사 상품 쪽은 어떤 정보를 갖췄는지 비교합니다. 무엇부터 고칠지 순서를 정하는 데 씁니다.</p>
+          <ul class="pts">
+            <li>{{ico:check}}<span>질문별 우리 · 경쟁사 언급 비교</span><span class="st6 pilot">파일럿</span></li>
+            <li>{{ico:check}}<span>경쟁사 상품 쪽 구조화 데이터 · 피드 비교</span><span class="st6 pilot">파일럿</span></li>
+            <li>{{ico:check}}<span>우리 상품 쪽 GEO 진단</span><span class="st6 now">지금 무료</span></li>
+          </ul>
+          <div class="row"><a class="btn btn-p" href="{{root}}contact/?type=commerce&amp;plan=commerce">파일럿 신청</a><a class="btn btn-g" href="{{root}}geo/">우리 쪽 먼저 진단</a></div>
+        </div>
+        <div class="flag6-v" aria-hidden="true">
+          <div class="passv">
+            <div><b>"린넨 원피스 추천해 줘"</b><small>ChatGPT · 경쟁사 A · B 언급</small><span class="st6 pilot">우리 없음</span></div>
+            <div><b>"여름 샌들 편한 브랜드"</b><small>Perplexity · 우리 · 경쟁사 A 언급</small><span class="st6 now">우리 나옴</span></div>
+            <div><b>"린넨 셔츠 세탁법"</b><small>Gemini · 우리 쪽 FAQ 인용</small><span class="st6 now">우리 나옴</span></div>
+          </div>
+          <span class="cap">예시 화면입니다. 질문과 결과는 실제가 아닙니다.</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="s6 soft" id="todo">
+  <div class="wrap">
+    <div class="h6">
+      <span class="eyebrow">체크리스트</span>
+      <h2>쇼핑몰이 지금 바로 할 일 여섯 가지</h2>
+      <p class="lead">모두 지금 무료 도구로 할 수 있습니다. 위에서부터 차례로 하면 AI 검색이 상품을 읽을 기본 준비가 끝납니다.</p>
+    </div>
+    <ol class="steps6">
+      <li><h3>대표 상품 쪽 진단</h3><p>잘 팔리는 상품 쪽 주소로 AI 검색 준비 점수와 고칠 코드를 받습니다.</p><small><a href="{{root}}geo/">무료 GEO 진단</a> · 10초 안팎</small></li>
+      <li><h3>AI 검색 크롤러 열기</h3><p>robots.txt 에서 OAI-SearchBot · PerplexityBot · Claude-SearchBot 같은 검색용 크롤러가 막혀 있지 않은지 봅니다. 학습용 허용은 따로 정하면 됩니다.</p><small>진단 결과의 'AI 크롤러' 표에서 확인</small></li>
+      <li><h3>상품 구조화 데이터 넣기</h3><p>상품 쪽에 Product 정보(이름 · 이미지 · 가격 · 브랜드 · 재고)를 JSON-LD 로 넣고, 사이트 맨 위에 llms.txt 를 올립니다.</p><small>진단이 붙여 넣을 코드를 만들어 드림</small></li>
+      <li><h3>AI 상품 피드 만들어 두기</h3><p>상품 주소를 넣고 CSV · JSON 피드를 받아 둡니다. 쇼핑 광고 · 판매자 센터 등록과 API 연동에 씁니다.</p><small><a href="#feed">피드 만들기</a> · 한 번에 20개</small></li>
+      <li><h3>질문과 답 올리기</h3><p>고객이 AI에게 물을 만한 질문과 답을 상세페이지에 FAQ 로 올립니다. 사이즈 · 소재 · 배송 · 교환처럼 구체적일수록 좋습니다.</p><small>진단이 질문 틀을 드림</small></li>
+      <li><h3>AI 이미지 표시 · 문구 점검</h3><p>AI로 만든 모델 컷 · 배경 합성 이미지에는 AI 표시와 대체 텍스트를 넣고, 상세페이지 문구는 위험 후보와 근거를 확인합니다.</p><small><a href="{{root}}mark/">자동 마킹</a> · <a href="{{root}}check/">광고 문구 검수</a></small></li>
+    </ol>
+  </div>
+</section>
+
+<section class="s6" id="pricing">
+  <div class="wrap">
+    <div class="h6">
+      <span class="eyebrow">요금</span>
+      <h2>쇼핑몰은 Growth 부터</h2>
+      <p class="lead">AI 상품 피드 · 광고 문구 검수 · 월간 리포트가 들어 있는 Growth 를 쇼핑몰에 권합니다. 출시 예정 요금 · 부가세 별도이며, 유료는 2026년 12월 기업 파일럿부터 엽니다.</p>
+    </div>
+    <div class="plans6">
+      <article class="plan6"><h3>Starter</h3><p class="for">소형 웹사이트</p><p class="p">49,000원<small> / 월</small></p><ul><li>{{ico:check}}사이트 1개 · GEO 진단 월 50쪽</li><li>{{ico:check}}자동 마킹 월 300건</li><li>{{ico:check}}구조화 데이터 · llms.txt · AI 표시 태그</li></ul><a class="btn btn-g" href="{{root}}pricing/">자세히</a></article>
+      <article class="plan6 on"><span class="badge6">쇼핑몰 추천</span><h3>Growth</h3><p class="for">쇼핑몰 · 중소기업</p><p class="p">149,000원<small> / 월</small></p><ul><li>{{ico:check}}사이트 3개 · GEO 진단 월 500쪽</li><li>{{ico:check}}자동 마킹 월 3,000건 · AI 상품 피드</li><li>{{ico:check}}광고 문구 검수 · 월간 리포트</li></ul><a class="btn btn-p" href="{{root}}contact/?plan=growth">Growth 시작 상담</a></article>
+      <article class="plan6"><h3>Business</h3><p class="for">브랜드 · 콘텐츠 기업</p><p class="p">399,000원<small> / 월</small></p><ul><li>{{ico:check}}사이트 10개 · GEO 진단 월 3,000쪽</li><li>{{ico:check}}자동 마킹 월 2만 건 · API · MCP</li><li>{{ico:check}}검토자 · 승인 기록 · 우선 지원</li></ul><a class="btn btn-g" href="{{root}}contact/?plan=business">상담 신청</a></article>
+      <article class="plan6"><h3>Enterprise</h3><p class="for">대형 플랫폼 · 기관</p><p class="p">100만 원~<small> / 월</small></p><ul><li>{{ico:check}}맞춤 한도 · 전용 규칙 · 감사 리포트</li><li>{{ico:check}}서비스 수준 협약 · 보안 검토</li><li>{{ico:check}}성과 연동 요금 선택</li></ul><a class="btn btn-g" href="{{root}}contact/?plan=enterprise">상담 신청</a></article>
+    </div>
+    <p class="plan6-note">AI 유입 · 전환 분석 · AI Content Studio · 경쟁사 비교는 Business 부터 들어 있습니다(파일럿). 사용량 요금 · 성과형 요금은 <a href="{{root}}pricing/">요금 쪽</a>에서 보세요.</p>
+  </div>
+</section>
+
+<section class="s6 soft" id="faq">
+  <div class="wrap">
+    <div class="h6 c"><span class="eyebrow">자주 묻는 것</span><h2>AI 커머스 엔진, 이것이 궁금합니다</h2></div>
+    <div class="faq6 c">
+      <details><summary>스마트스토어 · 오픈마켓 상품도 되나요?</summary><p>외부에서 쪽을 읽지 못하게 막아 둔 곳은 피드를 만들지 못할 수 있습니다. 이때는 자체몰(카페24 · 아임웹 · 고도몰 등) 상품 쪽을 넣거나, 상품 이미지 자동 마킹(대체 텍스트 · AI 표시)부터 쓰세요.</p></details>
+      <details><summary>만든 피드는 어디에 쓰나요?</summary><p>CSV 는 쇼핑 광고 · 판매자 센터처럼 상품 목록을 받는 곳에 올릴 때, JSON 은 사이트 구조화 데이터 · API 연동에 씁니다. 항목 이름(id · title · description · link · image_link · price · availability · brand)은 Google 판매자 센터 상품 데이터와 같은 이름을 씁니다. 올리기 전에 각 서비스의 필수 항목을 한 번 확인하세요.</p></details>
+      <details><summary>상품이 수백 개면 어떻게 하나요?</summary><p>무료 도구는 한 번에 20개까지입니다. 여러 번 나눠 만들 수 있고, Growth 요금제부터는 쇼핑몰 상품 전체를 자동으로 맞추는 동기화를 파일럿으로 엽니다(2026년 12월 시작 예정).</p></details>
+      <details><summary>상품 정보가 서버에 남나요?</summary><p>공개된 상품 쪽을 읽을 때만 쓰고, 결과는 같은 주소를 다시 물을 때를 위해 6시간만 서버 캐시에 둡니다. 쪽 내용을 따로 보관하지 않습니다.</p></details>
+      <details><summary>피드를 만들면 AI 검색에 나오고 매출이 오르나요?</summary><p>약속하지 않습니다. 어떤 상품을 답에 넣을지는 각 AI 서비스가 정합니다. AIMarker는 AI가 상품 정보를 정확히 읽을 준비를 갖추게 하고, 파일럿에서는 AI 검색 유입과 구매를 따로 세어 효과를 함께 확인합니다.</p></details>
+      <details><summary>AI로 만든 상품 이미지는 꼭 표시해야 하나요?</summary><p>플랫폼 · 업종마다 기준이 다릅니다. 네이버 쇼핑 광고는 AI로 만들거나 바꾼 콘텐츠에 AI 활용 표시를 요구한다고 보도되었고, Google 판매자 센터는 AI로 만든 이미지에 그 사실을 알리는 메타데이터를 넣고 지우지 말라고 안내합니다. 자동 마킹은 화면 표시 · 파일 속 정보 · 대체 텍스트를 한 번에 넣습니다. 법률 자문이 아니므로 업종별 적용은 전문가와 확인하세요.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="end6">
+  <div class="wrap">
+    <h2>우리 상품, AI가 읽을 준비가 됐을까요</h2>
+    <p>상품 주소 몇 개로 피드를 만들어 보고, 대표 상품 쪽은 무료 GEO 진단으로 고칠 거리를 받으세요.</p>
+    <div class="row"><a class="btn btn-p btn-l" href="#feed">AI 상품 피드 만들기</a><a class="btn btn-gl btn-l" href="{{root}}geo/">무료 GEO 진단</a><a class="btn btn-gl btn-l" href="{{root}}contact/?type=commerce&amp;plan=growth">기업 상담</a></div>
+    <p class="alt">여러 업종의 쓰임과 아홉 가지 모듈은 <a href="{{root}}business/">기업용</a>에서 볼 수 있습니다.</p>
+  </div>
+</section>

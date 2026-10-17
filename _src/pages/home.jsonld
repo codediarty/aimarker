@@ -9,8 +9,8 @@
    "url": "https://aimarker.kr/",
    "logo": "https://aimarker.kr/assets/icon-512.png",
    "email": "contact@skkc.co.kr",
-   "slogan": "AI로 만든 콘텐츠, 이제는 확인하고 표시합니다",
-   "description": "콘텐츠의 AI 사용 여부와 활용 범위를 확인하고, 근거가 붙은 디지털 마크를 발급 · 관리하는 AI 콘텐츠 투명성 기술 플랫폼.",
+   "slogan": "AI 콘텐츠가 만들어지고, 발견되고, 거래되는 모든 과정에 AIMarker",
+   "description": "AI 검색 최적화(GEO) · AI 콘텐츠 자동 마킹 · 근거 기록을 제공하는 AI 콘텐츠 플랫폼. 기업에는 GEO 자동 최적화 · AI 커머스 엔진 · AI 신뢰 · 컴플라이언스, 개인에게는 AI 작성률 검사 · 휴머나이징 · 무료 AI 표시 · 크리에이터 의뢰 연결.",
    "parentOrganization": {
     "@type": "Organization",
     "name": "성균관컨설팅",
@@ -35,44 +35,51 @@
    "operatingSystem": "Web",
    "url": "https://aimarker.kr/",
    "image": "https://aimarker.kr/assets/og.jpg",
-   "description": "콘텐츠 분석 엔진(C2PA 서명 재검증 · IPTC · EXIF · 생성 기록 판독), 마킹 발급 엔진(근거 맞춤 발급 · 전자서명 마크), 사용 이력 관리 시스템(마크 확인 · 변경 이력 · 원장 · 공개 타임스탬프), 기업용 API · MCP로 구성된 AI 콘텐츠 투명성 기술 플랫폼.",
+   "description": "GEO 진단 · 자동 최적화(구조화 데이터 · llms.txt · AI 크롤러 · AI 상품 피드), AI 사용 확인 · 자동 마킹(근거 맞춤 발급 · 전자서명 마크 · 원장 · 공개 타임스탬프), AI 작성률 검사 · 휴머나이징, 기업용 API · MCP 로 구성된 AI 콘텐츠 플랫폼.",
    "featureList": [
-    "AI 사용 여부 · 범위 확인(이미지 · 영상 · 오디오 · PDF · 글)",
-    "C2PA 서명 · 인증서 사슬 · 파일 결합 서버 재검증",
-    "근거와 맞는 표시만 발급하는 AI 마크(근거 등급: 서명 검증 · 파일 기록 · 발급자 신고)",
-    "전자서명 마크(JWS · Ed25519)와 공개키",
-    "마크 확인 쪽 · QR · 삽입 배지 · 파일 속 기록(XMP)",
-    "변경 이력 · 원장 · 매일 공개 타임스탬프(OpenTimestamps)",
+    "GEO 진단: AI 검색 준비 점수와 고칠 코드(JSON-LD · llms.txt · robots.txt · 메타 · FAQ)",
+    "AI 상품 피드(CSV · JSON) 만들기",
+    "AI 사용 여부 · 범위 확인과 자동 마킹(이미지 · 영상 · 오디오 · 문서 · 글)",
+    "C2PA 서명 · 인증서 사슬 서버 재검증, 근거와 맞는 표시만 발급",
+    "전자서명 마크(JWS · Ed25519) · 원장 · 매일 공개 타임스탬프(OpenTimestamps)",
+    "AI 작성률 검사(문장별 추정, 같은 글 같은 결과) · 휴머나이징(문체 점검 · 기본 다듬기 · 말투)",
     "기업용 API · MCP 서버 · 대량 마킹",
     "부가 기능: 광고 문구 검수 · 위험 분석 · 보고서 자동화"
    ],
    "offers": [
     {
      "@type": "Offer",
-     "name": "개인",
+     "name": "개인 무료",
      "price": "0",
      "priceCurrency": "KRW"
     },
     {
      "@type": "Offer",
-     "name": "Business",
-     "price": "99000",
+     "name": "Starter",
+     "price": "49000",
      "priceCurrency": "KRW",
-     "description": "월 요금부터 · 예상 요금"
+     "description": "월 요금 · 부가세 별도 · 출시 예정 요금"
     },
     {
      "@type": "Offer",
-     "name": "Scale",
-     "price": "390000",
+     "name": "Growth",
+     "price": "149000",
      "priceCurrency": "KRW",
-     "description": "월 요금부터 · 예상 요금"
+     "description": "월 요금 · 부가세 별도 · 출시 예정 요금"
+    },
+    {
+     "@type": "Offer",
+     "name": "Business",
+     "price": "399000",
+     "priceCurrency": "KRW",
+     "description": "월 요금 · 부가세 별도 · 출시 예정 요금"
     },
     {
      "@type": "Offer",
      "name": "Enterprise",
-     "price": "12000000",
+     "price": "1000000",
      "priceCurrency": "KRW",
-     "description": "연 요금부터 · 예상 요금"
+     "description": "월 요금부터 · 부가세 별도 · 출시 예정 요금"
     }
    ]
   }

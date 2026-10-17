@@ -1,0 +1,61 @@
+/* AIMarker 기업용 · AI 커머스 엔진 쪽 부품 (2026.10.17) · v6.css 위에 얹음 */
+
+/* 카드 묶음: 제품 세 가지(c3) · 업종(c2) */
+.cards6 { display: grid; gap: 16px; margin-top: 40px; }
+.cards6.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cards6.c2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card6 { display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 26px 24px; border-radius: 22px; border: 1px solid var(--line); background: #fff; }
+.card6 .k { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 850; color: var(--blue); }
+.card6 .k i { font-style: normal; width: 32px; height: 32px; border-radius: 10px; background: var(--blue-50); display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.card6 .k .ico { width: 18px; height: 18px; }
+.card6 h3 { font-size: 21px; font-weight: 900; letter-spacing: -.035em; line-height: 1.3; }
+.card6 > p { font-size: 15px; color: var(--ink-2); }
+.card6 .pts6 { padding-top: 14px; border-top: 1px dashed var(--line-2); }
+.card6 > .row { margin-top: auto; padding-top: 6px; }
+.card6 > .row .btn { flex: 1 1 140px; }
+.card6 .foot6 { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; }
+.card6 .foot6 .rec { font-size: 13.5px; font-weight: 700; color: var(--mute); }
+.card6 .foot6 .rec b { color: var(--ink); font-weight: 850; }
+.card6 .foot6 a { display: inline-flex; align-items: center; gap: 6px; font-size: 14.5px; font-weight: 800; }
+.card6 .foot6 a .ico { width: 16px; height: 16px; }
+.card6 [id] { scroll-margin-top: 88px; }
+
+/* 요금 아래 상자: 내용을 위로 붙임 */
+.usage6 div { align-content: start; }
+
+/* 상태 꼬리표가 붙은 목록 */
+.pts6 { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.pts6 li { display: flex; gap: 8px; align-items: flex-start; font-size: 14.5px; line-height: 1.5; }
+.pts6 li > .ico { width: 16px; height: 16px; color: var(--mk-d); margin-top: 3px; flex: 0 0 auto; }
+.pts6 li .st6 { margin-left: auto; flex: 0 0 auto; }
+
+/* 카드 아래 한 줄 바로가기(상태 + 링크) */
+.go6 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 4px; font-size: 14px; font-weight: 800; }
+.go6 a { display: inline-flex; align-items: center; gap: 5px; }
+.go6 .ico { width: 15px; height: 15px; }
+
+/* 모듈 표: 들어 있는 요금제 줄 */
+.mods6 .in { font-size: 12.5px; font-weight: 800; color: var(--blue); }
+.mods6 .in em { font-style: normal; font-weight: 700; color: var(--faint); margin-right: 6px; }
+
+/* 예시 화면 막대: 18/20 같은 값이 줄바꿈되지 않게 */
+.gcard-bars div { grid-template-columns: 96px minmax(0, 1fr) 44px; }
+.gcard-bars em { white-space: nowrap; }
+
+/* 예시 화면 머리 아이콘 */
+.gcard-ic { width: 56px; height: 56px; border-radius: 16px; background: var(--blue-50); color: var(--blue); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+.gcard-ic .ico { width: 26px; height: 26px; }
+
+/* 상품 피드 만들기: 칸과 단추 사이 */
+.feed6 textarea { display: block; }
+.feed6 form > .row { margin-top: 12px; }
+
+@media (max-width: 960px) {
+  .cards6.c3 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .cards6.c2 { grid-template-columns: minmax(0, 1fr); }
+  .card6 { padding: 22px 20px; }
+  .card6 h3 { font-size: 19.5px; }
+  .gcard-bars div { grid-template-columns: 84px minmax(0, 1fr) 40px; }
+}

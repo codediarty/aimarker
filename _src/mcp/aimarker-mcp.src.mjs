@@ -22,7 +22,7 @@ import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 
-const VERSION = '2.1.0';
+const VERSION = '2.2.0';
 const API = process.env.AIMARKER_URL || 'https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec';
 const SITE = 'https://aimarker.kr';
 const KEYS_URL = process.env.AIMARKER_KEYS_URL || SITE + '/.well-known/aimarker-keys.json';
@@ -160,6 +160,14 @@ const TOOLS = [
     description: '붙일 표시 문구를 받습니다. kind: image(AI 이미지) · video(AI 영상) · person(가상인물) · text(AI 글) · sponsor(광고 · 협찬). 짧은 표시 · 긴 안내 문장 · HTML · 마크다운 · IPTC 디지털 출처 값을 돌려줍니다. 표시 문구는 한국AI윤리위원회 기준을 따릅니다.',
     inputSchema: { type: 'object', properties: { kind: { type: 'string', enum: ['image', 'video', 'person', 'text', 'sponsor'] }, level: { type: 'string', enum: ['gen', 'edit'], description: 'gen: AI로 만듦 · edit: AI로 고침' } }, required: ['kind'] },
     annotations: { title: 'AI · 광고 표시 문구 받기', ...RO } },
+  { name: 'aimarker_geo_check', title: 'GEO 진단 · AI 상품 피드',
+    description: '사이트 · 상품 쪽 주소 하나로 AI 검색 준비 점수(0~100: AI 크롤러 접근 · 구조화 데이터 · 본문 · 메타 · 질문과 답 · 이미지 · 신뢰)와 붙여 넣을 고칠 코드(JSON-LD · llms.txt · robots.txt · 메타 · FAQ)를 받습니다. 상품 쪽이면 AI 상품 피드 한 줄(id · title · price · brand · image_link …)도 줍니다. 공개된 쪽만 읽고, 같은 주소는 6시간 같은 결과입니다.',
+    inputSchema: { type: 'object', properties: { url: { type: 'string', minLength: 4, maxLength: 300, description: '사이트 · 상품 쪽 주소(예: myshop.co.kr/product/123)' } }, required: ['url'] },
+    annotations: { title: 'GEO 진단 · AI 상품 피드', ...RO } },
+  { name: 'aimarker_detect_text', title: 'AI 작성 추정률(글)',
+    description: '글을 서버로 보내 AI 작성 추정률(0~100: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 부분의 비율)과 AI 패턴이 몰린 문장을 받습니다. 결정적 모델이라 같은 글은 언제나 같은 값입니다. 추정일 뿐 판정 · 증명이 아니니 결과만으로 사람을 판단하지 마세요. 글은 저장하지 않습니다. 한 번에 6,000자.',
+    inputSchema: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 6000, description: '확인할 글(6,000자까지)' } }, required: ['text'] },
+    annotations: { title: 'AI 작성 추정률', ...RO } },
   { name: 'aimarker_scan_site', title: '사이트 진단(부가 기능)',
     description: '공개된 사이트 첫 화면과 이미지 12장까지 살펴 AI 사용 흔적 · AI 상담 창 · 광고 표현 위험 후보를 보수적으로 진단합니다. 기록이 지워진 이미지는 없음이 아니라 확인 불가로 셉니다. 10~20초 걸립니다.',
     inputSchema: { type: 'object', properties: { url: { type: 'string', minLength: 4, maxLength: 200, description: '사이트 주소(예: myshop.co.kr)' } }, required: ['url'] },
@@ -689,6 +697,27 @@ const RUN = {
     const r = await api('am.label', { kind: a.kind, level: a.level || 'gen' });
     const s = { text: r.text, sentence: r.long, html: r.html, markdown: r.markdown, iptc: r.iptc || null };
     return ok('표시: ' + s.text + '\n안내 문장: ' + s.sentence + (s.iptc ? '\nIPTC digitalSourceType: ' + s.iptc : '') + '\nHTML: ' + s.html + '\n\n표시 문구는 한국AI윤리위원회 기준을 따릅니다. 파일마다 근거와 함께 남기려면 aimarker_mark 를 쓰세요.', s);
+  },
+  async aimarker_geo_check(a) {
+    need(a.url && /\./.test(a.url), 'url(사이트 · 상품 쪽 주소)을 넣어 주세요. 예: myshop.co.kr/product/123');
+    const r = await api('am.geo', { url: String(a.url).trim() });
+    const L = ['GEO 진단: ' + (r.title || r.url || a.url), '- AI 검색 준비 점수: ' + r.score + ' / 100' + (r.cached ? '(6시간 안 같은 결과)' : '')];
+    (r.parts || []).forEach((p) => L.push('- ' + (p.name || p.key) + ': ' + p.score + ' / ' + p.max));
+    const fx = r.fixes || [];
+    if (fx.length) L.push('', '고칠 것 ' + fx.length + '가지: ' + fx.slice(0, 6).map((f) => f.title || f.name || f.key).join(' · '), '붙여 넣을 코드는 structuredContent.fixes[].code 에 있습니다.');
+    if (r.feed) L.push('', 'AI 상품 피드: ' + [r.feed.title, r.feed.price, r.feed.brand].filter(Boolean).join(' · '));
+    return ok(L.join('\n'), r);
+  },
+  async aimarker_detect_text(a) {
+    need(a.text && String(a.text).trim(), 'text(확인할 글)를 넣어 주세요.');
+    const t = String(a.text);
+    need(t.length <= 6000, '한 번에 6,000자까지입니다. 나눠서 보내 주세요.');
+    const r = await api('am.detect', { text: t });
+    const hits = (r.sentences || []).filter((x) => x.ai).slice(0, 6);
+    const L = ['AI 작성 추정률: ' + r.rate + '% · ' + r.levelKo, '- 문장 ' + r.n + '개 · 글자 ' + r.chars + '자' + (r.short ? ' · 짧은 글이라 불안정' : '') + (r.verse ? ' · 시 · 노랫말처럼 짧은 줄이라 불안정' : '')];
+    if (hits.length) L.push('', 'AI 패턴이 몰린 문장(일부):', ...hits.map((x) => '- (' + x.p + ') ' + x.t.slice(0, 120)));
+    L.push('', r.note || '추정값이며 판정 · 증명이 아닙니다.');
+    return ok(L.join('\n'), r);
   },
   async aimarker_scan_site(a) {
     need(a.url && /\./.test(a.url), 'url(사이트 주소)을 넣어 주세요. 예: myshop.co.kr');

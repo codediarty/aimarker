@@ -1,4 +1,4 @@
-# AIMarker MCP 서버 2.1
+# AIMarker MCP 서버 2.2
 
 AI 에이전트(Claude · Cursor · VS Code · Codex · Gemini CLI 등)가 이미지 · 영상 · 오디오 · 글의 **AI 사용 여부를 파일 속 근거로 확인**하고, 근거에 맞는 **서명된 AIMarker 마크**를 발급 · 확인하게 하는 MCP 서버입니다.
 
@@ -25,19 +25,19 @@ Claude Desktop · Cursor · Gemini CLI (`mcpServers`):
   "mcpServers": {
     "aimarker": {
       "command": "npx",
-      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"],
+      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz"],
       "env": { "AIMARKER_KEY": "amk_발급받은_키" }
     }
   }
 }
 ```
 
-Windows 에서 `npx` 를 찾지 못하면 `"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"]` 로 바꾸세요.
+Windows 에서 `npx` 를 찾지 못하면 `"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz"]` 로 바꾸세요.
 
 Claude Code:
 
 ```bash
-claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz
+claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz
 ```
 
 파일 하나로 쓰려면 https://aimarker.kr/mcp/aimarker-mcp.mjs 를 내려받아 `"command": "node", "args": ["/경로/aimarker-mcp.mjs"]` 로 등록합니다.

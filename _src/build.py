@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261017c"
+VER = "20261017f"
 TODAY = "2026-10-16"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -106,34 +106,35 @@ LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40
         '<path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/>'
         '<rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg>')
 
-# 메뉴(5.0): AI 사용 확인 · 마크 확인 · 제품 · 솔루션 · 기술 · 요금 · 회사 + 기업 상담
+# 메뉴(6.0, 2026.10.17): 기업용 · 개인용 두 갈래 + 마크 확인 · 기술 · 요금 · 회사
 # 펼침 메뉴 항목: (주소, 아이콘, 제목, 설명) · 묶음 제목은 ("#", None, "묶음 이름", None)
-NAV = [("mark/", "mark", "AI 사용 확인", None),
+NAV = [("business", "business", "기업용", [
+           ("#", None, "핵심 제품", None),
+           ("geo/", "globe", "GEO 자동 최적화", "AI 검색이 읽고 인용하게 · 무료 진단"),
+           ("commerce/", "store", "AI 커머스 엔진", "AI 상품 피드 · 상세페이지 · 전환 분석"),
+           ("compliance/", "shield", "AI 신뢰 · 컴플라이언스", "출고 전 확인 · 자동 표시 · 감사 기록"),
+           ("#", None, "도구 · 연동", None),
+           ("mark/", "badge", "자동 마킹", "파일을 넣으면 AI 표시가 박힘"),
+           ("report/", "bars", "일괄 확인 리포트", "콘텐츠 수백 건을 한 번에"),
+           ("check/", "megaphone", "광고 문구 검수", "위험 후보 · 근거 · 바꿀 말"),
+           ("site/", "tag", "AI 표시 자동 태그", "코드 한 줄 · 아임웹 앱"),
+           ("developers/", "code", "API · MCP", "우리 서비스에 바로 연결"),
+           ("business/", "building", "기업용 전체 보기", "업종별 쓰임 · 요금")]),
+       ("personal", "personal", "개인용", [
+           ("humanize/", "sparkle", "AI 작성률 검사 · 휴머나이징", "AI가 쓴 티를 확인하고 다듬기"),
+           ("mark/", "badge", "무료 AI 표시", "AI 이미지 · 영상에 서명된 표시"),
+           ("proof/", "printer", "AI 활용 증빙서", "과제 · 공모전에 AI 사용 밝히기"),
+           ("creators/", "users", "크리에이터 사전 등록", "AI 작업으로 기업 의뢰 받기"),
+           ("personal/", "user", "개인용 전체 보기", "무료로 시작 · 요금")]),
        ("m/", "mcheck", "마크 확인", None),
-       ("product", "product", "제품", [
-           ("#", None, "핵심", None),
-           ("product/", "layers", "제품 개요", "확인 · 마킹 · 관리 네 가지 엔진"),
-           ("mark/", "badge", "AI 사용 확인 · 마크 발급", "파일 · 글 확인, 근거 맞춤 마크"),
-           ("m/", "search", "마크 확인", "표시 · 근거 · 서명 · 이력 확인"),
-           ("report/", "bars", "일괄 확인 리포트", "콘텐츠 수백 건 근거 확인 · 리포트"),
-           ("developers/", "code", "기업용 API · MCP", "올리는 순간 자동 확인 · 대량 마킹"),
-           ("verify/", "ledger", "원장 · 공개 타임스탬프", "발급 기록 위변조 확인"),
-           ("#", None, "부가 기능", None),
-           ("check/", "megaphone", "광고 문구 검수", "위험 후보 · 바꿀 말 · 자동 수정"),
-           ("app/", "inbox", "검수 작업 공간", "소재 묶음 검수 · 광고주 승인"),
-           ("scan/", "radar", "사이트 진단", "AI 사용 흔적 · 광고 표현 진단"),
-           ("site/", "tag", "AI 표시 · 자동 태그", "코드 한 줄 · 아임웹 앱")]),
-       ("solutions", "business", "솔루션", [
-           ("business/#commerce", "store", "쇼핑몰 · 이커머스", "상품 콘텐츠를 올리는 순간 자동 마킹"),
-           ("business/#media", "scroll", "언론 · 미디어", "기사 이미지 · 영상 AI 고지와 출처"),
-           ("business/#agency", "megaphone", "광고대행사 · 브랜드", "캠페인 소재 대량 확인 · 납품 증빙"),
-           ("business/#platform", "plug", "플랫폼 · AI 서비스", "생성 결과에 마크 · API 재판매"),
-           ("business/#creator", "user", "개인 크리에이터", "내 작품 AI 사용 밝히기 · 무료")]),
        ("technology/", "technology", "기술", None),
        ("pricing/", "pricing", "요금", None),
        ("company/", "company", "회사", None)]
-PRODUCT_KEYS = ["product", "app", "developers", "verify", "check", "scan", "site", "proof", "report"]
-ANNOUNCE = ("contact/", "기업 파일럿", "2026년 12월 유료 파일럿 기업을 모집합니다. 신청하면 우리 콘텐츠 100건의 AI 사용 확인 리포트를 먼저 드립니다")
+GROUP_KEYS = {"business": ["business", "geo", "commerce", "compliance", "product", "app", "developers", "verify", "check", "scan", "site", "report"],
+              "personal": ["personal", "humanize", "proof", "creators", "mark"]}
+PRODUCT_KEYS = GROUP_KEYS["business"]
+ANNOUNCE = ("contact/", "기업 파일럿", "2026년 12월 유료 파일럿 기업을 모집합니다. 신청하면 무료 GEO 진단과 콘텐츠 100건 AI 사용 확인 리포트를 먼저 드립니다")
+ANNOUNCE_P = ("humanize/", "새 기능", "AI 작성률 검사를 무료로 엽니다. 내 글에서 AI 패턴이 남은 문장을 바로 확인하세요")
 
 
 def ico(name, cls="ico"):
@@ -150,7 +151,7 @@ def header(root, key):
     items = []
     for href, k, label, sub in NAV:
         if sub:
-            cur = ' class="cur"' if (k == key or (k == "product" and key in PRODUCT_KEYS)) else ""
+            cur = ' class="cur"' if (k == key or key in GROUP_KEYS.get(k, [])) else ""
             parts, mega = [], any(h == "#" for h, _, _, _ in sub)
             for h, ic, t, d in sub:
                 if h == "#":
@@ -168,14 +169,16 @@ def header(root, key):
                 ('<span class="grp2">%s</span>' % t) if h == "#" else ('<a href="%s%s">%s</a>' % (root, h, t)) for h, _, t, _ in sub)
         else:
             mgroups += '<a href="%s%s">%s</a>' % (root, href, label)
-    ah, ab, at = ANNOUNCE
-    bar = ('<a class="annc" href="%s%s"><span class="annc-in"><b>%s</b><span>%s</span><em>신청하기%s</em></span></a>' % (root, ah, ab, at, ico("arrow"))) if key not in ("contact", "404") else ""
+    personal = key in GROUP_KEYS["personal"]
+    ah, ab, at = ANNOUNCE_P if personal else ANNOUNCE
+    bar = ('<a class="annc" href="%s%s"><span class="annc-in"><b>%s</b><span>%s</span><em>%s%s</em></span></a>' % (root, ah, ab, at, "검사해 보기" if personal else "신청하기", ico("arrow"))) if key not in ("contact", "404", "humanize") else ""
+    c1 = ("humanize/", "AI 작성률 검사") if personal else ("geo/", "무료 GEO 진단")
     return (bar + '<header class="hd" id="hd"><div class="wrap">%s<nav class="nav" aria-label="주 메뉴">%s</nav>'
-            '<div class="hd-cta"><a class="btn btn-g btn-s" href="%smark/">무료로 확인</a><a class="btn btn-p btn-s" href="%scontact/">기업 상담</a></div>'
+            '<div class="hd-cta"><a class="btn btn-g btn-s" href="%s%s">%s</a><a class="btn btn-p btn-s" href="%scontact/">기업 상담</a></div>'
             '<button class="menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">%s</button></div></header>'
             '<nav class="mnav" id="mnav" aria-label="모바일 메뉴">%s'
-            '<a class="btn btn-p" href="%scontact/">기업 상담</a><a class="btn btn-g" href="%smark/">무료로 확인</a></nav>'
-            % (brand(root), "".join(items), root, root, ico("menu"), mgroups, root, root))
+            '<a class="btn btn-p" href="%scontact/">기업 상담</a><a class="btn btn-g" href="%s%s">%s</a></nav>'
+            % (brand(root), "".join(items), root, c1[0], c1[1], root, ico("menu"), mgroups, root, root, c1[0], c1[1]))
 
 
 def footer(root):
@@ -188,14 +191,14 @@ def footer(root):
     if b["addr"]:
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
-    cols = [("제품", [("mark/", "AI 사용 확인 · 마크 발급"), ("m/", "마크 확인"), ("product/", "제품 개요"), ("pricing/", "요금"), ("verify/", "원장 · 공개 타임스탬프")]),
-            ("솔루션", [("business/#commerce", "쇼핑몰 · 이커머스"), ("business/#media", "언론 · 미디어"), ("business/#agency", "광고대행사 · 브랜드"), ("business/#platform", "플랫폼 · AI 서비스"), ("business/#creator", "개인 크리에이터")]),
+    cols = [("기업용", [("geo/", "GEO 자동 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 신뢰 · 컴플라이언스"), ("business/", "기업용 전체 보기"), ("pricing/#business", "기업 요금")]),
+            ("개인용", [("humanize/", "AI 작성률 검사 · 휴머나이징"), ("mark/", "무료 AI 표시 · 자동 마킹"), ("proof/", "AI 활용 증빙서"), ("creators/", "크리에이터 사전 등록"), ("pricing/#personal", "개인 요금")]),
+            ("도구", [("m/", "마크 확인"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("scan/", "사이트 진단"), ("site/", "AI 표시 자동 태그"), ("verify/", "원장 · 공개 타임스탬프")]),
             ("기술 · 개발자", [("technology/", "기술"), ("developers/", "API · AI 연동"), ("developers/#mcp", "MCP 서버"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("llms.txt", "llms.txt"), ("developers/openapi.json", "OpenAPI 명세")]),
-            ("부가 기능", [("check/", "광고 문구 검수"), ("app/", "검수 작업 공간"), ("scan/", "사이트 진단"), ("site/", "AI 표시 · 자동 태그"), ("proof/", "AI 활용 증빙서")]),
             ("회사", [("company/", "회사 소개"), ("contact/", "기업 상담"), ("trust/", "신뢰 · 판단 기준"), ("guide/", "광고 · AI 표시 가이드"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b class="ct">%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
     return ('<footer class="ft"><div class="wrap"><div class="top"><div class="ft-a">%s'
-            '<p class="about">AIMarker는 콘텐츠의 AI 사용 여부와 활용 범위를 확인하고, 근거가 붙은 디지털 마크를 발급 · 관리하는 AI 콘텐츠 투명성 기술 플랫폼입니다.</p><div id="aimarker" class="ft-label"></div></div>'
+            '<p class="about">AIMarker는 AI 콘텐츠가 만들어지고, 발견되고, 거래되는 모든 과정에서 AI 검색 최적화(GEO) · 자동 AI 표시 · 근거 기록을 제공하는 AI 콘텐츠 플랫폼입니다.</p><div id="aimarker" class="ft-label"></div></div>'
             '<div class="cols">%s</div></div>'
             '<div class="biz">%s<br>'
             '<span>AIMarker 마크는 표시와 그 근거를 기록하는 것이며, 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. 광고 검수 결과는 위험 후보와 근거입니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
@@ -266,7 +269,7 @@ def parse(src):
 
 
 # ---------- AI 연동 자료(4.0): MCP 서버 · SDK · 함수 호출 도구 정의 · llms.txt ----------
-MCP_VER = "2.1.0"
+MCP_VER = "2.2.0"
 _IND = {"type": "string", "enum": ["auto", "gen", "food", "hfood", "cos", "med", "fin"],
         "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."}
 _FLAGS = {"type": "object", "description": "콘텐츠 정보(모르면 비움).", "properties": {
@@ -302,6 +305,10 @@ FC_TOOLS = [
      {"text": {"type": "string"}, "ind": _IND, "flags": _FLAGS, "guide": _GUIDE, "stamp": {"type": "boolean", "description": "고친 문구의 해시를 원장에 남길지"}}, ["text"]),
     ("aimarker_label", "am.label", "붙일 표시 문구를 받습니다(한국AI윤리위원회 기준). kind: image · video · person(가상인물) · text · sponsor(광고 · 협찬). 짧은 표시 · 긴 문장 · HTML · 마크다운 · IPTC 값을 돌려줍니다.",
      {"kind": {"type": "string", "enum": ["image", "video", "person", "text", "sponsor"]}, "level": {"type": "string", "enum": ["gen", "edit"], "description": "gen: AI로 만듦 · edit: AI로 고침"}}, ["kind"]),
+    ("aimarker_geo_check", "am.geo", "사이트 · 상품 쪽 주소 하나로 AI 검색 준비 점수(0~100: AI 크롤러 접근 · 구조화 데이터 · 본문 · 메타 · 질문과 답 · 이미지 · 신뢰)와 붙여 넣을 고칠 코드(JSON-LD · llms.txt · robots.txt · 메타 · FAQ)를 받습니다. 상품 쪽이면 AI 상품 피드 한 줄도 줍니다.",
+     {"url": {"type": "string", "description": "사이트 · 상품 쪽 주소"}}, ["url"]),
+    ("aimarker_detect_text", "am.detect", "글의 AI 작성 추정률(0~100)과 AI 패턴이 몰린 문장을 받습니다. 같은 글은 언제나 같은 값입니다. 추정일 뿐 판정 · 증명이 아니므로 결과만으로 사람을 판단하지 마세요. 글은 서버로 보내지만 저장하지 않습니다. 6,000자까지.",
+     {"text": {"type": "string", "description": "확인할 글(6,000자까지)"}}, ["text"]),
     ("aimarker_stamp", "am.stamp", "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려주고, 하루치 원장은 다음 날 공개 앵커로 묶입니다.",
      {"content": {"type": "string", "description": "기록할 내용(실행 코드가 해시로 바꿈)"}, "k": {"type": "string", "enum": ["report", "version", "approval"], "description": "기록 종류"}, "n": {"type": "integer", "description": "보고서에 든 소재 수(선택)"}}, ["content"]),
     ("aimarker_verify", "am.verify", "원장 번호(id, LG로 시작)나 내용(content, 실행 코드가 해시로 바꿈)으로 증거 원장 기록을 확인합니다.",
@@ -381,6 +388,7 @@ def build_ai_assets():
     os.makedirs(os.path.join(ROOT, "lib"), exist_ok=True)
     shutil.copyfile(os.path.join(HERE, "lib", "aim-extract.js"), os.path.join(ROOT, "lib", "aim-extract.js"))
     shutil.copyfile(os.path.join(HERE, "lib", "aim-report.js"), os.path.join(ROOT, "lib", "aim-report.js"))
+    shutil.copyfile(os.path.join(HERE, "lib", "aim-seo.js"), os.path.join(ROOT, "lib", "aim-seo.js"))   # 6.0 검색 · AI 검색 꾸러미
     os.makedirs(os.path.join(ROOT, "m"), exist_ok=True)
     shutil.copyfile(os.path.join(HERE, "m", "embed.js"), os.path.join(ROOT, "m", "embed.js"))
     os.makedirs(os.path.join(ROOT, ".well-known"), exist_ok=True)

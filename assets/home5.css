@@ -4,7 +4,7 @@
 .h5 .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center; }
 .h5-kicker { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 750; color: #7FF0DA; }
 .h5-kicker i { width: 8px; height: 8px; border-radius: 50%; background: #3BD6BD; box-shadow: 0 0 0 4px rgba(59, 214, 189, .18); }
-.h5 h1 { font-size: clamp(34px, 4.6vw, 58px); font-weight: 900; letter-spacing: -.05em; line-height: 1.13; margin-top: 18px; color: #fff; }
+.h5 h1 { font-size: clamp(32px, 4.4vw, 52px); font-weight: 900; letter-spacing: -.05em; line-height: 1.13; margin-top: 18px; color: #fff; }
 .h5-sub { margin-top: 20px; font-size: 18px; line-height: 1.7; color: #B9C6E4; max-width: 560px; }
 .h5-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; align-items: center; }
 .h5-cta .tl { color: #C9D6F5; font-weight: 700; font-size: 15.5px; display: inline-flex; align-items: center; gap: 6px; padding: 0 6px; }

@@ -9,6 +9,8 @@
   "aimarker_check": "am.check",
   "aimarker_auto_fix": "am.auto",
   "aimarker_label": "am.label",
+  "aimarker_geo_check": "am.geo",
+  "aimarker_detect_text": "am.detect",
   "aimarker_stamp": "am.stamp",
   "aimarker_verify": "am.verify"
 }

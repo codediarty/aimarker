@@ -1,114 +1,168 @@
 <!--
 path: pricing/
 key: pricing
-title: 요금 · 개인은 무료, 기업은 쓰는 만큼 | AIMarker
-ogtitle: AIMarker 요금 · 개인 무료 · Business 월 99,000원 · Scale 월 390,000원 · Enterprise 연 1,200만 원부터(예상 요금)
-desc: AI 사용 확인 · 마크 발급은 개인 무료. 기업은 Business 월 99,000원부터, Scale 월 390,000원부터, Enterprise 연 1,200만 원부터, API 사용량 요금, 부가 기능(광고 문구 검수 등)은 따로. 정식 출시 전 예상 요금이며 유료는 2026년 12월 기업 파일럿부터.
+title: 요금 · 기업 Starter 월 49,000원부터 · 개인은 무료로 시작 | AIMarker
+ogtitle: AIMarker 요금 · Starter 49,000원 · Growth 149,000원 · Business 399,000원 · Enterprise 100만 원부터(월, 출시 예정 요금)
+desc: 기업은 Starter 월 49,000원 · Growth 월 149,000원 · Business 월 399,000원 · Enterprise 월 100만 원부터(부가세 별도)에 API 사용량 · 대량 처리 · 성과형을 더합니다. 개인은 무료로 시작해 건당 1,900원부터, 개인 프로 월 9,900원(부가세 포함). 모두 정식 출시 전 출시 예정 요금이며, 유료는 2026년 12월 기업 파일럿부터입니다.
 jsonld_file: pricing.jsonld
-styles: assets/mark.css, assets/home5.css
+styles: assets/mark.css, assets/v6.css
 selflabel: footer
 -->
-<section class="p4h">
+<section class="p6h one" id="top">
   <div class="wrap">
-    <span class="crumb">요금</span>
-    <h1>개인은 무료,<br>기업은 쓰는 만큼</h1>
-    <p class="lead4">AI 사용 확인과 마크 발급은 개인에게 무료입니다. 기업은 한 달에 발급하는 마크 수와 자동화(API · MCP) · 관리 · 지원 수준으로 고릅니다. 정식 출시 전 예상 요금이며, 실제 조건은 상담에서 함께 정합니다.</p>
-    <div class="row"><a class="btn btn-w btn-l" href="{{root}}mark/">무료로 시작</a><a class="btn btn-gl btn-l" href="{{root}}contact/">기업 상담</a></div>
-  </div>
-</section>
-
-<section class="blk" id="plans">
-  <div class="wrap">
-    <div class="plans4-h"><span class="tag-ex">예상 요금</span><p>부가세 별도 · 자동 결제 없음 · 유료 상품은 2026년 12월 기업 파일럿부터 엽니다.</p></div>
-    <div class="free5">
-      <div><b>개인</b><strong>무료</strong></div>
-      <p>AI 사용 확인(파일 · 글) · 근거 맞춤 마크 발급 · 전자서명 · 마크 확인 쪽 · QR · 삽입 배지 · 관리 키. 짧은 시간에 아주 많은 요청은 잠시 제한될 수 있습니다.</p>
-      <a class="btn btn-p" href="{{root}}mark/">무료로 마크 받기</a>
-    </div>
-    <div class="plans4">
-      <article class="pl4">
-        <header><h2>Business</h2><p>브랜드 · 쇼핑몰 · 중소 미디어</p></header>
-        <div class="pr"><b>월 99,000원</b><span>부터</span></div>
-        <dl>
-          <div><dt>마크 발급</dt><dd>월 1,000건</dd></div>
-          <div><dt>확인(판정)</dt><dd>월 3,000건</dd></div>
-          <div><dt>API</dt><dd>키 1개 · 하루 1만 회</dd></div>
-          <div><dt>초과 발급</dt><dd>건당 80원</dd></div>
-        </dl>
-        <ul><li>화면 대량 업로드 · 마크 목록 · 관리 키 CSV</li><li>확인된 발급자 이름(개발 중)</li><li>원장 · 공개 타임스탬프 증명 받기</li><li>메일 지원(영업일 하루 안에 답)</li></ul>
-        <a class="btn btn-g btn-l" href="{{root}}contact/?plan=business">상담 신청</a>
-      </article>
-      <article class="pl4 best">
-        <span class="flag">자동화 추천</span>
-        <header><h2>Scale</h2><p>대형 쇼핑몰 · 미디어 · 대행사</p></header>
-        <div class="pr"><b>월 390,000원</b><span>부터</span></div>
-        <dl>
-          <div><dt>마크 발급</dt><dd>월 10,000건</dd></div>
-          <div><dt>확인(판정)</dt><dd>월 30,000건</dd></div>
-          <div><dt>API · MCP</dt><dd>키 5개 · 하루 10만 회</dd></div>
-          <div><dt>초과 발급</dt><dd>건당 50원</dd></div>
-        </dl>
-        <ul><li>Business 의 모든 기능</li><li>올리는 순간 자동 발급(근거가 있으면 표시 자동)</li><li>여러 브랜드 · 팀(개발 중)</li><li>우선 지원 · 도입 지원</li></ul>
-        <a class="btn btn-p btn-l" href="{{root}}contact/?plan=scale">상담 신청{{ico:arrow}}</a>
-      </article>
-      <article class="pl4">
-        <header><h2>Enterprise</h2><p>대기업 · 플랫폼 · 공공 · 기관</p></header>
-        <div class="pr"><b>연 1,200만 원</b><span>부터</span></div>
-        <dl>
-          <div><dt>마크 발급</dt><dd>월 5만 건부터</dd></div>
-          <div><dt>처리 한도</dt><dd>전용 한도</dd></div>
-          <div><dt>계약</dt><dd>연간 · 라이선스</dd></div>
-          <div><dt>초과 발급</dt><dd>계약에 따라</dd></div>
-        </dl>
-        <ul><li>Scale 의 모든 기능</li><li>감사 리포트 · 보안 검토 · 서비스 수준 협약</li><li>판정 엔진 라이선스 · 온프레미스(계획)</li><li>전담 담당자</li></ul>
-        <a class="btn btn-g btn-l" href="{{root}}contact/?plan=enterprise">상담 신청</a>
-      </article>
+    <div>
+      <p class="p6h-k"><i></i>요금 · 정식 출시 전 출시 예정 요금</p>
+      <h1>개인은 무료로 시작하고,<br>기업은 규모에 맞게</h1>
+      <p class="lead">기업은 월 요금제에 사용량을 더하고, 큰 곳은 성과에 연동할 수 있습니다. 개인은 무료로 시작해 필요한 만큼만 건당 · 월 요금으로 더합니다. 유료는 2026년 12월 기업 파일럿부터 시작하며, 지금은 무료 기능을 가입 없이 쓰실 수 있습니다.</p>
+      <div class="p6h-act"><a class="btn btn-p btn-l" href="#business">기업 요금 보기</a><a class="btn btn-gl btn-l" href="#personal">개인 요금 보기</a><a class="tl" href="#free">지금 무료로 되는 것{{ico:arrow}}</a></div>
+      <p class="p6h-note"><span>{{ico:info}}기업 요금은 부가세 별도</span><span>{{ico:info}}개인 요금은 부가세 포함</span><span>{{ico:clock}}유료는 2026년 12월 기업 파일럿부터</span></p>
     </div>
   </div>
 </section>
 
-<section class="blk soft" id="usage">
+<section class="s6" id="business">
   <div class="wrap">
-    <div class="blk-h"><span class="k">사용량 · 부가 기능</span><h2>필요한 만큼 더하는 요금</h2></div>
-    <div class="cmp5">
-      <article><h3>API 사용량</h3><p class="p">발급 건당 50원 · 확인 건당 10원부터</p><p>플랫폼 · AI 서비스가 자기 서비스 안에서 쓰는 방식입니다. 월 최소 49,000원. 무료 API 키(하루 300회)로 먼저 붙여 볼 수 있습니다.</p><a href="{{root}}developers/#key">무료 키 받기</a></article>
-      <article><h3>대량 처리</h3><p class="p">한 번에 수만 건 · 견적</p><p>지난 콘텐츠를 한꺼번에 확인 · 마킹하는 일회성 작업입니다. 건수와 형식에 따라 견적합니다. 200개까지는 <a href="{{root}}report/">일괄 확인 리포트</a>로 바로 해 볼 수 있습니다.</p><a href="{{root}}contact/?plan=bulk">견적 요청</a></article>
-      <article><h3>광고 문구 검수</h3><p class="p">월 49,000원부터</p><p>부가 기능입니다. 한국 광고 규칙 팩으로 위험 후보 · 근거 · 바꿀 말, 자동 수정, 검수 작업 공간 · 광고주 승인 링크.</p><a href="{{root}}check/">무료로 검사해 보기</a></article>
-      <article><h3>위험 분석 · 보고서</h3><p class="p">월 29,000원부터</p><p>부가 기능입니다. 사이트 진단 · AI 활용 증빙서 · 월간 마킹 보고서 자동 만들기.</p><a href="{{root}}proof/">증빙서 보기</a></article>
+    <div class="h6">
+      <span class="eyebrow">기업 요금</span>
+      <h2>규모에 맞게 고르는 월 요금제</h2>
+      <p class="lead">사이트 수 · GEO 진단 쪽수 · 자동 마킹 건수로 고르고, 필요한 만큼 사용량을 더합니다. 출시 예정 요금이며 부가세 별도입니다.</p>
+    </div>
+    <nav class="tabs6" aria-label="요금 구분"><a class="on" href="#business" aria-current="true">기업</a><a href="#personal">개인</a></nav>
+    <div class="plans6" id="plans">
+      <article class="plan6"><h3>Starter</h3><p class="for">소형 웹사이트</p><p class="p">49,000원<small> / 월</small></p><ul><li>{{ico:check}}사이트 1개 · GEO 진단 월 50쪽</li><li>{{ico:check}}자동 마킹 월 300건</li><li>{{ico:check}}구조화 데이터 · llms.txt · AI 표시 태그</li></ul><a class="btn btn-g" href="{{root}}contact/?plan=Starter">상담 신청</a></article>
+      <article class="plan6 on"><span class="badge6">쇼핑몰 추천</span><h3>Growth</h3><p class="for">쇼핑몰 · 중소기업</p><p class="p">149,000원<small> / 월</small></p><ul><li>{{ico:check}}사이트 3개 · GEO 진단 월 500쪽</li><li>{{ico:check}}자동 마킹 월 3,000건 · AI 상품 피드</li><li>{{ico:check}}광고 문구 검수 · 월간 리포트</li></ul><a class="btn btn-p" href="{{root}}contact/?plan=Growth">Growth 시작 상담</a></article>
+      <article class="plan6"><h3>Business</h3><p class="for">브랜드 · 콘텐츠 기업</p><p class="p">399,000원<small> / 월</small></p><ul><li>{{ico:check}}사이트 10개 · GEO 진단 월 3,000쪽</li><li>{{ico:check}}자동 마킹 월 2만 건 · API · MCP</li><li>{{ico:check}}검토자 · 승인 기록 · 우선 지원</li></ul><a class="btn btn-g" href="{{root}}contact/?plan=Business">상담 신청</a></article>
+      <article class="plan6"><h3>Enterprise</h3><p class="for">대형 플랫폼 · 기관</p><p class="p">100만 원<small>부터 / 월</small></p><ul><li>{{ico:check}}맞춤 한도 · 전용 규칙 · 감사 리포트</li><li>{{ico:check}}서비스 수준 협약 · 보안 검토</li><li>{{ico:check}}성과 연동 요금 선택</li></ul><a class="btn btn-g" href="{{root}}contact/?plan=Enterprise">상담 신청</a></article>
+    </div>
+    <p class="plan6-note">파일럿 기업에는 우리 사이트 진단과 콘텐츠 100건 확인 리포트를 먼저 드립니다. 모듈마다 무엇이 들어 있는지는 <a href="#compare">비교표</a>에서 확인하세요.</p>
+
+    <h3 class="mt48" id="usage" style="font-size:20px;font-weight:900;letter-spacing:-.03em">사용량 · 성과형</h3>
+    <div class="usage6">
+      <div><b>API 사용량</b><span><strong>발급 건당 50원 · 확인 건당 10원부터.</strong> 플랫폼 · AI 서비스가 자기 서비스 안에서 쓰는 방식입니다. 무료 API 키(하루 300회)로 먼저 연결해 볼 수 있습니다.</span><a href="{{root}}developers/#key">무료 API 키 받기</a></div>
+      <div><b>대량 처리</b><span><strong>견적.</strong> 지난 콘텐츠 수만 건을 한꺼번에 확인 · 마킹하는 일회성 작업입니다. 건수와 형식에 따라 견적하고, 200개까지는 <a href="{{root}}report/">일괄 리포트</a>로 바로 해 볼 수 있습니다.</span><a href="{{root}}contact/?plan=bulk">견적 요청</a></div>
+      <div><b>성과형(파일럿 제안)</b><span>AI 검색에서 들어온 방문 · 구매가 늘어난 만큼 정산하는 방식입니다. 무엇을 기준으로 셀지와 정산 조건은 상담에서 함께 정하며, 노출이나 매출을 약속하지 않습니다.</span><a href="{{root}}contact/?plan=pilot">성과형 상담</a></div>
     </div>
   </div>
 </section>
 
-<section class="blk" id="count">
+<section class="s6 soft" id="compare">
   <div class="wrap">
-    <div class="blk-h"><span class="k">세는 방법</span><h2>무엇을 한 건으로 세나요</h2></div>
-    <ul class="mk-ul ok" style="margin-top:24px;max-width:860px">
-      <li>마크 발급 1건 = 마크 번호 하나. 같은 파일에 같은 표시를 다시 요청하면 새로 세지 않고 이미 있는 마크를 돌려줍니다.</li>
-      <li>확인(판정) 1건 = 파일 하나 또는 글 하나를 서버가 판정한 것. 이 브라우저 안에서만 읽는 것은 세지 않습니다.</li>
-      <li>마크 확인 쪽 · 공개키 · 원장 확인은 누구에게나 무료이며 세지 않습니다.</li>
-      <li>표시 변경 · 철회 · 표시본 등록은 세지 않습니다.</li>
-    </ul>
+    <div class="h6">
+      <span class="eyebrow">모듈별 비교</span>
+      <h2>요금제마다 들어 있는 기능</h2>
+      <p class="lead">Starter는 기본 GEO와 자동 마킹, Growth는 상품 피드와 AI 검색 노출 추적, Business는 신뢰 · 컴플라이언스 · 분석까지 더합니다. Enterprise는 모든 기능에 맞춤 한도와 전용 규칙을 붙입니다.</p>
+    </div>
+    <p class="plan6-note"><span class="st6 now">포함</span> 요금제에 들어 있음 · <span class="st6 pilot">파일럿</span> 2026년 12월 기업 파일럿에서 함께 여는 기능 · <span class="pm none" aria-hidden="true"></span> 들어 있지 않음</p>
+    <div class="kvt-wrap">
+      <table class="kvt" aria-label="요금제별 모듈 비교">
+        <thead><tr><th scope="col">기능</th><th scope="col">Starter<br>월 49,000원</th><th scope="col">Growth<br>월 149,000원</th><th scope="col">Business<br>월 399,000원</th><th scope="col">Enterprise<br>월 100만 원부터</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">GEO Optimizer<span class="note" style="display:block;font-weight:600">AI 검색 진단 · 개선 코드</span></th><td data-l="Starter">사이트 1개 · 월 50쪽</td><td data-l="Growth">사이트 3개 · 월 500쪽</td><td data-l="Business">사이트 10개 · 월 3,000쪽</td><td data-l="Enterprise">맞춤 한도</td></tr>
+          <tr><th scope="row">AI Auto Marking<span class="note" style="display:block;font-weight:600">AI 사용 확인 · 서명된 표시</span></th><td data-l="Starter">월 300건</td><td data-l="Growth">월 3,000건</td><td data-l="Business">월 2만 건</td><td data-l="Enterprise">맞춤 한도</td></tr>
+          <tr><th scope="row">Product AI Feed<span class="note" style="display:block;font-weight:600">AI 검색 · 쇼핑용 상품 피드</span></th><td data-l="Starter"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Growth"><span class="st6 now">포함</span></td><td data-l="Business"><span class="st6 now">포함</span></td><td data-l="Enterprise"><span class="st6 now">포함</span></td></tr>
+          <tr><th scope="row">AI Visibility Tracker<span class="note" style="display:block;font-weight:600">AI 검색 노출 추적</span></th><td data-l="Starter"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Growth"><span class="st6 pilot">파일럿</span></td><td data-l="Business"><span class="st6 pilot">파일럿</span></td><td data-l="Enterprise"><span class="st6 pilot">파일럿</span></td></tr>
+          <tr><th scope="row">광고 문구 검수<span class="note" style="display:block;font-weight:600">위험 후보 · 근거 · 바꿀 말</span></th><td data-l="Starter"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Growth"><span class="st6 now">포함</span></td><td data-l="Business"><span class="st6 now">포함</span></td><td data-l="Enterprise">전용 규칙</td></tr>
+          <tr><th scope="row">AI Content Studio<span class="note" style="display:block;font-weight:600">상품 설명 · FAQ · 글 초안</span></th><td data-l="Starter"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Growth"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Business"><span class="st6 pilot">파일럿</span></td><td data-l="Enterprise"><span class="st6 pilot">파일럿</span></td></tr>
+          <tr><th scope="row">AI Trust Passport<span class="note" style="display:block;font-weight:600">콘텐츠별 AI 사용 · 검토 이력</span></th><td data-l="Starter"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Growth"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Business"><span class="st6 pilot">파일럿</span></td><td data-l="Enterprise"><span class="st6 pilot">파일럿</span></td></tr>
+          <tr><th scope="row">AI Compliance Monitor<span class="note" style="display:block;font-weight:600">표시 누락 · 위험 표현 정기 점검</span></th><td data-l="Starter"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Growth"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Business"><span class="st6 pilot">파일럿</span></td><td data-l="Enterprise"><span class="st6 pilot">파일럿</span></td></tr>
+          <tr><th scope="row">AI Conversion Analytics<span class="note" style="display:block;font-weight:600">AI 검색 유입 · 구매 전환 분석</span></th><td data-l="Starter"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Growth"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Business"><span class="st6 pilot">파일럿</span></td><td data-l="Enterprise"><span class="st6 pilot">파일럿</span></td></tr>
+          <tr><th scope="row">Competitor Intelligence<span class="note" style="display:block;font-weight:600">경쟁사 AI 노출 · 콘텐츠 비교</span></th><td data-l="Starter"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Growth"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Business"><span class="st6 pilot">파일럿</span></td><td data-l="Enterprise"><span class="st6 pilot">파일럿</span></td></tr>
+          <tr><th scope="row">API · MCP<span class="note" style="display:block;font-weight:600">자동 연동 · AI 도구 연결</span></th><td data-l="Starter">무료 키 · 하루 300회</td><td data-l="Growth">무료 키 · 하루 300회</td><td data-l="Business"><span class="st6 now">포함</span></td><td data-l="Enterprise">전용 한도</td></tr>
+          <tr><th scope="row">맞춤 계약<span class="note" style="display:block;font-weight:600">감사 리포트 · 서비스 수준 협약 · 보안 검토 · 성과 연동 요금</span></th><td data-l="Starter"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Growth"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Business"><span class="pm none" aria-hidden="true"></span><span class="sr">없음</span></td><td data-l="Enterprise"><span class="st6 now">포함</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="plan6-note">GEO 진단(주소 하나씩) · 상품 주소 20개까지 상품 피드 만들기 · 광고 문구 검사는 요금제와 상관없이 누구나 무료로 해 볼 수 있습니다. 광고 문구 검수 결과는 위험 후보와 근거이며 법률 자문이 아닙니다. GEO 점수는 준비 상태를 보는 지표이고 AI 검색 노출을 약속하지 않습니다.</p>
   </div>
 </section>
 
-<section class="blk soft" id="faq">
+<section class="s6" id="personal">
   <div class="wrap">
-    <div class="blk-h"><span class="k">자주 묻는 것</span><h2>결제 전에 궁금한 것들</h2></div>
-    <div class="faq faq4">
-      <details><summary>개인 무료는 정말 무료인가요?</summary><p>네. AI 사용 확인과 마크 발급 · 마크 확인 쪽 · QR · 삽입 배지를 무료로 씁니다. 짧은 시간에 아주 많은 요청이 오면 잠시 제한될 수 있습니다.</p></details>
-      <details><summary>AI 사용 여부를 정확히 판정하나요?</summary><p>파일에 근거가 있을 때만 판정합니다. 서명된 출처 기록(C2PA)이나 생성 · 편집 기록이 있으면 그에 맞는 표시만 발급하고, 기록이 없으면 추측하지 않고 '발급자 신고'로 표시합니다. 마크에는 어떤 근거로 표시했는지가 함께 적힙니다.</p></details>
-      <details><summary>마크가 법적 인증인가요?</summary><p>아닙니다. 마크는 표시와 그 근거를 기록하고 서명한 것이며, 법률 자문을 대신하거나 콘텐츠의 적법성을 보증하지 않습니다. AI 사용 고지 의무에 대응할 때 근거 자료로 쓸 수 있습니다.</p></details>
-      <details><summary>원본 파일을 서버로 보내나요?</summary><p>보내지 않습니다. 파일은 이 브라우저(또는 고객 서버)에서 읽고, 서버에는 특징값 · 해시 · 서명 검증에 필요한 출처 기록 조각만 갑니다. 글도 지문(해시)만 보냅니다.</p></details>
-      <details><summary>관리 키를 잃어버리면 어떻게 되나요?</summary><p>관리 키는 발급할 때 한 번만 보여 드리고 서버에는 해시만 남아 다시 보여 드릴 수 없습니다. 마크 자체는 그대로 유효합니다. 기업 요금제는 관리 화면(개발 중)에서 계정으로 관리합니다.</p></details>
-      <details><summary>지금 결제할 수 있나요?</summary><p>아직 결제를 받지 않습니다. 무료 기능은 지금 바로 쓸 수 있고, 유료 상품은 2026년 12월 기업 파일럿부터 엽니다. 운영사 성균관컨설팅이 견적서 · 계약서 · 세금계산서로 진행합니다.</p></details>
+    <div class="h6">
+      <span class="eyebrow">개인 요금</span>
+      <h2>무료로 시작하고, 필요한 만큼만</h2>
+      <p class="lead">크리에이터 · 프리랜서 · 학생 · 1인 셀러를 위한 요금입니다. 출시 예정 요금이며 부가세 포함입니다. 지금은 휴머나이징 기본 다듬기, AI 작성률 검사, 자동 마킹, 마크 확인, 일괄 리포트, 증빙서를 무료로 쓰실 수 있습니다.</p>
+    </div>
+    <nav class="tabs6" aria-label="요금 구분"><a href="#business">기업</a><a class="on" href="#personal" aria-current="true">개인</a></nav>
+    <div class="plans6">
+      <article class="plan6"><h3>무료</h3><p class="for">가입 없이</p><p class="p">0원</p><ul><li>{{ico:check}}휴머나이징 문체 점검 · 기본 다듬기</li><li>{{ico:check}}AI 작성률 검사</li><li>{{ico:check}}자동 마킹 한 번에 50개</li><li>{{ico:check}}일괄 리포트 200개 · 마크 확인</li><li>{{ico:check}}AI 활용 증빙서</li></ul><a class="btn btn-g" href="{{root}}personal/">무료로 시작</a></article>
+      <article class="plan6 on"><span class="badge6">많이 찾는 요금</span><h3>건당</h3><p class="for">필요할 때만</p><p class="p">1,900원<small> ~ 9,900원</small></p><ul><li>{{ico:check}}고급 휴머나이징 1회 3,500자까지 1,900원</li><li>{{ico:check}}긴 글 묶음 1만 자 · 검사 리포트 9,900원</li><li>{{ico:check}}원본 출처 확인 상세 리포트</li></ul><a class="btn btn-p" href="{{root}}personal/#notify">출시 알림 받기</a></article>
+      <article class="plan6"><h3>개인 프로</h3><p class="for">자주 쓰는 분</p><p class="p">9,900원<small> / 월</small></p><ul><li>{{ico:check}}고급 휴머나이징 매달 30회</li><li>{{ico:check}}증빙서 PDF · 검사 리포트</li><li>{{ico:check}}마킹 기록 보관 · 대량 처리</li></ul><a class="btn btn-g" href="{{root}}personal/#notify">출시 알림 받기</a></article>
+      <article class="plan6"><h3>개인 GEO 브랜딩</h3><p class="for">프리랜서 · 강사 · 작가 · 전문가</p><p class="p">19,900원<small> ~ 49,900원&nbsp;/&nbsp;월</small></p><ul><li>{{ico:check}}프로필 · 포트폴리오 구조화 데이터</li><li>{{ico:check}}AI 검색 노출 점검 · 월간 리포트</li><li class="pl">{{ico:clock}}파일럿 준비 중</li></ul><a class="btn btn-g" href="{{root}}personal/#notify">파일럿 알림 받기</a></article>
+    </div>
+
+    <h3 class="mt48" id="creators" style="font-size:20px;font-weight:900;letter-spacing:-.03em">크리에이터 · 마켓</h3>
+    <div class="usage6">
+      <div><b>크리에이터 의뢰 연결</b><span><strong>가입 무료.</strong> AIMarker를 사용하는 기업의 이미지 · 영상 · 글 의뢰를 연결하고, 실제 거래가 생길 때만 거래 중개료 10~15%를 받습니다.</span><a href="{{root}}creators/">크리에이터 사전 등록</a></div>
+      <div style="align-content:start"><b>AI 콘텐츠 마켓(준비 중)</b><span>AI 콘텐츠를 사고파는 마켓을 준비하고 있습니다. 판매 중개료는 10~20%를 제안합니다.</span></div>
+      <div><b>납품물 AI 표시</b><span>의뢰로 만든 납품물에는 AI 사용 표시가 함께 갑니다. 표시는 자동 마킹으로 붙이며, 자동 마킹은 개인 무료입니다(한 번에 50개).</span><a href="{{root}}mark/">자동 마킹 해 보기</a></div>
+    </div>
+    <p class="plan6-note">사이트 · 쇼핑몰을 운영한다면 기업 <a href="#business">Starter</a>(월 49,000원, 부가세 별도)부터 보세요. 개인 유료 상품은 출시 알림을 신청하면 열 때 먼저 알려 드립니다.</p>
+  </div>
+</section>
+
+<section class="s6 soft" id="free">
+  <div class="wrap">
+    <div class="h6">
+      <span class="eyebrow">지금 무료로 되는 것</span>
+      <h2>결제 전에, 가입 없이 바로 써 보세요</h2>
+      <p class="lead">유료 요금제는 2026년 12월 기업 파일럿부터 엽니다. 그 전에도 아래 기능은 가입 없이 무료입니다. 짧은 시간에 아주 많은 요청이 오면 잠시 제한될 수 있습니다.</p>
+    </div>
+    <div class="cases6">
+      <a href="{{root}}geo/"><span class="ic">{{ico:globe}}</span><h3>GEO 무료 진단</h3><p>주소 하나로 AI 검색 준비 점수와 고칠 거리(구조화 데이터 · FAQ 틀 · llms.txt)를 바로 받습니다.</p><span class="go">진단하기{{ico:arrow}}</span></a>
+      <a href="{{root}}commerce/#feed"><span class="ic">{{ico:store}}</span><h3>AI 상품 피드</h3><p>상품 주소 20개까지 넣으면 AI 검색 · 쇼핑에 넘길 상품 피드(CSV · JSON)를 만듭니다.</p><span class="go">피드 만들기{{ico:arrow}}</span></a>
+      <a href="{{root}}mark/"><span class="ic">{{ico:badge}}</span><h3>자동 마킹</h3><p>파일을 넣으면 AI 사용을 확인하고 서명된 표시를 붙입니다. 한 번에 50개까지.</p><span class="go">표시 붙이기{{ico:arrow}}</span></a>
+      <a href="{{root}}report/"><span class="ic">{{ico:bars}}</span><h3>일괄 리포트</h3><p>폴더 · ZIP 200개까지 AI 사용 근거를 한 번에 확인하고 리포트로 받습니다.</p><span class="go">리포트 받기{{ico:arrow}}</span></a>
+      <a href="{{root}}m/"><span class="ic">{{ico:eye}}</span><h3>마크 확인</h3><p>마크 번호나 파일로 표시 · 근거 · 서명 · 이력을 누구나 확인합니다.</p><span class="go">마크 확인하기{{ico:arrow}}</span></a>
+      <a href="{{root}}check/"><span class="ic">{{ico:megaphone}}</span><h3>광고 문구 검사</h3><p>광고 · 상세페이지 문구의 위험 후보와 근거, 바꿀 문구를 보여 줍니다. 법률 자문은 아닙니다.</p><span class="go">검사하기{{ico:arrow}}</span></a>
+      <a href="{{root}}humanize/"><span class="ic">{{ico:sparkle}}</span><h3>AI 작성률 검사 · 기본 다듬기</h3><p>AI 패턴이 남은 문장을 짚고, 뜻 · 숫자 · 인용은 지키면서 내 글처럼 다듬습니다.</p><span class="go">검사하기{{ico:arrow}}</span></a>
+      <a href="{{root}}proof/"><span class="ic">{{ico:printer}}</span><h3>AI 활용 증빙서</h3><p>어떤 AI를 어디에 사용했는지 대화 링크로 정리해 과제 · 보고서와 함께 냅니다.</p><span class="go">증빙서 만들기{{ico:arrow}}</span></a>
+      <a href="{{root}}developers/#key"><span class="ic">{{ico:key}}</span><h3>무료 API 키</h3><p>하루 300회까지 API · MCP로 먼저 연결해 봅니다. 한도를 늘리려면 상담하세요.</p><span class="go">키 받기{{ico:arrow}}</span></a>
     </div>
   </div>
 </section>
 
-<section class="h5-end">
+<section class="s6" id="count">
   <div class="wrap">
-    <h2>파일 하나로 먼저 확인해 보세요</h2>
-    <p>개인은 무료입니다. 기업 파일럿을 신청하면 우리 콘텐츠 100건의 AI 사용 확인 리포트를 먼저 드립니다.</p>
-    <div class="h5-cta"><a class="btn btn-w btn-l" href="{{root}}mark/">AI 사용 확인하기</a><a class="btn btn-gl btn-l" href="{{root}}contact/">기업 상담 신청</a></div>
+    <div class="h6">
+      <span class="eyebrow">세는 방법</span>
+      <h2>무엇을 한 건으로 세나요</h2>
+    </div>
+    <div class="kvt-wrap" style="max-width:880px">
+      <table class="kvt" aria-label="한 건으로 세는 방법">
+        <thead><tr><th scope="col">항목</th><th scope="col">세는 방법</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">자동 마킹 1건</th><td>파일 하나 또는 글 하나에 마크를 붙이면 1건입니다. 같은 파일에 같은 표시를 다시 요청하면 새로 세지 않고 이미 있는 마크를 돌려줍니다.</td></tr>
+          <tr><th scope="row">GEO 진단 1쪽</th><td>진단한 주소 하나가 1쪽입니다. 같은 사이트 안이라도 쪽 주소가 다르면 따로 셉니다.</td></tr>
+          <tr><th scope="row">API 발급 · 확인</th><td>마크 번호 하나를 발급하면 발급 1건, 서버가 파일 하나나 글 하나를 확인하면 확인 1건입니다. 브라우저나 내 컴퓨터에서만 읽고 서버에 묻지 않은 것은 세지 않습니다.</td></tr>
+          <tr><th scope="row">고급 휴머나이징 1회</th><td>3,500자까지 한 번 다듬으면 1회입니다. 긴 글 묶음은 1만 자까지를 한 번으로 셉니다.</td></tr>
+          <tr><th scope="row">세지 않는 것</th><td>마크 확인 쪽 · 공개키 · 원장 확인은 누구에게나 무료이며 세지 않습니다. 표시 변경 · 철회 · 표시본 등록도 세지 않습니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="s6 soft" id="faq">
+  <div class="wrap">
+    <div class="h6 c"><span class="eyebrow">자주 묻는 것</span><h2>결제 전에 많이 묻는 것</h2></div>
+    <div class="faq6 c">
+      <details><summary>무료로 어디까지 쓸 수 있나요?</summary><p>가입 없이 GEO 진단(주소 하나씩), AI 상품 피드(상품 주소 20개까지), 자동 마킹(한 번에 50개), 마크 확인, 일괄 리포트(200개), 광고 문구 검사, AI 작성률 검사 · 휴머나이징 기본 다듬기, AI 활용 증빙서, 무료 API 키(하루 300회)를 쓰실 수 있습니다. 짧은 시간에 아주 많은 요청이 오면 잠시 제한될 수 있습니다.</p></details>
+      <details><summary>언제부터 결제하나요?</summary><p>아직 결제를 받지 않습니다. 이 쪽의 요금은 모두 정식 출시 전 출시 예정 요금이며, 정식 출시 때 바뀔 수 있습니다. 기업 유료 요금제는 2026년 12월 기업 파일럿부터 엽니다. 개인 유료 상품은 <a href="{{root}}personal/#notify">출시 알림</a>을 신청하시면 열 때 먼저 알려 드립니다.</p></details>
+      <details><summary>한도를 넘으면 어떻게 되나요?</summary><p>한도를 넘었을 때의 처리(넘은 만큼 요금을 더할지, 위 요금제로 옮길지)는 파일럿에서 정해 계약 조건에 적습니다. 갑자기 막히지 않도록 알려 드리는 방법도 파일럿에서 함께 정합니다.</p></details>
+      <details><summary>요금제를 바꿀 수 있나요?</summary><p>요금제를 옮기는 방법(옮기는 때 · 남은 요금 정산)은 파일럿에서 정합니다. 사이트 · 콘텐츠 양이 바뀌면 상담에서 맞는 요금제를 함께 고릅니다.</p></details>
+      <details><summary>세금계산서를 받을 수 있나요?</summary><p>기업 요금은 운영사 성균관컨설팅이 견적서 · 계약서 · 세금계산서로 진행합니다. 기업 요금은 부가세 별도, 개인 요금은 부가세 포함입니다.</p></details>
+      <details><summary>해지는 어떻게 하나요?</summary><p>해지 방법과 조건(최소 이용 기간 · 남은 기간 환불)은 파일럿에서 정해 계약서에 적습니다. 해지한 뒤에도 이미 발급한 마크의 서명은 공개키로 누구나 확인할 수 있습니다.</p></details>
+      <details><summary>'파일럿'이 붙은 기능은 무엇인가요?</summary><p>2026년 12월 기업 파일럿에서 참여 기업과 함께 다듬어 여는 기능입니다(AI Visibility Tracker · AI Content Studio · AI Trust Passport · AI Compliance Monitor · AI Conversion Analytics · Competitor Intelligence). 여는 범위와 시기는 파일럿에서 정합니다.</p></details>
+      <details><summary>성과형 요금은 어떻게 정하나요?</summary><p>AI 검색에서 들어온 방문 · 구매가 늘어난 만큼 정산하는 방식을 파일럿 기업에 제안합니다. 무엇을 어떻게 셀지, 얼마를 정산할지는 상담에서 함께 정합니다. 어떤 쪽을 답에 쓸지는 각 AI 서비스가 정하므로, AI 검색 노출이나 매출이 늘어난다고 약속하지 않습니다.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="end6">
+  <div class="wrap">
+    <h2>요금을 고르기 전에, 무료 진단부터</h2>
+    <p>주소 하나로 지금 AI 검색 준비 상태와 고칠 거리를 확인하세요. 기업은 상담에서 맞는 요금제를 함께 고르고, 개인은 가입 없이 무료로 시작합니다.</p>
+    <div class="row"><a class="btn btn-p btn-l" href="{{root}}geo/">무료 GEO 진단</a><a class="btn btn-gl btn-l" href="{{root}}contact/">기업 상담</a><a class="btn btn-gl btn-l" href="{{root}}personal/">개인은 무료로 시작</a></div>
   </div>
 </section>

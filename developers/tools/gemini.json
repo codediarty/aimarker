@@ -317,6 +317,38 @@
       }
     },
     {
+      "name": "aimarker_geo_check",
+      "description": "사이트 · 상품 쪽 주소 하나로 AI 검색 준비 점수(0~100: AI 크롤러 접근 · 구조화 데이터 · 본문 · 메타 · 질문과 답 · 이미지 · 신뢰)와 붙여 넣을 고칠 코드(JSON-LD · llms.txt · robots.txt · 메타 · FAQ)를 받습니다. 상품 쪽이면 AI 상품 피드 한 줄도 줍니다.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "사이트 · 상품 쪽 주소"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      }
+    },
+    {
+      "name": "aimarker_detect_text",
+      "description": "글의 AI 작성 추정률(0~100)과 AI 패턴이 몰린 문장을 받습니다. 같은 글은 언제나 같은 값입니다. 추정일 뿐 판정 · 증명이 아니므로 결과만으로 사람을 판단하지 마세요. 글은 서버로 보내지만 저장하지 않습니다. 6,000자까지.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "확인할 글(6,000자까지)"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      }
+    },
+    {
       "name": "aimarker_stamp",
       "description": "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려주고, 하루치 원장은 다음 날 공개 앵커로 묶입니다.",
       "parameters": {

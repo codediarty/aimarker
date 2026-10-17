@@ -3,7 +3,7 @@ path: developers/
 key: developers
 title: API · MCP · SDK · AI 사용 확인과 서명된 마크를 코드로 | AIMarker
 ogtitle: AIMarker API · AI 사용 확인과 서명된 마크를 코드 한 줄로
-desc: 파일의 AI 사용 근거 확인(am.analyze), 근거 맞춤 마크 발급(am.mark), 여러 파일 일괄 확인(am.analyzebatch) · 마크 확인 · 서명 확인 · 공개 앵커를 API · MCP 서버 2.1 · 함수 호출 · JavaScript · Python SDK 로. 원본 파일은 보내지 않고, 마크마다 Ed25519 서명. 무료 API 키 하루 300회.
+desc: 파일의 AI 사용 근거 확인(am.analyze), 근거 맞춤 마크 발급(am.mark), 여러 파일 일괄 확인(am.analyzebatch), GEO 진단(am.geo), AI 작성 추정률(am.detect) · 마크 확인 · 서명 확인 · 공개 앵커를 API · MCP 서버 2.2 · 함수 호출 · JavaScript · Python SDK 로. 원본 파일은 보내지 않고, 마크마다 Ed25519 서명. 무료 API 키 하루 300회.
 styles: assets/app.css, assets/mark.css
 scripts: lib/aim-extract.js, assets/amui.js, assets/dev.js
 selflabel: footer
@@ -41,7 +41,7 @@ selflabel: footer
 
 <section class="blk soft" id="mcp">
   <div class="wrap">
-    <div class="blk-h"><span class="k">MCP 서버 2.1</span><h2>Claude · Cursor · VS Code · Codex 에 설정 한 번</h2><p>Node.js 18 이상에서 의존성 없이 돕니다. 출처 판독기가 들어 있어, 에이전트가 이 컴퓨터의 파일을 직접 확인하고 마크를 받고 표시본까지 저장합니다.</p></div>
+    <div class="blk-h"><span class="k">MCP 서버 2.2</span><h2>Claude · Cursor · VS Code · Codex 에 설정 한 번</h2><p>Node.js 18 이상에서 의존성 없이 돕니다. 출처 판독기가 들어 있어, 에이전트가 이 컴퓨터의 파일을 직접 확인하고 마크를 받고 표시본까지 저장합니다.</p></div>
     <div class="code mt24" data-tabs>
       <div class="tabs code-tabs" role="tablist" aria-label="MCP 설정">
         <button type="button" role="tab" aria-selected="true">Claude Desktop · Cursor · Gemini CLI</button>
@@ -54,33 +54,33 @@ selflabel: footer
   "mcpServers": {
     "aimarker": {
       "command": "npx",
-      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"],
+      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz"],
       "env": { "AIMARKER_KEY": "amk_발급받은_키" }
     }
   }
 }</pre></div>
-      <div class="tabpane" role="tabpanel"><div class="code-h"><span>터미널</span><button class="btn btn-g btn-s" type="button" data-copy="#mc2"><span>복사</span></button></div><pre class="code-b" id="mc2">claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz</pre></div>
+      <div class="tabpane" role="tabpanel"><div class="code-h"><span>터미널</span><button class="btn btn-g btn-s" type="button" data-copy="#mc2"><span>복사</span></button></div><pre class="code-b" id="mc2">claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz</pre></div>
       <div class="tabpane" role="tabpanel"><div class="code-h"><span>.vscode/mcp.json</span><button class="btn btn-g btn-s" type="button" data-copy="#mc3"><span>복사</span></button></div><pre class="code-b" id="mc3">{
   "inputs": [{ "type": "promptString", "id": "aimarker-key", "description": "AIMarker API 키", "password": true }],
   "servers": {
     "aimarker": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"],
+      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz"],
       "env": { "AIMARKER_KEY": "${input:aimarker-key}" }
     }
   }
 }</pre></div>
       <div class="tabpane" role="tabpanel"><div class="code-h"><span>~/.codex/config.toml</span><button class="btn btn-g btn-s" type="button" data-copy="#mc4"><span>복사</span></button></div><pre class="code-b" id="mc4">[mcp_servers.aimarker]
 command = "npx"
-args = ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"]
+args = ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz"]
 env = { AIMARKER_KEY = "amk_발급받은_키" }</pre></div>
       <div class="tabpane" role="tabpanel"><div class="code-h"><span>내려받아 직접 실행</span><button class="btn btn-g btn-s" type="button" data-copy="#mc5"><span>복사</span></button></div><pre class="code-b" id="mc5">curl -O https://aimarker.kr/mcp/aimarker-mcp.mjs
 # 설정: "command": "node", "args": ["/내/경로/aimarker-mcp.mjs"], "env": { "AIMARKER_KEY": "amk_…" }
 AIMARKER_KEY=amk_발급받은_키 node aimarker-mcp.mjs --help
 node aimarker-mcp.mjs --features 사진.jpg   # 서버로 보내는 특징값만 확인(키 필요 없음)</pre></div>
     </div>
-    <p class="dev-note">Windows 에서 npx 를 찾지 못하면 <code>"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"]</code> 로 바꾸세요. 받기: <a href="{{root}}mcp/aimarker-mcp-2.1.0.tgz">npx 꾸러미</a> · <a href="{{root}}mcp/aimarker-mcp.mjs">파일 하나</a>. sharp 가 설치돼 있으면 비슷한 이미지 찾기에 쓰는 지각 해시도 만듭니다.</p>
+    <p class="dev-note">Windows 에서 npx 를 찾지 못하면 <code>"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz"]</code> 로 바꾸세요. 받기: <a href="{{root}}mcp/aimarker-mcp-2.2.0.tgz">npx 꾸러미</a> · <a href="{{root}}mcp/aimarker-mcp.mjs">파일 하나</a>. sharp 가 설치돼 있으면 비슷한 이미지 찾기에 쓰는 지각 해시도 만듭니다.</p>
     <div class="kvt-wrap"><table class="kvt mono">
       <thead><tr><th>도구</th><th>하는 일</th><th>서버에 가는 것</th></tr></thead>
       <tbody>
@@ -251,6 +251,11 @@ while (res.output.some((o) =&gt; o.type === 'function_call')) {
         <tr><th>am.markedit</th><td>변경 · 철회 · 관리 키만</td><td>id · mkey · label · title · issuer · alt[] · revoke</td><td>changed · mark · ledger</td></tr>
         <tr><th>am.pubkey</th><td>서명 공개키 · 누구나</td><td>없음</td><td>keys[{kty · crv · x · kid}] · current</td></tr>
         <tr><th>am.anchor</th><td>공개 앵커 · 누구나</td><td>date 또는 id(LG…)</td><td>root · prev · text · proofs · status · position</td></tr>
+        <tr><th>am.geo</th><td>GEO 진단 · AI 상품 피드</td><td>url</td><td>score · parts[] · bots[] · fixes[](붙여 넣을 코드) · feed</td></tr>
+        <tr><th>am.detect</th><td>AI 작성 추정률(추정 · 판정 아님 · 같은 글 같은 값)</td><td>text · sentences</td><td>rate · level · levelKo · short · verse · sentences[{t · p · ai}]</td></tr>
+        <tr><th>am.style</th><td>휴머나이징: 문체 점검 · 기본 다듬기 · 말투</td><td>text · mode(check · fix) · tone</td><td>before · paragraphs[] · ai / text · applied[] · left[] · after · aiAfter · facts</td></tr>
+        <tr><th>am.humanize</th><td>고급 휴머나이징(파일럿)</td><td>text · tone · probe</td><td>text · facts · ai · aiAfter</td></tr>
+        <tr><th>am.markalt</th><td>표시본 해시 등록(20건)</td><td>items[{id · key(관리 키) · alt}]</td><td>results[]</td></tr>
         <tr class="sub"><th>am.check · am.auto</th><td>부가: 광고 문구 검수 · 자동 수정</td><td>text · ind · flags · guide</td><td>decision · findings[] · labels[] / outcome · text · left[]</td></tr>
         <tr class="sub"><th>am.batch · am.label · am.scan</th><td>부가: 일괄 검수 · 표시 문구 · 사이트 진단</td><td>items · kind · url</td><td>results · text · level</td></tr>
         <tr class="sub"><th>am.share · am.status</th><td>부가: 광고주 승인 링크(90일)</td><td>data · ids</td><td>id · url · items</td></tr>

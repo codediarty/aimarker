@@ -79,14 +79,14 @@
       var btn = f.querySelector('button[type="submit"]'); if (btn) { btn.disabled = true; btn.setAttribute('data-t', btn.innerHTML); btn.innerHTML = '보내는 중…'; }
       AM.call('am.lead', d).then(function (r) {
         if (r && r.ok) {
-          show(f, 'ok', (kind === 'pilot' ? '기업 상담 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 상담과 콘텐츠 100건 AI 사용 확인 리포트 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
+          show(f, 'ok', (kind === 'pilot' ? '기업 상담 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 상담과 무료 GEO 진단 · 콘텐츠 100건 AI 사용 확인 리포트 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : kind === 'creator' ? '크리에이터 사전 등록이 접수되었습니다. 첫 의뢰 연결을 열 때 분야에 맞는 의뢰를 먼저 안내해 드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
           f.reset(); t0 = Date.now();
           if (window.gtag) try { window.gtag('event', 'generate_lead', { method: kind }); } catch (eG) { /* 무시 */ }
         } else if (r && r.message && /^(CONTACT|ORG|NAME|SLOW|BUSY|MEMO)$/.test(r.code || '')) {
           show(f, 'err', r.message);
         } else { throw new Error(r && r.message || 'fail'); }
       }).catch(function () {
-        var subj = '[AIMarker] ' + (kind === 'pilot' ? '도입 상담 · 파일럿' : kind === 'biz' ? '도입 문의' : '신청') + (d.plan ? ' · ' + d.plan : '');
+        var subj = '[AIMarker] ' + (kind === 'pilot' ? '도입 상담 · 파일럿' : kind === 'biz' ? '도입 문의' : kind === 'creator' ? '크리에이터 사전 등록' : '신청') + (d.plan ? ' · ' + d.plan : '');
         var bodyTxt = ['이름: ' + d.name, '회사 · 기관: ' + d.org, '연락처: ' + d.contact, '사이트: ' + d.site, '요금제: ' + d.plan, '구분: ' + d.type, '내용: ' + d.memo].join('\n');
         show(f, 'err', '지금 연결이 원활하지 않아요. <a href="mailto:' + AM.MAIL + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(bodyTxt) + '">메일로 보내기</a>를 눌러 주시면 같은 내용이 전달됩니다.');
       }).finally(function () { if (btn) { btn.disabled = false; btn.innerHTML = btn.getAttribute('data-t'); } });
@@ -109,7 +109,7 @@
   /* 주소로 넘어온 요금제 · 문의 종류 채우기: ?plan=pro · ?type=install */
   (function () {
     var q = new URLSearchParams(location.search);
-    var plan = { business: 'Business', scale: 'Scale', agency: 'Scale', enterprise: 'Enterprise', license: 'Enterprise', private: 'Enterprise', expert: 'Enterprise', api: 'API', bulk: '대량 처리', ad: '광고 검수', addon: '광고 검수', pilot: '파일럿', starter: '파일럿', free: '파일럿', pro: 'Business', biz: 'Business' }[q.get('plan') || ''];
+    var pq = String(q.get('plan') || '').toLowerCase(), plan = { starter: 'Starter', growth: 'Growth', business: 'Business', scale: 'Business', agency: 'Business', enterprise: 'Enterprise', license: 'Enterprise', private: 'Enterprise', expert: 'Enterprise', api: 'API', bulk: '대량 처리', ad: '광고 검수', addon: '광고 검수', pilot: '파일럿', free: '파일럿', pro: 'Growth', biz: 'Business', geo: 'GEO 진단', commerce: 'AI 커머스 엔진', compliance: 'AI 신뢰 · 컴플라이언스', performance: '성과형' }[pq];
     var type = { commerce: '쇼핑몰 · 이커머스', shop: '쇼핑몰 · 이커머스', media: '언론 · 미디어', news: '언론 · 미디어', agency: '광고대행사 · 브랜드', brand: '광고대행사 · 브랜드', api: '플랫폼 · AI 서비스', platform: '플랫폼 · AI 서비스', ai: '플랫폼 · AI 서비스', enterprise: '공공 · 교육 · 기관', public: '공공 · 교육 · 기관', univ: '공공 · 교육 · 기관', org: '공공 · 교육 · 기관', edu: '공공 · 교육 · 기관', invest: '투자 · 제휴', partner: '투자 · 제휴', ad: '투자 · 제휴', install: '기타', creator: '기타' }[q.get('type') || ''];
     if (plan) { var ps = document.querySelector('form[data-lead] [name="plan"]'); if (ps) { if (ps.tagName === 'SELECT') ps.value = plan; else { var pr = document.querySelector('form[data-lead] input[name="plan"][value="' + plan + '"]'); if (pr) pr.checked = true; else ps.value = plan; } } }
     try {   // 일괄 확인 리포트에서 '이 결과로 상담 신청'을 누르면 요약을 내용 칸에(같은 창에서만, 서버로는 신청할 때만 감)

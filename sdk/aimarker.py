@@ -1,4 +1,4 @@
-"""AIMarker SDK for Python 1.1.0 · https://aimarker.kr/developers/#sdk
+"""AIMarker SDK for Python 1.2.0 · https://aimarker.kr/developers/#sdk
 
 표준 라이브러리만 씁니다(Python 3.8+). 서버에서 쓰고, API 키는 환경 변수에 두세요. MIT
 
@@ -37,7 +37,7 @@ import urllib.request
 
 DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec"
 KEYS_URL = "https://aimarker.kr/.well-known/aimarker-keys.json"
-MCP_PKG = "https://aimarker.kr/mcp/aimarker-mcp-2.1.0.tgz"
+MCP_PKG = "https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz"
 LABELS = ("ai_generated", "ai_edited", "ai_assisted", "no_ai")
 LABEL_KO = {"ai_generated": "AI 생성", "ai_edited": "AI 편집 · 합성", "ai_assisted": "AI 보조", "no_ai": "AI 미사용"}
 BASIS_KO = {"verified": "서명 검증", "record": "파일 기록", "declared": "발급자 신고", "none": "근거 없음"}
@@ -363,6 +363,14 @@ class AIMarker:
 
     def label(self, kind, level="gen"):
         return self.call("am.label", kind=kind, level=level)
+
+    def geo(self, url):
+        """GEO 진단: AI 검색 준비 점수 · 고칠 코드 · (상품 쪽이면) AI 상품 피드"""
+        return self.call("am.geo", url=str(url or ""))
+
+    def detect(self, text, sentences=True):
+        """AI 작성 추정률(추정 · 판정 아님 · 같은 글은 같은 값). 글은 서버에서 저장하지 않음. 6,000자까지"""
+        return self.call("am.detect", text=str(text or ""), sentences=bool(sentences))
 
     def scan(self, url):
         return self.call("am.scan", url=url)
