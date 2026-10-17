@@ -127,22 +127,44 @@
         return AIM.inspectFile(file).then(function (x) {
           e.kind = x.report.kind || 'other'; e.sha256 = x.features.sha256; e.dhash = x.features.dhash || ''; e.features = x.features; e.pack = x.pack || null;
           e.packLen = e.pack ? JSON.stringify(e.pack).length : 0; e.state = 'local';
-          return THUMB.test(e.name) && e.kind === 'image' ? thumb(file).then(function (t) { e.thumb = t; }) : null;
+          return THUMB.test(e.name) && e.kind === 'image' ? thumb(file).then(function (t) { e.thumb = t.img; e.fh = t.fh; e.rgb = t.rgb; e.w = x.features.w || 0; e.h = x.features.h || 0; }) : null;
         });
       }).catch(function () { e.state = 'fail'; e.error = '이 파일을 읽지 못했습니다.'; nFail++; nChecked++; })
         .then(function () { readers--; nRead++; if (e.state === 'local') sendQ.push(e); progress(); pumpRead(); pumpSend(); });
     })(readQ.shift());
     if (!readQ.length && !readers) pumpSend();
   }
-  function thumb(file) {
-    if (typeof createImageBitmap === 'undefined') return Promise.resolve('');
+  function thumb(file) {   // 미리보기(88px) + 같은 · 비슷한 이미지 묶음용 서명(256비트 밝기 차이 해시 · 4칸 평균 색). 이 브라우저 안에서만 씀
+    if (typeof createImageBitmap === 'undefined') return Promise.resolve({ img: '', fh: '', rgb: '' });
     return createImageBitmap(file).then(function (bm) {
       var S = 88, c = document.createElement('canvas'); c.width = S; c.height = S;
       var k = Math.max(S / bm.width, S / bm.height), w = bm.width * k, h = bm.height * k, x = c.getContext('2d');
-      x.fillStyle = '#fff'; x.fillRect(0, 0, S, S); x.drawImage(bm, (S - w) / 2, (S - h) / 2, w, h); if (bm.close) bm.close();
-      return c.toDataURL('image/jpeg', 0.72);
-    }).catch(function () { return ''; });
+      x.fillStyle = '#fff'; x.fillRect(0, 0, S, S); x.drawImage(bm, (S - w) / 2, (S - h) / 2, w, h);
+      var out = { img: c.toDataURL('image/jpeg', 0.72), fh: '', rgb: '' };
+      try { var g = sig(bm); out.fh = g.fh; out.rgb = g.rgb; } catch (eS) { /* 서명 없이 미리보기만 */ }
+      if (bm.close) bm.close();
+      return out;
+    }).catch(function () { return { img: '', fh: '', rgb: '' }; });
   }
+  function sig(bm) {
+    var k = Math.min(1, 256 / Math.max(bm.width, bm.height)), W = Math.max(17, Math.round(bm.width * k)), H = Math.max(16, Math.round(bm.height * k));
+    var c = document.createElement('canvas'); c.width = W; c.height = H;
+    var x = c.getContext('2d', { willReadFrequently: true }); x.fillStyle = '#fff'; x.fillRect(0, 0, W, H); x.imageSmoothingQuality = 'high'; x.drawImage(bm, 0, 0, W, H);
+    var d = x.getImageData(0, 0, W, H).data, g = new Float64Array(272), n = new Float64Array(272), col = new Float64Array(12), cn = new Float64Array(4);
+    for (var yy = 0; yy < H; yy++) {
+      var cy = Math.min(15, Math.floor(yy * 16 / H)), qy = yy * 2 < H ? 0 : 2;
+      for (var xx = 0; xx < W; xx++) {
+        var cx = Math.min(16, Math.floor(xx * 17 / W)), q = qy + (xx * 2 < W ? 0 : 1), o = (yy * W + xx) * 4;
+        g[cy * 17 + cx] += 0.299 * d[o] + 0.587 * d[o + 1] + 0.114 * d[o + 2]; n[cy * 17 + cx]++;
+        col[q * 3] += d[o]; col[q * 3 + 1] += d[o + 1]; col[q * 3 + 2] += d[o + 2]; cn[q]++;
+      }
+    }
+    var fh = '', nib = 0, b = 0, y, i;
+    for (y = 0; y < 16; y++) for (i = 0; i < 16; i++) { nib = (nib << 1) | (g[y * 17 + i] / n[y * 17 + i] > g[y * 17 + i + 1] / n[y * 17 + i + 1] ? 1 : 0); if (++b === 4) { fh += nib.toString(16); nib = 0; b = 0; } }
+    var rgb = ''; for (i = 0; i < 12; i++) rgb += ('0' + Math.round(col[i] / Math.max(1, cn[Math.floor(i / 3)])).toString(16)).slice(-2);
+    return { fh: fh, rgb: rgb };
+  }
+
 
   /* 서버 확인(20건씩, 동시에 3묶음) */
   function takeBatch() {
@@ -206,7 +228,7 @@
   function finish() {
     if (!running) return;
     running = false; drop.removeAttribute('aria-disabled');
-    var list = entries.map(function (e) { return { name: e.name, path: e.path !== e.name ? e.path : '', size: e.size, kind: e.kind, sha256: e.sha256 || '', dhash: e.dhash || '', result: e.result || null, error: e.error || '', declared: e.declared || '', thumb: e.thumb || '' }; });
+    var list = entries.map(function (e) { return { name: e.name, path: e.path !== e.name ? e.path : '', size: e.size, kind: e.kind, sha256: e.sha256 || '', dhash: e.dhash || '', fh: e.fh || '', rgb: e.rgb || '', w: e.w || 0, h: e.h || 0, result: e.result || null, error: e.error || '', declared: e.declared || '', thumb: e.thumb || '' }; });
     var R = REP.build(list, { org: $('#rpOrg').value, source: 'aimarker.kr/report', at: new Date() });
     last = { R: R, html: REP.html(R), csv: REP.csv(R) };
     progress('끝났습니다 · ' + Math.round((Date.now() - t0) / 1000) + '초');

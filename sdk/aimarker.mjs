@@ -920,7 +920,7 @@ export const AIMExtract = (() => {
 /* 일괄 확인 리포트 aim-report(내장): report.build(entries) · report.html(R) · report.csv(R) · report.summaryText(R) · report.parseDeclared(csv) */
 export const report = (() => {
   const module = { exports: {} }, exports = module.exports;   // eslint-disable-line no-unused-vars
-/* AIMarker 일괄 확인 리포트(aim-report) 1.0 · 브라우저 · Node 공용 · 의존성 없음
+/* AIMarker 일괄 확인 리포트(aim-report) 1.0.1 · 브라우저 · Node 공용 · 의존성 없음
  * 판정 결과(am.analyze · am.analyzebatch)를 모아 '콘텐츠 n건 AI 사용 확인 리포트'를 만든다.
  * 하는 일: 근거 등급별로 나누기 · 바로 표시할 수 있는 비율 · 도구 · 서명자 분포 · 확인할 점
  *  (지금 표시와 근거가 다른 것, 같은 · 비슷한 이미지인데 근거가 다른 것, 출처 기록이 파일과 맞지 않는 것) · CSV · 혼자 열리는 HTML.
@@ -931,7 +931,7 @@ export const report = (() => {
   else root.AIMReport = api;
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
-  var VERSION = '1.0.0';
+  var VERSION = '1.0.1';
   var LABEL = { ai_generated: 'AI 생성', ai_edited: 'AI 편집 · 합성', ai_assisted: 'AI 보조', no_ai: 'AI 미사용', none: '표시 없음' };
   var BASIS = { verified: '서명 검증', record: '파일 기록', declared: '발급자 신고', none: '근거 없음' };
   var SCOPE = { generated: 'AI로 생성', edited: 'AI로 편집 · 합성', enhanced: 'AI로 보정' };
@@ -944,7 +944,7 @@ export const report = (() => {
     error: { t: '확인 못함', s: '확인 못함', b: '', c: '#E0A33A', d: '파일을 읽지 못했거나 서버 확인이 끝나지 않았습니다.' }
   };
   var CAT_ORDER = ['ai_verified', 'ai_record', 'cap', 'none', 'error'];
-  var NEAR = 6;
+  var FINE = 12, TINT = 48, NEAR = 2;   // 같은 · 비슷한 이미지: 256비트 해시 거리 · 4칸 평균 색 차이(브라우저), 64비트 해시만 있으면 더 엄격히
 
   function str(v) { return v === null || v === undefined ? '' : String(v); }
   function esc(s) { return str(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
@@ -1029,15 +1029,26 @@ export const report = (() => {
   }
 
   /* ---------- 같은 · 비슷한 이미지 묶음 ---------- */
+  function hexOk(v, n) { return new RegExp('^[0-9a-f]{' + n + '}$').test(str(v)); }
+  function nearImg(a, b) {   // 다른 상품을 같은 사진으로 묶지 않도록 보수적으로(밝기 구조 + 색 + 비율)
+    if (a.kind !== 'image' || b.kind !== 'image') return false;
+    if (+a.w > 0 && +a.h > 0 && +b.w > 0 && +b.h > 0) { var ra = a.w / a.h, rb = b.w / b.h; if (Math.abs(ra - rb) / Math.max(ra, rb) > 0.03) return false; }
+    if (hexOk(a.fh, 64) && hexOk(b.fh, 64)) {
+      if (ham(a.fh, b.fh) > FINE) return false;
+      if (hexOk(a.rgb, 24) && hexOk(b.rgb, 24)) for (var q = 0; q < 4; q++) { var t = 0; for (var k = 0; k < 3; k++) { var v = parseInt(a.rgb.substr(q * 6 + k * 2, 2), 16) - parseInt(b.rgb.substr(q * 6 + k * 2, 2), 16); t += v * v; } if (Math.sqrt(t) > TINT) return false; }
+      return true;
+    }
+    return hexOk(a.dhash, 16) && hexOk(b.dhash, 16) && ham(a.dhash, b.dhash) <= NEAR;
+  }
   function groups(entries, infos) {
-    /* 같은 파일(SHA-256)은 한 묶음. 비슷한 이미지는 묶음 안 모든 이미지와 dHash 거리가 NEAR 이하일 때만 넣음(사슬처럼 번지지 않게) */
+    /* 같은 파일(SHA-256)은 한 묶음. 비슷한 이미지는 묶음 안 모든 이미지와 가까울 때만 넣음(사슬처럼 번지지 않게) */
     var gl = [], bySha = {};
     entries.forEach(function (e, i) {
-      var s = str(e.sha256), d = e.kind === 'image' && /^[0-9a-f]{16}$/.test(str(e.dhash)) ? e.dhash : '';
+      var s = str(e.sha256);
       if (s && bySha[s] !== undefined) { gl[bySha[s]].push(i); return; }
       var gi = -1;
-      if (d) for (var g = 0; g < gl.length && gi < 0; g++) {
-        if (gl[g].every(function (j) { var dj = entries[j].kind === 'image' ? str(entries[j].dhash) : ''; return /^[0-9a-f]{16}$/.test(dj) && ham(dj, d) <= NEAR; })) gi = g;
+      if (e.kind === 'image') for (var g = 0; g < gl.length && gi < 0; g++) {
+        if (gl[g].every(function (j) { return str(entries[j].sha256) === s && s ? true : nearImg(e, entries[j]); })) gi = g;
       }
       if (gi < 0) { gl.push([i]); gi = gl.length - 1; } else gl[gi].push(i);
       if (s) bySha[s] = gi;
