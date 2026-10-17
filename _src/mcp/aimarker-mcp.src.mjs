@@ -9,7 +9,7 @@
  * - 마크 서명(Ed25519 · JWS)은 이 컴퓨터에서 공개키로 확인합니다.
  * - 부가 기능: 광고 문구 검수 · 자동 수정 · 표시 문구 · 사이트 진단 · 광고주 승인 링크 · 증거 원장.
  *
- * 실행: AIMARKER_KEY=amk_... npx -y https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz
+ * 실행: AIMARKER_KEY=amk_... npx -y https://aimarker.kr/mcp/aimarker-mcp-2.3.0.tgz
  * 또는:  AIMARKER_KEY=amk_... node aimarker-mcp.mjs
  * 필요: Node.js 18 이상. 의존성 없음(sharp 가 있으면 비슷한 이미지 찾기용 지각 해시도 만듭니다). 표준 입출력(stdio) MCP.
  *
@@ -22,11 +22,12 @@ import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 
-const VERSION = '2.2.0';
+const VERSION = '2.3.0';
 const API = process.env.AIMARKER_URL || 'https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec';
 const SITE = 'https://aimarker.kr';
 const KEYS_URL = process.env.AIMARKER_KEYS_URL || SITE + '/.well-known/aimarker-keys.json';
 const KEY = String(process.env.AIMARKER_KEY || '').trim();
+const PASS = String(process.env.AIMARKER_PASS || '').trim();   // 2.3: 개인 이용권 코드(선택) · AI 작성률 문장별 전체
 const TIMEOUT = Number(process.env.AIMARKER_TIMEOUT_MS) || 90000;
 const PROTOCOLS = ['2025-11-25', '2025-06-18', '2025-03-26', '2024-11-05'];
 const MAX_FILE = 300 * 1024 * 1024;
@@ -165,8 +166,8 @@ const TOOLS = [
     inputSchema: { type: 'object', properties: { url: { type: 'string', minLength: 4, maxLength: 300, description: '사이트 · 상품 쪽 주소(예: myshop.co.kr/product/123)' } }, required: ['url'] },
     annotations: { title: 'GEO 진단 · AI 상품 피드', ...RO } },
   { name: 'aimarker_detect_text', title: 'AI 작성 추정률(글)',
-    description: '글을 서버로 보내 AI 작성 추정률(0~100: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 부분의 비율)과 AI 패턴이 몰린 문장을 받습니다. 결정적 모델이라 같은 글은 언제나 같은 값입니다. 추정일 뿐 판정 · 증명이 아니니 결과만으로 사람을 판단하지 마세요. 글은 저장하지 않습니다. 한 번에 6,000자.',
-    inputSchema: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 6000, description: '확인할 글(6,000자까지)' } }, required: ['text'] },
+    description: '글을 서버로 보내 AI 작성 추정률(0~100: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 부분의 비율)과 AI 패턴이 몰린 문장을 받습니다. 결정적 모델이라 같은 글은 언제나 같은 값입니다. 추정일 뿐 판정 · 증명이 아니니 결과만으로 사람을 판단하지 마세요. 글은 저장하지 않습니다. 한 번에 6,000자. 무료 키는 맛보기(앞 3,000자의 실제 추정률 · 가장 뚜렷한 의심 문장 2개)이고, 이용권 코드(pass)나 유료 키면 모든 문장의 판정을 받습니다.',
+    inputSchema: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 6000, description: '확인할 글(6,000자까지)' }, pass: { type: 'string', maxLength: 24, description: '개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 없으면 환경 변수 AIMARKER_PASS 를 씁니다. 한 번 부를 때 이용권 1회를 씁니다(600자 이하는 세지 않음).' } }, required: ['text'] },
     annotations: { title: 'AI 작성 추정률', ...RO } },
   { name: 'aimarker_scan_site', title: '사이트 진단(부가 기능)',
     description: '공개된 사이트 첫 화면과 이미지 12장까지 살펴 AI 사용 흔적 · AI 상담 창 · 광고 표현 위험 후보를 보수적으로 진단합니다. 기록이 지워진 이미지는 없음이 아니라 확인 불가로 셉니다. 10~20초 걸립니다.',
@@ -712,10 +713,13 @@ const RUN = {
     need(a.text && String(a.text).trim(), 'text(확인할 글)를 넣어 주세요.');
     const t = String(a.text);
     need(t.length <= 6000, '한 번에 6,000자까지입니다. 나눠서 보내 주세요.');
-    const r = await api('am.detect', { text: t });
+    const pass = String(a.pass || PASS || '').trim();
+    const r = await api('am.detect', pass ? { text: t, pass } : { text: t });
     const hits = (r.sentences || []).filter((x) => x.ai).slice(0, 6);
     const L = ['AI 작성 추정률: ' + r.rate + '% · ' + r.levelKo, '- 문장 ' + r.n + '개 · 글자 ' + r.chars + '자' + (r.short ? ' · 짧은 글이라 불안정' : '') + (r.verse ? ' · 시 · 노랫말처럼 짧은 줄이라 불안정' : '')];
     if (hits.length) L.push('', 'AI 패턴이 몰린 문장(일부):', ...hits.map((x) => '- (' + x.p + ') ' + x.t.slice(0, 120)));
+    if (r.full === false) L.push('', '무료 맛보기: ' + (r.cut ? '앞 ' + Number(r.freeMax || 3000).toLocaleString() + '자만 검사했습니다(전체 ' + Number(r.total || t.length).toLocaleString() + '자). ' : '') + 'AI 의심 문장 ' + (r.aiN || 0) + '개 가운데 ' + (r.shown || 0) + '개만 보여 줍니다. 모든 문장은 이용권 코드(pass · https://aimarker.kr/humanize/#price)나 유료 API 키로 받습니다.');
+    if (r.pass) L.push('- 이용권: ' + r.pass.name + ' · 남은 ' + r.pass.left + '회' + (r.pass.end ? ' · ' + String(r.pass.end).slice(0, 16) + '까지' : ''));
     L.push('', r.note || '추정값이며 판정 · 증명이 아닙니다.');
     return ok(L.join('\n'), r);
   },
@@ -837,7 +841,7 @@ if (process.argv.includes('--features')) {   // 다른 언어(예: Python SDK)�
     .catch((e) => { process.stderr.write(String(e.message || e) + '\n'); process.exit(1); });
 } else {
 if (process.argv.includes('--help')) {
-  console.log('AIMarker MCP 서버 ' + VERSION + '\n환경 변수: AIMARKER_KEY(필수) · AIMARKER_TIMEOUT_MS(선택)\n설정 예시: https://aimarker.kr/developers/#mcp');
+  console.log('AIMarker MCP 서버 ' + VERSION + '\n환경 변수: AIMARKER_KEY(필수) · AIMARKER_PASS(선택, 개인 이용권) · AIMARKER_TIMEOUT_MS(선택)\n설정 예시: https://aimarker.kr/developers/#mcp');
   process.exit(0);
 }
 if (!KEY) process.stderr.write('[aimarker-mcp] AIMARKER_KEY 가 없습니다. 마크 확인 · 앵커 확인은 되지만 확인 · 발급 도구를 부르면 키 안내를 돌려줍니다. https://aimarker.kr/developers/#key\n');

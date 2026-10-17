@@ -1706,7 +1706,8 @@ export class AIMarker {
   /** GEO 진단: AI 검색 준비 점수 · 고칠 코드 · (상품 쪽이면) AI 상품 피드 */
   geo(url) { return this.call('am.geo', { url: String(url || '') }); }
   /** AI 작성 추정률(추정 · 판정 아님 · 같은 글은 같은 값). 글은 서버에서 저장하지 않음. 6,000자까지 */
-  detect(text, { sentences = true } = {}) { return this.call('am.detect', { text: String(text || ''), sentences }); }
+  /** AI 작성 추정률(추정 · 판정 아님). 무료 키는 맛보기(앞 3,000자 · 의심 문장 2개), pass(개인 이용권 코드)나 유료 키면 문장별 전체 */
+  detect(text, { sentences = true, pass = '' } = {}) { const b = { text: String(text || ''), sentences }; if (pass) b.pass = String(pass); return this.call('am.detect', b); }
   /** 사이트 진단(10~20초) */
   scan(url) { return this.call('am.scan', { url }); }
   /** 광고주 승인 링크(90일 보관). data: { title, brand, channel, ind, copy, score, dec, fnd, h } */

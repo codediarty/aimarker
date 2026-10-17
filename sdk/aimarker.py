@@ -37,7 +37,7 @@ import urllib.request
 
 DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec"
 KEYS_URL = "https://aimarker.kr/.well-known/aimarker-keys.json"
-MCP_PKG = "https://aimarker.kr/mcp/aimarker-mcp-2.2.0.tgz"
+MCP_PKG = "https://aimarker.kr/mcp/aimarker-mcp-2.3.0.tgz"
 LABELS = ("ai_generated", "ai_edited", "ai_assisted", "no_ai")
 LABEL_KO = {"ai_generated": "AI 생성", "ai_edited": "AI 편집 · 합성", "ai_assisted": "AI 보조", "no_ai": "AI 미사용"}
 BASIS_KO = {"verified": "서명 검증", "record": "파일 기록", "declared": "발급자 신고", "none": "근거 없음"}
@@ -368,9 +368,11 @@ class AIMarker:
         """GEO 진단: AI 검색 준비 점수 · 고칠 코드 · (상품 쪽이면) AI 상품 피드"""
         return self.call("am.geo", url=str(url or ""))
 
-    def detect(self, text, sentences=True):
-        """AI 작성 추정률(추정 · 판정 아님 · 같은 글은 같은 값). 글은 서버에서 저장하지 않음. 6,000자까지"""
-        return self.call("am.detect", text=str(text or ""), sentences=bool(sentences))
+    def detect(self, text, sentences=True, pass_code=None):
+        """AI 작성 추정률(추정 · 판정 아님 · 같은 글은 같은 값). 글은 서버에서 저장하지 않음. 6,000자까지.
+        무료 키는 맛보기(앞 3,000자 · 의심 문장 2개), pass_code(개인 이용권 코드)나 유료 키면 문장별 전체"""
+        extra = {"pass": str(pass_code)} if pass_code else {}
+        return self.call("am.detect", text=str(text or ""), sentences=bool(sentences), **extra)
 
     def scan(self, url):
         return self.call("am.scan", url=url)

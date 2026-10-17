@@ -137,6 +137,10 @@
 
 /* 요금 */
 .plans6 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 40px; align-items: stretch; }
+.plans6.two { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 820px; margin-top: 18px; }
+.plan6 .p em { font-style: normal; font-size: 14px; font-weight: 700; color: var(--mute); letter-spacing: 0; margin-left: 2px; }
+.sub6 { font-size: 20px; font-weight: 900; letter-spacing: -.03em; margin-top: 48px; }
+.sub6 + p { font-size: 14.5px; color: var(--mute); margin-top: 6px; }
 .plan6 { position: relative; border: 1px solid var(--line); border-radius: 22px; padding: 24px 20px; display: flex; flex-direction: column; gap: 10px; background: #fff; }
 .plan6.on { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(31, 85, 245, .08), var(--sh-2); }
 .plan6 .badge6 { position: absolute; top: -12px; left: 20px; background: var(--blue); color: #fff; font-size: 12px; font-weight: 850; padding: 4px 10px; border-radius: 999px; }
@@ -301,7 +305,7 @@
   .p6h { padding: 48px 0 64px; }
   .p6h .lead { font-size: 16.5px; }
   .s6 { padding: 64px 0; }
-  .fork6, .steps6, .why6, .mods6, .cases6, .usage6, .plans6, .moat6 { grid-template-columns: 1fr; }
+  .fork6, .steps6, .why6, .mods6, .cases6, .usage6, .plans6, .plans6.two, .moat6 { grid-template-columns: 1fr; }
   .fork6 a { padding: 22px; }
   .urlf { flex-wrap: wrap; padding: 6px; }
   .urlf .ico-l { display: none; }

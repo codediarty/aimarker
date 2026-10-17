@@ -58,7 +58,7 @@
     var bad = 0; r.parts.forEach(function (p) { p.items.forEach(function (it) { if (it.ok !== 'ok') bad++; }); });
     var head = '<div class="gr6-top">' + ring(r.score, r.grade, true) +
       '<div><h2>AI 검색 준비 점수 ' + r.score + '점 · ' + esc(r.grade) + '</h2><p>' + esc(r.kindKo) + (r.site && r.site.name ? ' · ' + esc(r.site.name) : '') + ' · 고칠 거리 ' + bad + '개' + (r.blocked && r.blocked.search ? ' · AI 검색 크롤러 ' + r.blocked.search + '곳이 막혀 있음' : '') + '</p><p class="meta">' + esc(r.url) + (r.cached ? ' · 최근 결과(6시간 안)' : '') + '</p></div>' +
-      '<div class="act"><a class="btn btn-p" href="' + root + 'contact/?plan=growth&site=' + encodeURIComponent(r.host) + '">자동으로 고치기 상담</a><button class="btn btn-g btn-s" type="button" id="gSave">결과 받기(JSON)</button></div></div>';
+      '<div class="act"><a class="btn btn-p" href="' + root + 'contact/?plan=' + (r.kind === 'product' ? 'shop' : 'basic') + '&site=' + encodeURIComponent(r.host) + '">' + (r.kind === 'product' ? '쇼핑몰 세팅으로 한 번에 고치기' : '1회 세팅으로 한 번에 고치기') + '</a><button class="btn btn-g btn-s" type="button" id="gSave">결과 받기(JSON)</button></div></div>';
     var parts = '<div class="gr6-box"><h3>항목별 결과<small>점수는 준비 상태를 보는 지표입니다</small></h3>' + r.parts.map(function (p) {
       return '<div class="gr6-part"><div class="gr6-ph"><b>' + esc(p.name) + '</b><i style="--w:' + Math.round(100 * p.got / p.max) + '%;--c:' + partColor(p) + '"></i><em>' + p.got + '/' + p.max + '</em></div><ul class="gr6-it">' +
         p.items.map(function (it) { return '<li class="' + esc(it.ok) + '"><span>' + esc(it.text) + (it.fix && it.ok !== 'ok' ? '<small>' + esc(it.fix) + '</small>' : '') + '</span></li>'; }).join('') + '</ul></div>';

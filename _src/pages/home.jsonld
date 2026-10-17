@@ -42,44 +42,58 @@
     "AI 사용 여부 · 범위 확인과 자동 마킹(이미지 · 영상 · 오디오 · 문서 · 글)",
     "C2PA 서명 · 인증서 사슬 서버 재검증, 근거와 맞는 표시만 발급",
     "전자서명 마크(JWS · Ed25519) · 원장 · 매일 공개 타임스탬프(OpenTimestamps)",
-    "AI 작성률 검사(문장별 추정, 같은 글 같은 결과) · 휴머나이징(문체 점검 · 기본 다듬기 · 말투)",
+    "AI 작성률 검사(문장별 색 표시, 같은 글 같은 결과, 무료 맛보기) · 휴머나이징(문장 고쳐 쓰기 도우미 · 표현 다듬기 · 말투)",
     "기업용 API · MCP 서버 · 대량 마킹",
     "부가 기능: 광고 문구 검수 · 위험 분석 · 보고서 자동화"
    ],
    "offers": [
     {
      "@type": "Offer",
-     "name": "개인 무료",
+     "name": "GEO 무료 진단 · AI 작성률 무료 맛보기",
      "price": "0",
      "priceCurrency": "KRW"
     },
     {
      "@type": "Offer",
-     "name": "Starter",
-     "price": "49000",
+     "name": "기본 세팅",
+     "price": "490000",
      "priceCurrency": "KRW",
-     "description": "월 요금 · 부가세 별도 · 출시 예정 요금"
+     "description": "기업 1회 세팅 · 부가세 별도"
     },
     {
      "@type": "Offer",
-     "name": "Growth",
-     "price": "149000",
+     "name": "쇼핑몰 세팅",
+     "price": "1490000",
      "priceCurrency": "KRW",
-     "description": "월 요금 · 부가세 별도 · 출시 예정 요금"
+     "description": "기업 1회 세팅 · 상품 500개까지 · 부가세 별도"
     },
     {
      "@type": "Offer",
-     "name": "Business",
-     "price": "399000",
+     "name": "브랜드 세팅",
+     "price": "3900000",
      "priceCurrency": "KRW",
-     "description": "월 요금 · 부가세 별도 · 출시 예정 요금"
+     "description": "기업 1회 세팅 · 390만 원부터 · 부가세 별도"
     },
     {
      "@type": "Offer",
-     "name": "Enterprise",
-     "price": "1000000",
+     "name": "자동 관리",
+     "price": "99000",
      "priceCurrency": "KRW",
-     "description": "월 요금부터 · 부가세 별도 · 출시 예정 요금"
+     "description": "선택형 월 관리 · 부가세 별도"
+    },
+    {
+     "@type": "Offer",
+     "name": "24시간 이용권",
+     "price": "2900",
+     "priceCurrency": "KRW",
+     "description": "개인 AI 작성률 검사 · 휴머나이징 · 부가세 포함"
+    },
+    {
+     "@type": "Offer",
+     "name": "30일 이용권",
+     "price": "9900",
+     "priceCurrency": "KRW",
+     "description": "개인 AI 작성률 검사 · 휴머나이징 · 부가세 포함"
     }
    ]
   }

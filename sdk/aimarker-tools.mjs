@@ -34,7 +34,7 @@ export async function runAimarkerTool(name, args = {}, { key = globalThis.proces
       case 'aimarker_auto_fix': return await am.auto(args.text, { ind: args.ind || '', flags: args.flags || {}, guide: args.guide, stamp: !!args.stamp });
       case 'aimarker_label': return await am.label(args.kind, args.level || 'gen');
       case 'aimarker_geo_check': return await am.geo(args.url);
-      case 'aimarker_detect_text': return await am.detect(args.text);
+      case 'aimarker_detect_text': return await am.detect(args.text, { pass: args.pass || '' });
       case 'aimarker_stamp': return await am.stamp(args.content, { kind: args.k || 'report', count: args.n });
       case 'aimarker_verify': return await am.verify({ id: args.id, content: args.content });
       default: return { ok: false, code: 'TOOL', message: '알 수 없는 도구: ' + name };

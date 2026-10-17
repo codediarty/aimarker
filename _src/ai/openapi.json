@@ -2,7 +2,7 @@
  "openapi": "3.1.0",
  "info": {
   "title": "AIMarker API",
-  "version": "2026.10.17-5.1",
+  "version": "2026.10.17-5.2",
   "summary": "AI 사용 확인 · 서명된 마크 발급 · 마크 확인 · 공개 앵커 API(부가: 광고 문구 검수)",
   "description": "AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 근거에 맞는 표시를 서명된 디지털 마크로 발급 · 관리하는 AI 콘텐츠 투명성 플랫폼입니다.\n\n- 모든 요청은 같은 주소(/exec)로 POST 하고 본문의 action 으로 동작을 고릅니다. 본문은 JSON 문자열, Content-Type: text/plain.\n- 서버가 302 로 결과 주소를 알려 주므로 리다이렉트를 따라가세요(POST → GET).\n- 파일 원본은 받지 않습니다. 출처 판독기 aim-extract(https://aimarker.kr/lib/aim-extract.js)가 만든 features(특징값) · pack(서명 검증용 조각)만 보냅니다.\n- 마크 서명(cred)은 JWS(EdDSA · Ed25519). 공개키: am.pubkey · https://aimarker.kr/.well-known/aimarker-keys.json\n- 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지 · 표시본에 AI 마크가 있으면 CONFIRM(사용자 확인 뒤 confirm: true).\n- 마크는 표시와 근거의 기록이며 법적 인증이 아닙니다. 광고 문구 검수(부가 기능)는 위험 후보와 근거이며 법률 자문이 아닙니다.\n- AI 에이전트용: MCP 서버 https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz · 한 파일 설명서 https://aimarker.kr/llms-full.txt",
   "contact": {
@@ -26,7 +26,7 @@
    "post": {
     "operationId": "aimarker",
     "summary": "action 으로 고르는 AIMarker 요청",
-    "description": "핵심: am.analyze(AI 사용 확인) · am.geo(GEO 진단 · AI 상품 피드) · am.detect(AI 작성 추정률) · am.style(휴머나이징 · 문체 점검) · am.humanize(고급 휴머나이징, 파일럿) · am.markalt(표시본 해시 등록) · am.analyzebatch(20건 일괄 확인, 발급 안 함) · am.mark(마크 발급) · am.markbatch(20개 일괄) · am.markinfo(마크 정보, 누구나) · am.lookup(같은 · 비슷한 파일의 마크, 누구나) · am.markedit(관리 키로 변경 · 철회) · am.pubkey(서명 공개키, 누구나) · am.anchor(공개 앵커, 누구나)\n부가 기능: am.check(문구 검수) · am.auto(자동 수정) · am.batch(20건 검수) · am.label(표시 문구) · am.scan(사이트 진단) · am.share(광고주 승인 링크) · am.status(승인 상태) · am.stamp(원장 기록) · am.verify(원장 확인)",
+    "description": "핵심: am.analyze(AI 사용 확인) · am.geo(GEO 진단 · AI 상품 피드) · am.detect(AI 작성 추정률) · am.style(휴머나이징 · 문체 점검) · am.humanize(고급 휴머나이징, 이용권) · am.markalt(표시본 해시 등록) · am.analyzebatch(20건 일괄 확인, 발급 안 함) · am.mark(마크 발급) · am.markbatch(20개 일괄) · am.markinfo(마크 정보, 누구나) · am.lookup(같은 · 비슷한 파일의 마크, 누구나) · am.markedit(관리 키로 변경 · 철회) · am.pubkey(서명 공개키, 누구나) · am.anchor(공개 앵커, 누구나)\n부가 기능: am.check(문구 검수) · am.auto(자동 수정) · am.batch(20건 검수) · am.label(표시 문구) · am.scan(사이트 진단) · am.share(광고주 승인 링크) · am.status(승인 상태) · am.stamp(원장 기록) · am.verify(원장 확인)",
     "requestBody": {
      "required": true,
      "content": {
@@ -1184,7 +1184,14 @@
        "KIND",
        "URL",
        "FETCH",
-       "ORIGIN"
+       "ORIGIN",
+       "TOO_LONG",
+       "PASS",
+       "PASS_END",
+       "PASS_USED",
+       "PASS_NEED",
+       "FREE_DAY",
+       "NOT_READY"
       ]
      },
      "message": {
@@ -2354,7 +2361,7 @@
    "StyleRequest": {
     "type": "object",
     "title": "am.style",
-    "description": "휴머나이징: AI식 문체 점검(check) · 기본 다듬기(fix) · 말투 바꾸기(tone). AI 작성 추정률(ai, 다듬은 뒤 aiAfter)도 함께. 글은 저장하지 않음. 한 번에 6,000자",
+    "description": "휴머나이징: AI식 문체 점검(check) · 기본 다듬기(fix) · 말투 바꾸기(tone). AI 작성 추정률(ai, 다듬은 뒤 aiAfter)도 함께. 글은 저장하지 않음. 한 번에 6,000자. 무료 키는 맛보기(신호 2개 · 다듬을 곳 3곳 미리 보기 · 바꿀 곳 수), 이용권 코드(pass)나 유료 키면 다듬은 글 전체",
     "properties": {
      "action": {
       "type": "string",
@@ -2386,6 +2393,11 @@
       ],
       "default": "keep",
       "description": "keep 그대로 · formal 습니다체 · polite 해요체"
+     },
+     "pass": {
+      "type": "string",
+      "maxLength": 24,
+      "description": "개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 전체 · 한 번에 1회 차감(600자 이하는 차감 없음). 없고 무료 키면 맛보기(앞 3,000자 · 의심 문장 2개)"
      }
     },
     "required": [
@@ -2397,7 +2409,7 @@
    "HumanizeRequest": {
     "type": "object",
     "title": "am.humanize",
-    "description": "고급 휴머나이징(파일럿): 생성 AI가 문장을 다시 쓰고 숫자 · 인용 · 고유명사가 그대로인지 확인. probe:true 로 켜졌는지만 확인",
+    "description": "고급 휴머나이징(이용권 고급 횟수, 준비되면): 생성 AI가 문장을 다시 쓰고 숫자 · 인용 · 고유명사가 그대로인지 확인. probe:true 로 켜졌는지만 확인(꺼져 있으면 NOT_READY)",
     "properties": {
      "action": {
       "type": "string",
@@ -2422,6 +2434,11 @@
      },
      "probe": {
       "type": "boolean"
+     },
+     "pass": {
+      "type": "string",
+      "maxLength": 24,
+      "description": "개인 이용권 코드(고급 횟수 1회 차감). 이용권이나 유료 키가 없으면 code PASS_NEED"
      }
     },
     "required": [
@@ -2432,7 +2449,7 @@
    "DetectRequest": {
     "type": "object",
     "title": "am.detect",
-    "description": "AI 작성 추정: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 부분의 비율(rate, 0~100)과 문장별 추정. 결정적 모델이라 같은 글은 언제나 같은 값. 추정일 뿐 판정 · 증명이 아님. 글은 저장하지 않음. 한 번에 6,000자",
+    "description": "AI 작성 추정: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 부분의 비율(rate, 0~100)과 문장별 추정. 결정적 모델이라 같은 글은 언제나 같은 값. 추정일 뿐 판정 · 증명이 아님. 글은 저장하지 않음. 한 번에 6,000자. 무료 키는 맛보기(앞 3,000자의 실제 추정률 · 가장 뚜렷한 의심 문장 2개, 나머지 문장은 lock), 이용권 코드(pass)나 유료 키(하루 한도 1,000 이상)면 모든 문장",
     "properties": {
      "action": {
       "type": "string",
@@ -2451,6 +2468,11 @@
       "type": "boolean",
       "default": true,
       "description": "false 면 문장별 결과를 빼고 비율만"
+     },
+     "pass": {
+      "type": "string",
+      "maxLength": 24,
+      "description": "개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 전체 · 한 번에 1회 차감(600자 이하는 차감 없음). 없고 무료 키면 맛보기(앞 3,000자 · 의심 문장 2개)"
      }
     },
     "required": [
@@ -2525,6 +2547,13 @@
         },
         "para": {
          "type": "integer"
+        },
+        "lock": {
+         "type": "integer",
+         "enum": [
+          1
+         ],
+         "description": "무료 맛보기에서 가린 문장(t · nl · para 만 있음)"
         }
        }
       }
@@ -2534,6 +2563,60 @@
      },
      "note": {
       "type": "string"
+     },
+     "aiN": {
+      "type": "integer",
+      "description": "AI 작성 추정 문장 수"
+     },
+     "aiChars": {
+      "type": "integer",
+      "description": "AI 작성 추정 구간 글자 수"
+     },
+     "cn": {
+      "type": "string",
+      "description": "검사 번호(D-XXXXX-XXXXX, 같은 글 · 같은 모델이면 같은 번호)"
+     },
+     "full": {
+      "type": "boolean",
+      "description": "true 면 모든 문장(이용권 · 유료 키), false 면 무료 맛보기"
+     },
+     "locked": {
+      "type": "boolean",
+      "description": "무료 맛보기에서 문장 일부를 가렸는지"
+     },
+     "shown": {
+      "type": "integer",
+      "description": "무료 맛보기에서 보여 준 의심 문장 수(2개까지)"
+     },
+     "cut": {
+      "type": "boolean",
+      "description": "무료 맛보기에서 앞 3,000자만 검사했는지"
+     },
+     "total": {
+      "type": "integer",
+      "description": "보낸 글 전체 글자 수(cut 일 때)"
+     },
+     "freeMax": {
+      "type": "integer",
+      "description": "무료 맛보기 글자 한도(3,000)"
+     },
+     "pass": {
+      "type": "object",
+      "description": "이용권을 썼을 때 남은 상태",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "end": {
+        "type": "string"
+       },
+       "left": {
+        "type": "integer"
+       },
+       "proLeft": {
+        "type": "integer"
+       }
+      }
      }
     }
    },
