@@ -29,14 +29,14 @@
     return AM.call('am.anchor', param, 30000).then(function (a) {
       if (!a || !a.ok) throw new Error(a && a.message || '확인하지 못했어요');
       if (a.pending) return (head || '') + '<div class="mv-card"><div class="mv-state">' + pill('warn', '공개 앵커 대기') + '</div><p class="mt12">' + esc(a.message || '') + '</p></div>';
-      var html = (head || '') + '<div class="mv-card vl-day"><div class="mv-state">' + (a.status === 'anchored' ? pill('ok', U.ico(U.I.check) + 'OpenTimestamps 에 올림') : pill('warn', '달력 서버에 다시 보내는 중')) +
+      var html = (head || '') + '<div class="mv-card vl-day"><div class="mv-state">' + (a.status === 'anchored' ? pill('ok', U.ico(U.I.check) + 'OpenTimestamps에 올림') : pill('warn', '달력 서버에 다시 보내는 중')) +
         '<span class="mv-pill" id="vlRe">이 브라우저에서 다시 계산하는 중…</span></div>' +
         '<h3 class="mt16">' + esc(a.date) + ' 원장 · ' + a.count + '줄</h3>' +
-        facts([['뿌리 해시', code(a.root)], ['앞날 뿌리', code(a.prev)], ['처음 · 마지막', esc(a.first) + ' ~ ' + esc(a.last)], ['올린 시각', esc(a.anchoredAt || '')],
+        facts([['뿌리 해시', code(a.root)], ['전날 뿌리', code(a.prev)], ['처음 · 마지막', esc(a.first) + ' ~ ' + esc(a.last)], ['올린 시각', esc(a.anchoredAt || '')],
           ['달력 서버', Object.keys(a.proofs || {}).map(function (k) { return esc(CAL[k] || k); }).join(' · ') || '없음']].concat(a.id ? [['찾은 기록', esc(a.id) + (a.position >= 0 ? ' · 그날 ' + (a.position + 1) + '번째 줄' : ' · 그날 원장에 없음')]] : [])) +
         '<div class="row mt16">' + (a.text ? '<button class="btn btn-g btn-s" type="button" id="vlTxt"><span>원장 글(.txt)</span></button>' : '') +
         (a.proofs && Object.keys(a.proofs).length ? '<button class="btn btn-g btn-s" type="button" id="vlOts"><span>증명 파일(.ots)</span></button>' : '') + '</div>' +
-        '<p class="dev-note">원장 글의 SHA-256 이 뿌리 해시와 같으면 그날 기록이 그대로입니다. 증명 파일은 OpenTimestamps 클라이언트(ots verify)로 확인하며, 비트코인 블록에 들어가기까지 몇 시간 걸릴 수 있습니다.</p></div>';
+        '<p class="dev-note">원장 글의 SHA-256이 뿌리 해시와 같으면 그날 기록이 그대로입니다. 증명 파일은 OpenTimestamps 클라이언트(ots verify)로 확인하며, 비트코인 블록에 들어가기까지 몇 시간 걸릴 수 있습니다.</p></div>';
       setTimeout(function () {
         var re = document.getElementById('vlRe');
         if (re && a.text) U.sha256(a.text).then(function (h) { re.className = 'mv-pill ' + (h === a.root ? 'ok' : 'bad'); re.textContent = h === a.root ? '다시 계산해도 같음' : '다시 계산한 해시가 다름'; });

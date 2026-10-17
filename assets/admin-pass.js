@@ -12,7 +12,7 @@
     return AM.call('am.adm', Object.assign({ op: op, t: T }, data || {}), 45000).then(function (r) { if (!r || !r.ok) throw r || {}; return r; });
   }
 
-  /* 관리 링크: 주소의 t 는 이 창에만 기억하고 주소에서 지움(화면 공유 · 방문 기록에 남지 않게) */
+  /* 관리 링크: 주소의 t는 이 창에만 기억하고 주소에서 지움(화면 공유 · 방문 기록에 남지 않게) */
   var q = new URLSearchParams(location.search), T = q.get('t') || sget('am_adm_t'), ORDER = (q.get('order') || '').toUpperCase().replace(/[^A-Z0-9\-]/g, '');
   if (q.get('t')) { sset('am_adm_t', q.get('t')); try { history.replaceState(null, '', location.pathname + (ORDER ? '?order=' + encodeURIComponent(ORDER) : '')); } catch (e) { /* 주소 그대로 */ } }
   var D = null, PROD = {};

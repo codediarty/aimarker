@@ -3,7 +3,7 @@ path: mark/
 key: mark
 title: 자동 마킹 · 파일만 넣으면 AI 표시가 박힙니다 | AIMarker
 ogtitle: 파일만 넣으세요. AI 표시는 자동으로 박힙니다
-desc: 이미지 · 영상 · 문서 · ZIP 을 넣으면 파일 속 기록으로 AI 사용을 확인하고, 근거에 맞는 표시를 이미지 위 · 파일 속 · 검색 정보에 한 번에 넣습니다. 광고 · 가상인물 표시와 구조화 데이터 · llms.txt 꾸러미까지. 파일은 서버로 보내지 않습니다. 개인 무료.
+desc: 이미지 · 영상 · 문서 · ZIP을 넣으면 파일 속 기록으로 AI 사용을 확인하고, 근거에 맞는 표시를 이미지 위 · 파일 속 · 검색 정보에 한 번에 넣습니다. 광고 · 가상인물 표시와 구조화 데이터 · llms.txt 꾸러미까지. 파일은 서버로 보내지 않습니다. 개인 무료.
 scripts: lib/aim-extract.js, lib/aim-seo.js, assets/vendor/qrcode.min.js, assets/markkit.js, assets/automark.js
 styles: assets/mark.css, assets/automark.css
 selflabel: footer
@@ -66,7 +66,7 @@ selflabel: footer
             <ul class="au-three">
               <li><b>화면</b><span id="auD1">AI 사용 이미지 위에 보이는 마크</span></li>
               <li><b>파일 속</b><span id="auD2">IPTC 디지털 소스 유형 · 대체 텍스트 · 저작권 · 마크 서명</span></li>
-              <li><b>검색</b><span>구조화 데이터 · 이미지 사이트맵 · llms.txt · AI 사용 안내 쪽</span></li>
+              <li><b>검색</b><span>구조화 데이터 · 이미지 사이트맵 · llms.txt · AI 사용 안내 페이지</span></li>
             </ul>
             <p class="note">관리 키는 다시 볼 수 없습니다. ZIP 안의 '마크 목록 · 관리 키.csv'를 안전한 곳에 보관하세요.</p>
           </div>
@@ -91,7 +91,7 @@ selflabel: footer
                 <label><input type="radio" name="oSize" value="l"><span>크게</span></label>
               </div>
             </div>
-            <label class="au-ck"><input type="checkbox" id="oQr"><span>QR 함께 넣기<small>찍으면 마크 확인 쪽이 열립니다</small></span></label>
+            <label class="au-ck"><input type="checkbox" id="oQr"><span>QR 함께 넣기<small>찍으면 마크 확인 페이지가 열립니다</small></span></label>
           </fieldset>
           <fieldset class="au-f">
             <legend>광고라면</legend>
@@ -107,7 +107,7 @@ selflabel: footer
             </div>
             <p class="au-small">문서 속성에는 언제나 마크 번호를 넣습니다.</p>
           </fieldset>
-          <label class="au-in"><span>브랜드 · 만든 이<small>마크 확인 쪽과 파일 속 '만든 이'에 들어갑니다</small></span><input type="text" id="oBrand" maxlength="40" placeholder="예: 봄날상회"></label>
+          <label class="au-in"><span>브랜드 · 만든 이<small>마크 확인 페이지와 파일 속 '만든 이'에 들어갑니다</small></span><input type="text" id="oBrand" maxlength="40" placeholder="예: 봄날상회"></label>
           <details class="au-more">
             <summary>검색 · AI 검색 정보(선택)</summary>
             <label class="au-in"><span>저작권 표기</span><input type="text" id="oRights" maxlength="120" placeholder="예: © 2026 봄날상회"></label>
@@ -172,7 +172,7 @@ selflabel: footer
       <article>
         <div class="au-tri-v v3" aria-hidden="true"><code>"digitalSourceType":<em>"TrainedAlgorithmicMedia…"</em></code><code>llms.txt<em>## AI 사용 표시</em></code><code>AI 사용 안내.html</code></div>
         <h3>검색 · AI 검색</h3>
-        <p>콘텐츠마다 구조화 데이터(schema.org) · 삽입 코드 · 이미지 사이트맵 · llms.txt 항목 · 'AI 사용 안내' 쪽을 만들어 드립니다. AI 검색과 답변 엔진이 출처와 AI 사용 표시를 같은 내용으로 읽게 합니다.</p>
+        <p>콘텐츠마다 구조화 데이터(schema.org) · 삽입 코드 · 이미지 사이트맵 · llms.txt 항목 · 'AI 사용 안내' 페이지를 만들어 드립니다. AI 검색과 답변 엔진이 출처와 AI 사용 표시를 같은 내용으로 읽게 합니다.</p>
       </article>
     </div>
   </div>

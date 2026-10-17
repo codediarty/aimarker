@@ -1,6 +1,6 @@
 /* AIMarker 일괄 확인 리포트(2026.10 · 5.1)
- * 1) 파일 · 폴더 · ZIP 을 이 브라우저에서 읽기(aim-extract) → 2) 20건씩 서버 확인(am.analyzebatch)
- * → 3) 리포트 정리(aim-report) · HTML · PDF · CSV. 원본 파일 · CSV 는 서버로 보내지 않음(특징값 · 해시 · 서명 조각만). */
+ * 1) 파일 · 폴더 · ZIP을 이 브라우저에서 읽기(aim-extract) → 2) 20건씩 서버 확인(am.analyzebatch)
+ * → 3) 리포트 정리(aim-report) · HTML · PDF · CSV. 원본 파일 · CSV는 서버로 보내지 않음(특징값 · 해시 · 서명 조각만). */
 (function () {
   'use strict';
   var AIM = window.AIMExtract, REP = window.AIMReport, MK = window.MK, AM = window.AM, JSZip = window.JSZip;
@@ -91,7 +91,7 @@
       $('#rpCsvName').textContent = f.name;
       $('#rpCsvNote').textContent = decl.count ? '표시 ' + decl.count + '줄을 읽었습니다' + (decl.bad ? '(표시 이름을 알 수 없는 ' + decl.bad + '줄은 뺌)' : '') + '. 파일 이름으로 맞춰 비교합니다.' : '읽을 수 있는 줄이 없습니다. 첫 칸 파일 이름, 둘째 칸 지금 표시로 적어 주세요.';
       $('#rpCsvNote').classList.toggle('bad', !decl.count);
-    }).catch(function () { $('#rpCsvNote').textContent = 'CSV 를 읽지 못했습니다.'; });
+    }).catch(function () { $('#rpCsvNote').textContent = 'CSV를 읽지 못했습니다.'; });
   });
   $('#rpTpl').addEventListener('click', function () {
     MK.save(new Blob([REP.declaredTemplate(picked.map(function (p) { return p.name; }))], { type: 'text/csv;charset=utf-8' }), 'aimarker-지금표시-양식.csv');

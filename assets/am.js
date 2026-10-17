@@ -6,7 +6,7 @@
   AM.MAIL = 'contact@skkc.co.kr';
   AM.root = document.body.getAttribute('data-root') || '';
 
-  /* 서버 요청(text/plain 이라 사전 확인 요청 없이 바로) */
+  /* 서버 요청(text/plain이라 사전 확인 요청 없이 바로) */
   AM.call = function (action, data, timeoutMs) {
     var body = Object.assign({ action: action, _o: location.hostname }, data || {});
     var ctl = 'AbortController' in window ? new AbortController() : null;
@@ -101,7 +101,7 @@
     if (sel) { sel.value = a.getAttribute('data-plan'); }
   });
 
-  /* 예전 문의 주소(솔루션 쪽 #ask)는 도입 상담 쪽으로, 주소 뒤 조건은 그대로 */
+  /* 예전 문의 주소(솔루션 페이지 #ask)는 도입 상담 페이지로, 주소 뒤 조건은 그대로 */
   if (document.body.getAttribute('data-page') === 'business' && location.hash === '#ask') {
     location.replace((document.body.getAttribute('data-root') || '../') + 'contact/' + location.search);
   }
@@ -118,6 +118,8 @@
     } catch (eR) { /* 무시 */ }
     var site = (q.get('site') || '').replace(/[^\w.\-:/가-힣]/g, '').slice(0, 120);
     if (site) { var si = document.querySelector('form[data-lead] input[name="site"]'); if (si && !si.value) si.value = site; }
+    var opt = (q.get('opt') || '').replace(/[<>"]/g, '').slice(0, 60);   // 8.0 추가 옵션 · 경쟁사 비교에서 넘어오면 내용 칸에
+    if (opt) { var mo = document.querySelector('form[data-lead] [name="memo"]'); if (mo && !mo.value) mo.value = '관심 있는 것: ' + opt + '\n'; }
     if (type) {
       var r = document.querySelector('form[data-lead] input[name="type"][value="' + type + '"]');
       if (r) r.checked = true;
@@ -135,7 +137,7 @@
     window.addEventListener('scroll', function () { var p = window.scrollY > 520; if (p !== past) { past = p; sync(); } }, { passive: true });
   });
 
-  /* 하위 쪽 차례: 지금 읽는 곳 강조 */
+  /* 하위 페이지 차례: 지금 읽는 곳 강조 */
   var toc = document.querySelector('.toc4');
   if (toc && 'IntersectionObserver' in window) {
     var links = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
@@ -213,7 +215,7 @@
     homeScan.addEventListener('submit', function (e) {
       e.preventDefault();
       var url = String(homeScan.elements.url.value || '').trim();
-      if (!/^(https?:\/\/)?[^\s\/?#:@]+\.[^\s\/?#:@]{2,}(\/\S*)?$/i.test(url)) { show(simple('사이트 주소를 확인해 주세요', '예: <b>myshop.co.kr</b> 처럼 주소만 넣으면 됩니다.')); homeScan.elements.url.focus(); return; }
+      if (!/^(https?:\/\/)?[^\s\/?#:@]+\.[^\s\/?#:@]{2,}(\/\S*)?$/i.test(url)) { show(simple('사이트 주소를 확인해 주세요', '예: <b>myshop.co.kr</b>처럼 주소만 넣으면 됩니다.')); homeScan.elements.url.focus(); return; }
       var host = hostOf(url);
       btn.disabled = true; btn.querySelector('span').textContent = '진단 중…';
       show('<div class="res2"><div style="padding:18px;display:flex;gap:12px;align-items:center;color:var(--mute)"><span class="spin"></span><span><b>' + esc(host) + '</b> 첫 화면과 이미지 12장까지 살피는 중이에요. 10~20초 걸립니다.</span></div></div>');

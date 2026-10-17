@@ -519,7 +519,7 @@
     tOut.innerHTML = '<div class="au-tx-res">' +
       '<div class="au-tx-h"><div><b>올릴 글이 준비됐습니다</b><span>' + esc(outTxt) + ' · 표시와 마크를 붙였습니다</span></div>' + MK.badge({ id: m.id, label: m.label, basis: m.basis }) + '</div>' +
       '<pre class="au-final" id="tFinal">' + esc(final) + '</pre>' +
-      '<div class="row"><button type="button" class="btn btn-p btn-s" id="tCopy">' + '<span>글 전체 복사</span></button><a class="btn btn-g btn-s" href="' + esc(MK.markUrl(m.id)) + '" target="_blank" rel="noopener">마크 확인 쪽</a></div>' +
+      '<div class="row"><button type="button" class="btn btn-p btn-s" id="tCopy">' + '<span>글 전체 복사</span></button><a class="btn btn-g btn-s" href="' + esc(MK.markUrl(m.id)) + '" target="_blank" rel="noopener">마크 확인 페이지</a></div>' +
       (applied.length ? '<h4>자동으로 바꾼 곳 ' + applied.length + '</h4><ul class="au-chg">' + applied.map(function (x) { return '<li>' + (x.from ? '<s>' + esc(x.from) + '</s> ' : '') + (x.to ? '<em>' + esc(x.to) + '</em>' : '<em class="del">(문장 뺌)</em>') + '</li>'; }).join('') + '</ul>' : '') +
       (left.length ? '<h4>직접 확인할 곳 ' + left.length + '</h4><ul class="au-left">' + left.map(function (f) { return '<li><b>' + esc(f.t || '필수 표시') + '</b><span>' + esc(f.why || '') + '</span>' + (f.tip ? '<small>' + esc(f.tip) + '</small>' : '') + '</li>'; }).join('') + '</ul>' : '') +
       '<p class="note">점검 결과는 위험 후보와 근거이며 법률 자문이 아닙니다. 글은 서버에 저장하지 않았고, 마크에는 글의 지문(해시)만 남습니다. 마지막 줄의 표시 문장은 지문에서 빼고 계산하므로 붙인 채로 올려도 같은 마크로 이어집니다.</p></div>';

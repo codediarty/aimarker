@@ -1,4 +1,4 @@
-/* AIMarker 기술 쪽: 지문(dHash) 실제 계산 시연 · 차례 강조 */
+/* AIMarker 기술 페이지: 지문(dHash) 실제 계산 시연 · 차례 강조 */
 (function () {
   'use strict';
   var $ = function (s, r) { return (r || document).querySelector(s); };

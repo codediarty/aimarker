@@ -26,7 +26,7 @@
     }
     trun.addEventListener('click', function () {
       if (!cur) return;
-      trun.disabled = true; $('#tout').textContent = '부르는 중…'; var t0 = Date.now();
+      trun.disabled = true; $('#tout').textContent = '호출 중…'; var t0 = Date.now();
       AM.call('am.analyze', { features: cur.features, pack: cur.pack || undefined, cid: U.cid() }, 70000).then(function (r) {
         $('#tout').textContent = pretty(r); $('#tms').textContent = (Date.now() - t0) + 'ms';
       }).catch(function () { $('#tout').textContent = '{ "ok": false, "message": "지금은 부르지 못했어요" }'; }).then(function () { trun.disabled = false; });
@@ -47,7 +47,7 @@
     mrun.addEventListener('click', function () {
       var id = (mid.value || '').trim().toUpperCase();
       if (!/^AM-[0-9A-Z]{10}$/.test(id)) { $('#msig').textContent = '마크 번호는 AM- 로 시작하는 13자리입니다.'; return; }
-      mrun.disabled = true; $('#mout').textContent = '부르는 중…'; $('#msig').textContent = ''; var t0 = Date.now();
+      mrun.disabled = true; $('#mout').textContent = '호출 중…'; $('#msig').textContent = ''; var t0 = Date.now();
       AM.call('am.markinfo', { id: id, cid: U.cid() }).then(function (r) {
         $('#mout').textContent = pretty(r); $('#mms').textContent = (Date.now() - t0) + 'ms';
         if (!r || !r.ok) return;
@@ -68,7 +68,7 @@
   var pout = $('#pout'), prun = $('#prun');
   if (prun) prun.addEventListener('click', function () {
     var body = { text: $('#ptext').value, ind: $('#pind').value, flags: { sponsored: $('#pspon').checked, aiPerson: $('#pperson').checked, aiMedia: false }, cid: U.cid() };
-    prun.disabled = true; pout.textContent = '부르는 중…'; var t0 = Date.now();
+    prun.disabled = true; pout.textContent = '호출 중…'; var t0 = Date.now();
     AM.call('am.check', body, 25000).then(function (r) {
       if (r && r.findings) r.findings = r.findings.map(function (f) { var o = {}; ['id', 'cat', 'lv', 's', 'e', 't', 'why', 'law', 'reps'].forEach(function (k) { o[k] = f[k]; }); return o; });
       pout.textContent = pretty(r); $('#pms').textContent = (Date.now() - t0) + 'ms';
@@ -89,6 +89,6 @@
       show('ok', '<b>API 키가 나왔어요. 지금 복사해 안전한 곳(서버 환경 변수)에 보관하세요. 다시 보여 드리지 않습니다.</b><div class="code mt12"><div class="code-h"><span>하루 ' + r.quota + '회 · ' + U.esc(r.id) + '</span><button class="btn btn-g btn-s" type="button" data-copy="#newKey"><span>복사</span></button></div><div class="code-b" id="newKey">' + U.esc(r.key) + '</div></div>');
       f.querySelectorAll('input,textarea').forEach(function (x) { x.disabled = true; });
       if (window.gtag) try { window.gtag('event', 'api_key'); } catch (eG) { /* 무시 */ }
-    }).catch(function (e2) { show('err', U.esc(e2.message || '지금은 발급하지 못했어요. contact@skkc.co.kr 로 문의해 주세요.')); btn.disabled = false; btn.textContent = 'API 키 받기'; });
+    }).catch(function (e2) { show('err', U.esc(e2.message || '지금은 발급하지 못했어요. contact@skkc.co.kr로 문의해 주세요.')); btn.disabled = false; btn.textContent = 'API 키 받기'; });
   });
 })();

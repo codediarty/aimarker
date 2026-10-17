@@ -80,7 +80,7 @@
     var tEn = (d.tools.length ? d.tools.map(function (t) { return t === '뤼튼' ? 'Wrtn' : t === '클로바X' ? 'CLOVA X' : t === '기타' ? 'other AI tools' : t; }).join(', ') : '[AI tool]') + (d.ver ? ' (version: ' + d.ver + ')' : '');
     $('#declOut').innerHTML = '<p><b>생성형 AI 활용 선언</b></p><p>본 ' + d.k.obj + '의 작성 과정에서 저자는 ' + esc(pKo) + '에 생성형 AI(사용 도구: ' + esc(toolTxt(d)) + ')를 활용하였다. 활용 뒤 저자는 그 내용을 직접 검토 · 검증 · 수정하였으며, 최종 내용에 대한 모든 책임은 저자에게 있다.</p>' +
       '<p class="en mt16"><b>Declaration of generative AI use</b></p><p class="en">In preparing this ' + d.k.en + ', the author(s) used ' + esc(tEn) + ' for ' + esc(pEn) + '. The author(s) reviewed, verified and revised all AI-assisted output and take full responsibility for the final content.</p>' +
-      (d.kind === 'journal' || d.kind === 'thesis' ? '<p class="note mt12">학술지는 보통 이 선언을 참고문헌 바로 위에 따로 두라고 안내합니다. 투고 규정을 확인하세요.</p>' : '<p class="note mt12">제출물 끝이나 첫 쪽 아래에 붙이세요. 제출처가 정한 형식이 있으면 그 형식을 따르세요.</p>');
+      (d.kind === 'journal' || d.kind === 'thesis' ? '<p class="note mt12">학술지는 보통 이 선언을 참고문헌 바로 위에 따로 두라고 안내합니다. 투고 규정을 확인하세요.</p>' : '<p class="note mt12">제출물 끝이나 첫 페이지 아래에 붙이세요. 제출처가 정한 형식이 있으면 그 형식을 따르세요.</p>');
     $('#noteOut').innerHTML = '<p>본 ' + d.k.objT + ' ' + esc(pKo) + '에 생성형 AI(사용 도구: ' + esc(toolTxt(d)) + ')를 활용하였으며' + (d.when ? '(' + esc(d.when) + ')' : '') + ', 결과는 작성자가 직접 검증 · 수정하였다.' + (d.links.length ? ' 대화 기록: ' + d.links.map(esc).join(', ') : '') + '</p>';
     save();
   }

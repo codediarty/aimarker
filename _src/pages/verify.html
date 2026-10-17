@@ -3,7 +3,7 @@ path: verify/
 key: verify
 title: 원장 · 공개 앵커 확인 · 기록이 그때 그대로인지 누구나 | AIMarker
 ogtitle: AIMarker 원장 · 공개 앵커 확인 · 마크 발급 기록이 바뀌지 않았는지 누구나 확인
-desc: AIMarker 는 마크 발급 · 변경 · 철회와 보고서 · 승인 기록을 해시로 원장에 남기고, 하루치 원장을 다음 날 OpenTimestamps 공개 앵커로 묶습니다. 원장 번호 · 해시 · 날짜로 확인하고 원장 글과 증명 파일(.ots)을 받습니다.
+desc: AIMarker는 마크 발급 · 변경 · 철회와 보고서 · 승인 기록을 해시로 원장에 남기고, 하루치 원장을 다음 날 OpenTimestamps 공개 앵커로 묶습니다. 원장 번호 · 해시 · 날짜로 확인하고, 원장 글과 증명 파일(.ots)을 내려받을 수 있습니다.
 styles: assets/mark.css
 scripts: assets/amui.js, assets/verify.js
 selflabel: footer
@@ -11,8 +11,8 @@ selflabel: footer
 <section class="p4h">
   <div class="wrap">
     <span class="crumb">원장 · 공개 앵커</span>
-    <h1>기록이 그때 그대로인지,<br>누구나 확인합니다</h1>
-    <p class="lead4">마크 발급 · 표시 변경 · 철회, 보고서 · 승인 기록은 해시와 서버 시각으로 원장에 남습니다. 하루치 원장은 다음 날 뿌리 해시 하나로 묶여 OpenTimestamps 공개 앵커에 올라가므로, AIMarker 도 지난 기록을 몰래 고칠 수 없습니다.</p>
+    <h1>기록이 그때 그대로인지,<br>누구나 확인할 수 있습니다</h1>
+    <p class="lead4">마크 발급 · 표시 변경 · 철회, 보고서 · 승인 기록은 해시와 서버 시각으로 원장에 남습니다. 하루치 원장은 다음 날 뿌리 해시 하나로 묶여 OpenTimestamps 공개 앵커에 올라가므로, AIMarker도 지난 기록을 몰래 고칠 수 없습니다.</p>
   </div>
 </section>
 
@@ -31,7 +31,7 @@ selflabel: footer
 
 <section class="blk soft" id="anchors">
   <div class="wrap" style="max-width:980px">
-    <div class="blk-h"><span class="k">공개 앵커</span><h2>최근 묶인 날</h2><p>날짜를 누르면 그날 원장 글을 이 브라우저에서 다시 해시해 뿌리 해시와 맞춰 보고, 원장 글과 증명 파일을 받을 수 있습니다.</p></div>
+    <div class="blk-h"><span class="k">공개 앵커</span><h2>최근 묶인 날짜</h2><p>날짜를 누르면 그날 원장 글을 이 브라우저에서 다시 해시해 뿌리 해시와 대조하고, 원장 글과 증명 파일을 받을 수 있습니다.</p></div>
     <div id="vlist" class="vl-list mt24"><p class="dev-note">불러오는 중…</p></div>
   </div>
 </section>
@@ -40,8 +40,8 @@ selflabel: footer
   <div class="wrap" style="max-width:980px">
     <div class="grid g3">
       <div class="mv-card"><h3>무엇을 남기나요</h3><p class="mt8">마크 번호 · 표시 · 근거 · 파일 해시, 보고서 · 승인 기록의 해시와 서버 시각만 남깁니다. 파일과 글 내용은 남기지 않아, 원장만으로는 무엇이 담겼는지 알 수 없습니다.</p></div>
-      <div class="mv-card"><h3>어떻게 묶나요</h3><p class="mt8">매일 0시 10분 뒤, 전날 원장 줄을 글 하나로 모아 SHA-256(뿌리 해시)을 만들고 OpenTimestamps 달력 서버 세 곳에 올립니다. 앞날 뿌리를 함께 넣어 날마다 사슬로 이어집니다.</p></div>
-      <div class="mv-card"><h3>직접 확인하려면</h3><p class="mt8">원장 글을 받아 SHA-256 이 뿌리 해시와 같은지 보고, 증명 파일(.ots)을 OpenTimestamps 클라이언트로 확인하세요. 방법은 <a href="{{root}}developers/#anchor">개발자 안내</a>에 있습니다.</p></div>
+      <div class="mv-card"><h3>어떻게 묶나요</h3><p class="mt8">매일 0시 10분이 지나면 전날 원장 기록을 글 하나로 모아 SHA-256(뿌리 해시)을 만들고, OpenTimestamps 달력 서버 세 곳에 올립니다. 이전 날의 뿌리 해시를 함께 넣어 날마다 사슬로 이어집니다.</p></div>
+      <div class="mv-card"><h3>직접 확인하려면</h3><p class="mt8">원장 글을 받아 SHA-256이 뿌리 해시와 같은지 보고, 증명 파일(.ots)을 OpenTimestamps 클라이언트로 확인하세요. 방법은 <a href="{{root}}developers/#anchor">개발자 안내</a>에 있습니다.</p></div>
     </div>
   </div>
 </section>

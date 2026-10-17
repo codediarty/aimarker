@@ -14,14 +14,14 @@
   var S = { pass: '', ps: null, passMsg: '', proReady: false, info: null, busy: false, res: null, fx: null, edits: {}, sel: -1, side: 'ai', cache: {}, first: true, paid: null };
   var LV = ['', '낮음', '중간', '높음'], ROOT = document.body.getAttribute('data-root') || '/';
   var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  /* 판정 기준 AMJ-1.0(서버 detect.js 와 같은 숫자 · 같은 문장 틀). 여러 조각(6,000자씩)을 합칠 때만 사이트에서 다시 계산 */
+  /* 판정 기준 AMJ-1.0(서버 detect.js와 같은 숫자 · 같은 문장 틀). 여러 조각(6,000자씩)을 합칠 때만 사이트에서 다시 계산 */
   var J = { HI: 85, MID: 65, SHORT: 60, SEG_AI: 20, UNFIT_RATE: 40, RISK_RATE: 20, UNFIT_SEG: 50,
     B: { unfit: ['부적합', '부적합 · 개선 필요'], risk: ['고위험', '고위험 · 수정 권고'], safe: ['안전', '안전 · AI 패턴 적음'], short: ['판단 보류', '판단 보류 · 글이 짧음'] } };
   var PRODS = [
     { id: 's1', name: '1건 이용권', price: 1900, desc: '글 한 편 · 검사 · 다듬기 3회(6,000자마다 1회) · 결과상세내역서 · 24시간' },
-    { id: 'd1', name: '24시간 이용권', price: 2900, best: 1, desc: '처음 쓴 때부터 24시간 · 검사 · 다듬기 40회 · 고급 휴머나이징 3회' },
-    { id: 'm1', name: '30일 이용권', price: 9900, days: 30, desc: '처음 쓴 날부터 30일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 5회' },
-    { id: 'q1', name: '90일 이용권', price: 19900, days: 90, desc: '처음 쓴 날부터 90일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 5회' }
+    { id: 'd1', name: '24시간 이용권', price: 2900, best: 1, desc: '처음 사용한 때부터 24시간 · 검사 · 다듬기 40회 · 고급 휴머나이징 3회' },
+    { id: 'm1', name: '30일 이용권', price: 9900, days: 30, desc: '처음 사용한 날부터 30일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 5회' },
+    { id: 'q1', name: '90일 이용권', price: 19900, days: 90, desc: '처음 사용한 날부터 90일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 5회' }
   ];
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
@@ -80,7 +80,7 @@
     if (/\.(txt|md)$/.test(nm) || f.type === 'text/plain') return f.text();
     if (/\.docx$/.test(nm)) return jszip().then(function (Z) { return Z.loadAsync(f); }).then(function (z) { var e = z.file('word/document.xml'); if (!e) throw new Error('Word 문서에서 본문을 찾지 못했습니다.'); return e.async('string'); }).then(function (x) { return paras(x, /<\/w:p>/, /<w:t(?:\s[^>]*)?>([^<]*)<\/w:t>|<w:tab\/>/g); });
     if (/\.hwpx$/.test(nm)) return jszip().then(function (Z) { return Z.loadAsync(f); }).then(function (z) { var fs = z.file(/^Contents\/section\d+\.xml$/i).sort(function (a, b) { return a.name.localeCompare(b.name, 'en', { numeric: true }); }); if (!fs.length) throw new Error('한글 문서에서 본문을 찾지 못했습니다.'); return Promise.all(fs.map(function (x) { return x.async('string'); })); }).then(function (xs) { return xs.map(function (x) { return paras(x, /<\/hp:p>/, /<hp:t(?:\s[^>]*)?>([\s\S]*?)<\/hp:t>/g); }).join('\n\n'); });
-    if (/\.(hwp|pdf|doc)$/.test(nm)) return Promise.reject(new Error('.hwp · .pdf · .doc 는 아직 바로 열지 못합니다. 글을 복사해 붙여 넣거나 .docx · .hwpx 로 저장해 넣어 주세요.'));
+    if (/\.(hwp|pdf|doc)$/.test(nm)) return Promise.reject(new Error('.hwp · .pdf · .doc는 아직 바로 열지 못합니다. 글을 복사해 붙여 넣거나 .docx · .hwpx로 저장해 넣어 주세요.'));
     return Promise.reject(new Error('Word(.docx) · 한글(.hwpx) · 텍스트(.txt) 파일을 넣어 주세요.'));
   }
   function takeFile(f) {
@@ -103,10 +103,10 @@
   function renderPass() {
     var h;
     if (S.pass && S.ps) {
-      var p = S.ps, when = p.started ? (p.daily ? md(p.end).replace(/ \d\d:\d\d$/, '') + '까지 · 오늘 ' : md(p.end) + '까지 · ') : (p.daily ? '처음 쓴 날부터 · 하루 ' : '처음 검사한 때부터 24시간 · ');
+      var p = S.ps, when = p.started ? (p.daily ? md(p.end).replace(/ \d\d:\d\d$/, '') + '까지 · 오늘 ' : md(p.end) + '까지 · ') : (p.daily ? '처음 사용한 날부터 · 하루 ' : '처음 검사한 때부터 24시간 · ');
       h = '<span class="chip on">' + ico('check') + esc(p.name) + '</span><span>' + when + '남은 검사 · 다듬기 <b>' + n2(p.left) + '</b>회' + (S.proReady && p.pro ? ' · 고급 ' + n2(p.proLeft) + '회' : '') + '</span><span class="sp"></span><button type="button" class="hz7-link" data-code>코드 바꾸기</button>';
     } else if (S.pass) h = '<span class="chip">이용권 확인 중</span><span>' + esc(S.pass) + '</span>';
-    else h = '<span class="chip off">무료 맛보기</span><span>' + (S.passMsg ? esc(S.passMsg) : '앞 6,000자 · AI 작성률 · 판정과 근거 · 가장 뚜렷한 문장 2개까지') + '</span><span class="sp"></span><button type="button" class="hz7-link" data-code>이용권 코드 넣기</button><button type="button" class="hz7-link" data-buy="d1">이용권 사기</button>';
+    else h = '<span class="chip off">무료 맛보기</span><span>' + (S.passMsg ? esc(S.passMsg) : '앞 6,000자 · AI 작성률 · 판정과 근거 · 가장 뚜렷한 문장 2개까지') + '</span><span class="sp"></span><button type="button" class="hz7-link" data-code>이용권 코드 넣기</button><button type="button" class="hz7-link" data-buy="d1">이용권 구매</button>';
     passEl.innerHTML = h; count();
   }
   function peek() {
@@ -261,7 +261,7 @@
     var acts = '';
     var again = retry ? '<button class="btn btn-g btn-s" type="button" data-again>무료 맛보기로 보기</button>' : '';
     if (code === 'PASS') { clearPass(); S.passMsg = m; renderPass(); acts = '<button class="btn btn-g btn-s" type="button" data-code>코드 다시 넣기</button>' + again; }
-    else if (code === 'PASS_END' || code === 'PASS_USED') acts = '<button class="btn btn-p btn-s" type="button" data-buy="d1">새 이용권 사기</button>' + again;
+    else if (code === 'PASS_END' || code === 'PASS_USED') acts = '<button class="btn btn-p btn-s" type="button" data-buy="d1">새 이용권 구매</button>' + again;
     else if (code === 'PASS_NEED') acts = '<button class="btn btn-p btn-s" type="button" data-buy="d1">24시간 이용권 2,900원</button><button class="btn btn-g btn-s" type="button" data-code>이용권 코드 넣기</button>';
     else if (code === 'FREE_DAY') acts = '<button class="btn btn-p btn-s" type="button" data-buy="s1">1건 이용권 1,900원</button><button class="btn btn-g btn-s" type="button" data-buy="d1">24시간 이용권 2,900원</button>';
     out.innerHTML = '<div class="hz7-err"><b>' + (code === 'PASS_NEED' ? '이용권이 필요해요' : '처리하지 못했어요') + '</b><span>' + esc(m) + '</span>' + (acts ? '<div class="row">' + acts + '</div>' : '') + '</div>';
@@ -382,7 +382,7 @@
     var tip = s.lock ? '' : ed ? ' title="고친 문장 · 다시 검사하면 새 색이 매겨집니다"' : lv > 0 ? ' title="AI 작성 가능성 ' + LV[lv] + ' · ' + s.p + '%"' : '';
     return '<span class="' + cls + '" data-i="' + i + '"' + tip + (M.full ? ' tabindex="0" role="button"' : '') + '>' + esc(ed ? S.edits[i] : s.t) + '</span>';
   }
-  function runHtml(M, a, b) {   // 문장 a~b 를 문단 · 줄 바꿈을 살려 그림
+  function runHtml(M, a, b) {   // 문장 a~b를 문단 · 줄 바꿈을 살려 그림
     var h = '', para = null;
     for (var i = a; i <= b && i < M.sentences.length; i++) {
       var s = M.sentences[i];
@@ -450,7 +450,7 @@
       '<div class="hz7-body"><div class="hz7-docw' + (lockDoc ? ' lkd' : '') + '"><div class="hz7-doc" id="hzDoc">' + docHtml(M) + '</div>' + (lockDoc ? lockHtml(M) : '') + '</div>' +
       '<aside class="hz7-side" id="hzSide" aria-label="검출 문장 · AI 표현">' + sideHtml(M) + '</aside></div>' +
       '<div class="hz7-legend"><span><i class="l3"></i>높음(85 이상)</span><span><i class="l2"></i>중간(65 이상)</span><span><i class="l1"></i>낮음(앞뒤 문맥으로 AI 구간)</span><span><i class="l0"></i>표시 없음</span></div>' + actsHtml(M) +
-      '<p class="hz7-fineprint">' + esc(M.note || 'AI 작성률은 판별 모델의 추정값입니다. 판정이나 증명으로 쓰지 않습니다.') + ' 결과만으로 다른 사람을 판단하지 마세요.</p></div>';
+      '<p class="hz7-fineprint">' + esc(M.note || 'AI 작성률과 판정은 판별 모델과 정해진 판정 기준으로 계산한 추정값이며 증명으로 쓰지 않습니다.') + (/단정하지|판단하지/.test(M.note || '') ? '' : ' 결과만으로 다른 사람을 판단하지 마세요.') + '</p></div>';
     out.innerHTML = h;
   }
   function lockHtml(M) {
@@ -635,7 +635,7 @@
       (rows ? '<h2>03 · AI 검출 구간 요약</h2><table class="rp8-t"><tr><th>구간</th><th>글자 수</th><th>AI 글자</th><th>비중</th><th>높음 · 중간 · 낮음</th><th>주요 특성</th><th>권고</th></tr>' + rows + '</table>' : '') +
       '<h2>04 · 문장 등급 분포</h2><div class="rp8-dist">' + dist.map(function (x) { return '<div><i class="' + x[0] + '"></i><span>' + x[1] + '</span><b>' + x[2] + '문장</b></div>'; }).join('') + '</div>' +
       '<h2>05 · 판정 기준(' + esc(M.critName || 'AIMarker 판정 기준 1.0') + ')</h2><ul class="rp8-crit"><li><b>문장 등급</b> 판별 확률 85 이상 높음 · 65 이상 중간 · 65 미만이지만 앞뒤 문맥까지 본 구간 판정에서 AI로 든 문장은 낮음</li><li><b>AI 작성률</b> AI 검출 문장의 글자 수 ÷ 전체 글자 수(빈칸 뺌)</li><li><b>구간</b> 문단 단위(30자 미만은 다음 문단과 합치고 1,000자를 넘으면 문장 경계에서 나눔). 구간 글자의 20% 이상이 AI 검출 문장이면 검출 구간</li><li><b>부적합</b> 작성률 40% 이상, 또는 검출 구간이 전체의 절반 이상(2구간 이상일 때), 또는 AI 대화창 흔적 1곳 이상</li><li><b>고위험</b> 작성률 20% 이상, 또는 검출 구간 1곳 이상, 또는 중간 이상 문장 1개 이상</li><li><b>안전</b> 위에 해당하지 않음 · 60자 미만은 판단 보류</li></ul>' +
-      '<footer class="rp8-note">본 결과서는 참고용 분석 자료이며, 최종 판단은 제출처의 기준과 심사자의 판단에 따릅니다. AI 작성률은 판별 모델과 정해진 판정 기준으로 계산한 추정값으로 판정이나 증명이 아니고, 법률 자문이 아닙니다. 사람이 쓴 글도 높게, AI가 쓴 글도 낮게 나올 수 있으며 다른 검사기와 결과가 다를 수 있습니다. 같은 글을 다시 넣으면 같은 검사 번호와 같은 결과가 나옵니다. 결과만으로 다른 사람을 판단하지 마세요. 글은 저장하지 않으며 이 결과서는 이용자의 브라우저에서 만들어졌습니다. AIMarker(aimarker.kr) · 운영 성균관컨설팅</footer></div>';
+      '<footer class="rp8-note">본 결과서는 참고용 분석 자료이며, 최종 판단은 제출처의 기준과 심사자의 판단에 따릅니다. AI 작성률과 판정은 판별 모델과 정해진 판정 기준으로 계산한 추정값이며 증명이 아니고, 법률 자문이 아닙니다. 사람이 쓴 글도 높게, AI가 쓴 글도 낮게 나올 수 있으며 다른 검사기와 결과가 다를 수 있습니다. 같은 글을 다시 넣으면 같은 검사 번호와 같은 결과가 나옵니다. 결과만으로 다른 사람을 판단하지 마세요. 글은 저장하지 않으며 이 결과서는 이용자의 브라우저에서 만들어졌습니다. AIMarker(aimarker.kr) · 운영 성균관컨설팅</footer></div>';
     var done = function () { document.body.classList.remove('hz7-printing'); window.removeEventListener('afterprint', done); };
     window.addEventListener('afterprint', done);
     document.body.classList.add('hz7-printing');
@@ -650,7 +650,7 @@
   function prodsHtml(sel) {
     return prods().map(function (p) {
       var per = p.days ? ' · 하루 약 ' + n2(Math.round(p.price / p.days / 10) * 10) + '원' : '';
-      return '<label' + (p.best ? ' class="best"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span><b>' + esc(p.name) + (p.best ? '<i>추천</i>' : '') + '</b><em>' + n2(p.price) + '원</em><small>' + esc(p.desc) + per + '</small></span></label>';
+      return '<label' + (p.best ? ' class="best"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span><b>' + esc(p.name) + (p.best ? '<i>추천</i>' : '') + '</b><em>' + n2(p.price) + '원</em><small>' + esc(S.proReady ? p.desc : String(p.desc || '').replace(/(고급 휴머나이징 (?:하루 )?\d+회)/, '$1(준비되면)')) + per + '</small></span></label>';
     }).join('');
   }
   function buyBtnLabel() { var f = $('#hzBuyForm'); if (!f) return; var id = (f.querySelector('input[name="product"]:checked') || {}).value || 'd1', p = prod(id) || PRODS[1], b = f.querySelector('button[type="submit"]'); if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : '<span>' + n2(p.price) + '원 주문하기</span>'; var n = $('#hzBuyNote'); if (n) n.textContent = payReady() ? '카드 · 간편결제로 바로 결제합니다. 결제가 승인되면 이 화면에서 바로 전체 결과가 열리고, 코드는 메일로도 보내 드립니다.' : '주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 이용권 코드를 보내 드립니다.'; }
@@ -705,10 +705,10 @@
         if (!r || !r.ok) throw r || {};
         if (r.pay && payReady()) return startPay(r, mail, msg, btn);
         sset('am_buy_mail', mail);
-        var guide = r.payGuide || '담당자가 주문을 확인하고 남겨 주신 이메일로 결제 방법을 안내해 드립니다. 결제가 확인되면 같은 메일로 이용권 코드를 보내 드립니다. 메일이 오지 않으면 스팸함을 확인하거나 contact@skkc.co.kr 로 주문 번호를 보내 주세요.';
+        var guide = r.payGuide || '담당자가 주문을 확인하고 남겨 주신 이메일로 결제 방법을 안내해 드립니다. 결제가 확인되면 같은 메일로 이용권 코드를 보내 드립니다. 메일이 오지 않으면 스팸함을 확인하거나 contact@skkc.co.kr로 주문 번호를 보내 주세요.';
         buyBody.innerHTML = '<h2>주문이 접수되었습니다</h2><div class="hz7-done"><p class="no">주문 번호<b>' + esc(r.id) + '</b></p><p>' + esc(r.name) + ' · ' + n2(r.price) + '원(부가세 포함)</p><div class="guide">' + esc(guide) + '</div>' +
           (r.link ? '<a class="btn btn-p btn-l" href="' + esc(r.link) + '" target="_blank" rel="noopener">결제하러 가기</a>' : '') +
-          '<p class="hz7-dlg-n">코드는 ' + esc(mail) + ' 로 보내 드립니다. 메일의 단추를 누르면 코드가 들어간 채로 이 쪽이 열립니다.</p><button class="btn btn-g" type="button" data-code>코드를 받았어요 · 코드 넣기</button></div>';
+          '<p class="hz7-dlg-n">코드는 ' + esc(mail) + ' 로 보내 드립니다. 메일의 단추를 누르면 코드가 들어간 채로 이 페이지가 열립니다.</p><button class="btn btn-g" type="button" data-code>코드를 받았어요 · 코드 넣기</button></div>';
       }).catch(function (e2) { btn.disabled = false; say(msg, (e2 && e2.message) || '주문을 보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.'); });
       return;
     }
@@ -746,7 +746,7 @@
       });
     }).catch(function (e) {
       cleanUrl();
-      out.innerHTML = '<div class="hz7-err"><b>결제를 확인하지 못했어요</b><span>' + esc((e && e.message) || '잠시 뒤 다시 시도해 주세요.') + ' 결제가 되었는데 이용권이 열리지 않으면 주문 번호(' + esc(String(Q.orderId || '').slice(0, 11)) + ')와 함께 contact@skkc.co.kr 로 알려 주세요.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="' + esc((d && d.prod) || 'd1') + '">다시 결제하기</button><button class="btn btn-g btn-s" type="button" data-code>코드가 있어요</button></div></div>';
+      out.innerHTML = '<div class="hz7-err"><b>결제를 확인하지 못했어요</b><span>' + esc((e && e.message) || '잠시 뒤 다시 시도해 주세요.') + ' 결제가 되었는데 이용권이 열리지 않으면 주문 번호(' + esc(String(Q.orderId || '').slice(0, 11)) + ')와 함께 contact@skkc.co.kr로 알려 주세요.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="' + esc((d && d.prod) || 'd1') + '">다시 결제하기</button><button class="btn btn-g btn-s" type="button" data-code>코드가 있어요</button></div></div>';
     });
   }
   function payFail() {
@@ -758,7 +758,7 @@
   if (Q.pay === 'ok' && Q.paymentKey && Q.orderId) payReturn();
   else if (Q.pay === 'fail') payFail();
 
-  /* 다른 쪽에서 바로 여는 주소: #buy-s1 · #buy-d1 · #buy-m1 · #buy-q1 · #code */
+  /* 다른 페이지에서 바로 여는 주소: #buy-s1 · #buy-d1 · #buy-m1 · #buy-q1 · #code */
   function hashGo() {
     var h = (location.hash || '').slice(1), m = /^buy-(s1|d1|m1|q1)$/.exec(h);
     if (m) openBuy(m[1]); else if (h === 'code') openCode(); else return;

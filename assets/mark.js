@@ -152,7 +152,7 @@
     return '<div class="mk-df"><label><span>사용한 AI 도구(있으면)</span><input type="text" data-f="tools" value="' + esc(it.tools || '') + '" placeholder="예: Midjourney, ChatGPT" maxlength="120"' + dis + '></label>' +
       '<div class="mk-chips">' + chips + '</div>' +
       '<label><span>콘텐츠 이름</span><input type="text" data-f="title" value="' + esc(it.title != null ? it.title : (it.kind === 'file' ? it.name.replace(/\.[a-z0-9]{2,5}$/i, '') : '')) + '" maxlength="80"' + dis + '></label>' +
-      '<label><span>발급자(브랜드 · 이름)</span><input type="text" data-f="issuer" value="' + esc(it.issuer != null ? it.issuer : store('am_issuer')) + '" maxlength="40" placeholder="마크 확인 쪽에 보이는 이름"' + dis + '></label></div>';
+      '<label><span>발급자(브랜드 · 이름)</span><input type="text" data-f="issuer" value="' + esc(it.issuer != null ? it.issuer : store('am_issuer')) + '" maxlength="40" placeholder="마크 확인 페이지에 보이는 이름"' + dis + '></label></div>';
   }
   function declaredView(it) {
     var R = it.R, rows = [['표시', MK.LABEL[R.label]], ['근거', MK.BASIS[R.basis]], ['도구', (R.tools || []).join(', ') || '없음'], ['콘텐츠 이름', it.title || '없음'], ['발급자', it.issuer || '밝히지 않음']];
@@ -190,11 +190,11 @@
     var other = it.kind === 'file' && !canEmbed ? '<p class="note">이 형식은 파일 안에 마크를 넣지 않습니다. 마크 카드 · 삽입 코드 · QR을 콘텐츠와 함께 쓰세요.</p>' : '';
     return '<div class="mk-done"><div class="mk-done-top"><div class="mk-done-b">' + MK.badge(m, { lg: true }) +
       '<p>마크 <b>' + esc(R.id) + '</b> 를 발급했습니다. 이 마크에는 AIMarker 전자서명이 들어 있고, 발급 기록은 원장 ' + esc(R.ledger && R.ledger.id || '') + ' 에 남았습니다.</p>' +
-      '<a class="btn btn-g btn-s" href="' + url + '" target="_blank" rel="noopener">마크 확인 쪽 열기</a></div>' +
+      '<a class="btn btn-g btn-s" href="' + url + '" target="_blank" rel="noopener">마크 확인 페이지 열기</a></div>' +
       '<div class="mk-done-q">' + MK.qrSvg(url, 120) + '<span>QR로 확인</span></div></div>' + keyBox +
       '<div class="mk-dls">' + embedUi + textUi +
       '<div class="mk-dlrow"><div><b>마크 카드(PNG)</b><span>배지 · 근거 · QR이 들어간 그림. 상세 페이지 · 보도자료 끝에 붙이세요.</span></div><button type="button" class="btn btn-g btn-s" data-act="card">받기</button></div>' +
-      '<div class="mk-dlrow"><div><b>웹사이트 삽입 코드</b><span>누르면 마크 확인 쪽이 열리는 배지입니다.</span></div><button type="button" class="btn btn-g btn-s" data-act="copyembed">복사</button></div>' +
+      '<div class="mk-dlrow"><div><b>웹사이트 삽입 코드</b><span>누르면 마크 확인 페이지가 열리는 배지입니다.</span></div><button type="button" class="btn btn-g btn-s" data-act="copyembed">복사</button></div>' +
       other + '</div></div>';
   }
   function sentence(R) {

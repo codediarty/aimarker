@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261017h"
+VER = "20261017j"
 TODAY = "2026-10-16"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -105,6 +105,24 @@ SPARK = '<path d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1
 LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#0E2A6B"/>'
         '<path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/>'
         '<rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg>')
+
+# 한국AI윤리위원회 상징(인증 기업 표시용, 8.0). 밝은 바탕 · 어두운 바탕 두 가지
+KAIEC_SVG = ('<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="%(bg)s" stroke="%(g)s" stroke-width="3"/>'
+             '<circle cx="32" cy="32" r="25.6" fill="none" stroke="%(au)s" stroke-width="1.3"/>'
+             '<path d="M32 13.5 20.4 43.6M32 13.5l11.6 30.1" stroke="%(g)s" stroke-width="4.2" fill="none"/>'
+             '<circle cx="20.4" cy="45" r="1.8" fill="%(g)s"/><circle cx="43.6" cy="45" r="1.8" fill="%(g)s"/>'
+             '<rect x="31" y="10.4" width="2" height="35.4" fill="%(au)s"/><rect x="27.2" y="10.4" width="9.6" height="1.8" fill="%(au)s"/>'
+             '<rect x="24.6" y="32.4" width="14.8" height="2" fill="%(au)s"/><rect x="27.6" y="44.4" width="8.8" height="1.8" fill="%(au)s"/>'
+             '<text x="32" y="54.6" text-anchor="middle" font-family="Pretendard Variable, Pretendard, sans-serif" font-size="6.2" font-weight="700" letter-spacing="1.1" fill="%(tx)s">KAIEC</text></svg>')
+KAIEC_LT = {"bg": "#FBFAF5", "g": "#0F4A3A", "au": "#B48A3C", "tx": "#1F2B3A"}
+KAIEC_DK = {"bg": "none", "g": "#E6ECF5", "au": "#C9A55C", "tx": "#E6ECF5"}
+
+
+def kaiec_badge(dark=False, lg=False):
+    return ('<a class="x-kaiec%s%s" href="https://kaiec.kr/" target="_blank" rel="noopener" aria-label="한국AI윤리위원회 인증 기업(위원회 누리집 새 창)">%s'
+            '<span><b>한국AI윤리위원회 인증 기업</b><small>KOREA AI ETHICS COMMITTEE</small></span></a>'
+            % (" dk" if dark else "", " lg" if lg else "", KAIEC_SVG % (KAIEC_DK if dark else KAIEC_LT)))
+
 
 # 메뉴(6.0, 2026.10.17): 기업용 · 개인용 두 갈래 + 마크 확인 · 기술 · 요금 · 회사
 # 펼침 메뉴 항목: (주소, 아이콘, 제목, 설명) · 묶음 제목은 ("#", None, "묶음 이름", None)
@@ -191,19 +209,50 @@ def footer(root):
     if b["addr"]:
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
-    cols = [("기업용", [("geo/", "GEO 자동 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 신뢰 · 컴플라이언스"), ("business/", "기업용 전체 보기"), ("pricing/#business", "기업 요금")]),
+    cols = [("기업용", [("geo/", "GEO 자동 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 신뢰 · 컴플라이언스"), ("business/", "기업용 전체 보기"), ("pricing/#business", "기업 요금 · 추가 옵션")]),
             ("개인용", [("humanize/", "AI 작성률 검사 · 휴머나이징"), ("mark/", "무료 AI 표시 · 자동 마킹"), ("proof/", "AI 활용 증빙서"), ("creators/", "크리에이터 사전 등록"), ("pricing/#personal", "개인 요금")]),
             ("도구", [("m/", "마크 확인"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("scan/", "사이트 진단"), ("site/", "AI 표시 자동 태그"), ("verify/", "원장 · 공개 타임스탬프")]),
             ("기술 · 개발자", [("technology/", "기술"), ("developers/", "API · AI 연동"), ("developers/#mcp", "MCP 서버"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("llms.txt", "llms.txt"), ("developers/openapi.json", "OpenAPI 명세")]),
             ("회사", [("company/", "회사 소개"), ("contact/", "기업 상담"), ("trust/", "신뢰 · 판단 기준"), ("guide/", "광고 · AI 표시 가이드"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b class="ct">%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
-    return ('<footer class="ft"><div class="wrap"><div class="top"><div class="ft-a">%s'
-            '<p class="about">AIMarker는 AI 콘텐츠가 만들어지고, 발견되고, 거래되는 모든 과정에서 AI 검색 최적화(GEO) · 자동 AI 표시 · 근거 기록을 제공하는 AI 콘텐츠 플랫폼입니다.</p><div id="aimarker" class="ft-label"></div></div>'
-            '<div class="cols">%s</div></div>'
+    std = ('<div class="ft8-std"><span><b>표준</b> C2PA · IPTC · XMP · schema.org · llms.txt</span>'
+           '<span><b>서명</b> Ed25519(JWS) · <a href="%s.well-known/aimarker-keys.json">공개키</a></span>'
+           '<span><b>원장</b> 하루치를 OpenTimestamps에 고정 · <a href="%sverify/">확인하기</a></span></div>' % (root, root))
+    return ('<footer class="ft"><div class="wrap"><div class="ft8-top"><div class="ft8-brand">%s'
+            '<p class="about">AIMarker는 AI 검색이 우리 회사를 정확히 읽고 인용하게 만들고(GEO), AI로 만든 콘텐츠에는 근거 있는 표시와 기록을 남기는 AI 콘텐츠 신뢰 플랫폼입니다.</p>'
+            '<div class="ft8-cred">%s</div><div id="aimarker" class="ft-label"></div></div>'
+            '<div class="ft8-cols">%s</div></div>%s'
             '<div class="biz">%s<br>'
             '<span>AIMarker 마크는 표시와 그 근거를 기록하는 것이며, 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. 광고 검수 결과는 위험 후보와 근거입니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
             '<span>© 2026 AIMarker</span></div></div></footer>'
-            % (brand(root), colhtml, "".join(biz)))
+            % (brand(root), kaiec_badge(dark=True), colhtml, std, "".join(biz)))
+
+
+def auto_ld(meta, body, path, title, desc):
+    """8.0: 모든 쪽에 구조화 데이터(운영 조직 · 이 페이지 · 자주 묻는 질문)를 자동으로. 우리 사이트도 GEO 기준을 지키게"""
+    import html as _h
+    if meta.get("layout") == "app" or meta.get("noindex"):
+        return ""
+    url = SITE + path
+    own = meta.get("jsonld", "")
+    graph = []
+    if not own:
+        graph.append({"@type": "Organization", "@id": SITE + "#org", "name": "AIMarker", "alternateName": "에이아이마커", "url": SITE,
+                      "logo": SITE + "assets/icon-512.png", "email": "contact@skkc.co.kr",
+                      "parentOrganization": {"@type": "Organization", "name": "성균관컨설팅", "url": "https://www.skkc.co.kr/"}})
+        graph.append({"@type": "WebPage", "@id": url + "#page", "url": url, "name": title, "description": desc, "inLanguage": "ko-KR",
+                      "isPartOf": {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": "AIMarker"}, "publisher": {"@id": SITE + "#org"}})
+    tx = lambda s: re.sub(r"\s+", " ", _h.unescape(re.sub(r"<[^>]+>", "", s))).strip()
+    qa = []
+    for m in re.finditer(r"<details[^>]*>\s*<summary[^>]*>(.*?)</summary>\s*<p>(.*?)</p>\s*</details>", body, re.S):
+        q, a = tx(m.group(1)), tx(m.group(2))
+        if q and a:
+            qa.append({"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}})
+    if len(qa) >= 2 and "FAQPage" not in own:
+        graph.append({"@type": "FAQPage", "@id": url + "#faq", "mainEntity": qa[:20]})
+    if not graph:
+        return ""
+    return '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False).replace("</", "<\\/") + "</script>"
 
 
 def page(meta, body):
@@ -211,7 +260,7 @@ def page(meta, body):
     depth = len([p for p in path.split("/") if p])
     root = "/" if meta.get("absroot") else "../" * depth
     body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
-    body = body.replace("{{root}}", root).replace("{{logo}}", LOGO)
+    body = body.replace("{{root}}", root).replace("{{logo}}", LOGO).replace("{{kaiec}}", kaiec_badge()).replace("{{kaiec_lg}}", kaiec_badge(lg=True)).replace("{{kaiec_dk}}", kaiec_badge(dark=True))
     body = re.sub(r"\{\{ico:([a-z0-9]+)\}\}", lambda m: ico(m.group(1)), body)
     title = meta["title"]
     desc = meta.get("desc", "")
@@ -230,20 +279,20 @@ def page(meta, body):
     if meta.get("manifest"):
         pre += ('<link rel="manifest" href="%sapp/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
                 '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' % root)
-    jsonld = meta.get("jsonld", "")
+    jsonld = meta.get("jsonld", "") + auto_ld(meta, body, path, title, desc)
     noindex = '<meta name="robots" content="noindex">' if meta.get("noindex") else ""
     head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>%s</title><meta name="description" content="%s">%s<link rel="canonical" href="%s%s">'
             '<meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker"><meta property="og:title" content="%s">'
             '<meta property="og:description" content="%s"><meta property="og:url" content="%s%s"><meta property="og:image" content="%sassets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
-            '<meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="%sassets/og.jpg"><meta name="theme-color" content="#0E2A6B">'
+            '<meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="%sassets/og.jpg"><meta name="theme-color" content="#0B1736">'
             '<link rel="icon" href="%sassets/favicon.svg" type="image/svg+xml"><link rel="icon" href="%sassets/favicon-32.png" sizes="32x32" type="image/png">'
             '<link rel="apple-touch-icon" href="%sassets/apple-touch-icon.png">'
             '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>'
             '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">'
             '<link rel="stylesheet" href="%sassets/am.css?v=%s">%s%s%s</head>'
             % (title, desc, noindex, SITE, path, meta.get("ogtitle", title), desc, SITE, path, SITE, SITE, root, root, root, root, VER,
-               ('' if meta.get("layout") == "app" else '<link rel="stylesheet" href="%sassets/site4.css?v=%s">' % (root, VER)), jsonld, pre))
+               ('' if meta.get("layout") == "app" else '<link rel="stylesheet" href="%sassets/site4.css?v=%s"><link rel="stylesheet" href="%sassets/v8.css?v=%s">' % (root, VER, root, VER)), jsonld, pre))
     if meta.get("layout") == "app":   # 작업 공간 · 승인 화면: 머리글 · 바닥글 없이
         return (head + '<body class="app" data-page="%s" data-root="%s">' % (meta.get("key", ""), root) + body +
                 '<script src="%sassets/am.js?v=%s" defer></script>' % (root, VER) + scripts + '</body></html>\n')

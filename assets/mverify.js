@@ -40,7 +40,7 @@
     var g1 = [], g2 = [], g3 = [];
     (r.evidence || []).forEach(function (e) { (e.lv === 'verified' ? g1 : g2).push(li(e.lv === 'verified' ? (e.dir === 'cap' ? 'ok' : 'ai') : e.dir === 'ai' ? 'ai' : e.dir === 'cap' ? 'cap' : 'info', e.t)); });
     if (r.signer) g1.unshift(li('ok', 'C2PA 출처 기록 서명자: ' + r.signer + '(서버에서 서명 · 신뢰 목록 확인)'));
-    if (r.basis === 'declared') g3.push(li('info', "발급자가 '" + (MK.LABEL[r.label] || r.label) + "'(으)로 밝혔습니다. AIMarker 가 기술로 확인한 내용이 아닙니다."));
+    if (r.basis === 'declared') g3.push(li('info', "발급자가 '" + (MK.LABEL[r.label] || r.label) + "'(으)로 밝혔습니다. AIMarker가 기술로 확인한 내용이 아닙니다."));
     if (r.tools) g3.push(li('info', '사용한 AI 도구: ' + r.tools));
     if (r.issuer) g3.push(li('info', '발급자: ' + r.issuer));
     var facts = [['마크 번호', r.id], ['발급 시각', r.at], ['콘텐츠', (MK.KIND[r.kind] || r.kind) + (r.size ? ' · ' + r.size : '')], ['콘텐츠 이름', r.title || '밝히지 않음'], ['발급자', r.issuer || '밝히지 않음'], ['근거', MK.BASIS[r.basis] || r.basis]];
@@ -59,7 +59,7 @@
       '</div><aside class="mv-side">' +
       '<div class="mv-card mv-check"><h2 class="mv-h">가지고 있는 파일이 이 마크의 파일인가요?</h2><label class="mk-drop" id="mvDrop2" for="mvFile2"><input type="file" id="mvFile2" hidden><span class="mk-drop-ic">' + ico('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>') + '</span><b>파일을 놓아 대조하기</b><span>이 기기에서만 계산합니다</span></label><div id="mvCmp"></div></div>' +
       '<div class="mv-card"><h2 class="mv-h">변경 이력</h2><ul class="mv-hist">' + hist + '</ul></div>' +
-      '<div class="mv-card" style="text-align:center">' + MK.qrSvg(MK.markUrl(r.id), 150).replace('class="mk-qr"', 'class="mk-qr" style="margin:0 auto"') + '<p class="note" style="margin-top:8px">이 쪽 주소 QR</p></div>' +
+      '<div class="mv-card" style="text-align:center">' + MK.qrSvg(MK.markUrl(r.id), 150).replace('class="mk-qr"', 'class="mk-qr" style="margin:0 auto"') + '<p class="note" style="margin-top:8px">이 페이지 주소 QR</p></div>' +
       '</aside></div>';
     bindDrop($('#mvDrop2'), $('#mvFile2'), compare);
     var cc = $('#mvCopyCred'); if (cc) cc.addEventListener('click', function () { AM.copy ? AM.copy(r.cred, cc) : navigator.clipboard.writeText(r.cred); });
@@ -87,13 +87,13 @@
       box.innerHTML = '<p>발급 기록이 원장 ' + link + ' 에 남았고, ' + esc(a.date) + ' 하루치 원장(' + a.count + '건)이 공개 타임스탬프(OpenTimestamps)에 묶였습니다.</p>' +
         '<dl class="mv-facts" style="margin-top:12px"><div><dt>그날 원장 뿌리 해시</dt><dd class="mv-mono">' + esc(a.root) + '</dd></div><div><dt>다시 계산한 값</dt><dd>' + (a.match ? '같음' : '<b style="color:var(--red)">다름</b>') + '</dd></div></dl>' +
         '<div class="row" style="margin-top:12px"><button class="btn btn-g btn-s" type="button" id="mvDay">그날 원장 글 받기</button><button class="btn btn-g btn-s" type="button" id="mvOts"' + (Object.keys(a.proofs || {}).length ? '' : ' disabled') + '>타임스탬프 증명(.ots) 받기</button></div>' +
-        '<p class="note" style="margin-top:8px">두 파일을 같은 폴더에 두고 OpenTimestamps 도구(ots verify)나 opentimestamps.org 에서 확인할 수 있습니다.</p>';
+        '<p class="note" style="margin-top:8px">두 파일을 같은 폴더에 두고 OpenTimestamps 도구(ots verify)나 opentimestamps.org에서 확인할 수 있습니다.</p>';
       var name = 'aimarker-ledger-' + a.date + '.txt';
       $('#mvDay').addEventListener('click', function () { MK.save(new Blob([a.text], { type: 'text/plain;charset=utf-8' }), name); });
       $('#mvOts').addEventListener('click', function () { MK.save(new Blob([otsFile(a.root, a.proofs)], { type: 'application/octet-stream' }), name + '.ots'); });
     }).catch(function () { box.innerHTML = '<p class="note">공개 타임스탬프 정보를 불러오지 못했습니다.</p>'; });
   }
-  /* OpenTimestamps 파일: 머리 · 판 · sha256 · 뿌리 해시 · 달력 서버 증명들(ff 로 갈래) */
+  /* OpenTimestamps 파일: 머리 · 판 · sha256 · 뿌리 해시 · 달력 서버 증명들(ff로 갈래) */
   function otsFile(rootHex, proofs) {
     var MAGIC = [0x00, 0x4f, 0x70, 0x65, 0x6e, 0x54, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x73, 0x00, 0x00, 0x50, 0x72, 0x6f, 0x6f, 0x66, 0x00, 0xbf, 0x89, 0xe2, 0xe8, 0x84, 0xe8, 0x92, 0x94];
     var parts = [new Uint8Array(MAGIC), new Uint8Array([0x01, 0x08])], root = new Uint8Array(32);

@@ -156,7 +156,7 @@
     if (L.q) { var qx = cx + L.gap, qy = top; x.save(); rr(x, qx, qy, L.q, L.q, h * 0.12); x.fillStyle = '#FFFFFF'; x.fill(); x.restore(); MK.qrDraw(x, MK.markUrl(m.id || 'AM-0000000000'), qx + L.q * 0.06, qy + L.q * 0.06, L.q * 0.88); }
     return c;
   };
-  /* pos: tl · tr · bl · br, size: s · m · l, qr: true 면 배지 옆에 QR, tags: 광고 · 가상인물 꼬리표 */
+  /* pos: tl · tr · bl · br, size: s · m · l, qr: true면 배지 옆에 QR, tags: 광고 · 가상인물 꼬리표 */
   MK.stamp = function (img, m, o) {
     o = o || {};
     var W = img.naturalWidth || img.width, H = img.naturalHeight || img.height, k = Math.min(1, 8000 / Math.max(W, H), Math.sqrt(40000000 / (W * H)));
