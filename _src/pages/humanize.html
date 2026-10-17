@@ -3,7 +3,7 @@ path: humanize/
 key: humanize
 title: AI 작성률 검사 · 문장별 색 표시 · 휴머나이징 | AIMarker
 ogtitle: 제출 전에, AI가 쓴 티부터 확인하세요 · AIMarker AI 작성률 검사
-desc: 글을 붙여 넣으면 AI 작성 추정률과 AI가 쓴 것으로 보이는 문장을 색으로 보여 드립니다. 학교 · 기관 · 기업이 AI 작성 검사를 하는 지금, 내기 전에 확인하고 내 글로 고쳐 쓰세요. 무료 맛보기, 24시간 이용권 2,900원부터.
+desc: 글을 붙여 넣으면 AI 작성률과 판정(안전 · 고위험 · 부적합), 판정 근거, AI가 쓴 것으로 보이는 문장을 색으로 보여 드립니다. 학교 · 기관 · 기업이 AI 작성 검사를 하는 지금, 내기 전에 확인하고 내 글로 고쳐 쓰세요. 무료 맛보기, 1건 1,900원부터.
 scripts: assets/humanize.js
 styles: assets/mark.css, assets/v6.css, assets/humanize.css
 selflabel: footer
@@ -36,7 +36,7 @@ selflabel: footer
           <div class="hz7-drop-hint" aria-hidden="true">{{ico:upload}}<span>파일을 놓으면 글을 꺼내 옵니다</span></div>
         </div>
         <div class="hz7-opts">
-          <span class="hz7-count"><b id="hzCount">0</b>자 · <span id="hzLimit">무료 맛보기 3,000자 · 이용권 5만 자</span></span>
+          <span class="hz7-count"><b id="hzCount">0</b>자 · <span id="hzLimit">무료 맛보기 6,000자 · 이용권 5만 자</span></span>
           <div class="hz7-optr">
             <label class="hz7-file btn btn-g btn-s">{{ico:file}}<span>파일 불러오기</span><input type="file" id="hzFile" accept=".docx,.hwpx,.txt,.md,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden></label>
             <label class="hz7-tone"><span class="sr">다듬을 때 말투</span><select id="hzTone" aria-label="다듬을 때 말투"><option value="keep">말투 그대로</option><option value="formal">습니다체로</option><option value="polite">해요체로</option></select></label>
@@ -51,13 +51,13 @@ selflabel: footer
         <p class="hz7-note">{{ico:lock}}글은 검사할 때만 서버로 보내고 저장하지 않습니다. 같은 글은 언제나 같은 결과가 나옵니다.</p>
       </div>
       <div class="hz7-out" id="hzOut" aria-live="polite">
-        <div class="hz7-empty">
+        <div class="hz7-empty hz8-empty">
           <div class="hz7-demo" aria-hidden="true">
-            <div class="hz7-demo-h"><div class="ring6 lg hi"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="85"/></svg><b>73<small>%</small></b></div><div><small>예시 결과</small><b>AI 작성 가능성 높음</b><span>문장 9개 가운데 6개가 AI 글과 비슷합니다</span></div></div>
+            <div class="hz8-demo-h"><div class="hz8-g u sm"><svg viewBox="0 0 200 112"><path class="z zs" d="M22.00 98.00 A78 78 0 0 1 36.90 52.15"/><path class="z zr" d="M36.90 52.15 A78 78 0 0 1 75.90 23.82"/><path class="z zu" d="M75.90 23.82 A78 78 0 0 1 178.00 98.00"/><path class="val" d="M22.00 98.00 A78 78 0 0 1 104.90 20.15"/><circle class="dot" cx="104.90" cy="20.15" r="7"/></svg><b>52<small>%</small></b><span>AI 작성률</span></div><div><small>예시 결과</small><div class="hz8-v u"><b>부적합</b><span>개선 필요</span></div><span>AI 작성률 52%(부적합 기준 40% 이상)</span></div></div>
             <p class="hz7-paper"><span class="hz-s l3">인공지능은 현대 사회에서 중요한 역할을 하고 있습니다.</span> <span class="hz-s l2">또한, 다양한 산업 분야에 있어서 혁신적인 변화를 이끌고 있습니다.</span> 지난주 우리 팀은 이 방식으로 회의록 정리를 20분 줄였다. <span class="hz-s l1">결론적으로, 앞으로가 기대됩니다.</span></p>
           </div>
-          <div class="hz7-legend"><span><i class="l3"></i>높음</span><span><i class="l2"></i>중간</span><span><i class="l1"></i>낮음</span><span><i class="l0"></i>사람 글에 가까움</span></div>
-          <p>검사하면 AI가 쓴 것으로 보이는 문장에 형광펜처럼 색을 칠하고, 왜 그렇게 봤는지 보여 드립니다. 무료 맛보기는 전체 추정률과 가장 뚜렷한 문장 2개를 보여 줍니다.</p>
+          <div class="hz7-legend"><span><i class="l3"></i>높음</span><span><i class="l2"></i>중간</span><span><i class="l1"></i>낮음</span><span><i class="l0"></i>표시 없음</span></div>
+          <p>검사하면 AI 작성률과 판정(안전 · 고위험 · 부적합), 판정 근거, 구간별 검출 현황을 보여 드리고, AI가 쓴 것으로 보이는 문장에 형광펜처럼 색을 칠합니다. 무료 맛보기도 판정과 수치는 이용권과 같은 실제 값입니다.</p>
         </div>
       </div>
     </div>
@@ -87,25 +87,33 @@ selflabel: footer
 <section class="s6 soft" id="read">
   <div class="wrap">
     <div class="h6">
-      <h2>색은 이렇게 읽습니다</h2>
-      <p class="lead">문장마다 앞뒤 문장과 함께 살펴, AI가 쓴 글과 비슷한 정도를 형광펜 색으로 칠합니다. 이어서 AI 글처럼 읽히는 구간을 묶어 전체 추정률을 냅니다.</p>
+      <h2>판정은 정해진 기준으로만 합니다</h2>
+      <p class="lead">같은 글은 언제나 같은 결과가 나오도록, 판별 모델이 매긴 문장 점수를 아래 기준(AIMarker 판정 기준 1.0)에 그대로 넣어 판정합니다. 사람이 기분에 따라 바꾸지 않습니다.</p>
+    </div>
+    <div class="hz8-crit">
+      <article class="u"><h3><b>부적합</b>개선 필요</h3><ul><li>AI 작성률 40% 이상</li><li>AI 검출 구간이 전체 구간의 절반 이상(2구간 이상일 때)</li><li>AI 대화창 흔적 1곳 이상(줄 첫머리의 굵게 표시 ** · 제목 기호 # · 글 맨 앞의 “물론입니다”)</li></ul><p>하나라도 맞으면 부적합입니다.</p></article>
+      <article class="r"><h3><b>고위험</b>수정 권고</h3><ul><li>AI 작성률 20% 이상</li><li>AI 검출 구간 1곳 이상</li><li>AI 가능성 중간 이상 문장 1개 이상</li></ul><p>부적합이 아니면서 하나라도 맞으면 고위험입니다.</p></article>
+      <article class="s"><h3><b>안전</b>AI 패턴 적음</h3><ul><li>위의 어느 것에도 해당하지 않음</li><li>60자보다 짧은 글은 판단하지 않음(판단 보류)</li></ul><p>추정값이므로 제출처의 AI 사용 규정도 함께 확인하세요.</p></article>
     </div>
     <div class="hz7-read">
       <div class="hz7-key">
-        <div><i class="l3"></i><b>높음</b><span>AI 작성 추정 구간 가운데 AI 글 패턴이 아주 뚜렷한 문장</span></div>
-        <div><i class="l2"></i><b>중간</b><span>AI 작성 추정 구간에 든 문장</span></div>
-        <div><i class="l1"></i><b>낮음</b><span>구간 밖이지만 AI 글 패턴이 조금 보이는 문장</span></div>
-        <div><i class="l0"></i><b>표시 없음</b><span>사람이 쓴 글에 가까운 문장</span></div>
+        <div><i class="l3"></i><b>높음</b><span>판별 확률 85 이상인 문장</span></div>
+        <div><i class="l2"></i><b>중간</b><span>판별 확률 65 이상 85 미만인 문장</span></div>
+        <div><i class="l1"></i><b>낮음</b><span>문장 하나만 보면 65 미만이지만, 앞뒤 문장과 함께 본 구간 판정에서 AI로 든 문장</span></div>
+        <div><i class="l0"></i><b>표시 없음</b><span>위에 들지 않는 문장. 색이 칠해진 문장의 글자 수 ÷ 전체 글자 수(빈칸 뺌)가 AI 작성률입니다</span></div>
+        <p class="hz8-mute">구간은 문단 단위입니다. 30자 미만 문단은 다음 문단과 합치고, 1,000자가 넘는 문단은 문장 경계에서 나눕니다. 구간 글자의 20% 이상이 AI 검출 문장이면 검출 구간입니다.</p>
       </div>
       <div class="hz7-pat">
-        <h3>자주 걸리는 AI 패턴</h3>
+        <h3>검출 구간마다 보는 AI 문체 특성</h3>
         <ul>
           <li><b>번역투</b><span>~에 있어서 · ~을 통해 · ~함으로써 · 되어지다</span></li>
           <li><b>상투적 연결어</b><span>문장마다 붙는 또한, · 결론적으로, · 이처럼,</span></li>
-          <li><b>빈말 수식</b><span>다양한 · 효과적으로 · 혁신적인 · 중요한 역할을 한다</span></li>
-          <li><b>틀에 박힌 처음과 끝</b><span>~에 대해 알아보겠습니다 · 도움이 되셨길 바랍니다</span></li>
+          <li><b>빈말 · 과장 수식</b><span>다양한 · 효과적으로 · 혁신적인 · 중요한 역할을 한다</span></li>
+          <li><b>틀에 박힌 도입 · 마무리</b><span>~에 대해 알아보겠습니다 · 도움이 되셨길 바랍니다</span></li>
           <li><b>대화창 복사 흔적</b><span>물론입니다! · 굵은 글씨(**) · 제목 기호(#)</span></li>
-          <li><b>너무 고른 글</b><span>비슷한 길이의 문장 · 같은 끝맺음이 이어짐</span></li>
+          <li><b>단조로운 리듬</b><span>비슷한 길이의 문장 · 같은 끝맺음 · 같은 첫마디</span></li>
+          <li><b>구체적 근거 부족</b><span>숫자 · 이름 · 인용 없이 일반적으로 · 대체로 같은 일반론만</span></li>
+          <li><b>문장 짜임 · 말투</b><span>눈에 띄는 표현은 없지만 판별 모델이 AI 글과 비슷한 짜임을 찾음</span></li>
         </ul>
       </div>
     </div>
@@ -119,9 +127,9 @@ selflabel: footer
       <p class="lead">문장 단위로 보여 주는 데서 끝나지 않고, 고쳐 쓰고 다시 확인하는 데까지 돕습니다.</p>
     </div>
     <ol class="hz7-steps">
-      <li><b>문장별 색 확인</b><p>어느 문장이 AI처럼 읽히는지, 왜 그렇게 봤는지 문장마다 보여 줍니다. 문단별 막대로 어디에 몰려 있는지도 한눈에 봅니다.</p></li>
+      <li><b>판정 · 문장별 색 확인</b><p>판정과 판정 근거를 먼저 보고, 어느 문장이 AI처럼 읽히는지 · 왜 그렇게 봤는지 문장마다 확인합니다. 구간별 타일로 어디에 몰려 있는지도 한눈에 봅니다.</p></li>
       <li><b>문장 고쳐 쓰기</b><p>색이 칠해진 문장을 누르면 도우미가 바꿀 표현과 고친 문장을 제안합니다. 내 경험 · 생각 · 구체적인 예를 한 가지 더하면 내 글에 가까워집니다.</p></li>
-      <li><b>다시 검사 · 리포트</b><p>고친 글을 다시 검사해 색이 어떻게 바뀌었는지 확인하고, 검사 번호가 찍힌 결과 리포트를 PDF로 저장합니다.</p></li>
+      <li><b>다시 검사 · 결과상세내역서</b><p>고친 글을 같은 기준으로 다시 검사해 판정이 어떻게 바뀌었는지 확인하고, 검사 번호 · 판정 근거 · 구간별 분석이 담긴 결과상세내역서를 PDF로 저장합니다.</p></li>
     </ol>
   </div>
 </section>
@@ -129,15 +137,21 @@ selflabel: footer
 <section class="s6 soft" id="price">
   <div class="wrap">
     <div class="h6 c">
-      <h2>맛보기는 무료, 전체는 이용권으로</h2>
-      <p class="lead">무료 맛보기도 추정률은 이용권과 같은 실제 값입니다. 어느 문장인지, 왜 그런지, 어떻게 고칠지는 이용권으로 엽니다. 가격은 부가세 포함입니다.</p>
+      <h2>판정은 무료로, 고칠 곳은 이용권으로</h2>
+      <p class="lead">무료 맛보기도 작성률 · 판정 · 판정 근거는 이용권과 같은 실제 값입니다. 어느 문장 · 어느 구간인지, 왜 그런지, 어떻게 고칠지와 결과상세내역서는 결제하면 바로 열립니다. 가격은 부가세 포함입니다.</p>
+    </div>
+    <div class="hz8-free">
+      <h3>무료 맛보기<small>0원</small></h3>
+      <ul><li>{{ico:check}}한 번에 6,000자</li><li>{{ico:check}}AI 작성률 · 판정 · 판정 근거</li><li>{{ico:check}}검출 글자 · 구간 · 문장 수</li><li>{{ico:check}}종합 분석 의견 · 문체 특성</li><li>{{ico:check}}가장 뚜렷한 문장 2개</li><li class="no">{{ico:lock}}나머지 문장 · 구간 위치 · 결과상세내역서</li></ul>
+      <a class="btn btn-g" href="#tool">무료로 검사하기</a>
     </div>
     <div class="hz7-plans">
-      <article class="hz7-plan"><h3>무료 맛보기</h3><p class="p">0원</p><p class="for">가입 없이 바로</p><ul><li>{{ico:check}}한 번에 3,000자</li><li>{{ico:check}}전체 AI 작성 추정률</li><li>{{ico:check}}AI 의심 문장 수 · 패턴 종류별 개수</li><li>{{ico:check}}가장 뚜렷한 의심 문장 2개</li><li class="no">{{ico:lock}}나머지 문장의 색 · 이유 · 리포트</li></ul><a class="btn btn-g" href="#tool">무료로 검사하기</a></article>
-      <article class="hz7-plan on"><span class="hz7-badge">제출 직전에</span><h3>24시간 이용권</h3><p class="p">2,900원</p><p class="for">처음 쓴 때부터 24시간</p><ul><li>{{ico:check}}검사 · 다듬기 40회(6,000자마다 1회)</li><li>{{ico:check}}한 번에 5만 자 · 논문도 한 번에</li><li>{{ico:check}}모든 문장의 색 표시와 이유</li><li>{{ico:check}}문장 고쳐 쓰기 도우미 · 표현 다듬기</li><li>{{ico:check}}검사 번호가 찍힌 결과 리포트(PDF)</li><li>{{ico:check}}고급 휴머나이징 3회(준비되면)</li></ul><button class="btn btn-p" type="button" data-buy="d1">24시간 이용권 사기</button></article>
-      <article class="hz7-plan"><h3>30일 이용권</h3><p class="p">9,900원</p><p class="for">처음 쓴 날부터 30일</p><ul><li>{{ico:check}}하루 검사 · 다듬기 40회</li><li>{{ico:check}}24시간 이용권의 모든 기능</li><li>{{ico:check}}고급 휴머나이징 하루 5회(준비되면)</li><li>{{ico:check}}과제 · 자기소개서를 자주 쓰는 학기 중에</li></ul><button class="btn btn-n" type="button" data-buy="m1">30일 이용권 사기</button></article>
+      <article class="hz7-plan"><h3>1건 이용권</h3><p class="p">1,900원</p><p class="for">글 한 편 · 처음 쓴 때부터 24시간</p><ul><li>{{ico:check}}검사 · 다듬기 3회(6,000자마다 1회)</li><li>{{ico:check}}모든 문장의 색 · 이유 · 구간별 분석</li><li>{{ico:check}}결과상세내역서(PDF)</li><li>{{ico:check}}고친 뒤 다시 검사</li></ul><button class="btn btn-n" type="button" data-buy="s1">1건 이용권 사기</button></article>
+      <article class="hz7-plan on"><span class="hz7-badge">추천 · 제출 직전에</span><h3>24시간 이용권</h3><p class="p">2,900원</p><p class="for">처음 쓴 때부터 24시간</p><ul><li>{{ico:check}}검사 · 다듬기 40회</li><li>{{ico:check}}한 번에 5만 자 · 논문도 한 번에</li><li>{{ico:check}}모든 문장의 색 · 이유 · 구간별 분석</li><li>{{ico:check}}문장 고쳐 쓰기 도우미 · 표현 다듬기</li><li>{{ico:check}}결과상세내역서(PDF)</li><li>{{ico:check}}고급 휴머나이징 3회(준비되면)</li></ul><button class="btn btn-p" type="button" data-buy="d1">24시간 이용권 사기</button></article>
+      <article class="hz7-plan"><h3>30일 이용권</h3><p class="p">9,900원</p><p class="for">처음 쓴 날부터 30일 · <span class="per">하루 약 330원</span></p><ul><li>{{ico:check}}하루 검사 · 다듬기 40회</li><li>{{ico:check}}24시간 이용권의 모든 기능</li><li>{{ico:check}}고급 휴머나이징 하루 5회(준비되면)</li><li>{{ico:check}}과제 · 자기소개서를 자주 쓰는 달에</li></ul><button class="btn btn-n" type="button" data-buy="m1">30일 이용권 사기</button></article>
+      <article class="hz7-plan"><h3>90일 이용권</h3><p class="p">19,900원</p><p class="for">처음 쓴 날부터 90일 · <span class="per">하루 약 220원</span></p><ul><li>{{ico:check}}하루 검사 · 다듬기 40회</li><li>{{ico:check}}30일 이용권의 모든 기능</li><li>{{ico:check}}한 학기 · 취업 준비 기간 내내</li></ul><button class="btn btn-n" type="button" data-buy="q1">90일 이용권 사기</button></article>
     </div>
-    <p class="hz7-plan-note">이미 코드가 있나요? <button type="button" class="hz7-link" data-code>이용권 코드 넣기</button> · 결제가 확인되면 코드를 메일로 보내 드립니다 · 사용 전이면 구매 후 7일 안에 환불(<a href="{{root}}terms/#pass">이용권 약관</a>)</p>
+    <p class="hz7-plan-note">이미 코드가 있나요? <button type="button" class="hz7-link" data-code>이용권 코드 넣기</button> · 카드 · 간편결제로 바로 결제하면 코드 입력 없이 바로 열립니다 · 사용 전이면 구매 후 7일 안에 환불(<a href="{{root}}terms/#pass">이용권 약관</a>)</p>
   </div>
 </section>
 
@@ -145,14 +159,14 @@ selflabel: footer
   <div class="wrap">
     <div class="h6 c"><h2>자주 묻는 것</h2></div>
     <div class="faq6 c">
-      <details><summary>AI 작성 추정률은 무엇인가요?</summary><p>글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 부분이 얼마나 되는지를 글자 수 비율로 보여 주는 추정값입니다. 문장마다 앞뒤 문장과 함께 살펴 점수를 매기고, 점수가 이어서 높은 구간을 AI 작성 추정 구간으로 묶습니다.</p></details>
-      <details><summary>무료 맛보기와 이용권은 무엇이 다른가요?</summary><p>무료 맛보기는 앞 3,000자의 전체 추정률과 AI 의심 문장 수, 가장 뚜렷한 문장 2개를 보여 줍니다. 추정률은 이용권과 같은 실제 값입니다. 이용권은 모든 문장의 색 표시와 이유, 문장 고쳐 쓰기 도우미, 표현 다듬기, 결과 리포트, 5만 자까지 한 번에 검사를 엽니다.</p></details>
+      <details><summary>AI 작성률과 판정은 어떻게 정하나요?</summary><p>판별 모델이 문장마다 앞뒤 문장과 함께 점수를 매기고, 정해진 기준으로 문장 등급(높음 · 중간 · 낮음)을 붙입니다. 등급이 붙은 문장의 글자 수 ÷ 전체 글자 수가 AI 작성률이고, 작성률 · 검출 구간 · 대화창 흔적을 위의 판정 기준에 넣어 안전 · 고위험 · 부적합을 정합니다. 같은 글은 언제나 같은 값과 같은 판정이 나옵니다.</p></details>
+      <details><summary>무료 맛보기와 이용권은 무엇이 다른가요?</summary><p>무료 맛보기는 앞 6,000자의 AI 작성률 · 판정 · 판정 근거 · 검출 수치 · 종합 분석 의견 · 문체 특성 이름과 가장 뚜렷한 문장 2개를 보여 줍니다. 값은 이용권과 같은 실제 값입니다. 이용권은 모든 문장의 색과 이유, 구간별 위치와 비중, 특성마다 걸린 표현, 먼저 고칠 문장, 문장 고쳐 쓰기 도우미 · 표현 다듬기, 결과상세내역서(PDF), 5만 자까지 한 번에 검사를 엽니다.</p></details>
       <details><summary>학교나 회사의 검사기와 결과가 같나요?</summary><p>검사기마다 학습한 글과 방법이 달라 결과가 다를 수 있습니다. AIMarker는 다른 서비스의 결과를 약속하지 않습니다. 어느 문장이 AI처럼 읽히는지 미리 살피고 내 글로 고쳐 쓰는 데 쓰세요.</p></details>
       <details><summary>AI 작성률이 높으면 AI가 썼다는 뜻인가요?</summary><p>아니요. 판정이나 증명이 아니라 추정입니다. 딱딱한 보고서체 · 공문체처럼 사람 글이 높게 나올 수도 있고, 사람이 많이 고친 AI 글은 낮게 나올 수 있습니다. 시 · 노랫말처럼 줄이 짧은 글과 150자보다 짧은 글은 특히 불안정합니다. 결과만으로 다른 사람을 판단하지 마세요.</p></details>
       <details><summary>표현 다듬기만 하면 추정률이 내려가나요?</summary><p>표현 다듬기는 AI가 자주 쓰는 표현을 바꿉니다. 글의 짜임과 흐름에 AI 패턴이 남아 있으면 추정률이 크게 내려가지 않을 수 있습니다. 색이 칠해진 문장을 눌러 문장 고쳐 쓰기 도우미로 내 경험 · 생각 · 구체적인 예를 더해 고쳐 쓰면 내 글에 가까워집니다.</p></details>
-      <details><summary>이용권은 어떻게 받나요?</summary><p>주문하면 주문 번호와 결제 안내를 드립니다. 결제가 확인되면 이용권 코드를 메일로 보내 드리고, 메일의 단추를 누르면 코드가 들어간 채로 이 쪽이 열립니다. 이용권 기간은 처음 검사한 때부터 시작합니다.</p></details>
-      <details><summary>환불되나요?</summary><p>사용하기 전이면 구매 후 7일 안에 환불해 드립니다. 한 번이라도 검사에 사용한 이용권은 디지털 콘텐츠 특성상 환불이 어렵습니다. 서버 오류로 검사가 끝나지 않은 경우에는 횟수를 차감하지 않습니다.</p></details>
-      <details><summary>내 글이 저장되나요?</summary><p>검사하고 다듬을 때만 서버로 보내고 저장하지 않습니다. 이용권은 남은 횟수와 기간만 세고, 글 내용은 남기지 않습니다. 결과 리포트는 이 브라우저에서 만들어 저장합니다.</p></details>
+      <details><summary>이용권은 어떻게 받나요?</summary><p>카드 · 간편결제로 바로 결제하면 승인되는 즉시 이 화면에서 전체 결과가 열리고, 이용권 코드와 영수증은 메일로도 보내 드립니다. 바로 결제를 쓸 수 없을 때는 주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 코드를 보내 드립니다. 이용권 기간은 처음 검사한 때부터 시작합니다.</p></details>
+      <details><summary>환불되나요?</summary><p>사용하기 전이면 구매 후 7일 안에 전액 환불해 드립니다(contact@skkc.co.kr 로 주문 번호와 함께). 한 번이라도 검사에 사용한 이용권은 디지털 콘텐츠 특성상 환불이 어렵습니다. 서버 오류로 검사가 끝나지 않은 경우에는 횟수를 차감하지 않습니다.</p></details>
+      <details><summary>내 글이 저장되나요?</summary><p>검사하고 다듬을 때만 서버로 보내고 저장하지 않습니다. 이용권은 남은 횟수와 기간만 세고, 글 내용은 남기지 않습니다. 결제 창으로 다녀오는 동안에는 넣은 글을 이 브라우저(탭)에만 잠시 두었다가 돌아오면 지웁니다. 결과상세내역서는 이 브라우저에서 만들어 저장합니다.</p></details>
     </div>
     <ol class="hz-src" id="src">
       <li>유니콘팩토리, 「"GPT로 쓰고 흔적 지운다"…대학가 번지는 '과제 자가점검'」, 2026.5.26. 지난 4월 교수자 평가용 서비스 검사 문서량 32만 8천여 건 → 57만 7천여 건(75.9% 증가), 학생 1인당 평균 재검사 6.6회 → 10.7회.</li>
@@ -167,26 +181,29 @@ selflabel: footer
 <section class="end6">
   <div class="wrap">
     <h2>내기 전에, 한 번만 확인하세요</h2>
-    <p>무료 맛보기로 추정률을 보고, 이용권으로 어느 문장인지 확인해 고쳐 쓰세요.</p>
-    <div class="row"><a class="btn btn-p btn-l" href="#tool">AI 작성률 무료 검사</a><button class="btn btn-gl btn-l" type="button" data-buy="d1">24시간 이용권 2,900원</button></div>
+    <p>무료 맛보기로 판정을 보고, 이용권으로 어느 문장인지 확인해 고쳐 쓰세요.</p>
+    <div class="row"><a class="btn btn-p btn-l" href="#tool">AI 작성률 무료 검사</a><button class="btn btn-gl btn-l" type="button" data-buy="s1">1건 이용권 1,900원</button></div>
   </div>
 </section>
 
 <dialog class="hz7-dlg" id="hzBuy" aria-labelledby="hzBuyT">
   <form method="dialog" class="hz7-dlg-x"><button type="submit" aria-label="닫기">{{ico:x}}</button></form>
   <div class="hz7-dlg-b" id="hzBuyBody">
-    <h2 id="hzBuyT">이용권 사기</h2>
+    <h2 id="hzBuyT">이용권 고르기</h2>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-prod"><legend class="sr">이용권 고르기</legend>
-        <label><input type="radio" name="product" value="d1" checked><span><b>24시간 이용권</b><em>2,900원</em><small>처음 쓴 때부터 24시간 · 검사 · 다듬기 40회 · 한 번에 5만 자</small></span></label>
-        <label><input type="radio" name="product" value="m1"><span><b>30일 이용권</b><em>9,900원</em><small>처음 쓴 날부터 30일 · 하루 40회</small></span></label>
+        <label><input type="radio" name="product" value="s1"><span><b>1건 이용권</b><em>1,900원</em><small>글 한 편 · 검사 · 다듬기 3회(6,000자마다 1회) · 결과상세내역서 · 24시간</small></span></label>
+        <label class="best"><input type="radio" name="product" value="d1" checked><span><b>24시간 이용권<i>추천</i></b><em>2,900원</em><small>처음 쓴 때부터 24시간 · 검사 · 다듬기 40회 · 고급 휴머나이징 3회</small></span></label>
+        <label><input type="radio" name="product" value="m1"><span><b>30일 이용권</b><em>9,900원</em><small>처음 쓴 날부터 30일 · 하루 검사 · 다듬기 40회 · 하루 약 330원</small></span></label>
+        <label><input type="radio" name="product" value="q1"><span><b>90일 이용권</b><em>19,900원</em><small>처음 쓴 날부터 90일 · 하루 검사 · 다듬기 40회 · 하루 약 220원</small></span></label>
       </fieldset>
-      <div class="field"><label for="hzBuyMail">코드를 받을 이메일 <em>필수</em></label><input class="inp" id="hzBuyMail" name="contact" type="email" inputmode="email" autocomplete="email" maxlength="80" required placeholder="name@example.com"></div>
-      <label class="consent"><input type="checkbox" name="agree"><span>구매 · 환불 안내(사용 전이면 구매 후 7일 안 환불, 사용한 뒤에는 환불이 어려움)와, 주문 확인 · 코드 발송을 위한 이메일 수집에 동의합니다. <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a> · <a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a></span></label>
+      <div class="field"><label for="hzBuyMail">코드 · 영수증을 받을 이메일 <em>필수</em></label><input class="inp" id="hzBuyMail" name="contact" type="email" inputmode="email" autocomplete="email" maxlength="80" required placeholder="name@example.com"></div>
+      <label class="consent"><input type="checkbox" name="agree"><span>구매 · 환불 안내(사용 전이면 구매 후 7일 안 전액 환불, 한 번이라도 사용한 뒤에는 디지털 콘텐츠 특성상 환불이 어려움)와, 주문 확인 · 코드 발송을 위한 이메일 수집에 동의합니다. <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a> · <a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a></span></label>
       <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <button class="btn btn-p btn-l" type="submit">주문하기</button>
+      <button class="btn btn-p btn-l" type="submit"><span>주문하기</span></button>
       <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n">가격은 부가세 포함입니다. 주문하면 결제 안내를 드리고, 결제가 확인되면 코드를 메일로 보내 드립니다. 운영 성균관컨설팅 · 통신판매업 신고 제2026-경기송탄-0622</p>
+      <p class="hz7-dlg-n" id="hzBuyNote">주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 이용권 코드를 보내 드립니다.</p>
+      <p class="hz7-dlg-n">가격은 부가세 포함입니다. 운영 성균관컨설팅(대표 이채연) · 사업자등록번호 272-32-01885 · 통신판매업 신고 제2026-경기송탄-0622 · 문의 contact@skkc.co.kr</p>
     </form>
   </div>
 </dialog>

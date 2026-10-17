@@ -9,7 +9,7 @@
  * - 마크 서명(Ed25519 · JWS)은 이 컴퓨터에서 공개키로 확인합니다.
  * - 부가 기능: 광고 문구 검수 · 자동 수정 · 표시 문구 · 사이트 진단 · 광고주 승인 링크 · 증거 원장.
  *
- * 실행: AIMARKER_KEY=amk_... npx -y https://aimarker.kr/mcp/aimarker-mcp-2.3.0.tgz
+ * 실행: AIMARKER_KEY=amk_... npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz
  * 또는:  AIMARKER_KEY=amk_... node aimarker-mcp.mjs
  * 필요: Node.js 18 이상. 의존성 없음(sharp 가 있으면 비슷한 이미지 찾기용 지각 해시도 만듭니다). 표준 입출력(stdio) MCP.
  *
@@ -22,12 +22,12 @@ import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 
-const VERSION = '2.3.0';
+const VERSION = '2.4.0';
 const API = process.env.AIMARKER_URL || 'https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec';
 const SITE = 'https://aimarker.kr';
 const KEYS_URL = process.env.AIMARKER_KEYS_URL || SITE + '/.well-known/aimarker-keys.json';
 const KEY = String(process.env.AIMARKER_KEY || '').trim();
-const PASS = String(process.env.AIMARKER_PASS || '').trim();   // 2.3: 개인 이용권 코드(선택) · AI 작성률 문장별 전체
+const PASS = String(process.env.AIMARKER_PASS || '').trim();   // 2.3: 개인 이용권 코드(선택) · AI 작성률 문장별 전체. 2.4: 판정(안전 · 고위험 · 부적합) · 판정 근거 · 문체 특성 · 종합 의견
 const TIMEOUT = Number(process.env.AIMARKER_TIMEOUT_MS) || 90000;
 const PROTOCOLS = ['2025-11-25', '2025-06-18', '2025-03-26', '2024-11-05'];
 const MAX_FILE = 300 * 1024 * 1024;
@@ -1663,10 +1663,10 @@ const TOOLS = [
     description: '사이트 · 상품 쪽 주소 하나로 AI 검색 준비 점수(0~100: AI 크롤러 접근 · 구조화 데이터 · 본문 · 메타 · 질문과 답 · 이미지 · 신뢰)와 붙여 넣을 고칠 코드(JSON-LD · llms.txt · robots.txt · 메타 · FAQ)를 받습니다. 상품 쪽이면 AI 상품 피드 한 줄(id · title · price · brand · image_link …)도 줍니다. 공개된 쪽만 읽고, 같은 주소는 6시간 같은 결과입니다.',
     inputSchema: { type: 'object', properties: { url: { type: 'string', minLength: 4, maxLength: 300, description: '사이트 · 상품 쪽 주소(예: myshop.co.kr/product/123)' } }, required: ['url'] },
     annotations: { title: 'GEO 진단 · AI 상품 피드', ...RO } },
-  { name: 'aimarker_detect_text', title: 'AI 작성 추정률(글)',
-    description: '글을 서버로 보내 AI 작성 추정률(0~100: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 부분의 비율)과 AI 패턴이 몰린 문장을 받습니다. 결정적 모델이라 같은 글은 언제나 같은 값입니다. 추정일 뿐 판정 · 증명이 아니니 결과만으로 사람을 판단하지 마세요. 글은 저장하지 않습니다. 한 번에 6,000자. 무료 키는 맛보기(앞 3,000자의 실제 추정률 · 가장 뚜렷한 의심 문장 2개)이고, 이용권 코드(pass)나 유료 키면 모든 문장의 판정을 받습니다.',
+  { name: 'aimarker_detect_text', title: 'AI 작성률 · 판정(글)',
+    description: '글을 서버로 보내 AI 작성률(0~100: AI 검출 문장의 글자 비율)과 판정(안전 · 고위험 · 부적합, AIMarker 판정 기준 1.0) · 판정 근거 · 구간별 검출 · AI 문체 특성 · 종합 분석 의견과 AI 패턴이 몰린 문장을 받습니다. 결정적 모델과 정해진 기준이라 같은 글은 언제나 같은 값 · 같은 판정입니다. 추정일 뿐 증명이 아니니 결과만으로 사람을 판단하지 마세요. 글은 저장하지 않습니다. 한 번에 6,000자. 무료 키는 맛보기(판정 · 수치는 같은 값, 문장 위치는 가장 뚜렷한 2개만)이고, 이용권 코드(pass)나 유료 키면 모든 문장 · 구간을 받습니다.',
     inputSchema: { type: 'object', properties: { text: { type: 'string', minLength: 1, maxLength: 6000, description: '확인할 글(6,000자까지)' }, pass: { type: 'string', maxLength: 24, description: '개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 없으면 환경 변수 AIMARKER_PASS 를 씁니다. 한 번 부를 때 이용권 1회를 씁니다(600자 이하는 세지 않음).' } }, required: ['text'] },
-    annotations: { title: 'AI 작성 추정률', ...RO } },
+    annotations: { title: 'AI 작성률 · 판정', ...RO } },
   { name: 'aimarker_scan_site', title: '사이트 진단(부가 기능)',
     description: '공개된 사이트 첫 화면과 이미지 12장까지 살펴 AI 사용 흔적 · AI 상담 창 · 광고 표현 위험 후보를 보수적으로 진단합니다. 기록이 지워진 이미지는 없음이 아니라 확인 불가로 셉니다. 10~20초 걸립니다.',
     inputSchema: { type: 'object', properties: { url: { type: 'string', minLength: 4, maxLength: 200, description: '사이트 주소(예: myshop.co.kr)' } }, required: ['url'] },
@@ -2213,10 +2213,17 @@ const RUN = {
     need(t.length <= 6000, '한 번에 6,000자까지입니다. 나눠서 보내 주세요.');
     const pass = String(a.pass || PASS || '').trim();
     const r = await api('am.detect', pass ? { text: t, pass } : { text: t });
-    const hits = (r.sentences || []).filter((x) => x.ai).slice(0, 6);
-    const L = ['AI 작성 추정률: ' + r.rate + '% · ' + r.levelKo, '- 문장 ' + r.n + '개 · 글자 ' + r.chars + '자' + (r.short ? ' · 짧은 글이라 불안정' : '') + (r.verse ? ' · 시 · 노랫말처럼 짧은 줄이라 불안정' : '')];
-    if (hits.length) L.push('', 'AI 패턴이 몰린 문장(일부):', ...hits.map((x) => '- (' + x.p + ') ' + x.t.slice(0, 120)));
-    if (r.full === false) L.push('', '무료 맛보기: ' + (r.cut ? '앞 ' + Number(r.freeMax || 3000).toLocaleString() + '자만 검사했습니다(전체 ' + Number(r.total || t.length).toLocaleString() + '자). ' : '') + 'AI 의심 문장 ' + (r.aiN || 0) + '개 가운데 ' + (r.shown || 0) + '개만 보여 줍니다. 모든 문장은 이용권 코드(pass · https://aimarker.kr/humanize/#price)나 유료 API 키로 받습니다.');
+    const hits = (r.sentences || []).filter((x) => x.g || x.ai).sort((a, b) => (b.p || 0) - (a.p || 0)).slice(0, 6);
+    const b = r.band || {}, lv = r.lv || {}, LVN = ['', '낮음', '중간', '높음'];
+    const L = ['AI 작성률: ' + r.rate + '% · 판정 ' + (b.label || r.levelKo) + (r.critName ? ' (' + r.critName + ')' : '')];
+    (b.why || []).forEach((w) => L.push('- 판정 근거: ' + w));
+    L.push('- 검출 글자 ' + (r.aiChars || 0) + ' / ' + r.chars + '자 · 검출 구간 ' + (r.segAi || 0) + ' / ' + (r.segN || 0) + ' · 검출 문장 ' + (r.aiN || 0) + ' / ' + r.n + '(높음 ' + (lv.hi || 0) + ' · 중간 ' + (lv.mid || 0) + ' · 낮음 ' + (lv.low || 0) + ')' + (r.short ? ' · 짧은 글이라 불안정' : '') + (r.verse ? ' · 시 · 노랫말처럼 짧은 줄이라 불안정' : ''));
+    if (r.chat) L.push('- AI 대화창 흔적: ' + (r.chatList || []).map((c) => c.name + ' ' + c.n + '곳').join(', '));
+    if ((r.feat || []).length) L.push('- AI 문체 특성: ' + r.feat.slice(0, 4).map((f) => f.name + ' ' + f.segs + '구간' + (f.tags && f.tags.length ? '(' + f.tags.slice(0, 3).join(', ') + ')' : '')).join(' · '));
+    if ((r.opinion || []).length) L.push('', '종합 의견:', ...r.opinion.map((x, i) => (i + 1) + '. ' + x));
+    if ((r.opDetail || []).length) L.push(...r.opDetail.map((x) => '- ' + x));
+    if (hits.length) L.push('', 'AI 패턴이 몰린 문장(일부):', ...hits.map((x) => '- (' + (LVN[x.g] || '') + ' ' + x.p + ') ' + x.t.slice(0, 120)));
+    if (r.full === false) L.push('', '무료 맛보기: 판정 · 수치는 이용권과 같은 값입니다. 검출 문장 ' + (r.aiN || 0) + '개 가운데 ' + (r.shown || 0) + '개만 위치를 보여 주고, 구간 위치 · 먼저 고칠 문장 · 특성별 걸린 표현은 이용권 코드(pass · https://aimarker.kr/humanize/#price)나 유료 API 키로 받습니다.');
     if (r.pass) L.push('- 이용권: ' + r.pass.name + ' · 남은 ' + r.pass.left + '회' + (r.pass.end ? ' · ' + String(r.pass.end).slice(0, 16) + '까지' : ''));
     L.push('', r.note || '추정값이며 판정 · 증명이 아닙니다.');
     return ok(L.join('\n'), r);

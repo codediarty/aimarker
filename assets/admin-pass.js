@@ -48,23 +48,24 @@
   }
 
   function badge(st) {
-    var k = /보냄|사용/.test(st) ? 'ok' : /대기|만듦/.test(st) ? 'wait' : /중지|취소|환불/.test(st) ? 'off' : '';
+    var k = /보냄|사용/.test(st) ? 'ok' : /대기|만듦|열림/.test(st) ? 'wait' : /중지|취소|환불|실패|확인 필요/.test(st) ? 'off' : '';
     return '<span class="adm-b ' + k + '">' + esc(st === '사용' ? '쓸 수 있음' : (st || '-')) + '</span>';
   }
   function render() {
     var ords = D.orders || [], ps = D.passes || [];
     $('#ordN').textContent = ords.length ? n2(ords.length) + '건' : '';
     $('#ordList').innerHTML = ords.length ? ords.map(function (o) {
-      var sent = /보냄/.test(o.st), p = PROD[o.plan];
-      return '<div class="adm-it' + (o.id === ORDER ? ' hit' : '') + '" id="o-' + esc(o.id) + '"><div class="adm-m"><b>' + esc(o.id) + '</b>' + badge(o.st) + '<span>' + esc(o.plan) + (p ? ' · ' + n2(p.price) + '원' : '') + '</span></div>' +
-        '<div class="adm-s"><span>' + esc(o.at) + '</span><span>' + esc(o.contact) + '</span>' + (o.memo ? '<span>' + esc(o.memo) + '</span>' : '') + '</div>' +
-        '<div class="adm-a">' + (p ? '<button class="btn ' + (sent ? 'btn-g' : 'btn-p') + ' btn-s" type="button" data-send="' + esc(o.id) + '" data-prod="' + esc(p.id) + '">' + (sent ? '다시 보내기' : '이용권 보내기') + '</button>' : '') + '</div></div>';
+      var sent = /보냄/.test(o.st), p = PROD[o.plan], toss = /pk [A-Za-z0-9_\-=.]{8,}/.test(o.memo || ''), paidNow = toss && /^결제 완료/.test(o.st), noSend = /^(결제창 열림|결제 실패|환불)/.test(o.st);
+      return '<div class="adm-it' + (o.id === ORDER ? ' hit' : '') + '" id="o-' + esc(o.id) + '"><div class="adm-m"><b>' + esc(o.id) + '</b>' + badge(o.st) + '<span>' + esc(o.plan) + (p ? ' · ' + n2(p.price) + '원' : '') + (toss ? ' · 바로 결제' : '') + '</span></div>' +
+        '<div class="adm-s"><span>' + esc(o.at) + '</span><span>' + esc(o.contact) + '</span>' + (o.memo ? '<span>' + esc(o.memo.replace(/ · pk [A-Za-z0-9_\-=.]+/, '')) + '</span>' : '') + (/^결제창 열림/.test(o.st) ? '<span class="adm-mute">결제 창을 연 뒤 아직 끝나지 않음(결제가 끝나면 자동으로 이용권이 나갑니다)</span>' : '') + '</div>' +
+        '<div class="adm-a">' + (p && !noSend ? '<button class="btn ' + (sent ? 'btn-g' : 'btn-p') + ' btn-s" type="button" data-send="' + esc(o.id) + '" data-prod="' + esc(p.id) + '">' + (sent ? '새 코드 보내기' : '이용권 보내기') + '</button>' : '') + (paidNow ? '<button class="btn btn-g btn-s" type="button" data-refund="' + esc(o.id) + '">환불(결제 취소)</button>' : '') + '</div></div>';
     }).join('') : '<p class="adm-empty">아직 주문이 없습니다.</p>';
     var sel = $('#isProd'); if (!sel.options.length) sel.innerHTML = (D.products || []).map(function (p) { return '<option value="' + esc(p.id) + '">' + esc(p.name) + ' · ' + n2(p.price) + '원</option>'; }).join('');
     $('#psN').textContent = ps.length ? n2(ps.length) + '개' : '';
     passes();
     var links = D.links || {}, lk = (D.products || []).map(function (p) { return '<dt>' + esc(p.name) + ' 결제 링크</dt><dd>' + (links[p.id] ? '<a href="' + esc(links[p.id]) + '" target="_blank" rel="noopener">' + esc(links[p.id]) + '</a>' : '<span class="adm-mute">없음(주문 뒤 메일로 결제 안내)</span>') + '</dd>'; }).join('');
-    $('#payBox').innerHTML = '<dt>결제 안내 글</dt><dd>' + (D.payGuide ? esc(D.payGuide) : '<span class="adm-mute">비어 있음: 기본 안내(담당자가 메일로 결제 방법을 알려 드림)가 나갑니다.</span>') + '</dd>' + lk;
+    var pay = D.pay || {};
+    $('#payBox').innerHTML = '<dt>바로 결제</dt><dd>' + (pay.ready ? '<b>켜짐</b> · ' + (pay.mode === 'widget' ? '결제위젯' : '결제창') + (pay.test ? ' · <b>시험 키</b>(실제 돈이 나가지 않음)' : ' · 실제 결제') + ' · 결제가 승인되면 이용권이 자동으로 나가고 매출 알림 메일이 옵니다' : '<span class="adm-mute">꺼짐: 스크립트 속성에 TOSS_CLIENT_KEY · TOSS_SECRET_KEY(토스페이먼츠)를 넣으면 켜집니다. 그 전까지는 주문 메일 → 이용권 보내기</span>') + '</dd>' + '<dt>결제 안내 글</dt><dd>' + (D.payGuide ? esc(D.payGuide) : '<span class="adm-mute">비어 있음: 기본 안내(담당자가 메일로 결제 방법을 알려 드림)가 나갑니다.</span>') + '</dd>' + lk;
     if (ORDER) { var h = document.getElementById('o-' + ORDER); if (h) { h.scrollIntoView({ block: 'center' }); ORDER = ''; } }
   }
   function passes() {
@@ -100,6 +101,13 @@
         else { $('#issueOut').innerHTML = codesHtml(r, r.mailErr || '메일을 보내지 못했습니다. 코드를 직접 전해 주세요.'); location.hash = 'issue'; }
         return load();
       }).catch(function (e2) { toast((e2 && e2.message) || '보내지 못했습니다.'); if (e2 && e2.code === 'ADMIN') gate(e2.message); b.disabled = false; b.textContent = b._old || '이용권 보내기'; });
+      return;
+    }
+    if (b.hasAttribute('data-refund')) {
+      if (!twice(b, '한 번 더 누르면 결제 취소 · 이용권 멈춤')) return;
+      b.disabled = true; b.textContent = '환불하는 중…';
+      call('refund', { order: b.getAttribute('data-refund'), reason: '구매자 요청 환불' }).then(function (r) { toast(r.id + (r.already ? ' 은 이미 환불한 주문입니다.' : ' 결제를 취소하고 이용권' + (r.pass ? '(' + r.pass + ')' : '') + '을 멈췄습니다.')); return load(); })
+        .catch(function (e5) { toast((e5 && e5.message) || '환불하지 못했습니다.'); if (e5 && e5.code === 'ADMIN') gate(e5.message); b.disabled = false; b.textContent = '환불(결제 취소)'; });
       return;
     }
     if (b.hasAttribute('data-stop')) {

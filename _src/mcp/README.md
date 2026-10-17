@@ -25,19 +25,19 @@ Claude Desktop · Cursor · Gemini CLI (`mcpServers`):
   "mcpServers": {
     "aimarker": {
       "command": "npx",
-      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.3.0.tgz"],
+      "args": ["-y", "https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz"],
       "env": { "AIMARKER_KEY": "amk_발급받은_키" }
     }
   }
 }
 ```
 
-Windows 에서 `npx` 를 찾지 못하면 `"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.3.0.tgz"]` 로 바꾸세요.
+Windows 에서 `npx` 를 찾지 못하면 `"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz"]` 로 바꾸세요.
 
 Claude Code:
 
 ```bash
-claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.3.0.tgz
+claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz
 ```
 
 파일 하나로 쓰려면 https://aimarker.kr/mcp/aimarker-mcp.mjs 를 내려받아 `"command": "node", "args": ["/경로/aimarker-mcp.mjs"]` 로 등록합니다.
@@ -72,7 +72,7 @@ claude mcp add aimarker -e AIMARKER_KEY=amk_발급받은_키 -- npx -y https://a
 ## 환경 변수
 
 - `AIMARKER_KEY` (필수): API 키
-- `AIMARKER_PASS` (선택, 2.3): 개인 이용권 코드. 넣으면 `aimarker_detect_text` 가 문장별 전체를 돌려줍니다(없으면 무료 맛보기: 앞 3,000자 · 의심 문장 2개). https://aimarker.kr/humanize/#price
+- `AIMARKER_PASS` (선택, 2.3): 개인 이용권 코드. 넣으면 `aimarker_detect_text` 가 문장별 · 구간별 전체를 돌려줍니다(없으면 무료 맛보기: 판정 · 수치는 같은 값, 문장 위치는 2개만). 2.4 부터 판정(안전 · 고위험 · 부적합) · 판정 근거 · 문체 특성 · 종합 의견을 함께 보여 줍니다. https://aimarker.kr/humanize/#price
 - `AIMARKER_TIMEOUT_MS` (선택): 요청 제한 시간, 기본 90000
 
 문의: contact@skkc.co.kr · https://aimarker.kr/developers/

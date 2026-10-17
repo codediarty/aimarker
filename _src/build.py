@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261017g"
+VER = "20261017h"
 TODAY = "2026-10-16"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -134,7 +134,7 @@ GROUP_KEYS = {"business": ["business", "geo", "commerce", "compliance", "product
               "personal": ["personal", "humanize", "proof", "creators", "mark"]}
 PRODUCT_KEYS = GROUP_KEYS["business"]
 ANNOUNCE = ("geo/", "기업", "월 구독 없이 1회 세팅으로 AI 검색 최적화와 AI 표시를 끝냅니다. 주소만 넣고 무료 진단부터 받아 보세요", "무료 진단")
-ANNOUNCE_P = ("humanize/", "개인", "학교 · 기관 · 기업은 이미 AI 작성 여부를 확인합니다. 내기 전에 문장별 색 표시로 먼저 확인하세요", "무료 맛보기")
+ANNOUNCE_P = ("humanize/", "개인", "학교 · 기관 · 기업은 이미 AI 작성 여부를 확인합니다. 내기 전에 판정과 문장별 색으로 먼저 확인하세요", "무료 맛보기")
 
 
 def ico(name, cls="ico"):
@@ -269,7 +269,7 @@ def parse(src):
 
 
 # ---------- AI 연동 자료(4.0): MCP 서버 · SDK · 함수 호출 도구 정의 · llms.txt ----------
-MCP_VER = "2.3.0"
+MCP_VER = "2.4.0"
 _IND = {"type": "string", "enum": ["auto", "gen", "food", "hfood", "cos", "med", "fin"],
         "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."}
 _FLAGS = {"type": "object", "description": "콘텐츠 정보(모르면 비움).", "properties": {
@@ -307,7 +307,7 @@ FC_TOOLS = [
      {"kind": {"type": "string", "enum": ["image", "video", "person", "text", "sponsor"]}, "level": {"type": "string", "enum": ["gen", "edit"], "description": "gen: AI로 만듦 · edit: AI로 고침"}}, ["kind"]),
     ("aimarker_geo_check", "am.geo", "사이트 · 상품 쪽 주소 하나로 AI 검색 준비 점수(0~100: AI 크롤러 접근 · 구조화 데이터 · 본문 · 메타 · 질문과 답 · 이미지 · 신뢰)와 붙여 넣을 고칠 코드(JSON-LD · llms.txt · robots.txt · 메타 · FAQ)를 받습니다. 상품 쪽이면 AI 상품 피드 한 줄도 줍니다.",
      {"url": {"type": "string", "description": "사이트 · 상품 쪽 주소"}}, ["url"]),
-    ("aimarker_detect_text", "am.detect", "글의 AI 작성 추정률(0~100)과 AI 패턴이 몰린 문장을 받습니다. 같은 글은 언제나 같은 값입니다. 추정일 뿐 판정 · 증명이 아니므로 결과만으로 사람을 판단하지 마세요. 글은 서버로 보내지만 저장하지 않습니다. 6,000자까지. 무료 키는 맛보기(앞 3,000자의 실제 추정률 · 가장 뚜렷한 의심 문장 2개)이고, 이용권 코드(pass)나 유료 키면 모든 문장의 판정을 받습니다.",
+    ("aimarker_detect_text", "am.detect", "글의 AI 작성률(0~100)과 판정(band: 안전 · 고위험 · 부적합, AIMarker 판정 기준 1.0) · 판정 근거(band.why) · 구간별 검출 · AI 문체 특성 · 종합 의견과 AI 패턴이 몰린 문장을 받습니다. 같은 글은 언제나 같은 값 · 같은 판정입니다. 추정일 뿐 증명이 아니므로 결과만으로 사람을 판단하지 마세요. 글은 서버로 보내지만 저장하지 않습니다. 6,000자까지. 무료 키는 맛보기(판정 · 수치는 같은 값, 문장 위치는 가장 뚜렷한 2개만)이고, 이용권 코드(pass)나 유료 키면 모든 문장 · 구간을 받습니다.",
      {"text": {"type": "string", "description": "확인할 글(6,000자까지)"}, "pass": {"type": "string", "description": "개인 이용권 코드(선택). 한 번 부를 때 1회를 씀(600자 이하는 세지 않음)"}}, ["text"]),
     ("aimarker_stamp", "am.stamp", "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려주고, 하루치 원장은 다음 날 공개 앵커로 묶입니다.",
      {"content": {"type": "string", "description": "기록할 내용(실행 코드가 해시로 바꿈)"}, "k": {"type": "string", "enum": ["report", "version", "approval"], "description": "기록 종류"}, "n": {"type": "integer", "description": "보고서에 든 소재 수(선택)"}}, ["content"]),

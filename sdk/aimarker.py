@@ -369,8 +369,8 @@ class AIMarker:
         return self.call("am.geo", url=str(url or ""))
 
     def detect(self, text, sentences=True, pass_code=None):
-        """AI 작성 추정률(추정 · 판정 아님 · 같은 글은 같은 값). 글은 서버에서 저장하지 않음. 6,000자까지.
-        무료 키는 맛보기(앞 3,000자 · 의심 문장 2개), pass_code(개인 이용권 코드)나 유료 키면 문장별 전체"""
+        """AI 작성률(추정이며 증명이 아님 · 같은 글은 같은 값 · 같은 판정). 글은 서버에서 저장하지 않음. 6,000자까지.
+        판정(band: 안전 · 고위험 · 부적합 · 판정 근거 why, AIMarker 판정 기준 1.0)도 함께. 무료 키는 맛보기(판정 · 수치는 같은 값, 문장 위치는 2개만), pass_code(개인 이용권 코드)나 유료 키면 문장별 · 구간별 전체"""
         extra = {"pass": str(pass_code)} if pass_code else {}
         return self.call("am.detect", text=str(text or ""), sentences=bool(sentences), **extra)
 

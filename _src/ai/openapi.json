@@ -2,9 +2,9 @@
  "openapi": "3.1.0",
  "info": {
   "title": "AIMarker API",
-  "version": "2026.10.17-5.2",
+  "version": "2026.10.17-5.3",
   "summary": "AI 사용 확인 · 서명된 마크 발급 · 마크 확인 · 공개 앵커 API(부가: 광고 문구 검수)",
-  "description": "AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 근거에 맞는 표시를 서명된 디지털 마크로 발급 · 관리하는 AI 콘텐츠 투명성 플랫폼입니다.\n\n- 모든 요청은 같은 주소(/exec)로 POST 하고 본문의 action 으로 동작을 고릅니다. 본문은 JSON 문자열, Content-Type: text/plain.\n- 서버가 302 로 결과 주소를 알려 주므로 리다이렉트를 따라가세요(POST → GET).\n- 파일 원본은 받지 않습니다. 출처 판독기 aim-extract(https://aimarker.kr/lib/aim-extract.js)가 만든 features(특징값) · pack(서명 검증용 조각)만 보냅니다.\n- 마크 서명(cred)은 JWS(EdDSA · Ed25519). 공개키: am.pubkey · https://aimarker.kr/.well-known/aimarker-keys.json\n- 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지 · 표시본에 AI 마크가 있으면 CONFIRM(사용자 확인 뒤 confirm: true).\n- 마크는 표시와 근거의 기록이며 법적 인증이 아닙니다. 광고 문구 검수(부가 기능)는 위험 후보와 근거이며 법률 자문이 아닙니다.\n- AI 에이전트용: MCP 서버 https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz · 한 파일 설명서 https://aimarker.kr/llms-full.txt",
+  "description": "AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 근거에 맞는 표시를 서명된 디지털 마크로 발급 · 관리하는 AI 콘텐츠 투명성 플랫폼입니다.\n\n- 모든 요청은 같은 주소(/exec)로 POST 하고 본문의 action 으로 동작을 고릅니다. 본문은 JSON 문자열, Content-Type: text/plain.\n- 서버가 302 로 결과 주소를 알려 주므로 리다이렉트를 따라가세요(POST → GET).\n- 파일 원본은 받지 않습니다. 출처 판독기 aim-extract(https://aimarker.kr/lib/aim-extract.js)가 만든 features(특징값) · pack(서명 검증용 조각)만 보냅니다.\n- 마크 서명(cred)은 JWS(EdDSA · Ed25519). 공개키: am.pubkey · https://aimarker.kr/.well-known/aimarker-keys.json\n- 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지 · 표시본에 AI 마크가 있으면 CONFIRM(사용자 확인 뒤 confirm: true).\n- 마크는 표시와 근거의 기록이며 법적 인증이 아닙니다. 광고 문구 검수(부가 기능)는 위험 후보와 근거이며 법률 자문이 아닙니다.\n- AI 에이전트용: MCP 서버 https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz · 한 파일 설명서 https://aimarker.kr/llms-full.txt",
   "contact": {
    "name": "AIMarker",
    "email": "contact@skkc.co.kr",
@@ -2397,7 +2397,7 @@
      "pass": {
       "type": "string",
       "maxLength": 24,
-      "description": "개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 전체 · 한 번에 1회 차감(600자 이하는 차감 없음). 없고 무료 키면 맛보기(앞 3,000자 · 의심 문장 2개)"
+      "description": "개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 · 구간별 전체 · 한 번에 1회 차감(600자 이하는 차감 없음). 없고 무료 키면 맛보기(같은 판정 · 같은 값, 문장 위치는 가장 뚜렷한 2개만)"
      }
     },
     "required": [
@@ -2449,7 +2449,7 @@
    "DetectRequest": {
     "type": "object",
     "title": "am.detect",
-    "description": "AI 작성 추정: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 부분의 비율(rate, 0~100)과 문장별 추정. 결정적 모델이라 같은 글은 언제나 같은 값. 추정일 뿐 판정 · 증명이 아님. 글은 저장하지 않음. 한 번에 6,000자. 무료 키는 맛보기(앞 3,000자의 실제 추정률 · 가장 뚜렷한 의심 문장 2개, 나머지 문장은 lock), 이용권 코드(pass)나 유료 키(하루 한도 1,000 이상)면 모든 문장",
+    "description": "AI 작성률과 판정: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 문장의 글자 비율(rate, 0~100), 판정 기준 AMJ-1.0(AIMarker 판정 기준 1.0)으로 정한 판정(band: 안전 · 고위험 · 부적합 · 판단 보류)과 판정 근거(band.why), 문장 등급(g: 3 높음 · 2 중간 · 1 낮음), 구간(문단)별 검출(segs), AI 문체 특성(feat), 종합 분석 의견(opinion). 결정적 모델 · 정해진 기준이라 같은 글은 언제나 같은 값 · 같은 판정. 추정일 뿐 증명이 아님. 글은 저장하지 않음. 한 번에 6,000자. 무료 키는 맛보기(판정 · 수치 · 의견은 같은 값, 문장 위치는 가장 뚜렷한 2개만 · segs · opDetail 은 빼고 개수만 · 특성 예시는 맨 위 1개만), 이용권 코드(pass)나 유료 키(하루 한도 1,000 이상)면 모두",
     "properties": {
      "action": {
       "type": "string",
@@ -2472,7 +2472,7 @@
      "pass": {
       "type": "string",
       "maxLength": 24,
-      "description": "개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 전체 · 한 번에 1회 차감(600자 이하는 차감 없음). 없고 무료 키면 맛보기(앞 3,000자 · 의심 문장 2개)"
+      "description": "개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 · 구간별 전체 · 한 번에 1회 차감(600자 이하는 차감 없음). 없고 무료 키면 맛보기(같은 판정 · 같은 값, 문장 위치는 가장 뚜렷한 2개만)"
      }
     },
     "required": [
@@ -2492,7 +2492,7 @@
       "type": "integer",
       "minimum": 0,
       "maximum": 100,
-      "description": "AI 작성 추정률(글자 수 비율)"
+      "description": "AI 작성률: AI 검출 문장(등급 g 가 있는 문장)의 글자 수 ÷ 전체 글자 수(빈칸 뺌), 반올림"
      },
      "level": {
       "type": "string",
@@ -2502,7 +2502,8 @@
        "low",
        "none",
        "short"
-      ]
+      ],
+      "description": "band 와 같은 뜻의 짧은 값(high 부적합 · mid 고위험 · low/none 안전 · short 판단 보류)"
      },
      "levelKo": {
       "type": "string"
@@ -2532,7 +2533,7 @@
         },
         "p": {
          "type": "integer",
-         "description": "AI 패턴 점수 0~100"
+         "description": "문장 판별 확률 0~100(앞뒤 문맥을 함께 봄)"
         },
         "ai": {
          "type": "integer",
@@ -2540,7 +2541,7 @@
           0,
           1
          ],
-         "description": "AI 작성 추정 구간이면 1"
+         "description": "AI 검출 문장이면 1(g 가 1 이상)"
         },
         "nl": {
          "type": "integer"
@@ -2554,6 +2555,16 @@
           1
          ],
          "description": "무료 맛보기에서 가린 문장(t · nl · para 만 있음)"
+        },
+        "g": {
+         "type": "integer",
+         "enum": [
+          0,
+          1,
+          2,
+          3
+         ],
+         "description": "문장 등급: 3 높음(p 85 이상) · 2 중간(65 이상) · 1 낮음(65 미만이지만 구간 판정에서 AI) · 0 없음"
         }
        }
       }
@@ -2566,11 +2577,11 @@
      },
      "aiN": {
       "type": "integer",
-      "description": "AI 작성 추정 문장 수"
+      "description": "AI 검출 문장 수"
      },
      "aiChars": {
       "type": "integer",
-      "description": "AI 작성 추정 구간 글자 수"
+      "description": "AI 검출 문장 글자 수"
      },
      "cn": {
       "type": "string",
@@ -2586,11 +2597,11 @@
      },
      "shown": {
       "type": "integer",
-      "description": "무료 맛보기에서 보여 준 의심 문장 수(2개까지)"
+      "description": "무료 맛보기에서 보여 준 검출 문장 수(2개까지)"
      },
      "cut": {
       "type": "boolean",
-      "description": "무료 맛보기에서 앞 3,000자만 검사했는지"
+      "description": "무료 맛보기에서 앞부분만 검사했는지(한 번에 6,000자라 보통 false)"
      },
      "total": {
       "type": "integer",
@@ -2598,7 +2609,7 @@
      },
      "freeMax": {
       "type": "integer",
-      "description": "무료 맛보기 글자 한도(3,000)"
+      "description": "무료 맛보기 글자 한도(6,000)"
      },
      "pass": {
       "type": "object",
@@ -2617,6 +2628,228 @@
         "type": "integer"
        }
       }
+     },
+     "band": {
+      "type": "object",
+      "description": "판정(판정 기준 AMJ-1.0). 부적합: 작성률 40% 이상 · 검출 구간이 전체의 절반 이상(2구간 이상일 때) · AI 대화창 흔적 1곳 이상 / 고위험: 작성률 20% 이상 · 검출 구간 1곳 이상 · 중간 이상 문장 1개 이상 / 안전: 그 밖 / 60자 미만은 판단 보류",
+      "properties": {
+       "key": {
+        "type": "string",
+        "enum": [
+         "unfit",
+         "risk",
+         "safe",
+         "short"
+        ]
+       },
+       "ko": {
+        "type": "string",
+        "description": "부적합 · 고위험 · 안전 · 판단 보류"
+       },
+       "label": {
+        "type": "string",
+        "description": "예: 부적합 · 개선 필요"
+       },
+       "why": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        },
+        "description": "판정 근거(맞은 기준마다 한 줄)"
+       }
+      }
+     },
+     "crit": {
+      "type": "string",
+      "description": "판정 기준 버전(AMJ-1.0)"
+     },
+     "critName": {
+      "type": "string",
+      "description": "AIMarker 판정 기준 1.0"
+     },
+     "lv": {
+      "type": "object",
+      "description": "등급별 문장 수",
+      "properties": {
+       "hi": {
+        "type": "integer",
+        "description": "높음(판별 확률 85 이상)"
+       },
+       "mid": {
+        "type": "integer",
+        "description": "중간(65 이상)"
+       },
+       "low": {
+        "type": "integer",
+        "description": "낮음(65 미만이지만 구간 판정에서 AI)"
+       }
+      }
+     },
+     "segN": {
+      "type": "integer",
+      "description": "구간(문단) 수"
+     },
+     "segAi": {
+      "type": "integer",
+      "description": "AI 검출 구간 수(구간 글자의 20% 이상이 AI 검출 문장)"
+     },
+     "segs": {
+      "type": "array",
+      "description": "구간별 검출(무료 맛보기에는 없음, segLock 에 개수)",
+      "items": {
+       "type": "object",
+       "properties": {
+        "no": {
+         "type": "integer"
+        },
+        "s": {
+         "type": "integer",
+         "description": "첫 문장 번호(sentences 기준)"
+        },
+        "e": {
+         "type": "integer",
+         "description": "끝 문장 번호"
+        },
+        "c": {
+         "type": "integer",
+         "description": "글자 수"
+        },
+        "a": {
+         "type": "integer",
+         "description": "AI 검출 글자 수"
+        },
+        "share": {
+         "type": "integer",
+         "description": "검출 비중 %"
+        },
+        "ai": {
+         "type": "integer",
+         "enum": [
+          0,
+          1
+         ]
+        },
+        "hi": {
+         "type": "integer"
+        },
+        "mid": {
+         "type": "integer"
+        },
+        "low": {
+         "type": "integer"
+        },
+        "feat": {
+         "type": "array",
+         "items": {
+          "type": "integer"
+         },
+         "description": "이 구간의 주요 문체 특성 번호"
+        }
+       }
+      }
+     },
+     "segLock": {
+      "type": "integer",
+      "description": "무료 맛보기에서 가린 구간 수"
+     },
+     "chat": {
+      "type": "integer",
+      "description": "AI 대화창 흔적 수(줄 첫머리 굵게 표시 · 제목 기호 · 글 맨 앞 AI 답변 첫마디)"
+     },
+     "chatList": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "n": {
+         "type": "integer"
+        },
+        "t": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "feat": {
+      "type": "array",
+      "description": "AI 문체 특성(검출 구간마다 본 것): 1 번역투 · 2 상투적 연결어 · 3 빈말 · 과장 수식 · 4 틀에 박힌 도입 · 마무리 · 5 대화창 복사 흔적 · 6 단조로운 리듬 · 7 구체적 근거 부족 · 8 문장 짜임 · 말투",
+      "items": {
+       "type": "object",
+       "properties": {
+        "cat": {
+         "type": "integer"
+        },
+        "name": {
+         "type": "string"
+        },
+        "segs": {
+         "type": "integer",
+         "description": "이 특성이 나온 검출 구간 수"
+        },
+        "share": {
+         "type": "integer",
+         "description": "검출 구간 가운데 비중 %"
+        },
+        "n": {
+         "type": "integer",
+         "description": "건수"
+        },
+        "tags": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         },
+         "description": "걸린 표현(무료 맛보기는 맨 위 특성만)"
+        },
+        "why": {
+         "type": "string"
+        },
+        "lock": {
+         "type": "integer",
+         "enum": [
+          1
+         ]
+        }
+       }
+      }
+     },
+     "cats": {
+      "type": "array",
+      "description": "글 전체의 AI식 표현 종류별 개수",
+      "items": {
+       "type": "object",
+       "properties": {
+        "cat": {
+         "type": "integer"
+        },
+        "name": {
+         "type": "string"
+        },
+        "n": {
+         "type": "integer"
+        }
+       }
+      }
+     },
+     "opinion": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "종합 분석 의견(규칙으로 만듦, 같은 값이면 같은 문장)"
+     },
+     "opDetail": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      },
+      "description": "위치가 들어간 의견(먼저 고칠 문장 · 가장 많이 검출된 구간 · 검출 구간 위치). 무료 맛보기에는 없음(opDetailN 에 개수)"
+     },
+     "opDetailN": {
+      "type": "integer"
      }
     }
    },
@@ -2664,7 +2897,7 @@
   }
  },
  "x-aimarker": {
-  "mcp": "https://aimarker.kr/mcp/aimarker-mcp-2.0.0.tgz",
+  "mcp": "https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz",
   "llms": "https://aimarker.kr/llms-full.txt",
   "tools": {
    "openai": "https://aimarker.kr/developers/tools/openai.json",
