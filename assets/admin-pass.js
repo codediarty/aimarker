@@ -103,10 +103,19 @@
       }).catch(function (e2) { toast((e2 && e2.message) || '보내지 못했습니다.'); if (e2 && e2.code === 'ADMIN') gate(e2.message); b.disabled = false; b.textContent = b._old || '이용권 보내기'; });
       return;
     }
-    if (b.hasAttribute('data-refund')) {
-      if (!twice(b, '한 번 더 누르면 결제 취소 · 이용권 멈춤')) return;
-      b.disabled = true; b.textContent = '환불하는 중…';
-      call('refund', { order: b.getAttribute('data-refund'), reason: '구매자 요청 환불' }).then(function (r) { toast(r.id + (r.already ? ' 은 이미 환불한 주문입니다.' : ' 결제를 취소하고 이용권' + (r.pass ? '(' + r.pass + ')' : '') + '을 멈췄습니다.')); return load(); })
+    if (b.hasAttribute('data-refund')) {   // 1.27.0 약관 제7조의3 기준 금액을 먼저 보고, 두 번째 누름에 환불(대상이 아니면 '전액 환불(예외)')
+      var oid = b.getAttribute('data-refund');
+      if (b.getAttribute('data-arm') !== '1') {
+        b.disabled = true;
+        call('quote', { order: oid }).then(function (q) {
+          b.disabled = false; b._mode = q.amount > 0 ? 'auto' : 'full';
+          toast(q.why + (q.amount > 0 ? ' → ' + n2(q.amount) + '원' : ' → 약관상 환불 대상이 아닙니다. 예외로 전액 환불하려면 한 번 더 누르세요.'));
+          twice(b, q.amount > 0 ? '한 번 더 누르면 ' + n2(q.amount) + '원 환불' + (q.amount < q.price ? '(부분 취소)' : '') : '한 번 더 누르면 전액 환불(예외)');
+        }).catch(function (e6) { b.disabled = false; toast((e6 && e6.message) || '환불 금액을 확인하지 못했습니다.'); if (e6 && e6.code === 'ADMIN') gate(e6.message); });
+        return;
+      }
+      twice(b); b.disabled = true; b.textContent = '환불하는 중…';
+      call('refund', { order: oid, mode: b._mode || 'auto', reason: b._mode === 'full' ? '예외 전액 환불' : '' }).then(function (r) { toast(r.id + (r.already ? ' 은 이미 환불한 주문입니다.' : ' ' + n2(r.amount) + '원을 ' + (r.partial ? '부분 취소' : '결제 취소') + '하고 이용권' + (r.pass ? '(' + r.pass + ')' : '') + '을 멈췄습니다.')); return load(); })
         .catch(function (e5) { toast((e5 && e5.message) || '환불하지 못했습니다.'); if (e5 && e5.code === 'ADMIN') gate(e5.message); b.disabled = false; b.textContent = '환불(결제 취소)'; });
       return;
     }

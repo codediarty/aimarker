@@ -1,4 +1,6 @@
-/* AIMarker AI 작성률 검사 · 휴머나이징 8.0 (2026.10.17 밤)
+/* AIMarker AI 작성률 검사 · 휴머나이징 8.1 (2026.10.18)
+   - 8.1: 인간화 엔진 HUM(서버 1.27.0, 생성 AI 없이). 고급 휴머나이징 무료 맛보기(첫 문단) · 이용권은 6,000자씩 나눠 전체 · 다른 버전 ·
+     말투 자동(보고서 · 과제는 한다체) · 한다체 · 해요체 · 습니다체 · 다시 쓴 문장 후보 2개(도우미)
    - 판정 기준 AMJ-1.0: AI 작성률 · 판정(안전 · 고위험 · 부적합)과 판정 근거 · 구간(문단)별 검출 · AI 문체 특성 · 종합 분석 의견
    - 무료 맛보기(앞 6,000자, 이용권 첫 조각과 같은 범위 · 같은 값): 작성률 · 판정 · 근거 · 글자 수 · 구간 수 · 특성 이름 · 의견과 가장 뚜렷한 문장 2개.
      위치(문장별 색 · 구간) · 특성 예시 · 먼저 고칠 문장 · 결과상세내역서는 결제 뒤에 열림
@@ -10,18 +12,19 @@
   var AM = window.AM || {}, $ = function (s, el) { return (el || document).querySelector(s); };
   var box = $('#hz'); if (!box || !AM.call) return;
   var ta = $('#hzText'), out = $('#hzOut'), btnC = $('#hzCheck'), btnF = $('#hzFix'), btnP = $('#hzPro'), passEl = $('#hzPass');
-  var FREE_MAX = 6000, PAID_MAX = 50000, CHUNK = 6000, HUM_MAX = 3500, HELP_MAX = 600;
-  var S = { pass: '', ps: null, passMsg: '', proReady: false, info: null, busy: false, res: null, fx: null, edits: {}, sel: -1, side: 'ai', cache: {}, first: true, paid: null };
+  var FREE_MAX = 6000, PAID_MAX = 50000, CHUNK = 6000, HUM_MAX = 6000, HELP_MAX = 600;
+  var S = { pass: '', ps: null, passMsg: '', proReady: true, info: null, busy: false, res: null, fx: null, edits: {}, sel: -1, side: 'ai', cache: {}, first: true, paid: null, variant: 0, toneUsed: '' };
+  var CAT = { 0: '말투', 1: '번역투', 2: '상투적 연결어', 3: '빈말 · 과장 수식', 4: '틀에 박힌 도입 · 마무리', 5: '대화창 복사 흔적', 6: '문장 리듬', 7: '딱딱한 어휘' };
   var LV = ['', '낮음', '중간', '높음'], ROOT = document.body.getAttribute('data-root') || '/';
   var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   /* 판정 기준 AMJ-1.0(서버 detect.js와 같은 숫자 · 같은 문장 틀). 여러 조각(6,000자씩)을 합칠 때만 사이트에서 다시 계산 */
   var J = { HI: 85, MID: 65, SHORT: 60, SEG_AI: 20, UNFIT_RATE: 40, RISK_RATE: 20, UNFIT_SEG: 50,
     B: { unfit: ['부적합', '부적합 · 개선 필요'], risk: ['고위험', '고위험 · 수정 권고'], safe: ['안전', '안전 · AI 패턴 적음'], short: ['판단 보류', '판단 보류 · 글이 짧음'] } };
   var PRODS = [
-    { id: 's1', name: '1건 이용권', price: 1900, desc: '글 한 편 · 검사 · 다듬기 3회(6,000자마다 1회) · 결과상세내역서 · 24시간' },
-    { id: 'd1', name: '24시간 이용권', price: 2900, best: 1, desc: '처음 사용한 때부터 24시간 · 검사 · 다듬기 40회 · 고급 휴머나이징 3회' },
-    { id: 'm1', name: '30일 이용권', price: 9900, days: 30, desc: '처음 사용한 날부터 30일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 5회' },
-    { id: 'q1', name: '90일 이용권', price: 19900, days: 90, desc: '처음 사용한 날부터 90일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 5회' }
+    { id: 's1', name: '1건 이용권', price: 1900, desc: '글 한 편 · 검사 · 다듬기 3회(6,000자마다 1회) · 고급 휴머나이징 1회 · 결과상세내역서 · 24시간' },
+    { id: 'd1', name: '24시간 이용권', price: 2900, best: 1, desc: '처음 사용한 때부터 24시간 · 검사 · 다듬기 40회 · 고급 휴머나이징 10회' },
+    { id: 'm1', name: '30일 이용권', price: 9900, days: 30, desc: '처음 사용한 날부터 30일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 20회' },
+    { id: 'q1', name: '90일 이용권', price: 19900, days: 90, desc: '처음 사용한 날부터 90일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 20회' }
   ];
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
@@ -32,7 +35,8 @@
   function sset(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { /* 저장 없이 */ } }
   function ssget(k) { try { return JSON.parse(sessionStorage.getItem(k) || 'null'); } catch (e) { return null; } }
   function ssset(k, v) { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 저장 없이 */ } }
-  function tone() { return ($('#hzTone') || {}).value || 'keep'; }
+  function tone() { return ($('#hzTone') || {}).value || 'auto'; }
+  function toneFor() { var t = tone(); return t === 'auto' && S.toneUsed ? S.toneUsed : t; }   // 문장 도우미는 글 전체에서 정한 말투로
   function prod(id) { var L = (S.info && S.info.products && S.info.products.length) ? S.info.products : PRODS; for (var i = 0; i < L.length; i++) if (L[i].id === id) return L[i]; return null; }
   function prods() { return (S.info && S.info.products && S.info.products.length) ? S.info.products : PRODS; }
   function call(action, data, ms) {
@@ -104,10 +108,10 @@
     var h;
     if (S.pass && S.ps) {
       var p = S.ps, when = p.started ? (p.daily ? md(p.end).replace(/ \d\d:\d\d$/, '') + '까지 · 오늘 ' : md(p.end) + '까지 · ') : (p.daily ? '처음 사용한 날부터 · 하루 ' : '처음 검사한 때부터 24시간 · ');
-      h = '<span class="chip on">' + ico('check') + esc(p.name) + '</span><span>' + when + '남은 검사 · 다듬기 <b>' + n2(p.left) + '</b>회' + (S.proReady && p.pro ? ' · 고급 ' + n2(p.proLeft) + '회' : '') + '</span><span class="sp"></span><button type="button" class="hz7-link" data-code>코드 바꾸기</button>';
+      h = '<span class="chip on">' + ico('check') + esc(p.name) + '</span><span>' + when + '남은 검사 · 다듬기 <b>' + n2(p.left) + '</b>회' + (p.pro ? ' · 고급 휴머나이징 ' + n2(p.proLeft) + '회' : '') + '</span><span class="sp"></span><button type="button" class="hz7-link" data-code>코드 바꾸기</button>';
     } else if (S.pass) h = '<span class="chip">이용권 확인 중</span><span>' + esc(S.pass) + '</span>';
     else h = '<span class="chip off">무료 맛보기</span><span>' + (S.passMsg ? esc(S.passMsg) : '앞 6,000자 · AI 작성률 · 판정과 근거 · 가장 뚜렷한 문장 2개까지') + '</span><span class="sp"></span><button type="button" class="hz7-link" data-code>이용권 코드 넣기</button><button type="button" class="hz7-link" data-buy="d1">이용권 구매</button>';
-    passEl.innerHTML = h; count();
+    passEl.innerHTML = h; count(); if (typeof proBtn === 'function') proBtn();
   }
   function peek() {
     if (!S.pass) return renderPass();
@@ -120,8 +124,8 @@
     else if (sget('am_pass')) S.pass = sget('am_pass');
     renderPass(); if (!(Q.pay === 'ok' && Q.paymentKey)) peek();
   })();
-  var infoP = call('am.passinfo', {}, 20000).then(function (r) { S.info = r; S.proReady = !!r.proReady; proBtn(); renderPass(); return r; }).catch(function () { proBtn(); return null; });
-  function proBtn() { btnP.disabled = !S.proReady; $('#hzProTag').textContent = S.proReady ? '이용권' : '준비 중'; btnP.title = S.proReady ? '생성 AI가 문장을 새로 써 줍니다(이용권 고급 횟수)' : '고급 휴머나이징은 준비 중입니다'; }
+  var infoP = call('am.passinfo', {}, 20000).then(function (r) { S.info = r; S.proReady = r.proReady !== false; proBtn(); renderPass(); return r; }).catch(function () { proBtn(); return null; });
+  function proBtn() { btnP.disabled = !S.proReady || S.busy; var tg = $('#hzProTag'); if (tg) tg.textContent = S.pass ? '이용권' : '첫 문단 무료'; btnP.title = 'AI 문체를 사람 말투로 바꿉니다. AIMarker 인간화 엔진(생성 AI 없이 우리 서버에서)'; }
   function payReady() { return !!(S.info && S.info.pay && S.info.pay.ready && S.info.pay.clientKey); }
 
   /* ---------- 글 나누기(같은 글은 언제나 같게) ---------- */
@@ -460,7 +464,7 @@
   }
   function actsHtml(M) {
     if (!M.full) return '<div class="hz7-acts"><button class="btn btn-p" type="button" data-buy="d1">결과상세내역서 받기 · 2,900원</button><button class="btn btn-g" type="button" data-act="fix">표현 다듬기 미리 보기</button><button class="btn btn-g" type="button" data-code>이용권 코드 넣기</button></div>';
-    return '<div class="hz7-acts"><button class="btn btn-n" type="button" data-act="report">' + ico('file') + '<span>결과상세내역서 저장(PDF)</span></button><button class="btn btn-g" type="button" data-act="fix">표현 다듬기</button>' + (S.proReady && S.ps && S.ps.pro ? '<button class="btn btn-g" type="button" data-act="pro">고급 휴머나이징</button>' : '') + '<button class="btn btn-g" type="button" data-act="recheck">다시 검사</button></div>';
+    return '<div class="hz7-acts"><button class="btn btn-n" type="button" data-act="report">' + ico('file') + '<span>결과상세내역서 저장(PDF)</span></button><button class="btn btn-g" type="button" data-act="fix">표현 다듬기</button>' + (S.proReady && S.ps && S.ps.pro ? '<button class="btn btn-g" type="button" data-act="pro">고급 휴머나이징(인간화)</button>' : '') + '<button class="btn btn-g" type="button" data-act="recheck">다시 검사</button></div>';
   }
   function stamp(d) { d = d || new Date(); var p = function (x) { return ('0' + x).slice(-2); }; return d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
 
@@ -469,7 +473,7 @@
     var s = M.sentences[i], cur = S.edits[i] != null ? S.edits[i] : s.t, lv = lvOf(s), why = s.sig.length ? s.sig.slice(0, 5).map(function (g) { return '<li><b>' + esc(g.catKo || 'AI 패턴') + '</b>“' + esc(g.t) + '” · ' + esc(g.why) + '</li>'; }).join('') : '<li>' + (lv >= 2 ? '눈에 띄는 표현보다 문장 짜임 · 말투 · 앞뒤 흐름이 AI 글과 비슷합니다. 내 경험이나 구체적인 예를 더하면 달라집니다.' : lv === 1 ? '이 문장만 보면 기준보다 낮지만, 앞뒤 문장과 함께 AI 구간으로 판정되었습니다. 앞뒤 문장부터 고치면 같이 내려갈 수 있습니다.' : 'AI 글 패턴이 거의 보이지 않는 문장입니다.') + '</li>';
     return '<div class="hz7-sp" id="hzSp"><div class="hz7-sp-top"><button type="button" class="hz7-link" data-act="back">목록으로</button><span class="lv l' + Math.max(0, lv) + '">' + (lv > 0 ? LV[lv] + ' · ' : '') + s.p + '%</span></div>' +
       '<blockquote>' + esc(cur) + '</blockquote><h4>왜 이렇게 봤나요</h4><ul>' + why + '</ul>' +
-      '<h4>고쳐 쓰기</h4><div class="row"><button class="btn btn-g btn-s" type="button" data-act="help">도우미 제안 받기</button>' + (S.proReady && S.ps && S.ps.pro ? '<button class="btn btn-g btn-s" type="button" data-act="alts">AI로 다시 쓴 후보(고급 1회)</button>' : '') + '</div><div id="hzSug"></div>' +
+      '<h4>고쳐 쓰기</h4><div class="row"><button class="btn btn-g btn-s" type="button" data-act="help">도우미 제안 받기</button>' + (S.ps ? '<button class="btn btn-g btn-s" type="button" data-act="alts">다시 쓴 문장 후보 2개</button>' : '') + '</div><div id="hzSug"></div>' +
       '<textarea id="hzSent" aria-label="고쳐 쓸 문장">' + esc(cur) + '</textarea>' +
       '<div class="hz7-tips"><button type="button" data-tip="[직접 겪은 일 한 줄]">+ 내 경험</button><button type="button" data-tip="[숫자 · 장소 · 날짜]">+ 구체적인 사실</button><button type="button" data-tip="[내 생각과 그 이유]">+ 내 생각</button></div>' +
       '<div class="row"><button class="btn btn-p btn-s" type="button" data-act="apply">이 문장 바꾸기</button>' + (S.edits[i] != null ? '<button class="btn btn-g btn-s" type="button" data-act="undo">원래대로</button>' : '') + '</div>' +
@@ -507,6 +511,7 @@
     if (act === 'report') { report(); return; }
     if (act === 'fix') { fix(); return; }
     if (act === 'pro') { pro(); return; }
+    if (act === 'proagain') { S.variant = (S.variant || 0) + 1; pro(true); return; }
     if (act === 'usefix' && S.fx) { useFix(); return; }
     if (act === 'copyfix' && S.fx) { if (AM.copy) AM.copy(S.fx.text, b); else if (navigator.clipboard) navigator.clipboard.writeText(S.fx.text); return; }
     if (act === 'backres' && S.res) { S.fx = null; renderRes(); return; }
@@ -517,7 +522,7 @@
     var cur = ($('#hzSent').value || '').trim(); if (!cur) return;
     if (cur.length > HELP_MAX) return sugMsg('도우미는 ' + HELP_MAX + '자까지의 문장에 씁니다.');
     sugMsg('바꿀 표현을 찾는 중…');
-    call('am.style', { text: cur, mode: 'fix', tone: tone(), pass: S.pass }, 40000).then(function (r) {
+    call('am.style', { text: cur, mode: 'fix', tone: toneFor(), pass: S.pass }, 40000).then(function (r) {
       if (!r.text || r.text === cur) return sugMsg('이 문장에서 자동으로 바꿀 표현을 찾지 못했습니다. 아래 단추로 내 경험 · 사실 · 생각을 더해 직접 고쳐 보세요.');
       var g = $('#hzSug'); if (!g) return;
       g.innerHTML = '<div class="hz7-cand"><button type="button" data-cand="' + esc(r.text) + '">' + esc(r.text) + '<small>도우미 제안 · 눌러서 넣기</small></button></div>' + ((r.applied || []).length ? '<ul>' + r.applied.slice(0, 4).map(function (a) { return '<li><b>' + esc(a.why || '다듬기') + '</b>' + (a.from ? '<s>' + esc(a.from) + '</s> → ' : '') + esc(a.to || '(뺌)') + '</li>'; }).join('') + '</ul>' : '');
@@ -525,11 +530,12 @@
   }
   function alts() {
     var cur = ($('#hzSent').value || '').trim(); if (!cur) return;
-    if (cur.length > HELP_MAX) return sugMsg('AI 후보는 ' + HELP_MAX + '자까지의 문장에 씁니다.');
-    sugMsg('생성 AI가 다시 쓰는 중…');
-    call('am.humanize', { text: cur, alts: 1, tone: tone(), pass: S.pass }, 90000).then(function (r) {
+    if (cur.length > HELP_MAX) return sugMsg('문장 후보는 ' + HELP_MAX + '자까지의 문장에 씁니다.');
+    sugMsg('다시 쓰는 중…');
+    call('am.humanize', { text: cur, alts: 1, tone: toneFor(), pass: S.pass }, 90000).then(function (r) {
       var g = $('#hzSug'); if (!g) return;
-      g.innerHTML = '<div class="hz7-cand">' + (r.alts || []).map(function (a) { return '<button type="button" data-cand="' + esc(a.text) + '">' + esc(a.text) + '<small>' + (a.missing && a.missing.length ? '원문의 ' + esc(a.missing.join(', ')) + ' 이(가) 빠졌습니다. 대조하세요' : 'AI 후보 · 눌러서 넣은 뒤 내 말로 고치세요') + '</small></button>'; }).join('') + '</div>';
+      if (!(r.alts || []).length) return sugMsg('이 문장에서 다르게 쓸 곳을 찾지 못했습니다. 아래 단추로 내 경험 · 사실 · 생각을 더해 직접 고쳐 보세요.');
+      g.innerHTML = '<div class="hz7-cand">' + (r.alts || []).map(function (a) { return '<button type="button" data-cand="' + esc(a.text) + '">' + esc(a.text) + '<small>' + (a.missing && a.missing.length ? '원문의 ' + esc(a.missing.join(', ')) + ' 이(가) 빠졌습니다. 대조하세요' : '후보 · 눌러서 넣은 뒤 내 말로 고치세요') + '</small></button>'; }).join('') + '</div>';
     }).catch(function (e) { sugMsg((e && e.message) || '후보를 받지 못했습니다.'); });
   }
 
@@ -547,29 +553,56 @@
     var C0 = chunk(t), C = full ? C0 : { parts: [C0.parts[0]], seps: [] };
     if (full && S.ps && C.parts.length > S.ps.left) { out.innerHTML = '<div class="hz7-err"><b>남은 횟수가 모자라요</b><span>이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 다듬어 이용권 ' + C.parts.length + '회가 필요합니다. 지금 남은 횟수는 ' + S.ps.left + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="d1">24시간 이용권 2,900원</button></div></div>'; return; }
     setBusy(true); prog('표현 다듬는 중', 0, C.parts.length);
-    seq(C.parts, function (part, i) { return call('am.style', { text: part, mode: 'fix', tone: tone(), pass: full ? S.pass : '' }, 90000).then(function (r) { prog('표현 다듬는 중', i + 1, C.parts.length); return r; }); })
+    var tn = tone();
+    seq(C.parts, function (part, i) { return call('am.style', { text: part, mode: 'fix', tone: tn, pass: full ? S.pass : '' }, 90000).then(function (r) { if (r.toneUsed && tn === 'auto') { tn = r.toneUsed; S.toneUsed = r.toneUsed; } prog('표현 다듬는 중', i + 1, C.parts.length); return r; }); })
       .then(function (rs) {
         if (!rs.every(function (r) { return r.full; })) { S.fx = { free: true, changes: rs[0].changes || 0, samples: rs[0].fixSamples || [], cut: C0.parts.length > 1, total: t.length }; renderFixFree(); toOut(); return; }
         var text = rs.map(function (r, i) { return (i ? C.seps[i - 1] : '') + r.text; }).join(''), applied = [], left = [], miss = [], tot = 0;
         rs.forEach(function (r) { applied = applied.concat(r.applied || []); left = left.concat(r.left || []); if (r.facts) { tot += r.facts.total || 0; (r.facts.missing || []).forEach(function (x) { if (miss.indexOf(x) < 0) miss.push(x); }); } });
         var before = { chars: 0, ai: 0 }; rs.forEach(function (r) { if (r.ai) { before.chars += r.ai.chars || 0; before.ai += r.ai.aiChars || 0; } });
         return merge(rs.map(function (r) { return { aiAfter: r.aiAfter, left: r.left }; }), true, text).then(function (A) {
-          A.src = text; S.fx = { kind: 'fix', src: t, text: text, applied: applied, left: left, facts: { total: tot, missing: miss }, beforeRate: before.chars ? Math.round(before.ai / before.chars * 100) : 0, after: A };
+          var tnote = ''; rs.forEach(function (r) { if (r.toneNote && !tnote) tnote = r.toneNote; });
+          A.src = text; S.fx = { kind: 'fix', src: t, text: text, applied: applied, left: left, facts: { total: tot, missing: miss }, beforeRate: before.chars ? Math.round(before.ai / before.chars * 100) : 0, after: A, toneNote: tnote };
           renderFix(); toOut();
         });
       }).catch(function (e) { fail(e); }).then(function () { setBusy(false); });
   }
   btnF.addEventListener('click', fix);
-  function pro() {
+  function pro(again) {
     if (!S.proReady) return;
-    if (!S.pass) { openBuy('d1', '고급 휴머나이징은 24시간 이용권부터 씁니다.'); return; }
     var t = (Object.keys(S.edits).length && S.res ? buildText() : ta.value).replace(/\r\n?/g, '\n');
     if (!need(t) || S.busy) return;
-    if (t.length > HUM_MAX) { out.innerHTML = '<div class="hz7-err">고급 휴머나이징은 한 번에 ' + n2(HUM_MAX) + '자까지입니다. 고칠 문단만 넣어 주세요. 긴 글은 색이 칠해진 문장을 눌러 “AI로 다시 쓴 후보”를 쓰세요.</div>'; return; }
-    setBusy(true); prog('생성 AI가 다시 쓰는 중', 0, 1);
-    call('am.humanize', { text: t, tone: tone(), pass: S.pass }, 120000).then(function (r) {
-      return merge([{ aiAfter: r.aiAfter }], true, r.text).then(function (A) { A.src = r.text; S.fx = { kind: 'pro', src: t, text: r.text, applied: [], left: [], facts: r.facts || { total: 0, missing: [] }, beforeRate: r.ai ? r.ai.rate : 0, after: A }; renderFix(); toOut(); });
-    }).catch(function (e) { fail(e); }).then(function () { setBusy(false); });
+    if (again !== true) S.variant = 0;
+    if (!S.pass) {   // 무료 맛보기: 첫 문단만
+      setBusy(true); prog('첫 문단을 사람 말투로 바꾸는 중', 0, 1);
+      call('am.humanize', { text: t.slice(0, HUM_MAX), tone: tone() }, 60000).then(function (r) { S.fx = { kind: 'proFree', src: r.src, text: r.text, total: t.length, shown: r.shown, changes: r.changes, samples: r.samples || [], tone: r.tone, toneNote: r.toneNote || '' }; renderProFree(); toOut(); })
+        .catch(function (e) { fail(e); }).then(function () { setBusy(false); });
+      return;
+    }
+    if (t.length > PAID_MAX) { out.innerHTML = '<div class="hz7-err">이용권은 한 번에 5만 자까지 인간화합니다.</div>'; return; }
+    var C = chunk(t);
+    if (S.ps && C.parts.length > S.ps.proLeft) { out.innerHTML = '<div class="hz7-err"><b>고급 휴머나이징 횟수가 모자라요</b><span>이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 인간화해 ' + C.parts.length + '회가 필요합니다. 지금 남은 횟수는 ' + S.ps.proLeft + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="d1">24시간 이용권 2,900원 · 고급 10회</button></div></div>'; return; }
+    setBusy(true); prog('AI 문체를 사람 말투로 바꾸는 중', 0, C.parts.length);
+    var tn = tone();
+    seq(C.parts, function (part, i) { return call('am.humanize', { text: part, tone: tn, variant: S.variant, pass: S.pass }, 120000).then(function (r) { if (tn === 'auto' && r.tone) { tn = r.tone; S.toneUsed = r.tone; } prog('AI 문체를 사람 말투로 바꾸는 중', i + 1, C.parts.length); return r; }); })
+      .then(function (rs) {
+        var text = rs.map(function (r, i) { return (i ? C.seps[i - 1] : '') + r.text; }).join(''), applied = [], miss = [], tot = 0, bc = 0, ba = 0, tmiss = 0, tnote = '';
+        rs.forEach(function (r) { applied = applied.concat(r.applied || []); if (r.facts) { tot += r.facts.total || 0; (r.facts.missing || []).forEach(function (x) { if (miss.indexOf(x) < 0) miss.push(x); }); } if (r.ai) { bc += r.ai.chars || 0; ba += r.ai.aiChars || 0; } if (r.stats && r.stats.toneMiss) tmiss += r.stats.toneMiss; if (r.toneNote && !tnote) tnote = r.toneNote; });
+        return merge(rs.map(function (r) { return { aiAfter: r.aiAfter }; }), true, text).then(function (A) {
+          A.src = text; S.fx = { kind: 'pro', src: t, text: text, applied: applied, left: [], facts: { total: tot, missing: miss }, beforeRate: bc ? Math.round(ba / bc * 100) : 0, after: A, tone: tn, variant: S.variant, toneMiss: tmiss, toneNote: tnote };
+          renderFix(); toOut();
+        });
+      }).catch(function (e) { fail(e); }).then(function () { setBusy(false); });
+  }
+  function renderProFree() {
+    var F = S.fx, ops = diff(F.src, F.text), dv = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '+' ? '<ins>' + esc(o[1]) + '</ins>' : '<del>' + esc(o[1]) + '</del>'; }).join('');
+    var TN = { plain: '한다체로', polite: '해요체로', formal: '습니다체로', keep: '말투는 그대로' }[F.tone] || '';
+    out.innerHTML = '<div class="hz7-res"><div class="hz7-head" style="grid-template-columns:minmax(0,1fr)"><div class="hz7-sum"><small>고급 휴머나이징 · 무료 맛보기</small><h2>첫 문단을 사람 말투로 바꿨습니다</h2><p>바꾼 곳 ' + n2(F.changes) + '곳' + (TN ? ' · ' + TN : '') + '. 생성 AI 없이 AIMarker 인간화 엔진이 바꿉니다. 숫자 · 고유명사 · 인용은 그대로 둡니다.</p></div></div>' +
+      '<div class="hz7-vt" role="tablist"><button type="button" role="tab" data-fv="text" aria-selected="true">바꾼 글</button><button type="button" role="tab" data-fv="diff" aria-selected="false">바뀐 곳</button></div>' +
+      '<div data-fp="text"><div class="hz7-text">' + esc(F.text) + '</div></div><div data-fp="diff" hidden><div class="hz7-text">' + dv + '</div></div>' +
+      (F.toneNote ? '<p class="hz7-fineprint">' + esc(F.toneNote) + '</p>' : '') +
+      (F.samples.length ? '<ul class="hz7-list">' + F.samples.map(function (a) { return '<li><span class="cat">' + esc(CAT[a.cat] || '말투') + '</span><b>' + (a.from ? '<s>' + esc(a.from) + '</s> ' : '') + (a.to ? '<ins>' + esc(a.to) + '</ins>' : '(뺌)') + '</b><small>' + esc(a.why) + '</small></li>'; }).join('') + '</ul>' : '') +
+      '<div class="hz7-docw" style="min-height:200px"><div class="hz7-lock" style="position:relative;left:auto;top:auto;transform:none;margin:0 auto">' + ico('lock') + '<h3>' + (F.total > F.shown ? '나머지 ' + n2(Math.max(0, F.total - F.shown)) + '자와 ' : '') + '글 전체 인간화는 이용권으로</h3><p>글 전체 · 바꾼 이유 · 다른 버전 · 인간화 전후 AI 작성률 · 숫자와 인용을 지켰는지 확인까지 열립니다. 1건 이용권에도 고급 휴머나이징 1회가 들어 있습니다.</p><button class="btn btn-p" type="button" data-buy="s1">1건 이용권 1,900원</button><button class="btn btn-g" type="button" data-buy="d1">24시간 이용권 2,900원 · 고급 10회</button><button type="button" class="hz7-link" data-code>이용권 코드가 있어요</button></div></div></div>';
   }
   btnP.addEventListener('click', pro);
   function tokens(s) { return String(s).match(/\s+|[^\s]+/g) || []; }
@@ -595,14 +628,15 @@
     var clean = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '+' ? (o[1].trim() ? '<mark>' + esc(o[1]) + '</mark>' : esc(o[1])) : ''; }).join('');
     var dv = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '+' ? '<ins>' + esc(o[1]) + '</ins>' : '<del>' + esc(o[1]) + '</del>'; }).join('');
     var tabs = [['text', '다듬은 글'], ['diff', '바뀐 곳 ' + changes]];
-    if (F.kind === 'fix') { tabs.push(['why', '바꾼 이유 ' + F.applied.length]); if (F.left.length) tabs.push(['left', '직접 손볼 곳 ' + F.left.length]); }
+    if (F.applied.length) tabs.push(['why', '바꾼 이유 ' + F.applied.length]);
+    if (F.kind === 'fix' && F.left.length) tabs.push(['left', '직접 손볼 곳 ' + F.left.length]);
     var f = F.facts, facts = '<div class="hz7-facts2' + (f.missing.length ? ' bad' : '') + '">' + ico(f.missing.length ? 'alert' : 'check') + '<span>' + (f.missing.length ? '원문의 숫자 · 인용 가운데 다듬은 글에서 찾지 못한 것: ' + esc(f.missing.join(', ')) + '. 꼭 대조해 주세요.' : f.total ? '원문의 숫자 · 인용 · 고유명사 ' + f.total + '개를 그대로 지켰습니다.' : '바꾸면 안 되는 숫자 · 인용이 없는 글입니다.') + '</span></div>';
-    var warn = A.band && A.band.key === 'unfit' ? '<div class="hz7-warn">' + (F.kind === 'fix' ? '표현 다듬기는 AI가 자주 쓰는 표현을 바꿉니다. 글의 짜임과 흐름에 AI 패턴이 남아 있으면 판정이 바로 바뀌지 않습니다. “다듬은 글로 바꾸고 색 보기”를 누른 뒤, 색이 칠해진 문장을 눌러 내 경험 · 생각 · 구체적인 예를 더해 고쳐 쓰세요.' : '아직 AI 패턴이 남아 있습니다. 색이 칠해진 문장을 눌러 내 말로 고쳐 쓰세요.') + '</div>' : '';
-    out.innerHTML = '<div class="hz7-res"><div class="hz7-ba"><div>' + ring(F.beforeRate, ringCls(F.beforeRate), '') + '<div><small>다듬기 전</small><b>AI 작성률</b></div></div><span class="arr" aria-hidden="true">→</span><div>' + ring(A.rate, ringCls(A.rate), '') + '<div><small>' + (F.kind === 'pro' ? '고급 휴머나이징 뒤' : '표현 다듬기 뒤') + '</small><b>' + esc(A.band ? A.band.label : A.levelKo) + '</b></div></div></div>' + warn +
+    var warn = A.band && A.band.key === 'unfit' ? '<div class="hz7-warn">' + (F.kind === 'fix' ? '표현 다듬기는 AI가 자주 쓰는 표현을 바꿉니다. 글의 짜임과 흐름에 AI 패턴이 남아 있으면 판정이 바로 바뀌지 않습니다. 고급 휴머나이징으로 말투와 문장 리듬까지 바꾸거나, 색이 칠해진 문장을 눌러 내 경험 · 생각 · 구체적인 예를 더해 고쳐 쓰세요.' : '아직 AI 패턴이 남아 있습니다. 보고서 · 과제라면 말투를 한다체로 바꿔 보거나, 색이 칠해진 문장을 눌러 내 경험 · 생각을 더해 고쳐 쓰세요.') + '</div>' : '';
+    out.innerHTML = '<div class="hz7-res"><div class="hz7-ba"><div>' + ring(F.beforeRate, ringCls(F.beforeRate), '') + '<div><small>다듬기 전</small><b>AI 작성률</b></div></div><span class="arr" aria-hidden="true">→</span><div>' + ring(A.rate, ringCls(A.rate), '') + '<div><small>' + (F.kind === 'pro' ? '고급 휴머나이징 뒤' + ({ plain: ' · 한다체', polite: ' · 해요체', formal: ' · 습니다체' }[F.tone] || '') + (F.variant ? ' · 버전 ' + (F.variant + 1) : '') : '표현 다듬기 뒤') + '</small><b>' + esc(A.band ? A.band.label : A.levelKo) + '</b></div></div></div>' + warn +
       '<div class="hz7-vt" role="tablist">' + tabs.map(function (t, k) { return '<button type="button" role="tab" data-fv="' + t[0] + '" aria-selected="' + (k ? 'false' : 'true') + '">' + esc(t[1]) + '</button>'; }).join('') + '</div>' +
       '<div data-fp="text"><div class="hz7-text">' + clean + '</div></div><div data-fp="diff" hidden><div class="hz7-text">' + dv + '</div></div>' +
-      (F.kind === 'fix' ? '<div data-fp="why" hidden><ul class="hz7-list">' + F.applied.map(function (a) { return '<li><span class="cat">' + esc(({ 1: '번역투', 2: '상투적 연결어', 3: '빈말 · 과장 수식', 4: '틀에 박힌 도입 · 마무리', 5: '대화창 복사 흔적' })[a.cat] || '말투') + '</span><b>' + (a.from ? '<s>' + esc(a.from) + '</s> ' : '') + (a.to ? '<ins>' + esc(a.to) + '</ins>' : '(뺌)') + '</b><small>' + esc(a.why) + '</small></li>'; }).join('') + '</ul></div><div data-fp="left" hidden><ul class="hz7-list">' + F.left.map(function (a) { return '<li><span class="cat">' + esc(a.catKo) + '</span>' + (a.t ? '<b>' + esc(a.t) + '</b>' : '') + '<small>' + esc(a.why) + '</small></li>'; }).join('') + '</ul></div>' : '') +
-      facts + '<div class="hz7-acts"><button class="btn btn-p" type="button" data-act="usefix">다듬은 글로 바꾸고 색 보기</button><button class="btn btn-g" type="button" data-act="copyfix">다듬은 글 복사</button>' + (S.res ? '<button class="btn btn-g" type="button" data-act="backres">검사 결과로 돌아가기</button>' : '') + '</div>' +
+      (F.applied.length ? '<div data-fp="why" hidden><ul class="hz7-list">' + F.applied.map(function (a) { return '<li><span class="cat">' + esc(CAT[a.cat] || '말투') + '</span><b>' + (a.from ? '<s>' + esc(a.from) + '</s> ' : '') + (a.to ? '<ins>' + esc(a.to) + '</ins>' : '(뺌)') + '</b><small>' + esc(a.why) + '</small></li>'; }).join('') + '</ul></div>' : '') + (F.left.length ? '<div data-fp="left" hidden><ul class="hz7-list">' + F.left.map(function (a) { return '<li><span class="cat">' + esc(a.catKo) + '</span>' + (a.t ? '<b>' + esc(a.t) + '</b>' : '') + '<small>' + esc(a.why) + '</small></li>'; }).join('') + '</ul></div>' : '') +
+      facts + (changes === 0 ? '<p class="hz7-fineprint">AI 말버릇으로 볼 만한 곳이 거의 없어 원문을 그대로 두었습니다.</p>' : '') + (F.toneNote ? '<p class="hz7-fineprint">' + esc(F.toneNote) + '</p>' : F.toneMiss ? '<p class="hz7-fineprint">말투를 바꾸지 못한 문장 ' + n2(F.toneMiss) + '개는 원래 말투로 두었습니다(인용 · 물음 · 뜻이 갈리는 끝맺음). 바뀐 곳 탭에서 확인해 주세요.</p>' : '') + '<div class="hz7-acts"><button class="btn btn-p" type="button" data-act="usefix">다듬은 글로 바꾸고 색 보기</button><button class="btn btn-g" type="button" data-act="copyfix">다듬은 글 복사</button>' + (F.kind === 'pro' ? '<button class="btn btn-g" type="button" data-act="proagain">다른 버전으로(고급 1회)</button>' : '') + (S.res ? '<button class="btn btn-g" type="button" data-act="backres">검사 결과로 돌아가기</button>' : '') + '</div>' +
       '<p class="hz7-fineprint">“다듬은 글로 바꾸고 색 보기”는 다듬은 글의 판정 결과를 그대로 보여 주므로 이용권 횟수를 더 쓰지 않습니다.</p></div>';
   }
   out.addEventListener('click', function (e) {
@@ -650,7 +684,7 @@
   function prodsHtml(sel) {
     return prods().map(function (p) {
       var per = p.days ? ' · 하루 약 ' + n2(Math.round(p.price / p.days / 10) * 10) + '원' : '';
-      return '<label' + (p.best ? ' class="best"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span><b>' + esc(p.name) + (p.best ? '<i>추천</i>' : '') + '</b><em>' + n2(p.price) + '원</em><small>' + esc(S.proReady ? p.desc : String(p.desc || '').replace(/(고급 휴머나이징 (?:하루 )?\d+회)/, '$1(준비되면)')) + per + '</small></span></label>';
+      return '<label' + (p.best ? ' class="best"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span><b>' + esc(p.name) + (p.best ? '<i>추천</i>' : '') + '</b><em>' + n2(p.price) + '원</em><small>' + esc(p.desc) + per + '</small></span></label>';
     }).join('');
   }
   function buyBtnLabel() { var f = $('#hzBuyForm'); if (!f) return; var id = (f.querySelector('input[name="product"]:checked') || {}).value || 'd1', p = prod(id) || PRODS[1], b = f.querySelector('button[type="submit"]'); if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : '<span>' + n2(p.price) + '원 주문하기</span>'; var n = $('#hzBuyNote'); if (n) n.textContent = payReady() ? '카드 · 간편결제로 바로 결제합니다. 결제가 승인되면 이 화면에서 바로 전체 결과가 열리고, 코드는 메일로도 보내 드립니다.' : '주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 이용권 코드를 보내 드립니다.'; }

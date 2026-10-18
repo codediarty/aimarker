@@ -3,7 +3,7 @@ path: humanize/
 key: humanize
 title: AI 작성률 검사 · 문장별 색 표시 · 휴머나이징 | AIMarker
 ogtitle: 제출 전에, AI가 쓴 티부터 확인하세요 · AIMarker AI 작성률 검사
-desc: 글을 붙여 넣으면 AI 작성률과 판정(안전 · 고위험 · 부적합), 판정 근거를 보여 주고, AI가 쓴 것으로 보이는 문장은 색으로 표시합니다. 학교 · 기관 · 기업이 AI 작성 여부를 검사하는 지금, 내기 전에 확인하고 내 글로 고쳐 쓰세요. 무료 맛보기, 1건 1,900원부터.
+desc: 글을 붙여 넣으면 AI 작성률과 판정(안전 · 고위험 · 부적합), 판정 근거를 보여 주고, AI가 쓴 것으로 보이는 문장은 색으로 표시합니다. 고급 휴머나이징은 생성 AI 없이 AIMarker 인간화 엔진으로 AI 문체를 사람 말투로 바꿉니다(첫 문단 무료). 무료 맛보기, 1건 1,900원부터.
 scripts: assets/humanize.js
 styles: assets/mark.css, assets/v6.css, assets/humanize.css
 selflabel: footer
@@ -39,13 +39,13 @@ selflabel: footer
           <span class="hz7-count"><b id="hzCount">0</b>자 · <span id="hzLimit">무료 맛보기 6,000자 · 이용권 5만 자</span></span>
           <div class="hz7-optr">
             <label class="hz7-file btn btn-g btn-s">{{ico:file}}<span>파일 불러오기</span><input type="file" id="hzFile" accept=".docx,.hwpx,.txt,.md,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden></label>
-            <label class="hz7-tone"><span class="sr">다듬을 때 말투</span><select id="hzTone" aria-label="다듬을 때 말투"><option value="keep">말투 그대로</option><option value="formal">습니다체로</option><option value="polite">해요체로</option></select></label>
+            <label class="hz7-tone"><span class="sr">다듬을 때 말투</span><select id="hzTone" aria-label="다듬을 때 말투"><option value="auto" selected>말투 자동(추천)</option><option value="keep">말투 그대로</option><option value="plain">한다체로(보고서 · 과제)</option><option value="polite">해요체로(후기 · 블로그)</option><option value="formal">습니다체로(공식 글)</option></select></label>
           </div>
         </div>
         <div class="hz7-act">
           <button class="btn btn-p btn-l" type="button" id="hzCheck">{{ico:search}}<span>AI 작성률 검사</span></button>
           <button class="btn btn-g btn-l" type="button" id="hzFix">{{ico:sparkle}}<span>표현 다듬기</span></button>
-          <button class="btn btn-g btn-l" type="button" id="hzPro" disabled>{{ico:zap}}<span>고급 휴머나이징</span><em class="hz7-pill" id="hzProTag">준비 중</em></button>
+          <button class="btn btn-g btn-l" type="button" id="hzPro">{{ico:zap}}<span>고급 휴머나이징</span><em class="hz7-pill" id="hzProTag">첫 문단 무료</em></button>
         </div>
         <div class="hz7-pass" id="hzPass" aria-live="polite"></div>
         <p class="hz7-note">{{ico:lock}}글은 검사할 때만 서버로 보내고 저장하지 않습니다. 같은 글은 언제나 같은 결과가 나옵니다.</p>
@@ -128,13 +128,35 @@ selflabel: footer
     </div>
     <ol class="hz7-steps">
       <li><b>판정 · 문장별 색 확인</b><p>판정과 판정 근거를 먼저 보고, 어느 문장이 왜 AI처럼 읽히는지 문장마다 확인합니다. AI 문장이 어디에 몰려 있는지도 구간별 타일로 한눈에 봅니다.</p></li>
-      <li><b>문장 고쳐 쓰기</b><p>색이 칠해진 문장을 누르면 도우미가 바꿀 표현과 고친 문장을 제안합니다. 내 경험이나 생각, 구체적인 예를 하나만 더해도 내 글에 가까워집니다.</p></li>
+      <li><b>문장 고쳐 쓰기 · 인간화</b><p>색이 칠해진 문장을 누르면 도우미가 바꿀 표현과 다시 쓴 문장 후보를 보여 줍니다. 글 전체는 고급 휴머나이징으로 말투와 리듬까지 바꾸고, 내 경험이나 생각을 하나만 더해도 내 글에 가까워집니다.</p></li>
       <li><b>다시 검사 · 결과상세내역서</b><p>고친 글을 같은 기준으로 다시 검사해 판정이 어떻게 바뀌었는지 확인하고, 검사 번호 · 판정 근거 · 구간별 분석이 담긴 결과상세내역서를 PDF로 저장합니다.</p></li>
     </ol>
   </div>
 </section>
 
-<section class="s6 soft" id="price">
+<section class="s6 soft" id="human">
+  <div class="wrap">
+    <div class="h6">
+      <h2>AI 문체를 사람 말투로, 인간화 엔진</h2>
+      <p class="lead">고급 휴머나이징은 생성 AI를 사용하지 않습니다. 사람 글과 AI 글 1만여 편을 비교해 찾은 AI 말버릇을, 사람 글 약 10억 자에서 뽑은 용언 사전과 실제 쓰임 표로 사람 글에 가깝게 바꿉니다. 외부 AI 서비스에 글을 보내지 않고, 첫 문단은 무료로 바꿔 볼 수 있습니다.</p>
+    </div>
+    <div class="hz9-human">
+      <div class="hz9-ba">
+        <div><small>AI가 쓴 글</small><p>인공지능 기술은 <em class="a">현대 사회에서</em> 중요한 역할을 하고 있습니다. <em class="a">또한,</em> <em class="a">다양한</em> 산업 분야<em class="a">에 있어서</em> <em class="a">혁신적인</em> 변화를 이끌고 있습니다. <em class="a">따라서,</em> 기업은 데이터를 체계적으로 관리<em class="a">하는 것이 중요합니다</em>. <em class="a">결론적으로,</em> 인공지능은 미래 사회의 핵심이라고 할 수 있습니다.</p></div>
+        <div class="to"><small>고급 휴머나이징 · 말투 자동(한다체)</small><p>인공지능 기술은 <em class="h">오늘날</em> 중요한 역할을 하고 있다. <em class="h">그리고</em> <em class="h">여러</em> 산업 분야<em class="h">에서</em> <em class="h">큰</em> 변화를 이끌고 있다. <em class="h">따라서</em> 기업은 데이터를 체계적으로 관리<em class="h">하는 게 중요하다</em>. <em class="h">정리하면</em> 인공지능은 미래 사회의 핵심이라고 할 수 있다.</p></div>
+      </div>
+      <ul class="hz9-feat">
+        <li><b>AI 말버릇을 사람 말로</b><span>문장마다 붙는 ‘또한, · 결론적으로,’와 쉼표, ‘다양한 · 일반적으로 · 이러한’ 같은 빈말, ‘~에 있어서 · ~을 통해’ 같은 번역투를 문맥에 맞게 바꿉니다. 가운뎃점으로 늘어놓기, ‘첫째, 둘째, 셋째’, ‘A, B, 그리고 C’, 힘주려고 낱말에 씌운 작은따옴표, 문장 끝의 쌍점(‘다음과 같습니다:’)처럼 AI 글에 유난히 많은 버릇도 사람 글처럼 고칩니다. 뜻이나 세기가 달라질 수 있는 곳은 바꾸지 않고 그대로 둡니다.</span></li>
+        <li><b>말투와 리듬까지</b><span>말투 자동은 보고서 · 과제 · 에세이를 한다체로 맞추고, 해요체 · 습니다체로도 고를 수 있습니다. 너무 긴 문장은 나누고 짧은 문장은 이어 사람 글처럼 리듬을 줍니다. 지원서 · 안내문 · 사과문 · 상담 답장처럼 읽는 사람에게 부탁하거나 높여 말하는 글은 한다체로 낮추지 않고, 시 · 대화 · 반말 편지처럼 말투를 고르게 바꾸기 어려운 글은 말투를 그대로 두고 까닭을 알려 드립니다.</span></li>
+        <li><b>뜻과 사실은 그대로</b><span>숫자 · 날짜 · 고유명사 · 인용 · 주소는 건드리지 않고, 없는 경험이나 근거를 지어내지 않으며, ‘할 수 있다’를 ‘한다’로 단정하는 식으로 말의 세기를 바꾸지 않습니다. 목록 기호와 줄 나눔도 그대로 둡니다. 바꾼 문장은 말끝을 되읽어 보고 부정 · 시제 · 숫자 · 영문이 그대로인지, ‘할 수 있다 · 것 같다’ 같은 말이 줄지 않았는지, 사람 글에서 실제로 쓰는 짝인지 한 번 더 확인해 어긋나면 원문으로 둡니다.</span></li>
+        <li><b>같은 글은 같은 결과</b><span>정해진 규칙과 용언 사전으로 바꾸므로 같은 글 · 같은 설정이면 언제나 같은 결과입니다. 마음에 들지 않으면 ‘다른 버전’으로 다른 후보를 봅니다.</span></li>
+      </ul>
+    </div>
+    <p class="hz7-safe">{{ico:info}}<span>AI 사용 사실을 밝혀야 하는 과제 · 공모전 · 채용 서류라면, 다듬은 뒤에도 그 규정대로 밝히세요. 고급 휴머나이징은 문체를 다듬는 도구이며, 다른 검사기의 결과를 약속하지 않습니다.</span></p>
+  </div>
+</section>
+
+<section class="s6" id="price">
   <div class="wrap">
     <div class="h6 c">
       <h2>판정은 무료로, 고칠 곳은 이용권으로</h2>
@@ -142,20 +164,20 @@ selflabel: footer
     </div>
     <div class="hz8-free">
       <h3>무료 맛보기<small>0원</small></h3>
-      <ul><li>{{ico:check}}한 번에 6,000자</li><li>{{ico:check}}AI 작성률 · 판정 · 판정 근거</li><li>{{ico:check}}검출 글자 · 구간 · 문장 수</li><li>{{ico:check}}종합 분석 의견 · 문체 특성</li><li>{{ico:check}}가장 뚜렷한 문장 2개</li><li class="no">{{ico:lock}}나머지 문장 · 구간 위치 · 결과상세내역서</li></ul>
+      <ul><li>{{ico:check}}한 번에 6,000자</li><li>{{ico:check}}AI 작성률 · 판정 · 판정 근거</li><li>{{ico:check}}검출 글자 · 구간 · 문장 수</li><li>{{ico:check}}종합 분석 의견 · 문체 특성</li><li>{{ico:check}}가장 뚜렷한 문장 2개</li><li>{{ico:check}}고급 휴머나이징 첫 문단</li><li class="no">{{ico:lock}}나머지 문장 · 글 전체 인간화 · 결과상세내역서</li></ul>
       <a class="btn btn-g" href="#tool">무료로 검사하기</a>
     </div>
     <div class="hz7-plans">
-      <article class="hz7-plan"><h3>1건 이용권</h3><p class="p">1,900원</p><p class="for">글 한 편 · 처음 사용한 때부터 24시간</p><ul><li>{{ico:check}}검사 · 다듬기 3회(6,000자마다 1회)</li><li>{{ico:check}}모든 문장의 색 · 이유 · 구간별 분석</li><li>{{ico:check}}결과상세내역서(PDF)</li><li>{{ico:check}}고친 뒤 다시 검사</li></ul><button class="btn btn-n" type="button" data-buy="s1">1건 이용권 구매</button></article>
-      <article class="hz7-plan on"><span class="hz7-badge">추천 · 제출 직전에</span><h3>24시간 이용권</h3><p class="p">2,900원</p><p class="for">처음 사용한 때부터 24시간</p><ul><li>{{ico:check}}검사 · 다듬기 40회</li><li>{{ico:check}}한 번에 5만 자 · 논문도 한 번에</li><li>{{ico:check}}모든 문장의 색 · 이유 · 구간별 분석</li><li>{{ico:check}}문장 고쳐 쓰기 도우미 · 표현 다듬기</li><li>{{ico:check}}결과상세내역서(PDF)</li><li>{{ico:check}}고급 휴머나이징 3회(준비되면)</li></ul><button class="btn btn-p" type="button" data-buy="d1">24시간 이용권 구매</button></article>
-      <article class="hz7-plan"><h3>30일 이용권</h3><p class="p">9,900원</p><p class="for">처음 사용한 날부터 30일 · <span class="per">하루 약 330원</span></p><ul><li>{{ico:check}}하루 검사 · 다듬기 40회</li><li>{{ico:check}}24시간 이용권의 모든 기능</li><li>{{ico:check}}고급 휴머나이징 하루 5회(준비되면)</li><li>{{ico:check}}과제 · 자기소개서를 자주 쓰는 달에</li></ul><button class="btn btn-n" type="button" data-buy="m1">30일 이용권 구매</button></article>
-      <article class="hz7-plan"><h3>90일 이용권</h3><p class="p">19,900원</p><p class="for">처음 사용한 날부터 90일 · <span class="per">하루 약 220원</span></p><ul><li>{{ico:check}}하루 검사 · 다듬기 40회</li><li>{{ico:check}}30일 이용권의 모든 기능</li><li>{{ico:check}}한 학기 · 취업 준비 기간 내내</li></ul><button class="btn btn-n" type="button" data-buy="q1">90일 이용권 구매</button></article>
+      <article class="hz7-plan"><h3>1건 이용권</h3><p class="p">1,900원</p><p class="for">글 한 편 · 처음 사용한 때부터 24시간</p><ul><li>{{ico:check}}검사 · 다듬기 3회(6,000자마다 1회)</li><li>{{ico:check}}모든 문장의 색 · 이유 · 구간별 분석</li><li>{{ico:check}}결과상세내역서(PDF)</li><li>{{ico:check}}고급 휴머나이징 1회(6,000자)</li><li>{{ico:check}}고친 뒤 다시 검사</li></ul><button class="btn btn-n" type="button" data-buy="s1">1건 이용권 구매</button></article>
+      <article class="hz7-plan on"><span class="hz7-badge">추천 · 제출 직전에</span><h3>24시간 이용권</h3><p class="p">2,900원</p><p class="for">처음 사용한 때부터 24시간</p><ul><li>{{ico:check}}검사 · 다듬기 40회</li><li>{{ico:check}}한 번에 5만 자 · 논문도 한 번에</li><li>{{ico:check}}모든 문장의 색 · 이유 · 구간별 분석</li><li>{{ico:check}}문장 고쳐 쓰기 도우미 · 표현 다듬기</li><li>{{ico:check}}결과상세내역서(PDF)</li><li>{{ico:check}}고급 휴머나이징 10회 · 다른 버전</li></ul><button class="btn btn-p" type="button" data-buy="d1">24시간 이용권 구매</button></article>
+      <article class="hz7-plan"><h3>30일 이용권</h3><p class="p">9,900원</p><p class="for">처음 사용한 날부터 30일 · <span class="per">하루 약 330원</span></p><ul><li>{{ico:check}}하루 검사 · 다듬기 40회</li><li>{{ico:check}}24시간 이용권의 모든 기능</li><li>{{ico:check}}고급 휴머나이징 하루 20회</li><li>{{ico:check}}과제 · 자기소개서를 자주 쓰는 달에</li></ul><button class="btn btn-n" type="button" data-buy="m1">30일 이용권 구매</button></article>
+      <article class="hz7-plan"><h3>90일 이용권</h3><p class="p">19,900원</p><p class="for">처음 사용한 날부터 90일 · <span class="per">하루 약 220원</span></p><ul><li>{{ico:check}}하루 검사 · 다듬기 40회</li><li>{{ico:check}}30일 이용권의 모든 기능</li><li>{{ico:check}}고급 휴머나이징 하루 20회</li><li>{{ico:check}}한 학기 · 취업 준비 기간 내내</li></ul><button class="btn btn-n" type="button" data-buy="q1">90일 이용권 구매</button></article>
     </div>
-    <p class="hz7-plan-note">이미 코드가 있나요? <button type="button" class="hz7-link" data-code>이용권 코드 넣기</button> · 카드나 간편결제로 결제하면 코드를 넣지 않아도 바로 열립니다 · 사용 전이면 구매 후 7일 안에 환불(<a href="{{root}}terms/#pass">이용권 약관</a>)</p>
+    <p class="hz7-plan-note">이미 코드가 있나요? <button type="button" class="hz7-link" data-code>이용권 코드 넣기</button> · 카드나 간편결제로 결제하면 코드를 넣지 않아도 바로 열립니다 · 사용 전이면 구매 후 7일 안에 전액 환불, 사용을 시작한 이용권은 청약철회가 제한됩니다(<a href="{{root}}terms/#pass">이용권 약관</a>)</p>
   </div>
 </section>
 
-<section class="s6" id="faq">
+<section class="s6 soft" id="faq">
   <div class="wrap">
     <div class="h6 c"><h2>자주 묻는 질문</h2></div>
     <div class="faq6 c">
@@ -163,9 +185,12 @@ selflabel: footer
       <details><summary>무료 맛보기와 이용권은 무엇이 다른가요?</summary><p>무료 맛보기는 첫 6,000자의 AI 작성률, 판정과 판정 근거, 검출 수치, 종합 분석 의견, 문체 특성 이름, 가장 뚜렷한 문장 2개를 보여 줍니다. 수치는 이용권과 같은 실제 값입니다. 이용권으로는 모든 문장의 색과 이유, 구간별 위치와 비중, 특성마다 해당하는 표현, 먼저 고칠 문장을 볼 수 있고, 문장 고쳐 쓰기 도우미 · 표현 다듬기, 결과상세내역서(PDF), 5만 자까지 한 번에 검사하는 기능도 열립니다.</p></details>
       <details><summary>학교나 회사의 검사기와 결과가 같나요?</summary><p>검사기마다 학습한 글과 방법이 달라 결과가 다를 수 있습니다. AIMarker는 다른 서비스의 결과를 약속하지 않습니다. 어느 문장이 AI처럼 읽히는지 미리 살피고 내 글로 고쳐 쓰는 데 활용하세요.</p></details>
       <details><summary>AI 작성률이 높으면 AI가 썼다는 뜻인가요?</summary><p>아니요. 작성률과 판정은 정해진 기준으로 낸 추정이지 증명이 아닙니다. 딱딱한 보고서체나 공문체로 쓴 사람 글이 높게 나올 수도 있고, 사람이 많이 고친 AI 글은 낮게 나올 수 있습니다. 시 · 노랫말처럼 줄이 짧은 글과 150자보다 짧은 글은 결과가 특히 불안정합니다. 결과만으로 다른 사람을 판단하지 마세요.</p></details>
-      <details><summary>표현 다듬기만 하면 추정률이 내려가나요?</summary><p>표현 다듬기는 AI가 자주 쓰는 표현을 바꿉니다. 글의 짜임과 흐름에 AI 패턴이 남아 있으면 추정률이 크게 내려가지 않을 수 있습니다. 색이 칠해진 문장을 눌러 문장 고쳐 쓰기 도우미와 함께 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰면 내 글에 가까워집니다.</p></details>
+      <details><summary>표현 다듬기와 고급 휴머나이징은 무엇이 다른가요?</summary><p>표현 다듬기는 번역투 · 상투적 연결어 · 빈말 · 대화창 흔적 같은 표현을 고칩니다(검사 · 다듬기 횟수). 고급 휴머나이징은 여기에 말투(한다체 · 해요체 · 습니다체)와 문장 리듬(긴 문장 나누기 · 짧은 문장 잇기)까지 바꾸고 ‘다른 버전’도 볼 수 있습니다(고급 횟수). 어느 쪽이든 뜻과 말의 세기가 달라질 수 있는 곳은 그대로 둡니다. 첫 문단은 무료로 바꿔 볼 수 있습니다.</p></details>
+      <details><summary>한다체를 골랐는데 말투가 그대로인 곳이 있어요</summary><p>지원서 · 안내문 · 사과문 · 초대장 · 상담 답장처럼 읽는 사람에게 부탁하거나 높여 말하는 글을 한다체로 바꾸면 실례가 되거나 한 글 안에 말투가 섞입니다. 그래서 이런 글은 말투를 그대로 두고 결과 화면에 까닭을 알려 드립니다. 해요체나 습니다체로는 바꿀 수 있습니다. 다른 글에서도 부탁 · 인사처럼 읽는 사람에게 하는 문장 몇 개는 그대로 둘 수 있습니다.</p></details>
+      <details><summary>고급 휴머나이징도 생성 AI를 사용하나요?</summary><p>아니요. AIMarker 인간화 엔진은 생성 AI를 사용하지 않고, 사람 글과 AI 글을 비교해 만든 규칙과 사람 글 약 10억 자에서 뽑은 용언 사전 · 실제 쓰임 표로 우리 서버에서 바꿉니다. 그래서 글을 외부 AI 서비스에 보내지 않고, 같은 글은 같은 결과가 나오며, 없는 내용을 지어내지 않습니다.</p></details>
+      <details><summary>다듬으면 추정률이 꼭 내려가나요?</summary><p>AI가 자주 쓰는 표현과 말투가 바뀌면 대개 내려가지만, 글의 짜임과 흐름에 AI 패턴이 남아 있으면 크게 내려가지 않을 수 있습니다. 보고서 · 과제는 말투를 한다체로 바꿔 보고, 색이 칠해진 문장에 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰면 내 글에 가까워집니다. 다른 검사기의 결과는 약속하지 않습니다.</p></details>
       <details><summary>이용권은 어떻게 받나요?</summary><p>카드 · 간편결제로 바로 결제하면 승인되는 즉시 이 화면에서 전체 결과가 열리고, 이용권 코드와 영수증은 메일로도 보내 드립니다. 바로 결제를 이용할 수 없을 때는 주문하시면 결제 안내를 메일로 드리고, 결제가 확인되면 코드를 보내 드립니다. 이용권 기간은 처음 검사한 때부터 시작합니다.</p></details>
-      <details><summary>환불되나요?</summary><p>사용하기 전이면 구매 후 7일 안에 전액 환불해 드립니다. 주문 번호와 함께 contact@skkc.co.kr로 요청해 주세요. 한 번이라도 검사에 사용한 이용권은 디지털 콘텐츠 특성상 환불이 어렵습니다. 서버 오류로 검사가 끝나지 않은 경우에는 횟수를 차감하지 않습니다.</p></details>
+      <details><summary>환불되나요?</summary><p>사용하기 전이면 구매 후 7일 안에 전액 환불해 드립니다. 주문 번호와 함께 contact@skkc.co.kr로 요청해 주세요. 사용을 시작한 뒤에는 청약철회가 제한되며, 자세한 기준은 <a href="{{root}}terms/#pass">이용권 약관</a>을 따릅니다. 그래서 무료 맛보기로 먼저 확인해 보시기를 권합니다. 서버 오류로 검사가 끝나지 않은 경우에는 횟수를 차감하지 않습니다.</p></details>
       <details><summary>내 글이 저장되나요?</summary><p>글은 검사하고 다듬을 때만 서버로 보내며, 저장하지 않습니다. 이용권은 남은 횟수와 기간만 세고, 글 내용은 남기지 않습니다. 결제 창으로 다녀오는 동안에는 넣은 글을 이 브라우저(탭)에만 잠시 두었다가 돌아오면 지웁니다. 결과상세내역서는 이 브라우저에서 만들어 저장합니다.</p></details>
     </div>
     <ol class="hz-src" id="src">
@@ -192,18 +217,18 @@ selflabel: footer
     <h2 id="hzBuyT">이용권 고르기</h2>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-prod"><legend class="sr">이용권 고르기</legend>
-        <label><input type="radio" name="product" value="s1"><span><b>1건 이용권</b><em>1,900원</em><small>글 한 편 · 검사 · 다듬기 3회(6,000자마다 1회) · 결과상세내역서 · 24시간</small></span></label>
-        <label class="best"><input type="radio" name="product" value="d1" checked><span><b>24시간 이용권<i>추천</i></b><em>2,900원</em><small>처음 사용한 때부터 24시간 · 검사 · 다듬기 40회 · 고급 휴머나이징 3회(준비되면)</small></span></label>
-        <label><input type="radio" name="product" value="m1"><span><b>30일 이용권</b><em>9,900원</em><small>처음 사용한 날부터 30일 · 하루 검사 · 다듬기 40회 · 하루 약 330원</small></span></label>
-        <label><input type="radio" name="product" value="q1"><span><b>90일 이용권</b><em>19,900원</em><small>처음 사용한 날부터 90일 · 하루 검사 · 다듬기 40회 · 하루 약 220원</small></span></label>
+        <label><input type="radio" name="product" value="s1"><span><b>1건 이용권</b><em>1,900원</em><small>글 한 편 · 검사 · 다듬기 3회(6,000자마다 1회) · 고급 휴머나이징 1회 · 결과상세내역서 · 24시간</small></span></label>
+        <label class="best"><input type="radio" name="product" value="d1" checked><span><b>24시간 이용권<i>추천</i></b><em>2,900원</em><small>처음 사용한 때부터 24시간 · 검사 · 다듬기 40회 · 고급 휴머나이징 10회</small></span></label>
+        <label><input type="radio" name="product" value="m1"><span><b>30일 이용권</b><em>9,900원</em><small>처음 사용한 날부터 30일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 20회 · 하루 약 330원</small></span></label>
+        <label><input type="radio" name="product" value="q1"><span><b>90일 이용권</b><em>19,900원</em><small>처음 사용한 날부터 90일 · 하루 검사 · 다듬기 40회 · 고급 휴머나이징 하루 20회 · 하루 약 220원</small></span></label>
       </fieldset>
       <div class="field"><label for="hzBuyMail">코드 · 영수증을 받을 이메일 <em>필수</em></label><input class="inp" id="hzBuyMail" name="contact" type="email" inputmode="email" autocomplete="email" maxlength="80" required placeholder="name@example.com"></div>
-      <label class="consent"><input type="checkbox" name="agree"><span>구매 · 환불 안내(사용 전이면 구매 후 7일 안 전액 환불, 한 번이라도 사용한 뒤에는 디지털 콘텐츠 특성상 환불이 어려움)와 주문 확인 · 코드 발송을 위한 이메일 수집에 동의합니다. <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a> · <a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a></span></label>
+      <label class="consent"><input type="checkbox" name="agree"><span>사용을 시작한 이용권은 청약철회가 제한된다는 것(사용 전이면 구매 후 7일 안 전액 환불, 30일 · 90일 이용권은 남은 기간 해지 가능)을 확인했고, 이용권 약관과 주문 확인 · 코드 발송을 위한 이메일 수집에 동의합니다. <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a> · <a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a></span></label>
       <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button class="btn btn-p btn-l" type="submit"><span>주문하기</span></button>
       <p class="msg" role="status"></p>
       <p class="hz7-dlg-n" id="hzBuyNote">주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 이용권 코드를 보내 드립니다.</p>
-      <p class="hz7-dlg-n">가격은 부가세 포함입니다. 운영 성균관컨설팅(대표 이채연) · 사업자등록번호 272-32-01885 · 통신판매업 신고 제2026-경기송탄-0622 · 문의 contact@skkc.co.kr</p>
+      <p class="hz7-dlg-n">가격은 부가세 포함입니다. 미성년자는 법정대리인의 동의를 받아 구매해 주세요(동의 없는 구매는 취소할 수 있습니다). 운영 성균관컨설팅(대표 이채연) · 사업자등록번호 272-32-01885 · 통신판매업 신고 제2026-경기송탄-0622 · 문의 contact@skkc.co.kr</p>
     </form>
   </div>
 </dialog>

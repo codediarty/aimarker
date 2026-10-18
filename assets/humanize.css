@@ -574,3 +574,27 @@
   .hz8-tlock { position: relative; left: auto; top: auto; transform: none; margin: -46px auto 0; flex-wrap: wrap; justify-content: center; text-align: center; }
   .hz7-plans { grid-template-columns: minmax(0, 1fr); max-width: 520px; }
 }
+
+/* ---------- 8.1 인간화 엔진 소개 ---------- */
+.hz9-human { margin-top: 36px; display: grid; gap: 22px; }
+.hz9-ba { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-radius: 22px; border: 1px solid var(--line); background: #fff; overflow: hidden; }
+.hz9-ba > div { padding: 22px 26px 26px; min-width: 0; }
+.hz9-ba > .to { border-left: 1px solid var(--line); background: linear-gradient(180deg, #F2FAF7, #fff 70%); }
+.hz9-ba small { display: block; margin-bottom: 10px; font-size: 12.5px; font-weight: 850; color: var(--faint); }
+.hz9-ba .to small { color: var(--tl2); }
+.hz9-ba p { font-family: var(--serif); font-size: 17px; line-height: 1.95; color: var(--ink); word-break: keep-all; }
+.hz9-ba em { font-style: normal; }
+.hz9-ba em.a { background: linear-gradient(transparent 56%, var(--hl2) 56%); }
+.hz9-ba em.h { color: var(--tl1); font-weight: 750; background: linear-gradient(transparent 64%, rgba(14, 140, 120, .20) 64%); }
+.hz9-feat { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+.hz9-feat li { display: grid; gap: 8px; align-content: start; padding-top: 14px; border-top: 2px solid var(--tl2); }
+.hz9-feat b { font-size: 16.5px; font-weight: 900; letter-spacing: -.02em; }
+.hz9-feat span { font-size: 14px; color: var(--mute); line-height: 1.72; word-break: keep-all; }
+@media (max-width: 980px) { .hz9-feat { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .hz9-ba { grid-template-columns: minmax(0, 1fr); }
+  .hz9-ba > .to { border-left: 0; border-top: 1px solid var(--line); }
+  .hz9-ba > div { padding: 18px 18px 20px; }
+  .hz9-ba p { font-size: 16px; }
+  .hz9-feat { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+}
