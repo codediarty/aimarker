@@ -800,5 +800,16 @@
   }
   window.addEventListener('hashchange', hashGo); hashGo();
 
+  /* 9.0: 첫 화면 작업창에서 넘어온 글(이 브라우저 세션 저장소에만 잠깐 둠) → 바로 검사 또는 다듬기 */
+  (function () {
+    if (Q.pay) return;
+    var h = ssget('am_hz_in'); if (!h || !h.text) return;
+    ssset('am_hz_in', null);
+    if (!String(ta.value || '').trim()) ta.value = String(h.text).slice(0, PAID_MAX);
+    var tn = $('#hzTone'); if (tn && h.tone && tn.querySelector('option[value="' + h.tone + '"]')) tn.value = h.tone;
+    count();
+    setTimeout(function () { if (h.act === 'pro') { if (!btnP.disabled) pro(); else infoP.then(function () { pro(); }); } else check(); }, 120);
+  })();
+
   count();
 })();

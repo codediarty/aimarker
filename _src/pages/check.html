@@ -7,16 +7,13 @@ desc: 광고 · 상세페이지 · SNS 문구를 붙여 넣으면 표시광고�
 styles: assets/app.css
 scripts: assets/amui.js, assets/check.js
 -->
-<section class="ph">
-  <div class="wrap">
-    <span class="eyebrow">무료 도구 · 광고 문구 검사</span>
-    <h1>올리기 전 30초,<br>위험 표현과 고칠 문구까지</h1>
-    <p class="lead">문구를 붙여 넣으면 업종을 자동으로 고르고, 한국 광고 규칙에 비춰 위험 후보와 근거, 바꿀 문구를 보여 줍니다. 회원가입 없이 무료입니다.</p>
-    <div class="row">
-      <span class="bdg bdg-live"><i></i>업종 규칙 팩 6종</span>
-      <span class="bdg bdg-beta"><i></i>협찬 · 가상인물 · AI 표시 검사</span>
-      <span class="bdg bdg-soon">문구는 검사에만 쓰고 저장하지 않음</span>
-    </div>
+<section class="k-apphead" aria-labelledby="h1">
+  <div class="k-wrap">
+    <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<span>무료 도구, 광고 문구 검사</span></p>
+    <div class="k-apphead-row"><div>
+      <h1 class="k-h1 sm" id="h1">올리기 전 30초,<br>위험 표현과 고칠 문구까지</h1>
+      <p class="k-lead">문구를 붙여 넣으면 업종을 자동으로 고르고, 한국 광고 규칙에 비춰 위험 후보와 근거, 바꿀 문구를 보여 줍니다. 회원가입 없이 무료입니다.</p>
+    </div><ul class="k-apphead-facts"><li>{{ico:check}}업종 규칙 팩 6종</li><li>{{ico:check}}협찬, 가상인물, AI 표시 검사</li><li>{{ico:check}}문구는 검사에만 쓰고 저장하지 않음</li></ul></div>
   </div>
 </section>
 
@@ -28,20 +25,20 @@ scripts: assets/amui.js, assets/check.js
           <textarea class="chk-ta" id="ctext" maxlength="5000" placeholder="예: 피부과 전문의가 개발한 재생 크림! 부작용 없는 순한 성분으로 바르자마자 주름이 사라져요."></textarea>
           <div class="chk-cnt"><span id="ccnt">0</span> / 5,000자</div></div>
         <div class="grid g2 mt8">
-          <div class="field"><label for="cind">업종 규칙 팩</label><select class="sel" id="cind"><option value="">업종 자동</option><option value="gen">일반 상품 · 서비스</option><option value="food">일반식품</option><option value="hfood">건강기능식품</option><option value="cos">화장품</option><option value="med">의료 · 병원</option><option value="fin">금융 · 대출 · 투자</option></select></div>
+          <div class="field"><label for="cind">업종 규칙 팩</label><select class="sel" id="cind"><option value="">업종 자동</option><option value="gen">일반 상품, 서비스</option><option value="food">일반식품</option><option value="hfood">건강기능식품</option><option value="cos">화장품</option><option value="med">의료, 병원</option><option value="fin">금융, 대출, 투자</option></select></div>
           <div class="field"><label>예시로 해 보기</label><div class="row" id="samples"><button class="btn btn-g btn-s" type="button" data-s="0">화장품</button><button class="btn btn-g btn-s" type="button" data-s="1">건강식품</button><button class="btn btn-g btn-s" type="button" data-s="2">협찬 글</button></div></div>
         </div>
         <div class="chk-opts">
-          <label><input type="checkbox" id="fspon"><span><b>협찬 · 대가를 받은 콘텐츠예요</b> · 제품이나 원고료, 할인을 받았다면</span></label>
-          <label><input type="checkbox" id="fperson"><span><b>AI로 만든 인물 · 목소리가 나와요</b> · 가상 모델, AI 성우, 아바타 등</span></label>
-          <label><input type="checkbox" id="fmedia"><span><b>AI로 만든 이미지 · 영상을 사용해요</b></span></label>
+          <label><input type="checkbox" id="fspon"><span><b>협찬, 대가를 받은 콘텐츠예요</b>, 제품이나 원고료, 할인을 받았다면</span></label>
+          <label><input type="checkbox" id="fperson"><span><b>AI로 만든 인물, 목소리가 나와요</b>, 가상 모델, AI 성우, 아바타 등</span></label>
+          <label><input type="checkbox" id="fmedia"><span><b>AI로 만든 이미지, 영상을 사용해요</b></span></label>
         </div>
         <div class="row mt16"><button class="btn btn-p btn-l" type="button" id="cgo">{{ico:search}}<span>검사하기</span></button><span class="note">입력을 멈추면 자동으로 다시 검사합니다</span></div>
       </div>
-      <div class="callout mt16">{{ico:info}}<div>위험 '후보'와 근거를 보여 주는 도구입니다. 법률 자문이 아니며 적법성을 보증하지 않습니다. 같은 엔진을 <a href="{{root}}app/">검수 작업 공간</a>(승인 · 보고서)과 <a href="{{root}}developers/">API</a>로도 쓸 수 있습니다.</div></div>
+      <div class="callout mt16">{{ico:info}}<div>위험 '후보'와 근거를 보여 주는 도구입니다. 법률 자문이 아니며 적법성을 보증하지 않습니다. 같은 엔진을 <a href="{{root}}app/">검수 작업 공간</a>(승인, 보고서)과 <a href="{{root}}developers/">API</a>로도 쓸 수 있습니다.</div></div>
     </div>
     <div id="cout" aria-live="polite">
-      <div class="chk-empty">{{ico:megaphone}}<b style="display:block;color:var(--ink);font-size:16px">문구를 넣으면 여기에 결과가 나옵니다</b>업종별 금지 · 과장 표현, 추천 · 보증 표시, 가상인물 · AI 표시, 저작권 단서까지 한 번에 봅니다.</div>
+      <div class="chk-empty">{{ico:megaphone}}<b style="display:block;color:var(--ink);font-size:16px">문구를 넣으면 여기에 결과가 나옵니다</b>업종별 금지, 과장 표현, 추천, 보증 표시, 가상인물, AI 표시, 저작권 단서까지 한 번에 봅니다.</div>
     </div>
   </div>
 </section>
@@ -50,12 +47,12 @@ scripts: assets/amui.js, assets/check.js
   <div class="wrap">
     <div class="sh"><span class="eyebrow">무엇을 보나요</span><h2 class="h2">광고주 누구에게나 적용되는 규칙부터</h2><p class="lead">AI 기본법은 AI 서비스 사업자의 의무이지만, 아래 규칙은 업종에 따라 모든 광고주에게 적용됩니다.</p></div>
     <div class="six">
-      <div class="ck"><div class="top"><span class="ic">{{ico:scale}}</span><span class="no">공통</span></div><h3>거짓 · 과장 · 기만</h3><p>최고 · 최초 · 100% · 보장 · 부작용 없음, 최저가 · 할인 표시, 무료 조건, 비교 광고.</p><div class="law">표시광고법</div></div>
-      <div class="ck"><div class="top"><span class="ic">{{ico:store}}</span><span class="no">식품 · 건기식</span></div><h3>질병 · 기능성 표현</h3><p>질병 예방 · 치료, 일반식품의 기능성, 체중 감량, 전문가 추천, 의약품 대체, 필수 문구.</p><div class="law">식품표시광고법 제8조</div></div>
-      <div class="ck"><div class="top"><span class="ic">{{ico:sparkle}}</span><span class="no">화장품</span></div><h3>의약품 오인 표현</h3><p>치료 · 재생 · 염증 · 제거, 기능성 표현 확인, 줄기세포 · 유전자, 의사 추천.</p><div class="law">화장품법 제13조</div></div>
-      <div class="ck"><div class="top"><span class="ic">{{ico:shield}}</span><span class="no">의료</span></div><h3>의료광고 금지 표현</h3><p>치료 결과 단정, 치료 경험담 · 전후 사진, 최상급 비교, 할인 · 무료 시술, 부작용 정보 누락.</p><div class="law">의료법 제56조</div></div>
-      <div class="ck"><div class="top"><span class="ic">{{ico:trend}}</span><span class="no">금융</span></div><h3>수익 · 대출 광고</h3><p>원금 보장 · 확정 수익, 수익률 과장, 무심사 · 누구나 대출, 리딩방, 위험 · 금리 안내 누락.</p><div class="law">금융소비자보호법 제22조</div></div>
-      <div class="ck"><div class="top"><span class="ic">{{ico:users}}</span><span class="no">추천 · 보증 · AI</span></div><h3>협찬 · 가상인물 표시</h3><p>'광고 · 협찬' 표시 위치, 내돈내산 위장, AI로 만든 인물 · 전문가 · 후기, AI 이미지 표시.</p><div class="law">추천 · 보증 심사지침</div></div>
+      <div class="ck"><div class="top"><span class="ic">{{ico:scale}}</span><span class="no">공통</span></div><h3>거짓, 과장, 기만</h3><p>최고, 최초, 100%, 보장, 부작용 없음, 최저가, 할인 표시, 무료 조건, 비교 광고.</p><div class="law">표시광고법</div></div>
+      <div class="ck"><div class="top"><span class="ic">{{ico:store}}</span><span class="no">식품, 건기식</span></div><h3>질병, 기능성 표현</h3><p>질병 예방, 치료, 일반식품의 기능성, 체중 감량, 전문가 추천, 의약품 대체, 필수 문구.</p><div class="law">식품표시광고법 제8조</div></div>
+      <div class="ck"><div class="top"><span class="ic">{{ico:sparkle}}</span><span class="no">화장품</span></div><h3>의약품 오인 표현</h3><p>치료, 재생, 염증, 제거, 기능성 표현 확인, 줄기세포, 유전자, 의사 추천.</p><div class="law">화장품법 제13조</div></div>
+      <div class="ck"><div class="top"><span class="ic">{{ico:shield}}</span><span class="no">의료</span></div><h3>의료광고 금지 표현</h3><p>치료 결과 단정, 치료 경험담, 전후 사진, 최상급 비교, 할인, 무료 시술, 부작용 정보 누락.</p><div class="law">의료법 제56조</div></div>
+      <div class="ck"><div class="top"><span class="ic">{{ico:trend}}</span><span class="no">금융</span></div><h3>수익, 대출 광고</h3><p>원금 보장, 확정 수익, 수익률 과장, 무심사, 누구나 대출, 리딩방, 위험, 금리 안내 누락.</p><div class="law">금융소비자보호법 제22조</div></div>
+      <div class="ck"><div class="top"><span class="ic">{{ico:users}}</span><span class="no">추천, 보증, AI</span></div><h3>협찬, 가상인물 표시</h3><p>'광고, 협찬' 표시 위치, 내돈내산 위장, AI로 만든 인물, 전문가, 후기, AI 이미지 표시.</p><div class="law">추천, 보증 심사지침</div></div>
     </div>
   </div>
 </section>

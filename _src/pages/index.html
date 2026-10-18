@@ -1,168 +1,363 @@
 <!--
 path:
 key: home
-title: AIMarker · 기업은 AI 검색 최적화와 AI 표시, 개인은 AI 작성률 검사
-ogtitle: AI가 답하는 시대의 콘텐츠 신뢰 플랫폼 · AIMarker
-desc: 기업은 무료 진단 뒤 1회 세팅으로 AI 검색 최적화(GEO)와 AI 콘텐츠 표시를 끝내고, 필요할 때만 자동 관리합니다. 개인은 내기 전에 AI 작성률과 판정을 확인하고 문장별 색으로 고칠 곳을 찾습니다. 한국AI윤리위원회 인증 기업 AIMarker.
+v9: 1
+title: AIMarker | AI 작성률 검사와 휴머나이징, GEO, AI 표시를 한곳에서
+ogtitle: AI가 만든 콘텐츠, 표시부터 관리까지 AIMarker 하나로
+desc: 글은 문장마다 AI 작성 가능성을 확인하고 사람 말투로 다듬습니다. 기업은 AI 검색 최적화(GEO), AI 상품 피드, 출고 전 점검과 서명된 AI 표시까지 한 번의 세팅으로 끝냅니다. 한국AI윤리위원회 인증 기업 AIMarker.
 scripts: assets/geo.js
-styles: assets/mark.css, assets/v6.css, assets/home7.css
 jsonld_file: home.jsonld
 selflabel: footer
 -->
-<h1 class="sr">AIMarker: 기업용 AI 검색 최적화(GEO) · AI 콘텐츠 표시, 개인용 AI 작성률 검사 · 휴머나이징</h1>
-<section class="x-split-hero" id="top" aria-label="기업용 · 개인용">
-  <div class="b">
-    <div class="x-split-in">
-      <p class="x-split-k x-rise">{{ico:building}}기업 · 쇼핑몰 · 브랜드</p>
-      <h2 class="x-rise d1">AI가 우리 회사를<br>찾고, 믿고, 추천하게</h2>
-      <p class="x-rise d2">고객은 검색창 대신 AI에게 묻습니다. 주소만 넣으면 AI 검색이 우리 사이트를 어떻게 읽는지 진단하고, 한 번의 세팅으로 AI 검색 최적화와 AI 콘텐츠 표시를 끝냅니다.</p>
-      <form class="x-url x-rise d3" data-goto-geo role="search" aria-label="무료 GEO 진단">
-        <label class="sr" for="hUrl">회사 사이트 주소</label>
-        <input id="hUrl" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="회사 사이트 주소(예: myshop.co.kr)" maxlength="300" required>
-        <button class="btn btn-p" type="submit">무료로 진단하기</button>
-      </form>
-      <a class="x-split-link" href="{{root}}business/">기업용 자세히 보기{{ico:arrow}}</a>
-      <div class="x-split-meta"><div><b>10초</b><span>가입 없이 진단</span></div><div><b>17종</b><span>AI 크롤러 허용 점검</span></div><div><b>49만 원</b><span>1회 세팅부터</span></div></div>
+<section class="k-hero" aria-labelledby="h1">
+  <div class="k-wrap">
+    <div class="k-hero-head">
+      <h1 class="k-h1" id="h1">AI가 만든 콘텐츠,<br>표시부터 관리까지 <span class="k-mk">AIMarker</span> 하나로</h1>
+      <p class="k-lead">글은 문장마다 AI 작성 가능성을 확인하고 사람 말투로 다듬습니다. 사이트는 AI 검색이 정확히 읽도록 고치고, 이미지와 영상에는 서명된 AI 표시를 남깁니다.</p>
     </div>
-  </div>
-  <div class="c">
-    <div class="x-split-in">
-      <p class="x-split-k x-rise">{{ico:user}}학생 · 취업 준비 · 크리에이터</p>
-      <h2 class="x-rise d1">내 글, AI가 쓴 티가<br>날까요?</h2>
-      <p class="x-rise d2">학교 · 기관 · 기업은 이미 AI 작성 여부를 확인합니다. 붙여 넣으면 AI 작성률과 판정(안전 · 고위험 · 부적합)을 정해진 기준으로 보여 드리고, 고칠 문장을 색으로 짚어 드립니다.</p>
-      <div class="x-acts x-rise d3" style="margin-top:30px"><a class="btn btn-w btn-l" href="{{root}}humanize/">AI 작성률 무료 검사</a></div>
-      <a class="x-split-link" href="{{root}}personal/">개인용 자세히 보기{{ico:arrow}}</a>
-      <div class="x-split-meta"><div><b>0원</b><span>무료 맛보기</span></div><div><b>1,900원</b><span>1건 이용권부터</span></div><div><b>저장 안 함</b><span>검사할 때만 받음</span></div></div>
-    </div>
-  </div>
-</section>
 
-<div class="x-proof">
-  <div class="wrap">
-    {{kaiec}}
-    <ul aria-label="AIMarker 기술 근거">
-      <li>{{ico:fingerprint}}C2PA · IPTC 출처 기록 판독</li>
-      <li>{{ico:key}}Ed25519 전자서명 마크</li>
-      <li>{{ico:ledger}}원장 공개 타임스탬프</li>
-      <li>{{ico:lock}}판정 규칙은 서버에만</li>
-    </ul>
-  </div>
-</div>
-
-<section class="x-sec" id="now">
-  <div class="wrap">
-    <div class="x-head">
-      <p class="x-kick">지금 달라진 것</p>
-      <h2 class="x-h2">AI가 답하고, AI가 확인합니다</h2>
-      <p class="x-lead">기업에게는 AI 검색이 새 첫 화면이 됐고, 개인에게는 AI 작성 확인이 일상이 됐습니다.</p>
-    </div>
-    <div class="x-facts">
-      <div class="x-fact"><b>20<small>억 명</small></b><h4>구글 AI 개요 월 이용자</h4><p>검색 결과 맨 위에서 AI가 먼저 답합니다.</p><span class="x-src"><a href="https://techcrunch.com/2025/07/23/googles-ai-overviews-have-2b-monthly-users-ai-mode-100m-in-the-us-and-india" target="_blank" rel="noopener">TechCrunch, 2025.7.23</a></span></div>
-      <div class="x-fact"><b>20<small>%+</small></b><h4>네이버 검색 중 AI 브리핑</h4><p>국내 검색도 다섯 번에 한 번 이상은 AI가 요약해 답합니다(2025년 말).</p><span class="x-src"><a href="https://www.ceoscoredaily.com/page/view/2026031016373092535" target="_blank" rel="noopener">CEO스코어데일리, 2026.3.11</a></span></div>
-      <div class="x-fact"><b>75.9<small>%</small></b><h4>교수자 AI · 표절 검사 증가</h4><p>교수자 평가용 서비스의 검사 문서가 1년 새 이만큼 늘었습니다(2026년 4월).</p><span class="x-src">유니콘팩토리, 2026.5.26</span></div>
-      <div class="x-fact"><b>3.6<small>배</small></b><h4>자기소개서 AI 판별 검사</h4><p>2025년 10~11월 검사량이 1년 전보다 늘었고, 일부 기업은 서류 심사에 씁니다.</p><span class="x-src">디지털타임스, 2025.11.23</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="x-sec alt" id="business">
-  <div class="wrap">
-    <div class="x-head row">
-      <div>
-        <p class="x-kick">기업용</p>
-        <h2 class="x-h2">한 번 세팅하면,<br>AI 검색과 AI 표시가 알아서</h2>
-        <p class="x-lead">AI 검색에 잘 보이게, AI 쇼핑에서 잘 팔리게, AI 콘텐츠를 믿을 수 있게. 세 가지를 한 번의 세팅으로 묶고, 새 콘텐츠가 계속 생길 때만 관리를 켭니다.</p>
+    <div class="k-desk" id="desk">
+      <div class="k-desk-tabs" role="tablist" aria-label="할 일 고르기">
+        <button type="button" role="tab" id="dt-text" aria-selected="true" aria-controls="dk-text" data-out="do-text">{{ico:pen}}<span class="lg">글 검사와 휴머나이징</span><span class="sm">글 검사</span></button>
+        <button type="button" role="tab" id="dt-site" aria-selected="false" aria-controls="dk-site" data-out="do-site" tabindex="-1">{{ico:globe}}<span class="lg">사이트 GEO 진단</span><span class="sm">GEO 진단</span></button>
+        <button type="button" role="tab" id="dt-file" aria-selected="false" aria-controls="dk-file" data-out="do-file" tabindex="-1">{{ico:badge}}AI 표시</button>
+        <span class="who">가입 없이 무료로 써 볼 수 있습니다</span>
       </div>
-      <a class="btn btn-g" href="{{root}}business/">기업용 전체 보기</a>
-    </div>
-    <div class="x-auto c3">
-      <div>{{ico:globe}}<h4>GEO 자동 최적화</h4><p>AI 크롤러 · 구조화 데이터 · 질문과 답을 진단하고, 고칠 코드를 만들어 설치까지 끝냅니다.</p><small>진단 무료</small></div>
-      <div>{{ico:store}}<h4>AI 커머스 엔진</h4><p>상품 정보를 AI 검색 · 쇼핑이 읽는 구조화 데이터와 상품 피드로 바꾸고, 상세페이지 AI 표시까지 챙깁니다.</p><small>상품 피드 무료</small></div>
-      <div>{{ico:shield}}<h4>AI 신뢰 · 컴플라이언스</h4><p>AI 사용을 파일 기록으로 확인해 근거에 맞는 표시만 붙이고, 서명 마크와 원장으로 증명합니다.</p><small>자동 마킹 무료</small></div>
-    </div>
-    <div class="x-plans c3" style="margin-top:28px">
-      <div class="x-plan"><h3>기본 세팅</h3><p class="who">소형 · 브랜드 사이트</p><p class="pr"><b>49만 원</b><span>1회</span></p><ul><li>{{ico:check}}페이지 30개까지 진단 · 고칠 코드 설치</li><li>{{ico:check}}기존 AI 콘텐츠 200건 확인 · 표시</li><li>{{ico:check}}다시 진단 · 전후 리포트</li></ul><a class="btn btn-g" href="{{root}}contact/?plan=basic">상담 신청</a></div>
-      <div class="x-plan best"><span class="x-tag">쇼핑몰 추천</span><h3>쇼핑몰 세팅</h3><p class="who">상품 500개까지</p><p class="pr"><b>149만 원</b><span>1회</span></p><ul><li>{{ico:check}}상품 구조화 데이터 · AI 상품 피드</li><li>{{ico:check}}상품 이미지 AI 표시 2,000건</li><li>{{ico:check}}광고 문구 검수 · 원격 설치</li></ul><a class="btn btn-p" href="{{root}}contact/?plan=shop">상담 신청</a></div>
-      <div class="x-plan"><h3>브랜드 세팅</h3><p class="who">여러 사이트 · 대량 콘텐츠</p><p class="pr"><b>390만 원</b><span>부터</span></p><ul><li>{{ico:check}}콘텐츠 1만 건 이상 · 맞춤 검수 규칙</li><li>{{ico:check}}담당자 교육 · 사내 AI 표시 가이드</li><li>{{ico:check}}API · MCP 연동</li></ul><a class="btn btn-g" href="{{root}}contact/?plan=brand">상담 신청</a></div>
-    </div>
-    <p class="x-note">월 관리는 선택입니다. 자동 관리 월 9.9만 원 · 성장 관리 월 29만 원, 언제든 해지할 수 있고 세팅 고객은 첫 달이 포함됩니다. 경쟁사 비교 리포트 · 교육 · 사내 가이드 같은 <a href="{{root}}business/#addons">추가 옵션</a>도 있습니다. 기업 요금은 부가세 별도.</p>
-  </div>
-</section>
+      <div class="k-desk-body">
+        <div class="k-desk-in" role="tabpanel" id="dk-text" aria-labelledby="dt-text">
+          <label class="k-lab" for="dkText">검사하거나 다듬을 글</label>
+          <textarea id="dkText" maxlength="50000" spellcheck="false" placeholder="과제, 자기소개서, 블로그, 보고서 글을 붙여 넣으세요. 글은 검사할 때만 보내고 저장하지 않습니다."></textarea>
+          <div class="k-desk-bar">
+            <span class="k-small" style="margin-right:2px">예시</span>
+            <button class="k-chip" type="button" data-ex="report">보고서</button>
+            <button class="k-chip" type="button" data-ex="essay">자기소개서</button>
+            <button class="k-chip" type="button" data-ex="blog">AI 대화창 복사</button>
+            <span class="cnt" id="dkCnt">0 / 6,000자</span>
+          </div>
+          <div class="k-desk-act">
+            <button class="k-btn k-btn-p" type="button" id="dkCheck">{{ico:search}}AI 작성률 검사</button>
+            <button class="k-btn k-btn-l" type="button" id="dkPro">{{ico:pen}}사람 말투로 다듬기</button>
+            <label class="k-sr" for="dkTone">말투</label>
+            <select class="tone" id="dkTone"><option value="auto">말투 자동</option><option value="polite">해요체</option><option value="formal">습니다체</option><option value="plain">한다체</option><option value="keep">말투 그대로</option></select>
+          </div>
+        </div>
+        <div class="k-desk-in" role="tabpanel" id="dk-site" aria-labelledby="dt-site" hidden>
+          <label class="k-lab" for="hUrl">회사 사이트나 상품 페이지 주소</label>
+          <form class="k-url" data-goto-geo role="search" aria-label="무료 GEO 진단">
+            <input id="hUrl" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="예: myshop.co.kr" maxlength="300" required>
+            <button class="k-btn k-btn-p" type="submit">무료로 진단하기</button>
+          </form>
+          <ul class="k-checks">
+            <li><b>AI 크롤러 접근</b><span>ChatGPT, Claude, Perplexity, 구글, 네이버 등 17종의 허용 상태</span></li>
+            <li><b>구조화 데이터</b><span>회사, 상품, 질문과 답을 AI가 읽는 형식으로 썼는지</span></li>
+            <li><b>본문과 질문</b><span>AI가 인용하기 좋은 문장과 자주 묻는 질문이 있는지</span></li>
+            <li><b>고칠 코드</b><span>JSON-LD, llms.txt, robots 조각을 바로 붙여 넣게 만들어 줌</span></li>
+          </ul>
+          <p class="k-small" style="margin-top:14px">공개된 페이지만, 진단할 때 읽고 보관하지 않습니다.</p>
+        </div>
+        <div class="k-desk-in" role="tabpanel" id="dk-file" aria-labelledby="dt-file" hidden>
+          <h2 class="k-h3">이미지와 영상에 서명된 AI 표시</h2>
+          <p class="k-p" style="margin-top:10px;color:var(--k-gray)">파일 속 기록(C2PA, IPTC)으로 AI 사용을 먼저 확인하고, 근거에 맞는 표시와 전자서명을 넣어 드립니다. 파일은 브라우저에서만 읽고 서버로 보내지 않습니다.</p>
+          <ul class="k-checks">
+            <li><b>근거 맞춤 표시</b><span>파일 기록과 다른 표시는 붙이지 않음</span></li>
+            <li><b>전자서명</b><span>Ed25519 서명, 누구나 공개키로 확인</span></li>
+            <li><b>공개 원장</b><span>발급 기록을 매일 공개 타임스탬프에 고정</span></li>
+          </ul>
+          <div class="k-desk-act"><a class="k-btn k-btn-p" href="{{root}}mark/">{{ico:upload}}파일 넣고 자동 마킹</a><a class="k-btn k-btn-l" href="{{root}}m/">받은 마크 확인</a></div>
+        </div>
 
-<section class="x-sec" id="personal">
-  <div class="wrap x-duo">
-    <div>
-      <p class="x-kick" style="color:var(--verified)">개인용</p>
-      <h2 class="x-h2">내기 전에 문장별로 확인하고,<br>내 글로 고쳐 쓰세요</h2>
-      <p class="x-lead">과제 · 자기소개서 · 논문 · 블로그 글을 붙여 넣으면 AI 작성률과 판정, 판정 근거를 보여 드리고 AI가 쓴 것으로 보이는 문장을 형광펜 색으로 짚어 드립니다.</p>
-      <dl class="x-dl">
-        <div><dt>같은 글, 같은 판정</dt><dd>정해진 판정 기준으로만 판정해 돌릴 때마다 바뀌지 않고, 검사 번호로 다시 확인합니다</dd></div>
-        <div><dt>고쳐 쓰기 도우미</dt><dd>색이 칠해진 문장을 누르면 바꿀 표현과 고친 문장을 제안합니다</dd></div>
-        <div><dt>결과상세내역서</dt><dd>검사 번호 · 판정 근거 · 구간별 분석 · 원문 전문 분석을 PDF로</dd></div>
-        <div><dt>저장하지 않음</dt><dd>글은 검사할 때만 보내고 남기지 않습니다</dd></div>
-      </dl>
-      <div class="x-acts"><a class="btn btn-l" style="background:var(--verified);color:#fff" href="{{root}}humanize/">AI 작성률 무료 검사</a><a class="btn btn-g btn-l" href="{{root}}personal/">개인용 전체 보기</a></div>
-      <p class="x-note">무료 맛보기 0원 · 1건 이용권 1,900원 · 24시간 이용권 2,900원 · 30일 9,900원 · 90일 19,900원(부가세 포함)</p>
-    </div>
-    <div aria-hidden="true">
-      <div class="h7-card" style="transform:none">
-        <div class="h7-card-h"><div class="ring6 lg hi"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="166"/></svg><b>47<small>%</small></b></div><div><small>AI 작성률 · 예시</small><b>부적합 · 개선 필요</b><span>작성률 47%(부적합 기준 40% 이상)</span></div></div>
-        <p class="h7-paper">지난 학기 조별 과제로 동네 시장 상인 다섯 분을 인터뷰했다. 처음엔 거절도 많이 당했는데, 두 번째 주부터는 먼저 말을 걸어 주시는 분도 생겼다. <span class="hz-s l3">전통시장은 지역 경제 활성화에 있어서 중요한 역할을 합니다.</span> <span class="hz-s l2">또한, 다양한 먹거리와 문화를 경험할 수 있는 공간으로서 그 가치가 높습니다.</span> <span class="hz-s l1">따라서, 앞으로도 많은 관심이 필요하다고 할 수 있습니다.</span></p>
-        <div class="h7-card-f"><span><i class="l3"></i>높음</span><span><i class="l2"></i>중간</span><span><i class="l1"></i>낮음</span></div>
+        <div class="k-desk-out" aria-live="polite">
+          <div id="do-text">
+            <div class="k-out-h"><small>예시 결과</small><span class="k-legend"><span><i class="l3"></i>높음</span><span><i class="l2"></i>중간</span><span><i class="l1"></i>낮음</span></span></div>
+            <div class="k-score"><div class="k-ring" style="--p:47"><b>47<small>%</small></b></div><div class="t"><b><span class="k-verdict unfit">부적합</span>개선 필요</b><span>AI 작성률 47%, 부적합 기준은 40% 이상</span></div></div>
+            <p class="k-paper k-draw">지난 학기 조별 과제로 동네 시장 상인 다섯 분을 인터뷰했다. 처음엔 거절도 많이 당했는데, 두 번째 주부터는 먼저 말을 걸어 주시는 분도 생겼다. <span class="k-s l3">전통시장은 지역 경제 활성화에 있어서 중요한 역할을 합니다.</span> <span class="k-s l2">또한, 다양한 먹거리와 문화를 경험할 수 있는 공간으로서 그 가치가 높습니다.</span> <span class="k-s l1">따라서, 앞으로도 많은 관심이 필요하다고 할 수 있습니다.</span></p>
+            <div class="k-out-f"><p class="k-small">예시 화면입니다. 글을 넣고 검사하면 내 글로 바로 나옵니다.</p><span class="k-tag">판정 기준 AMJ-1.0</span></div>
+          </div>
+          <div id="do-site" hidden>
+            <div class="k-out-h"><small>예시 진단 결과</small><span class="k-tag">myshop.co.kr</span></div>
+            <div class="k-geo">
+              <div class="k-geo-top"><div class="k-ring" style="--p:58"><b>58</b></div><div class="k-score-t"><b style="display:block;font-size:17px;font-weight:760">AI 검색 준비 점수 58점</b><span class="k-small" style="color:var(--k-gray)">아직 비어 있는 점수 +31점, 고칠 코드 6개</span></div></div>
+              <div class="k-bars">
+                <div class="k-bar"><span>AI 크롤러 접근</span><i><em style="--w:85%"></em></i><b>85</b></div>
+                <div class="k-bar"><span>구조화 데이터</span><i><em class="lo" style="--w:28%"></em></i><b>28</b></div>
+                <div class="k-bar"><span>본문 가독성</span><i><em style="--w:74%"></em></i><b>74</b></div>
+                <div class="k-bar"><span>제목과 설명</span><i><em style="--w:70%"></em></i><b>70</b></div>
+                <div class="k-bar"><span>질문과 답</span><i><em class="lo" style="--w:20%"></em></i><b>20</b></div>
+                <div class="k-bar"><span>이미지 대체 텍스트</span><i><em style="--w:60%"></em></i><b>60</b></div>
+                <div class="k-bar"><span>신뢰 신호</span><i><em style="--w:52%"></em></i><b>52</b></div>
+              </div>
+<pre class="k-code" aria-label="고칠 코드 예시"><span class="c">&lt;!-- 고칠 코드 1: 회사 정보 --&gt;</span>
+&lt;script type=<span class="s">"application/ld+json"</span>&gt;
+{ <span class="k">"@type"</span>: <span class="s">"Organization"</span>, <span class="k">"name"</span>: <span class="s">"마이샵"</span>,
+  <span class="k">"url"</span>: <span class="s">"https://myshop.co.kr"</span> }
+&lt;/script&gt;</pre>
+            </div>
+            <div class="k-out-f"><p class="k-small">예시 화면입니다. 영역별 점수는 100점 기준 비율입니다.</p></div>
+          </div>
+          <div id="do-file" hidden>
+            <div class="k-out-h"><small>예시 마크</small><span class="k-tag ok">{{ico:check}}서명 확인됨</span></div>
+            <div class="k-markcard">
+              <div class="k-thumb" role="img" aria-label="AI로 만든 예시 이미지"><span>AI 생성</span></div>
+              <dl class="k-kv">
+                <dt>표시</dt><dd>AI로 만든 이미지</dd>
+                <dt>근거</dt><dd>파일 기록(C2PA)에 생성 도구 기록</dd>
+                <dt>서명</dt><dd>Ed25519, <code>amk1-f4e2e03c4c04</code></dd>
+                <dt>원장</dt><dd>하루치를 공개 타임스탬프에 고정</dd>
+                <dt>확인</dt><dd>aimarker.kr/m/ 에서 마크 번호로</dd>
+              </dl>
+            </div>
+            <div class="k-out-f"><p class="k-small">예시 화면입니다. 표시 문구는 한국AI윤리위원회 기준을 따릅니다.</p></div>
+          </div>
+        </div>
       </div>
-      <p class="x-note" style="text-align:center">예시 화면입니다. 실제 결과는 넣은 글로 바로 나옵니다.</p>
+    </div>
+    <div class="k-hero-foot"><span>{{ico:check}}글은 저장하지 않습니다</span><span>{{ico:check}}같은 글은 언제나 같은 판정</span><span>{{ico:check}}생성 AI 없이 다듬는 인간화 엔진</span><span>{{ico:check}}한국AI윤리위원회 인증 기업</span></div>
+  </div>
+</section>
+
+<section class="k-sec" id="products" aria-labelledby="pTitle">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="pTitle">AI 콘텐츠를 확인하고, 표시하고, 기록하는 제품</h2>
+      <p class="k-lead">개인은 내기 전에 글을 확인하고 다듬습니다. 기업은 AI 검색과 AI 쇼핑에 맞춰 사이트를 세팅하고, AI로 만든 콘텐츠를 근거 있게 표시합니다. 모든 제품은 같은 판정 기준과 서명 기록 위에서 움직입니다.</p>
+    </div>
+    <div class="k-prods">
+
+      <article class="k-prod">
+        <div class="k-prod-t">
+          <p class="k-prod-k">{{ico:pen}}AI 작성률 검사와 휴머나이징<span class="k-tag">개인</span></p>
+          <h3 class="k-h3">AI가 쓴 티가 나는 문장을 찾아, 사람 말투로 고칩니다</h3>
+          <p class="k-p">글을 붙여 넣으면 AI 작성률과 판정(안전, 고위험, 부적합)을 정해진 기준으로 보여 주고, AI가 쓴 것으로 보이는 문장을 형광펜 색으로 표시합니다. 휴머나이징은 생성 AI 없이 AIMarker 인간화 엔진이 사람 말투로 바꿉니다.</p>
+          <ul class="k-facts">
+            <li>{{ico:check}}<span><b>같은 글은 같은 판정</b>, 검사 번호로 언제든 다시 확인</span></li>
+            <li>{{ico:check}}<span><b>숫자, 이름, 인용은 그대로</b> 두고 말투와 버릇만 고침</span></li>
+            <li>{{ico:check}}<span><b>결과상세내역서 PDF</b>, 글은 저장하지 않음</span></li>
+          </ul>
+          <div class="k-acts"><a class="k-btn k-btn-p" href="{{root}}humanize/">무료로 검사하기</a><a class="k-a" href="{{root}}personal/">개인용 한눈에</a></div>
+        </div>
+        <div class="k-screen" aria-hidden="true">
+          <div class="k-screen-bar"><i></i><i></i><i></i><span>aimarker.kr/humanize/</span></div>
+          <div class="k-screen-body">
+            <div class="k-score"><div class="k-ring" style="--p:100"><b>100<small>%</small></b></div><div class="t"><b><span class="k-verdict unfit">부적합</span>AI 작성 패턴이 많음</b><span>4문장 모두 AI 가능성 높음, 대화창 흔적 없음</span></div></div>
+            <div class="k-screen-cols" style="margin-top:14px">
+              <div class="k-cmp"><div><small>원문</small><p><span class="k-s l3">인공지능 기술은 현대 사회에서 중요한 역할을 하고 있습니다.</span> <span class="k-s l3">또한, 다양한 산업 분야에 있어서 혁신적인 변화를 이끌고 있습니다.</span> <span class="k-s l3">이를 통해 기업은 업무를 효과적으로 처리할 수 있습니다.</span> <span class="k-s l3">따라서, 인공지능을 적극적으로 활용하는 것이 중요합니다.</span></p></div></div>
+              <div class="k-cmp"><div class="after"><small>사람 말투로(해요체)</small><p>인공지능 기술은 <span class="k-s ok">오늘날</span> 중요한 역할을 하고 <span class="k-s ok">있어요</span>. <span class="k-s ok">그리고 여러</span> 산업 분야에서 <span class="k-s ok">큰</span> 변화를 이끌고 <span class="k-s ok">있어요</span>. 이를 통해 기업은 업무를 효과적으로 처리할 수 <span class="k-s ok">있어서</span> 인공지능을 적극적으로 활용하는 <span class="k-s ok">게 중요해요</span>.</p></div></div>
+            </div>
+            <p class="k-small" style="margin-top:12px">인간화 엔진 HUM 1.1의 실제 결과입니다.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="k-prod r">
+        <div class="k-prod-t">
+          <p class="k-prod-k">{{ico:globe}}GEO 자동 최적화<span class="k-tag">기업</span></p>
+          <h3 class="k-h3">AI 검색이 우리 회사를 정확히 읽고 인용하게 만듭니다</h3>
+          <p class="k-p">ChatGPT, 구글 AI 개요, 네이버 AI 브리핑은 페이지를 읽고 답을 만듭니다. 주소만 넣으면 AI 검색이 우리 사이트를 어떻게 읽는지 100점 기준으로 진단하고, 고칠 코드를 만들어 설치까지 끝냅니다.</p>
+          <ul class="k-facts">
+            <li>{{ico:check}}<span><b>AI 크롤러 17종</b>의 허용과 차단 상태를 한 번에</span></li>
+            <li>{{ico:check}}<span><b>고칠 코드 생성</b>: 구조화 데이터, llms.txt, robots, 자주 묻는 질문</span></li>
+            <li>{{ico:check}}<span><b>경쟁사와 같은 기준</b>으로 비교, 세팅 전후 리포트</span></li>
+          </ul>
+          <div class="k-acts"><a class="k-btn k-btn-p" href="{{root}}geo/">무료 진단</a><a class="k-a" href="{{root}}geo/#compare">경쟁사와 비교</a></div>
+        </div>
+        <div class="k-screen" aria-hidden="true">
+          <div class="k-screen-bar"><i></i><i></i><i></i><span>aimarker.kr/geo/?url=myshop.co.kr</span><em class="k-ex">예시</em></div>
+          <div class="k-screen-body">
+            <div class="k-screen-cols">
+              <div class="k-geo">
+                <div class="k-geo-top"><div class="k-ring" style="--p:58"><b>58</b></div><div><b style="display:block;font-size:16px;font-weight:760">AI 검색 준비 58점</b><span class="k-small" style="color:var(--k-gray)">비어 있는 점수 +31점</span></div></div>
+                <div class="k-bars">
+                  <div class="k-bar"><span>AI 크롤러 접근</span><i><em style="--w:85%"></em></i><b>85</b></div>
+                  <div class="k-bar"><span>구조화 데이터</span><i><em class="lo" style="--w:28%"></em></i><b>28</b></div>
+                  <div class="k-bar"><span>질문과 답</span><i><em class="lo" style="--w:20%"></em></i><b>20</b></div>
+                  <div class="k-bar"><span>신뢰 신호</span><i><em style="--w:52%"></em></i><b>52</b></div>
+                </div>
+              </div>
+              <div class="k-rows k-mhide">
+                <div class="h"><span>AI 크롤러</span><span>쓰임</span><span>상태</span></div>
+                <div><b>ChatGPT 검색</b><span class="k-small">검색</span><span class="k-dot ok">허용</span></div>
+                <div><b>Claude 검색</b><span class="k-small">검색</span><span class="k-dot ok">허용</span></div>
+                <div><b>Perplexity 검색</b><span class="k-small">검색</span><span class="k-dot hi">막힘</span></div>
+                <div><b>네이버 검색</b><span class="k-small">검색</span><span class="k-dot ok">허용</span></div>
+                <div><b>Google Gemini 학습</b><span class="k-small">학습</span><span class="k-dot wait">선택</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="k-prod">
+        <div class="k-prod-t">
+          <p class="k-prod-k">{{ico:store}}AI 커머스 엔진<span class="k-tag">기업</span></p>
+          <h3 class="k-h3">상품 정보를 AI 쇼핑이 읽는 데이터로 바꿉니다</h3>
+          <p class="k-p">상품 페이지를 AI 검색과 AI 쇼핑이 이해하는 구조화 데이터와 상품 피드로 바꾸고, 상세페이지에 들어간 AI 이미지에는 근거 있는 표시를 붙입니다.</p>
+          <ul class="k-facts">
+            <li>{{ico:check}}<span><b>상품 주소만 넣으면</b> AI 상품 피드(JSON, CSV)를 바로 생성</span></li>
+            <li>{{ico:check}}<span><b>가격, 재고, 배송, 리뷰</b> 정보를 빠짐없이 정리</span></li>
+            <li>{{ico:check}}<span><b>상세페이지 AI 이미지 표시</b>와 광고 문구 검수</span></li>
+          </ul>
+          <div class="k-acts"><a class="k-btn k-btn-p" href="{{root}}commerce/">상품 피드 만들기</a><a class="k-a" href="{{root}}commerce/">커머스 엔진 자세히</a></div>
+        </div>
+        <div class="k-screen" aria-hidden="true">
+          <div class="k-screen-bar"><i></i><i></i><i></i><span>aimarker.kr/commerce/</span><em class="k-ex">예시</em></div>
+          <div class="k-screen-body">
+            <div class="k-screen-cols">
+              <div class="k-rows k-mhide">
+                <div class="h"><span>상품</span><span>필드</span><span>상태</span></div>
+                <div><b>보습 크림 50ml</b><span class="k-small">가격</span><span class="k-dot ok">있음</span></div>
+                <div><b>보습 크림 50ml</b><span class="k-small">재고</span><span class="k-dot ok">있음</span></div>
+                <div><b>보습 크림 50ml</b><span class="k-small">리뷰</span><span class="k-dot mid">보강</span></div>
+                <div><b>보습 크림 50ml</b><span class="k-small">AI 이미지</span><span class="k-dot ok">표시함</span></div>
+              </div>
+<pre class="k-code">{ <span class="k">"@type"</span>: <span class="s">"Product"</span>,
+  <span class="k">"name"</span>: <span class="s">"보습 크림 50ml"</span>,
+  <span class="k">"offers"</span>: {
+    <span class="k">"price"</span>: <span class="n">28000</span>,
+    <span class="k">"priceCurrency"</span>: <span class="s">"KRW"</span>,
+    <span class="k">"availability"</span>: <span class="s">"InStock"</span> } }</pre>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="k-prod r">
+        <div class="k-prod-t">
+          <p class="k-prod-k">{{ico:shield}}AI 컴플라이언스<span class="k-tag">기업</span></p>
+          <h3 class="k-h3">AI로 만든 광고와 콘텐츠를 근거 있게 내보냅니다</h3>
+          <p class="k-p">광고, 상세페이지, SNS 콘텐츠를 내보내기 전에 AI 사용 근거, 표시 요건, 광고 표현 위험을 자동으로 점검합니다. 고칠 문구, 광고주 승인, 보고서와 원장 기록까지 작업 공간 하나에서 끝납니다.</p>
+          <ul class="k-facts">
+            <li>{{ico:check}}<span><b>올리면 자동 점검</b>, 위험 후보와 근거, 바꿀 문구</span></li>
+            <li>{{ico:check}}<span><b>광고주 승인 링크</b>와 보고서, 서명된 마크</span></li>
+            <li>{{ico:check}}<span><b>발급 기록</b>을 매일 공개 타임스탬프에 고정</span></li>
+          </ul>
+          <div class="k-acts"><a class="k-btn k-btn-p" href="{{root}}app/">작업 공간 열기</a><a class="k-a" href="{{root}}compliance/">컴플라이언스 자세히</a></div>
+        </div>
+        <div class="k-screen" aria-hidden="true">
+          <div class="k-screen-bar"><i></i><i></i><i></i><span>aimarker.kr/app/</span><em class="k-ex">예시</em></div>
+          <div class="k-screen-body">
+            <div class="k-rows">
+              <div class="h"><span>소재</span><span>점검</span><span>승인</span></div>
+              <div><b>봄 시즌 배너(AI 이미지)</b><span class="k-dot ok">표시 완료</span><span class="k-dot ok">승인됨</span></div>
+              <div><b>수분 크림 상세페이지</b><span class="k-dot mid">표시 필요</span><span class="k-dot wait">대기</span></div>
+              <div><b>신제품 SNS 카드</b><span class="k-dot hi">위험 후보 2</span><span class="k-dot wait">수정 중</span></div>
+              <div><b>인플루언서 협찬 영상</b><span class="k-dot ok">문제 없음</span><span class="k-dot ok">승인됨</span></div>
+            </div>
+<pre class="k-code" style="margin-top:14px"><span class="c">// 원장: 하루치 기록의 해시를 OpenTimestamps에 고정</span>
+<span class="k">date</span>    <span class="s">2026-10-18</span>
+<span class="k">root</span>    <span class="s">sha256:3f9a…c41e</span>
+<span class="k">anchor</span>  <span class="s">OpenTimestamps, 확인 대기</span></pre>
+          </div>
+        </div>
+      </article>
+
     </div>
   </div>
 </section>
 
-<section class="x-sec dark" id="moat">
-  <div class="wrap">
-    <div class="x-head">
-      <p class="x-kick">AIMarker의 기술</p>
-      <h2 class="x-h2">표시가 아니라,<br>근거를 발급합니다</h2>
-      <p class="x-lead">AI 검색도 사람도 근거가 있는 정보를 믿습니다. AIMarker의 표시와 검사는 흉내 내기 어려운 기술 위에 있습니다.</p>
+<section class="k-sec k-panel" id="now" aria-labelledby="nTitle">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="nTitle">AI가 답하고, AI로 확인하는 시대입니다</h2>
+      <p class="k-lead">기업에게는 AI 검색이 새 첫 화면이 됐고, 개인에게는 AI 작성 확인이 일상이 됐습니다.</p>
     </div>
-    <div class="x-princ c4">
-      <div><h4>{{ico:shield}}근거 맞춤 판정</h4><p>파일 속 서명 · 기록과 다른 표시를 막습니다. 판정 규칙은 서버에만 둡니다.</p></div>
-      <div><h4>{{ico:key}}전자서명 마크</h4><p>모든 표시에 AIMarker 서명이 들어가, 누구나 공개키로 확인합니다.</p></div>
-      <div><h4>{{ico:ledger}}공개 원장</h4><p>발급 · 변경 기록을 매일 공개 타임스탬프에 고정합니다.</p></div>
-      <div><h4>{{ico:fingerprint}}결정적 AI 작성 추정</h4><p>한국어 문장 패턴을 학습한 판별 모델이라, 같은 글은 언제나 같은 값이 나옵니다.</p></div>
+    <div class="k-stats">
+      <div class="k-stat"><b>20<small>억 명</small></b><h4>구글 AI 개요 월 이용자</h4><p>검색 결과 맨 위에서 AI가 먼저 답합니다.</p><cite><a href="https://techcrunch.com/2025/07/23/googles-ai-overviews-have-2b-monthly-users-ai-mode-100m-in-the-us-and-india" target="_blank" rel="noopener">TechCrunch, 2025.7.23</a></cite></div>
+      <div class="k-stat"><b>20<small>%+</small></b><h4>네이버 검색 중 AI 브리핑</h4><p>국내 검색도 다섯 번에 한 번 이상은 AI가 요약해 답합니다(2025년 말).</p><cite><a href="https://www.ceoscoredaily.com/page/view/2026031016373092535" target="_blank" rel="noopener">CEO스코어데일리, 2026.3.11</a></cite></div>
+      <div class="k-stat"><b>75.9<small>%</small></b><h4>교수자 AI 검사 증가</h4><p>교수자 평가용 서비스의 검사 문서가 1년 새 이만큼 늘었습니다(2026년 4월).</p><cite>유니콘팩토리, 2026.5.26</cite></div>
+      <div class="k-stat"><b>3.6<small>배</small></b><h4>자기소개서 AI 판별 검사</h4><p>2025년 10~11월 검사량이 1년 전보다 늘었고, 일부 기업은 서류 심사에 씁니다.</p><cite>디지털타임스, 2025.11.23</cite></div>
     </div>
-    <div class="x-acts"><a class="btn btn-gl" href="{{root}}technology/">기술 자세히 보기</a><a class="btn btn-gl" href="{{root}}company/">회사 소개</a></div>
   </div>
 </section>
 
-<section class="x-sec" id="faq">
-  <div class="wrap">
-    <div class="x-head">
-      <p class="x-kick">자주 묻는 질문</p>
-      <h2 class="x-h2">시작하기 전에 많이 묻는 것</h2>
+<section class="k-sec" id="business" aria-labelledby="bTitle">
+  <div class="k-wrap">
+    <div class="k-head-row">
+      <div class="k-head">
+        <h2 class="k-h2" id="bTitle">기업은 한 번 세팅하고,<br>필요할 때만 관리합니다</h2>
+        <p class="k-lead">월 구독부터 받지 않습니다. 무료 진단으로 지금 상태를 보고, 한 번의 세팅으로 GEO와 상품 데이터와 AI 표시를 끝낸 뒤, 새 콘텐츠가 계속 생길 때만 월 관리를 켭니다.</p>
+      </div>
+      <div class="k-acts" style="margin-top:0"><a class="k-btn k-btn-p" href="{{root}}contact/">도입 상담</a><a class="k-btn k-btn-l" href="{{root}}business/">기업용 한눈에</a></div>
     </div>
-    <div class="x-faq">
-      <details><summary>기업은 왜 월 구독이 아니라 1회 세팅인가요?</summary><p>AI 검색 최적화와 AI 표시는 처음 한 번 제대로 넣는 일이 가장 큽니다. 그래서 세팅은 한 번에 끝내고, 새 상품 · 새 콘텐츠가 계속 생기거나 AI 검색 변화를 챙겨야 할 때만 월 관리를 켜도록 했습니다. 월 관리는 언제든 해지할 수 있습니다.</p></details>
-      <details><summary>정말 AI 검색에 더 잘 나오나요?</summary><p>어떤 페이지를 답에 쓸지는 각 AI 서비스가 정하므로 노출을 약속할 수는 없습니다. AIMarker는 AI 검색이 페이지를 읽고 이해하고 믿을 수 있는 준비 상태를 고치고, 세팅 전후 점수와 고친 내용을 리포트로 드립니다.</p></details>
-      <details><summary>개인 AI 작성률 검사는 무료인가요?</summary><p>무료 맛보기로 앞 6,000자의 AI 작성률 · 판정(안전 · 고위험 · 부적합) · 판정 근거와 가장 뚜렷한 문장 2개를 볼 수 있습니다. 값은 이용권과 같은 실제 값입니다. 모든 문장의 색과 이유, 구간별 분석, 고쳐 쓰기 도우미, 결과상세내역서는 이용권(1,900원부터)으로 엽니다.</p></details>
+    <table class="k-table">
+      <thead><tr><th scope="col">필요한 일</th><th scope="col">제품</th><th scope="col">받는 것</th><th scope="col">시작가</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">AI 검색이 우리 회사를 정확히 소개하게<small>ChatGPT, 구글 AI 개요, 네이버 AI 브리핑</small></th><td data-h="제품"><a class="k-a" href="{{root}}geo/">GEO 자동 최적화</a></td><td data-h="받는 것">진단 리포트, 고칠 코드와 설치, 세팅 전후 점수, 경쟁사 비교</td><td class="pr" data-h="시작가">49만 원<small>1회 기본 세팅, 진단은 무료</small></td></tr>
+        <tr><th scope="row">AI 쇼핑에서 상품이 읽히고 팔리게<small>상품 수백 개 이상 쇼핑몰</small></th><td data-h="제품"><a class="k-a" href="{{root}}commerce/">AI 커머스 엔진</a></td><td data-h="받는 것">상품 구조화 데이터, AI 상품 피드, 상품 이미지 AI 표시 2,000건, 광고 문구 검수</td><td class="pr" data-h="시작가">149만 원<small>1회 쇼핑몰 세팅</small></td></tr>
+        <tr><th scope="row">AI로 만든 광고와 콘텐츠를 근거 있게<small>브랜드, 광고 대행사, 기관</small></th><td data-h="제품"><a class="k-a" href="{{root}}compliance/">AI 컴플라이언스</a></td><td data-h="받는 것">출고 전 자동 점검과 자동 표시, 광고주 승인, 보고서와 감사 원장</td><td class="pr" data-h="시작가">무료 베타<small>작업 공간. 맞춤 검수 규칙은 브랜드 세팅 390만 원부터</small></td></tr>
+        <tr><th scope="row">우리 시스템과 AI 에이전트에 바로<small>개발팀, 플랫폼</small></th><td data-h="제품"><a class="k-a" href="{{root}}developers/">API와 MCP</a></td><td data-h="받는 것">API 키, OpenAPI 명세, MCP 서버, 함수 호출 도구 정의</td><td class="pr" data-h="시작가">무료 키<small>하루 300회</small></td></tr>
+      </tbody>
+    </table>
+    <div class="k-steps" style="margin-top:40px" aria-label="도입 순서">
+      <div class="k-step"><span class="n"><b>1</b>무료 진단</span><h4>주소만 넣고 지금 상태 확인</h4><p>가입 없이 GEO 점수, AI 크롤러 상태, 고칠 거리를 봅니다. 경쟁사와 나란히 비교할 수도 있습니다.</p><p class="pr">0원</p></div>
+      <div class="k-step"><span class="n"><b>2</b>1회 세팅</span><h4>진단 결과로 범위를 정하고 한 번에 설치</h4><p>고칠 코드, 상품 데이터, 기존 AI 콘텐츠 표시를 끝내고 전후 리포트를 드립니다.</p><p class="pr">49만 원부터</p></div>
+      <div class="k-step"><span class="n"><b>3</b>월 관리(선택)</span><h4>새 콘텐츠가 계속 생길 때만</h4><p>새 상품과 콘텐츠 자동 점검, AI 검색 변화 대응. 언제든 해지할 수 있고, 세팅 고객은 첫 달이 포함됩니다.</p><p class="pr">월 9.9만 원부터</p></div>
+    </div>
+    <p class="k-small" style="margin-top:16px">기업 요금은 부가세 별도입니다. 경쟁사 비교 리포트, 교육, 사내 AI 표시 가이드 같은 <a href="{{root}}pricing/#addons">추가 옵션</a>도 있습니다.</p>
+  </div>
+</section>
+
+<section class="k-sec" id="tech" aria-labelledby="tTitle">
+  <div class="k-wrap">
+    <div class="k-head-row">
+      <div class="k-head">
+        <h2 class="k-h2" id="tTitle">AIMarker를 움직이는 엔진</h2>
+        <p class="k-lead">검사, 다듬기, 표시, 기록이 모두 직접 만든 엔진 위에서 돌아갑니다. 판정 규칙과 사전은 서버에만 두고, 결과는 누구나 다시 확인할 수 있게 남깁니다.</p>
+      </div>
+      <a class="k-btn k-btn-l" href="{{root}}technology/">기술 자세히</a>
+    </div>
+    <table class="k-table">
+      <thead><tr><th scope="col">엔진</th><th scope="col">하는 일</th><th scope="col">사양</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">인간화 엔진 <span class="k-ver">HUM 1.1</span></th><td data-h="하는 일">AI 문체를 사람 말투로 바꿈</td><td data-h="사양">생성 AI를 사용하지 않음. 사람 글 약 10억 자를 통계로 써서 만든 용언 사전과 실제 쓰임 표, 바꿀 때마다 거치는 정합성 확인 8단계, 같은 글은 같은 결과</td></tr>
+        <tr><th scope="row">AI 작성 추정 <span class="k-ver">DET 1.0</span></th><td data-h="하는 일">문장마다 AI 작성 가능성을 추정</td><td data-h="사양">한국어 문장 패턴을 학습한 판별 모델, 판정 기준 AMJ-1.0(안전, 고위험, 부적합)과 판정 근거, 결정적 결과</td></tr>
+        <tr><th scope="row">서명 마크 <span class="k-ver">AMP</span></th><td data-h="하는 일">AI 표시에 위조하기 어려운 서명</td><td data-h="사양">Ed25519(JWS) 전자서명, C2PA와 IPTC 기록 판독, 근거와 다른 표시는 발급하지 않음</td></tr>
+        <tr><th scope="row">공개 원장</th><td data-h="하는 일">발급과 변경 기록을 증명</td><td data-h="사양">하루치 기록의 해시를 OpenTimestamps에 고정, 누구나 원장 확인</td></tr>
+        <tr><th scope="row">GEO 진단기</th><td data-h="하는 일">AI 검색 준비 상태 진단</td><td data-h="사양">100점 기준 7개 영역, AI 크롤러 17종, 고칠 코드와 AI 상품 피드 생성</td></tr>
+        <tr><th scope="row">API와 MCP <span class="k-ver">2.4</span></th><td data-h="하는 일">서비스와 AI 에이전트 연결</td><td data-h="사양">OpenAPI 명세, MCP 서버, 함수 호출 도구 정의, llms.txt</td></tr>
+      </tbody>
+    </table>
+    <div class="k-screen-cols" style="margin-top:36px">
+<pre class="k-code" aria-label="AI 연동 예시"><span class="c">// AI 에이전트에서 휴머나이징 부르기(MCP · 함수 호출)</span>
+{ <span class="k">"action"</span>: <span class="s">"am.humanize"</span>,
+  <span class="k">"text"</span>: <span class="s">"인공지능 기술은 현대 사회에서…"</span>,
+  <span class="k">"tone"</span>: <span class="s">"polite"</span> }
+<span class="c">// 응답</span>
+{ <span class="k">"text"</span>: <span class="s">"인공지능 기술은 오늘날…"</span>,
+  <span class="k">"facts"</span>: { <span class="k">"missing"</span>: [] } }</pre>
+<pre class="k-code" aria-label="마크 서명 공개키 예시"><span class="c">// 마크 서명 확인: 공개키는 누구나 받을 수 있음</span>
+GET aimarker.kr/.well-known/aimarker-keys.json
+{ <span class="k">"kty"</span>: <span class="s">"OKP"</span>, <span class="k">"crv"</span>: <span class="s">"Ed25519"</span>,
+  <span class="k">"kid"</span>: <span class="s">"amk1-f4e2e03c4c04"</span>,
+  <span class="k">"alg"</span>: <span class="s">"EdDSA"</span> }</pre>
+    </div>
+    <div class="k-trust" style="margin-top:48px;padding-top:32px;border-top:1px solid var(--k-rule)">
+      {{kaiec_lg}}
+      <div class="k-std" aria-label="따르는 표준"><span>C2PA</span><span>IPTC</span><span>XMP</span><span>schema.org</span><span>llms.txt</span><span>Ed25519</span><span>OpenTimestamps</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="faq" aria-labelledby="fTitle">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
+    <div class="k-faq">
       <details><summary>AI 작성률이 높으면 AI가 썼다는 뜻인가요?</summary><p>아니요. 판정은 정해진 기준에 따른 추정이지 증명이 아닙니다. 사람 글이 높게, 사람이 많이 고친 AI 글이 낮게 나올 수도 있습니다. 다른 검사기와 결과가 다를 수 있고, 결과만으로 다른 사람을 판단하지 마세요.</p></details>
-      <details><summary>파일이나 글이 서버에 남나요?</summary><p>자동 마킹은 브라우저에서 파일을 읽고 서버에는 마크 번호 · 해시 · 판정 근거만 보냅니다. AI 작성률 검사는 글을 검사할 때만 보내고 저장하지 않습니다. GEO 진단은 공개된 페이지를 진단할 때만 읽고 6시간 캐시에 둘 뿐 보관하지 않습니다.</p></details>
-      <details><summary>지금 바로 쓸 수 있나요?</summary><p>GEO 무료 진단, AI 작성률 무료 맛보기, 자동 마킹, 마크 확인은 가입 없이 바로 쓰실 수 있습니다. 기업 세팅은 상담 신청 뒤 진단 결과로 범위와 일정을 정합니다.</p></details>
+      <details><summary>휴머나이징은 생성 AI로 다시 쓰는 건가요?</summary><p>아니요. AIMarker 인간화 엔진은 생성 AI를 사용하지 않습니다. 사람 글 통계로 만든 사전과 규칙으로 번역투, 상투어, AI 대화창 흔적, 말투를 고치고, 숫자와 이름과 인용은 그대로 둡니다. 뜻이나 주장의 세기가 달라질 수 있는 곳은 바꾸지 않습니다. 결과는 꼭 직접 읽어 보고 쓰세요.</p></details>
+      <details><summary>무료로 어디까지 쓸 수 있나요?</summary><p>AI 작성률 검사는 앞 6,000자의 작성률과 판정, 판정 근거, 가장 뚜렷한 문장 2개를 무료로 봅니다. 휴머나이징은 첫 문단을 무료로 다듬어 보여 드립니다. 모든 문장의 색과 이유, 글 전체 다듬기, 결과상세내역서는 이용권(1,900원부터)으로 엽니다. GEO 진단, 자동 마킹, 마크 확인은 가입 없이 무료입니다.</p></details>
+      <details><summary>기업은 왜 월 구독이 아니라 1회 세팅인가요?</summary><p>AI 검색 최적화와 AI 표시는 처음 한 번 제대로 넣는 일이 가장 큽니다. 그래서 세팅은 한 번에 끝내고, 새 상품과 새 콘텐츠가 계속 생기거나 AI 검색 변화를 챙겨야 할 때만 월 관리를 켜도록 했습니다. 월 관리는 언제든 해지할 수 있습니다.</p></details>
+      <details><summary>정말 AI 검색에 더 잘 나오나요?</summary><p>어떤 페이지를 답에 쓸지는 각 AI 서비스가 정하므로 노출을 약속할 수는 없습니다. AIMarker는 AI 검색이 페이지를 읽고 이해하고 믿을 수 있는 준비 상태를 고치고, 세팅 전후 점수와 고친 내용을 리포트로 드립니다.</p></details>
+      <details><summary>글이나 파일이 서버에 남나요?</summary><p>AI 작성률 검사와 휴머나이징은 글을 처리할 때만 보내고 저장하지 않습니다. 자동 마킹은 브라우저에서 파일을 읽고 서버에는 마크 번호와 해시와 판정 근거만 보냅니다. GEO 진단은 공개된 페이지를 진단할 때만 읽고 6시간 캐시에 둘 뿐 보관하지 않습니다.</p></details>
     </div>
-    <p class="x-note" id="src">출처: TechCrunch 2025.7.23(알파벳 2분기 실적 발표) · CEO스코어데일리 2026.3.11(네이버 발표) · 유니콘팩토리 2026.5.26(교수자 평가용 서비스 검사 문서량 32만 8천여 건 → 57만 7천여 건) · 디지털타임스 2025.11.23(AI 판별 검사량 2025년 10~11월 64만 7천 건, 전년 동기 3.6배, 일부 대기업 · 공기업 서류 심사 도입)</p>
+    <p class="k-small" style="margin-top:20px">숫자 출처: TechCrunch 2025.7.23(알파벳 2분기 실적 발표), CEO스코어데일리 2026.3.11(네이버 발표), 유니콘팩토리 2026.5.26(교수자 평가용 서비스 검사 문서량 32만 8천여 건에서 57만 7천여 건), 디지털타임스 2025.11.23(AI 판별 검사량 2025년 10~11월 64만 7천 건, 전년 같은 기간의 3.6배, 일부 대기업과 공기업 서류 심사 도입).</p>
   </div>
 </section>
 
-<section class="x-cta">
-  <div class="wrap">
+<section class="k-cta" aria-labelledby="cTitle">
+  <div class="k-wrap k-cta-in">
     <div>
-      <h2 class="x-h2">어디서부터 볼까요?</h2>
-      <p>기업은 주소 하나로 AI 검색 준비 상태를, 개인은 글을 붙여 넣어 AI 작성률을 바로 확인하세요. 둘 다 가입 없이 무료입니다.</p>
+      <h2 class="k-h2" id="cTitle">지금 바로 써 보세요</h2>
+      <p class="k-lead">개인은 글을 붙여 넣고, 기업은 주소 하나로 시작합니다. 둘 다 가입 없이 무료입니다.</p>
     </div>
-    <div>
-      <form class="x-url" data-goto-geo role="search" aria-label="무료 GEO 진단">
-        <label class="sr" for="hUrl2">회사 사이트 주소</label>
-        <input id="hUrl2" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="회사 사이트 주소" maxlength="300" required>
-        <button class="btn btn-p" type="submit">무료로 진단하기</button>
-      </form>
-      <div class="x-acts" style="margin-top:14px"><a class="btn btn-gl" href="{{root}}humanize/">AI 작성률 무료 검사</a><a class="btn btn-gl" href="{{root}}contact/">기업 상담</a></div>
-    </div>
+    <div class="k-acts"><a class="k-btn k-btn-p k-btn-lg" href="#desk">글 검사하기</a><a class="k-btn k-btn-l k-btn-lg" href="{{root}}geo/">무료 GEO 진단</a><a class="k-btn k-btn-l k-btn-lg" href="{{root}}contact/">도입 상담</a></div>
   </div>
 </section>

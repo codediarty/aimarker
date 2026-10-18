@@ -104,9 +104,9 @@
     var w = padX + icon + gap + tw + padX, h = f + padY * 2, m = Math.max(10, f * 0.8);
     var x = o.pos === 'tr' || o.pos === 'br' ? W - m - w : m, y = o.pos === 'bl' || o.pos === 'br' ? H - m - h : m, dark = o.theme !== 'light';
     ctx.shadowColor = 'rgba(0,0,0,.18)'; ctx.shadowBlur = f * 0.5; ctx.shadowOffsetY = f * 0.08;
-    rr(ctx, x, y, w, h, rad); ctx.fillStyle = dark ? 'rgba(10,18,36,.78)' : 'rgba(255,255,255,.92)'; ctx.fill(); ctx.shadowColor = 'transparent';
-    ctx.save(); ctx.translate(x + padX, y + (h - icon) / 2); ctx.scale(icon / 24, icon / 24); ctx.fillStyle = dark ? '#FFFFFF' : '#1F55F5'; ctx.fill(new Path2D(SPARK)); ctx.restore();
-    ctx.fillStyle = dark ? '#FFFFFF' : '#0B1324'; ctx.textBaseline = 'middle'; ctx.font = '800 ' + f + 'px ' + FONT; ctx.fillText(text, x + padX + icon + gap, y + h / 2 + f * 0.04);
+    rr(ctx, x, y, w, h, rad); ctx.fillStyle = dark ? 'rgba(18, 20, 24,.78)' : 'rgba(255,255,255,.92)'; ctx.fill(); ctx.shadowColor = 'transparent';
+    ctx.save(); ctx.translate(x + padX, y + (h - icon) / 2); ctx.scale(icon / 24, icon / 24); ctx.fillStyle = dark ? '#FFFFFF' : '#121418'; ctx.fill(new Path2D(SPARK)); ctx.restore();
+    ctx.fillStyle = dark ? '#FFFFFF' : '#121418'; ctx.textBaseline = 'middle'; ctx.font = '800 ' + f + 'px ' + FONT; ctx.fillText(text, x + padX + icon + gap, y + h / 2 + f * 0.04);
     ctx.restore();
   }
   function xmp(text) {

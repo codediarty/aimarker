@@ -27,7 +27,7 @@
   var LEVELS = [['human', '사람 작성'], ['assist', 'AI 도움'], ['generated', 'AI 생성']];
   var HOME = 'https://aimarker.kr/?utm_source=label&utm_medium=referral';
   var SPARK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.5l-1.9-5.4a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8z" fill="currentColor"/></svg>';
-  var LOGO = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#0E2A6B"/><path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/><rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg>';
+  var LOGO = '<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#121418"/><rect x="9" y="9.6" width="22" height="3.4" rx="1.7" fill="#fff" fill-opacity=".9"/><rect x="6.4" y="16.4" width="27.2" height="9" rx="2.6" fill="#FFD84D" transform="rotate(-4 20 20.9)"/><rect x="9" y="19.2" width="17" height="3.4" rx="1.7" fill="#121418"/><rect x="9" y="28.8" width="13" height="3.4" rx="1.7" fill="#fff" fill-opacity=".9"/></svg>';
 
   function clean(v, n) { return String(v == null ? '' : v).replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, n || 60); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -58,19 +58,19 @@
     return ':host{all:initial}*{box-sizing:border-box}' +
       '.k{font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:' + C.fg + ';-webkit-font-smoothing:antialiased;letter-spacing:-.01em;line-height:1.5;word-break:keep-all}' +
       '.k svg{width:1em;height:1em;flex:0 0 auto}' +
-      '.badge{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px 0 9px;border-radius:999px;border:1px solid ' + C.line + ';background:' + C.bg + ';color:' + C.fg + ';font-family:inherit;font-weight:750;font-size:13px;line-height:1;cursor:pointer;box-shadow:0 6px 18px rgba(14,42,107,.14);transition:transform .15s ease,box-shadow .15s ease}' +
-      '.badge:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(14,42,107,.2)}.badge svg{width:20px;height:20px}' +
+      '.badge{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px 0 9px;border-radius:999px;border:1px solid ' + C.line + ';background:' + C.bg + ';color:' + C.fg + ';font-family:inherit;font-weight:750;font-size:13px;line-height:1;cursor:pointer;box-shadow:0 6px 18px rgba(18, 20, 24,.14);transition:transform .15s ease,box-shadow .15s ease}' +
+      '.badge:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(18, 20, 24,.2)}.badge svg{width:20px;height:20px}' +
       '.badge:focus-visible,.lnk:focus-visible,.line button:focus-visible{outline:2px solid ' + C.acc + ';outline-offset:2px}' +
       '.line{display:flex;justify-content:center;padding:12px 16px;font-size:12.5px;color:' + C.sub + '}' +
       '.line button{display:inline-flex;align-items:center;gap:7px;border:0;background:none;color:inherit;font:inherit;cursor:pointer;padding:4px 6px;border-radius:8px}.line button b{color:' + C.acc + '}.line svg{width:18px;height:18px}' +
-      '.pop{position:absolute;bottom:46px;' + side + ':0;width:336px;max-width:calc(100vw - 24px);max-height:calc(100vh - 84px);overflow:auto;background:' + C.bg + ';border:1px solid ' + C.line + ';border-radius:16px;box-shadow:0 18px 48px rgba(10,22,40,.22);padding:16px 16px 12px;display:none;text-align:left}' +
+      '.pop{position:absolute;bottom:46px;' + side + ':0;width:336px;max-width:calc(100vw - 24px);max-height:calc(100vh - 84px);overflow:auto;background:' + C.bg + ';border:1px solid ' + C.line + ';border-radius:16px;box-shadow:0 18px 48px rgba(18, 20, 24,.22);padding:16px 16px 12px;display:none;text-align:left}' +
       '.pop.on{display:block}.pop h4{display:flex;align-items:center;gap:7px;margin:0 0 2px;font-size:15.5px;font-weight:800;color:' + C.fg + '}.pop h4 svg{color:' + C.acc + ';width:17px;height:17px}' +
       '.pop .who{margin:0;font-size:12.5px;color:' + C.sub + '}' +
       '.lv{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:12px 0 4px}.lv span{text-align:center;padding:6px 2px;border-radius:8px;background:' + C.chip + ';color:' + C.sub + ';font-weight:750;font-size:11.5px}' +
-      '.lv span.on{color:#fff}.lv .human.on{background:#0FA88F}.lv .assist.on{background:#1F55F5}.lv .generated.on{background:#0E2A6B' + (C.dark ? ';box-shadow:inset 0 0 0 1px #3D5BA8' : '') + '}' +
+      '.lv span.on{color:#fff}.lv .human.on{background:#0E9A6A}.lv .assist.on{background:#FFD84D;color:#121418}.lv .generated.on{background:#121418' + (C.dark ? ';box-shadow:inset 0 0 0 1px #4A4E57' : '') + '}' +
       '.lvt{margin:0 0 6px;font-size:11.5px;color:' + C.sub + '}' +
       '.pop ul{list-style:none;margin:0;padding:0}.pop li{display:flex;gap:8px;padding:7px 0;border-top:1px solid ' + C.line + ';font-size:13.5px;color:' + C.fg + '}.pop li:first-child{border-top:0}' +
-      '.pop li i{flex:0 0 6px;height:6px;margin-top:8px;border-radius:50%;background:' + C.acc + '}.pop li.ok i{background:#0FA88F}' +
+      '.pop li i{flex:0 0 6px;height:6px;margin-top:8px;border-radius:50%;background:' + C.acc + '}.pop li.ok i{background:#0E9A6A}' +
       '.pop .ct{margin:8px 0 0;font-size:12.5px;color:' + C.sub + ';word-break:break-all}.pop .ct a{color:' + C.acc + '}' +
       '.pop .ft{margin:12px -16px -12px;padding:10px 16px 11px;border-top:1px solid ' + C.line + ';background:' + C.foot + ';border-radius:0 0 16px 16px;font-size:11.5px;color:' + C.sub + '}' +
       '.lnk{display:flex;align-items:center;gap:8px;margin-top:7px;color:' + C.fg + ';text-decoration:none;font-size:12px;line-height:1.35}.lnk svg{width:24px;height:24px;flex:0 0 24px}' +
@@ -83,8 +83,8 @@
 
   function build(raw, mountEl) {
     var c = normalize(raw || {});
-    var C = c.dark ? { bg: '#0F172A', fg: '#E5ECF8', sub: '#9FB0CC', line: '#273449', chip: '#1E2A44', acc: '#7FA6FF', foot: '#0B1222', dark: 1 }
-      : { bg: '#FFFFFF', fg: '#0B1324', sub: '#5B687D', line: '#E4E9F2', chip: '#EEF2F8', acc: '#1F55F5', foot: '#F6F8FC' };
+    var C = c.dark ? { bg: '#16181D', fg: '#E9EAEE', sub: '#9EA3AD', line: '#2C2F36', chip: '#22252B', acc: '#FFD84D', foot: '#111317', dark: 1 }
+      : { bg: '#FFFFFF', fg: '#121418', sub: '#5B606B', line: '#E3E5E9', chip: '#F1F2F4', acc: '#121418', foot: '#F7F8F9' };
     var items = c.uses.map(function (k) { return '<li><i></i><span>' + esc(USE[k]) + '</span></li>'; }).join('') +
       (c.review ? '<li class="ok"><i></i><span>' + esc(c.review) + '</span></li>' : '') +
       (c.privacy ? '<li class="ok"><i></i><span>AI 도구에 고객 개인정보를 넣지 않습니다</span></li>' : '');
@@ -136,7 +136,7 @@
     var h = document.createElement('div'); h.setAttribute('data-aimarker-tags', '1');
     h.style.cssText = 'all:initial;position:fixed;left:0;top:0;width:0;height:0;z-index:2147481999';
     var r = h.attachShadow ? h.attachShadow({ mode: 'open' }) : h;
-    r.innerHTML = '<style>.t{position:fixed;display:none;align-items:center;gap:4px;padding:3px 9px 3px 6px;border-radius:999px;background:rgba(10,18,36,.8);color:#fff;font:800 11px/1.45 "Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;letter-spacing:-.01em;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);white-space:nowrap;border:0}.t svg{width:12px;height:12px;flex:0 0 auto}.t.on{display:inline-flex}</style>';
+    r.innerHTML = '<style>.t{position:fixed;display:none;align-items:center;gap:4px;padding:3px 9px 3px 6px;border-radius:999px;background:rgba(18, 20, 24,.8);color:#fff;font:800 11px/1.45 "Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;letter-spacing:-.01em;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);white-space:nowrap;border:0}.t svg{width:12px;height:12px;flex:0 0 auto}.t.on{display:inline-flex}</style>';
     (document.body || document.documentElement).appendChild(h); AUTO.root = r; return r;
   }
   var raf = 0;

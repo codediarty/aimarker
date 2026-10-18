@@ -8,12 +8,12 @@ styles: assets/app.css, assets/mark.css
 scripts: lib/aim-extract.js, assets/amui.js, assets/dev.js
 selflabel: footer
 -->
-<section class="p4h">
-  <div class="wrap">
-    <span class="crumb">API · AI 연동</span>
-    <h1>AI 사용 확인과 서명된 마크를,<br>코드 한 줄로</h1>
-    <p class="lead4">쇼핑몰 상품 등록, 기사 업로드, 생성 서비스의 결과 저장처럼 콘텐츠가 오가는 자리에 AIMarker를 붙이세요. 파일 속 근거로 AI 사용 여부를 확인하고, 근거에 맞는 표시만 서명된 마크로 발급합니다. AI 에이전트는 MCP 서버로, 내 코드는 API · SDK로 연결합니다. 무료 키로 하루 300회까지 호출할 수 있습니다.</p>
-    <div class="row"><a class="btn btn-w btn-l" href="#key">무료 API 키 받기{{ico:arrow}}</a><a class="btn btn-gl btn-l" href="{{root}}llms-full.txt">AI에게 줄 문서(llms-full.txt)</a><a class="btn btn-gl btn-l" href="openapi.json">OpenAPI</a></div>
+<section class="k-phero" aria-labelledby="h1">
+  <div class="k-wrap">
+    <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<span>API, AI 연동</span></p>
+    <h1 class="k-h1" id="h1">AI 사용 확인과 서명된 마크를,<br>코드 한 줄로</h1>
+    <p class="k-lead">쇼핑몰 상품 등록, 기사 업로드, 생성 서비스의 결과 저장처럼 콘텐츠가 오가는 자리에 AIMarker를 붙이세요. 파일 속 근거로 AI 사용 여부를 확인하고, 근거에 맞는 표시만 서명된 마크로 발급합니다. AI 에이전트는 MCP 서버로, 내 코드는 API, SDK로 연결합니다. 무료 키로 하루 300회까지 호출할 수 있습니다.</p>
+    <div class="k-acts"><a class="k-btn k-btn-p" href="#key">무료 API 키 받기</a><a class="k-btn k-btn-l" href="{{root}}llms-full.txt">AI에게 줄 문서(llms-full.txt)</a><a class="k-btn k-btn-l" href="openapi.json">OpenAPI</a></div>
   </div>
 </section>
 
@@ -21,8 +21,8 @@ selflabel: footer
   <div class="wrap">
     <ol class="q3">
       <li><b>키 받기</b><span>아래 양식에서 바로 발급됩니다. 하루 300회 무료.</span><a href="#key">키 받기</a></li>
-      <li><b>연결 고르기</b><span>AI 에이전트는 MCP, 내 코드는 SDK · 함수 호출, 자동화 도구는 HTTP.</span><a href="#mcp">연결 방법</a></li>
-      <li><b>AI에게 말하기</b><span>"이미지 · 글을 넘기기 전에 AIMarker로 확인하고, 필요하면 마크를 받아."</span><a href="#prompt">지침 복사</a></li>
+      <li><b>연결 고르기</b><span>AI 에이전트는 MCP, 내 코드는 SDK, 함수 호출, 자동화 도구는 HTTP.</span><a href="#mcp">연결 방법</a></li>
+      <li><b>AI에게 말하기</b><span>"이미지, 글을 넘기기 전에 AIMarker로 확인하고, 필요하면 마크를 받아."</span><a href="#prompt">지침 복사</a></li>
     </ol>
   </div>
 </section>
@@ -31,26 +31,26 @@ selflabel: footer
   <div class="wrap">
     <div class="blk-h"><span class="k">동작 방식</span><h2>원본은 그 자리에, 근거와 서명만 오갑니다</h2><p>판정 규칙과 생성 도구 지문은 서버에만 있고, 파일을 읽는 판독기는 공개되어 있습니다. 같은 파일이면 어디서 불러도 같은 판정이 나옵니다.</p></div>
     <ol class="dev-flow">
-      <li><b>이 기기에서 판독</b><span>출처 판독기 <a href="{{root}}lib/aim-extract.js">aim-extract</a>가 파일을 읽어 특징값(features)과 서명 검증용 조각(pack)을 만듭니다. 원본 · 픽셀 · 글 원문은 보내지 않습니다.</span></li>
-      <li><b>서버가 판정</b><span><code>am.analyze</code>: C2PA 서명 재검증 · 생성 기록 · 도구 지문으로 AI 사용 여부(used · not_used · unknown), 근거 등급, 고를 수 있는 표시(allowed)를 정합니다.</span></li>
+      <li><b>이 기기에서 판독</b><span>출처 판독기 <a href="{{root}}lib/aim-extract.js">aim-extract</a>가 파일을 읽어 특징값(features)과 서명 검증용 조각(pack)을 만듭니다. 원본, 픽셀, 글 원문은 보내지 않습니다.</span></li>
+      <li><b>서버가 판정</b><span><code>am.analyze</code>: C2PA 서명 재검증, 생성 기록, 도구 지문으로 AI 사용 여부(used, not_used, unknown), 근거 등급, 고를 수 있는 표시(allowed)를 정합니다.</span></li>
       <li><b>근거 맞춤 발급</b><span><code>am.mark</code>: 근거와 맞지 않는 표시는 막고(CONFLICT), 마크마다 Ed25519로 서명(JWS)해 원장에 남깁니다.</span></li>
-      <li><b>누구나 확인</b><span>공개키로 서명을 확인하고, <a href="{{root}}m/">마크 확인 페이지</a> · QR · 삽입 배지로 보여 줍니다. 하루치 원장은 다음 날 OpenTimestamps 공개 앵커에 묶입니다.</span></li>
+      <li><b>누구나 확인</b><span>공개키로 서명을 확인하고, <a href="{{root}}m/">마크 확인 페이지</a>, QR, 삽입 배지로 보여 줍니다. 하루치 원장은 다음 날 OpenTimestamps 공개 앵커에 묶입니다.</span></li>
     </ol>
   </div>
 </section>
 
 <section class="blk soft" id="mcp">
   <div class="wrap">
-    <div class="blk-h"><span class="k">MCP 서버 2.4</span><h2>Claude · Cursor · VS Code · Codex에 한 번만 설정하세요</h2><p>Node.js 18 이상에서 의존성 없이 동작합니다. 출처 판독기가 내장되어 있어, 에이전트가 이 컴퓨터의 파일을 직접 확인하고 마크를 받아 표시본까지 저장합니다.</p></div>
+    <div class="blk-h"><span class="k">MCP 서버 2.4</span><h2>Claude, Cursor, VS Code, Codex에 한 번만 설정하세요</h2><p>Node.js 18 이상에서 의존성 없이 동작합니다. 출처 판독기가 내장되어 있어, 에이전트가 이 컴퓨터의 파일을 직접 확인하고 마크를 받아 표시본까지 저장합니다.</p></div>
     <div class="code mt24" data-tabs>
       <div class="tabs code-tabs" role="tablist" aria-label="MCP 설정">
-        <button type="button" role="tab" aria-selected="true">Claude Desktop · Cursor · Gemini CLI</button>
+        <button type="button" role="tab" aria-selected="true">Claude Desktop, Cursor, Gemini CLI</button>
         <button type="button" role="tab" aria-selected="false">Claude Code</button>
         <button type="button" role="tab" aria-selected="false">VS Code</button>
         <button type="button" role="tab" aria-selected="false">Codex CLI</button>
         <button type="button" role="tab" aria-selected="false">파일 하나로</button>
       </div>
-      <div class="tabpane on" role="tabpanel"><div class="code-h"><span>claude_desktop_config.json · .cursor/mcp.json · settings.json</span><button class="btn btn-g btn-s" type="button" data-copy="#mc1"><span>복사</span></button></div><pre class="code-b" id="mc1">{
+      <div class="tabpane on" role="tabpanel"><div class="code-h"><span>claude_desktop_config.json, .cursor/mcp.json, settings.json</span><button class="btn btn-g btn-s" type="button" data-copy="#mc1"><span>복사</span></button></div><pre class="code-b" id="mc1">{
   "mcpServers": {
     "aimarker": {
       "command": "npx",
@@ -80,29 +80,29 @@ env = { AIMARKER_KEY = "amk_발급받은_키" }</pre></div>
 AIMARKER_KEY=amk_발급받은_키 node aimarker-mcp.mjs --help
 node aimarker-mcp.mjs --features 사진.jpg   # 서버로 보내는 특징값만 확인(키 필요 없음)</pre></div>
     </div>
-    <p class="dev-note">Windows에서 npx를 찾지 못하면 <code>"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz"]</code>로 바꾸세요. 내려받기: <a href="{{root}}mcp/aimarker-mcp-2.4.0.tgz">npx 패키지</a> · <a href="{{root}}mcp/aimarker-mcp.mjs">파일 하나</a>. sharp가 설치되어 있으면 비슷한 이미지를 찾는 데 쓰는 지각 해시도 만듭니다.</p>
+    <p class="dev-note">Windows에서 npx를 찾지 못하면 <code>"command": "cmd", "args": ["/c", "npx", "-y", "https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz"]</code>로 바꾸세요. 내려받기: <a href="{{root}}mcp/aimarker-mcp-2.4.0.tgz">npx 패키지</a>, <a href="{{root}}mcp/aimarker-mcp.mjs">파일 하나</a>. sharp가 설치되어 있으면 비슷한 이미지를 찾는 데 쓰는 지각 해시도 만듭니다.</p>
     <div class="kvt-wrap"><table class="kvt mono">
       <thead><tr><th>도구</th><th>하는 일</th><th>서버로 보내는 것</th></tr></thead>
       <tbody>
-        <tr><th>aimarker_analyze_file</th><td>파일의 AI 사용 근거 확인: 판정 · 근거 등급 · 고를 수 있는 표시, 같거나 비슷한 파일의 기존 마크</td><td>특징값 · 해시</td></tr>
-        <tr><th>aimarker_analyze_text</th><td>글의 기존 마크 · AI 활용 표현 확인</td><td>글의 해시</td></tr>
-        <tr><th>aimarker_analyze_folder</th><td>폴더째 20건씩 확인해 리포트로 정리: 근거 등급 · 바로 표시할 수 있는 비율 · 먼저 확인할 점 · 도구 분포, 지금 표시 CSV와 비교, 리포트 HTML · CSV 저장(2.1)</td><td>특징값 · 해시</td></tr>
-        <tr><th>aimarker_mark</th><td>근거 맞춤 마크 발급(근거와 맞지 않으면 막힘). write_copy로 마크 번호 · 서명을 넣은 표시본(JPEG · PNG)을 저장 · 등록</td><td>특징값 · 해시</td></tr>
-        <tr><th>aimarker_mark_batch</th><td>20개까지 한 번에 확인 · 발급, 근거 없는 항목은 DECLARE로 돌려줌</td><td>특징값 · 해시</td></tr>
-        <tr><th>aimarker_verify_mark</th><td>파일 속 마크 서명을 공개키로 확인, 원본 · 표시본 대조, 철회 여부</td><td>마크 번호(조회)</td></tr>
-        <tr><th>aimarker_mark_info · find_marks</th><td>마크 번호로 확인, 같은 파일 · 표시본 · 비슷한 이미지의 마크 찾기</td><td>번호 · 해시</td></tr>
-        <tr><th>aimarker_edit_mark</th><td>관리 키로 표시 변경(근거 범위 안에서) · 이름 변경 · 철회</td><td>관리 키</td></tr>
-        <tr><th>aimarker_anchor</th><td>하루치 원장의 뿌리 해시 · OpenTimestamps 증명 확인, .ots 저장</td><td>날짜(조회)</td></tr>
-        <tr><th>aimarker_geo_check · detect_text</th><td>주소 하나로 GEO 진단 · 고칠 코드 · AI 상품 피드(2.2), 글의 AI 작성 추정률(2.2). 2.3부터 pass(개인 이용권) · AIMARKER_PASS로 문장별 결과 전체</td><td>주소 · 글(저장 안 함)</td></tr>
-        <tr><th>부가 기능 9개</th><td>광고 문구 검수 · 자동 수정 · 일괄 검수 · 표시 문구 · 사이트 진단 · 광고주 승인 · 승인 상태 · 원장 기록 · 원장 확인</td><td>문구(저장 안 함)</td></tr>
+        <tr><th>aimarker_analyze_file</th><td>파일의 AI 사용 근거 확인: 판정, 근거 등급, 고를 수 있는 표시, 같거나 비슷한 파일의 기존 마크</td><td>특징값, 해시</td></tr>
+        <tr><th>aimarker_analyze_text</th><td>글의 기존 마크, AI 활용 표현 확인</td><td>글의 해시</td></tr>
+        <tr><th>aimarker_analyze_folder</th><td>폴더째 20건씩 확인해 리포트로 정리: 근거 등급, 바로 표시할 수 있는 비율, 먼저 확인할 점, 도구 분포, 지금 표시 CSV와 비교, 리포트 HTML, CSV 저장(2.1)</td><td>특징값, 해시</td></tr>
+        <tr><th>aimarker_mark</th><td>근거 맞춤 마크 발급(근거와 맞지 않으면 막힘). write_copy로 마크 번호, 서명을 넣은 표시본(JPEG, PNG)을 저장, 등록</td><td>특징값, 해시</td></tr>
+        <tr><th>aimarker_mark_batch</th><td>20개까지 한 번에 확인, 발급, 근거 없는 항목은 DECLARE로 돌려줌</td><td>특징값, 해시</td></tr>
+        <tr><th>aimarker_verify_mark</th><td>파일 속 마크 서명을 공개키로 확인, 원본, 표시본 대조, 철회 여부</td><td>마크 번호(조회)</td></tr>
+        <tr><th>aimarker_mark_info, find_marks</th><td>마크 번호로 확인, 같은 파일, 표시본, 비슷한 이미지의 마크 찾기</td><td>번호, 해시</td></tr>
+        <tr><th>aimarker_edit_mark</th><td>관리 키로 표시 변경(근거 범위 안에서), 이름 변경, 철회</td><td>관리 키</td></tr>
+        <tr><th>aimarker_anchor</th><td>하루치 원장의 뿌리 해시, OpenTimestamps 증명 확인, .ots 저장</td><td>날짜(조회)</td></tr>
+        <tr><th>aimarker_geo_check, detect_text</th><td>주소 하나로 GEO 진단, 고칠 코드, AI 상품 피드(2.2), 글의 AI 작성 추정률(2.2). 2.3부터 pass(개인 이용권), AIMARKER_PASS로 문장별 결과 전체</td><td>주소, 글(저장 안 함)</td></tr>
+        <tr><th>부가 기능 9개</th><td>광고 문구 검수, 자동 수정, 일괄 검수, 표시 문구, 사이트 진단, 광고주 승인, 승인 상태, 원장 기록, 원장 확인</td><td>문구(저장 안 함)</td></tr>
       </tbody></table></div>
-    <p class="dev-note">프롬프트: <code>mark_content</code>(확인하고 마크 받기) · <code>check_received_file</code>(받은 파일의 마크 확인) · <code>report_folder</code>(폴더 리포트) · <code>review_ad_copy</code>(광고 문구 검수). 이전 1.0.0 · 2.0.0 · 2.1.0 · 2.2.0 패키지도 그대로 동작합니다.</p>
+    <p class="dev-note">프롬프트: <code>mark_content</code>(확인하고 마크 받기), <code>check_received_file</code>(받은 파일의 마크 확인), <code>report_folder</code>(폴더 리포트), <code>review_ad_copy</code>(광고 문구 검수). 이전 1.0.0, 2.0.0, 2.1.0, 2.2.0 패키지도 그대로 동작합니다.</p>
   </div>
 </section>
 
 <section class="blk" id="sdk">
   <div class="wrap">
-    <div class="blk-h"><span class="k">SDK 1.1</span><h2>파일 하나로 붙이는 JavaScript · Python 클라이언트</h2><p>의존성이 없습니다. JavaScript SDK에는 출처 판독기가 내장되어 있어 파일 바이트를 그대로 넘기면 됩니다. Python SDK는 글 · 서명 확인을 표준 라이브러리로 처리하고, 파일 판독은 Node.js로 합니다. 서버 쪽 코드에서 사용하고, API 키는 환경 변수에 보관하세요.</p></div>
+    <div class="blk-h"><span class="k">SDK 1.1</span><h2>파일 하나로 붙이는 JavaScript, Python 클라이언트</h2><p>의존성이 없습니다. JavaScript SDK에는 출처 판독기가 내장되어 있어 파일 바이트를 그대로 넘기면 됩니다. Python SDK는 글, 서명 확인을 표준 라이브러리로 처리하고, 파일 판독은 Node.js로 합니다. 서버 쪽 코드에서 사용하고, API 키는 환경 변수에 보관하세요.</p></div>
     <div class="code mt24" data-tabs>
       <div class="tabs code-tabs" role="tablist" aria-label="SDK">
         <button type="button" role="tab" aria-selected="true">JavaScript</button>
@@ -110,7 +110,7 @@ node aimarker-mcp.mjs --features 사진.jpg   # 서버로 보내는 특징값만
         <button type="button" role="tab" aria-selected="false">상품 등록에 붙이기</button>
         <button type="button" role="tab" aria-selected="false">여러 파일 리포트</button>
       </div>
-      <div class="tabpane on" role="tabpanel"><div class="code-h"><span><a href="{{root}}sdk/aimarker.mjs">aimarker.mjs</a> · Node 20+ · Deno · Bun · Workers</span><button class="btn btn-g btn-s" type="button" data-copy="#sd1"><span>복사</span></button></div><pre class="code-b" id="sd1">import { AIMarker } from './aimarker.mjs';
+      <div class="tabpane on" role="tabpanel"><div class="code-h"><span><a href="{{root}}sdk/aimarker.mjs">aimarker.mjs</a>, Node 20+, Deno, Bun, Workers</span><button class="btn btn-g btn-s" type="button" data-copy="#sd1"><span>복사</span></button></div><pre class="code-b" id="sd1">import { AIMarker } from './aimarker.mjs';
 import { readFile, writeFile } from 'node:fs/promises';
 const am = new AIMarker({ key: process.env.AIMARKER_KEY });
 
@@ -128,7 +128,7 @@ try {
   if (e.code === 'DECLARE') { /* 근거 없음: 사용자에게 AI 사용 여부를 물어 label 로 */ }
   if (e.code === 'CONFIRM') { /* 비슷한 AI 이미지가 있음: 확인받고 confirm: true 로 */ }
 }</pre></div>
-      <div class="tabpane" role="tabpanel"><div class="code-h"><span><a href="{{root}}sdk/aimarker.py">aimarker.py</a> · Python 3.8+ · 표준 라이브러리만</span><button class="btn btn-g btn-s" type="button" data-copy="#sd2"><span>복사</span></button></div><pre class="code-b" id="sd2">import os
+      <div class="tabpane" role="tabpanel"><div class="code-h"><span><a href="{{root}}sdk/aimarker.py">aimarker.py</a>, Python 3.8+, 표준 라이브러리만</span><button class="btn btn-g btn-s" type="button" data-copy="#sd2"><span>복사</span></button></div><pre class="code-b" id="sd2">import os
 from aimarker import AIMarker, AIMarkerError
 
 am = AIMarker(os.environ["AIMARKER_KEY"])
@@ -146,7 +146,7 @@ except AIMarkerError as e:
 
 # 서명 확인: 서버에 묻지 않고 공개키로(Ed25519 직접 계산)
 print(AIMarker.verify_mark(m["cred"]))   # {"ok": True, "kid": "amk1-…", "payload": {...}}</pre></div>
-      <div class="tabpane" role="tabpanel"><div class="code-h"><span>상품 이미지를 올릴 때 20개씩 자동 확인 · 발급</span><button class="btn btn-g btn-s" type="button" data-copy="#sd3"><span>복사</span></button></div><pre class="code-b" id="sd3">import { AIMarker } from './aimarker.mjs';
+      <div class="tabpane" role="tabpanel"><div class="code-h"><span>상품 이미지를 올릴 때 20개씩 자동 확인, 발급</span><button class="btn btn-g btn-s" type="button" data-copy="#sd3"><span>복사</span></button></div><pre class="code-b" id="sd3">import { AIMarker } from './aimarker.mjs';
 const am = new AIMarker({ key: process.env.AIMARKER_KEY });
 
 export async function onProductImages(files, seller) {   // files: [{ bytes, name, sku }]
@@ -156,7 +156,7 @@ export async function onProductImages(files, seller) {   // files: [{ bytes, nam
     else if (x.code === 'DECLARE') await askSeller(x.ref);   // 기록 없는 이미지: 판매자 신고로 발급
   }
 }</pre></div>
-      <div class="tabpane" role="tabpanel"><div class="code-h"><span>폴더 · 여러 파일을 20건씩 확인하고 리포트(HTML · CSV)로 · SDK 1.1</span><button class="btn btn-g btn-s" type="button" data-copy="#sd4"><span>복사</span></button></div><pre class="code-b" id="sd4">import { AIMarker, report } from './aimarker.mjs';
+      <div class="tabpane" role="tabpanel"><div class="code-h"><span>폴더, 여러 파일을 20건씩 확인하고 리포트(HTML, CSV)로, SDK 1.1</span><button class="btn btn-g btn-s" type="button" data-copy="#sd4"><span>복사</span></button></div><pre class="code-b" id="sd4">import { AIMarker, report } from './aimarker.mjs';
 import { readdir, writeFile } from 'node:fs/promises';
 
 const am = new AIMarker({ key: process.env.AIMARKER_KEY });
@@ -175,7 +175,7 @@ await writeFile('report.csv', report.csv(R));   // 파일마다 판정 · 근거
 
 <section class="blk soft" id="tools">
   <div class="wrap">
-    <div class="blk-h"><span class="k">함수 호출</span><h2>내 코드의 LLM에 도구로 붙이기</h2><p>도구 정의 JSON을 그대로 넣고, 실행은 <a href="{{root}}sdk/aimarker-tools.mjs">aimarker-tools.mjs</a>(SDK와 같은 폴더)에 맡기세요. 파일 경로는 실행 환경에서 읽어 특징값으로 바꾸고, 오류(CONFIRM · CONFLICT · DECLARE)는 모델이 읽을 수 있게 그대로 돌려줍니다.</p></div>
+    <div class="blk-h"><span class="k">함수 호출</span><h2>내 코드의 LLM에 도구로 붙이기</h2><p>도구 정의 JSON을 그대로 넣고, 실행은 <a href="{{root}}sdk/aimarker-tools.mjs">aimarker-tools.mjs</a>(SDK와 같은 폴더)에 맡기세요. 파일 경로는 실행 환경에서 읽어 특징값으로 바꾸고, 오류(CONFIRM, CONFLICT, DECLARE)는 모델이 읽을 수 있게 그대로 돌려줍니다.</p></div>
     <div class="dl3">
       <a href="tools/openai.json">{{ico:download}}<b>OpenAI</b><span>Responses API 도구 형식</span></a>
       <a href="tools/anthropic.json">{{ico:download}}<b>Claude</b><span>Messages API 도구 사용</span></a>
@@ -224,7 +224,7 @@ while (res.output.some((o) =&gt; o.type === 'function_call')) {
 
 <section class="blk" id="prompt">
   <div class="wrap">
-    <div class="blk-h"><span class="k">에이전트 지침</span><h2>AI에게 이렇게 일러 두세요</h2><p>맞춤 GPT · Claude 프로젝트 · 사내 에이전트의 지침(system prompt)에 붙여 넣으면 됩니다.</p></div>
+    <div class="blk-h"><span class="k">에이전트 지침</span><h2>AI에게 이렇게 일러 두세요</h2><p>맞춤 GPT, Claude 프로젝트, 사내 에이전트의 지침(system prompt)에 붙여 넣으면 됩니다.</p></div>
     <div class="code mt24"><div class="code-h"><span>지침</span><button class="btn btn-g btn-s" type="button" data-copy="#sp"><span>복사</span></button></div><pre class="code-b prose" id="sp">이미지 · 영상 · 오디오 · 글을 사용자에게 넘기거나 게시하기 전에 aimarker_analyze_file(글은 aimarker_analyze_text)로 AI 사용 근거를 확인한다.
 - 표시가 필요하면 aimarker_mark 로 마크를 받는다. 파일에 근거가 있으면 label 을 auto 로 둔다.
 - 표시는 verdict.allowed 안에서만 고른다. 근거가 없으면 사용자에게 실제 AI 사용 여부와 사용한 도구를 묻고, 그 답으로 발급한다.
@@ -243,34 +243,34 @@ while (res.output.some((o) =&gt; o.type === 'function_call')) {
     <div class="kvt-wrap"><table class="kvt mono api">
       <thead><tr><th>action</th><th>하는 일</th><th>주요 입력</th><th>주요 출력</th></tr></thead>
       <tbody>
-        <tr><th>am.analyze</th><td>AI 사용 확인</td><td>features · pack</td><td>verdict{ai · scope · basis · allowed · suggest} · signals[] · signer · registry[]</td></tr>
-        <tr><th>am.analyzebatch</th><td>20건까지 한 번에 확인(발급 안 함)</td><td>items[{ref · features · pack}]</td><td>results[{ok · ref · verdict · …} | {ok:false · code · msg}] · failed</td></tr>
-        <tr><th>am.mark</th><td>마크 발급</td><td>features · pack · label · tools · title · issuer · confirm</td><td>id · url · key(관리 키) · cred(JWS) · kid · basis · ledger · xmp</td></tr>
-        <tr><th>am.markbatch</th><td>20개까지 한 번에 발급</td><td>items[{ref · features · pack · label(auto)}] · issuer</td><td>results[] · issued</td></tr>
-        <tr><th>am.markinfo</th><td>마크 정보 · 누구나</td><td>id</td><td>status · label · basis · evidence[] · history[] · sha256 · alts · cred</td></tr>
-        <tr><th>am.lookup</th><td>마크 찾기 · 누구나</td><td>sha256 · dhash</td><td>items[{id · label · basis · exact · alt · dist}]</td></tr>
-        <tr><th>am.markedit</th><td>변경 · 철회 · 관리 키로만</td><td>id · mkey · label · title · issuer · alt[] · revoke</td><td>changed · mark · ledger</td></tr>
-        <tr><th>am.pubkey</th><td>서명 공개키 · 누구나</td><td>없음</td><td>keys[{kty · crv · x · kid}] · current</td></tr>
-        <tr><th>am.anchor</th><td>공개 앵커 · 누구나</td><td>date 또는 id(LG…)</td><td>root · prev · text · proofs · status · position</td></tr>
-        <tr><th>am.geo</th><td>GEO 진단 · AI 상품 피드</td><td>url</td><td>score · parts[] · bots[] · fixes[](붙여 넣을 코드) · feed</td></tr>
-        <tr><th>am.detect</th><td>AI 작성률과 판정(AIMarker 판정 기준 1.0: 안전 · 고위험 · 부적합, 판정 근거). 추정이며 증명이 아님 · 같은 글이면 같은 값과 판정. 무료 키는 맛보기(판정 · 수치는 같은 값, 문장 위치는 2개만), pass나 유료 키면 문장별 · 구간별 전체</td><td>text · sentences · pass(개인 이용권, 선택)</td><td>rate · band{key · ko · label · why[]} · lv · segN · segAi · segs[] · feat[] · opinion[] · opDetail[] · chat · aiN · aiChars · cn · full · sentences[{t · p · g · ai | lock}] · pass</td></tr>
-        <tr><th>am.style</th><td>휴머나이징: 문체 점검 · 표현 다듬기 · 말투. 무료 키는 미리 보기, pass나 유료 키면 다듬은 글 전체</td><td>text · mode(check · fix) · tone(auto · keep · plain · polite · formal) · guide(map · ban · tone, 브랜드 말투 규칙) · pass</td><td>before · paragraphs[] · ai / text · applied[] · left[] · after · aiAfter · facts</td></tr>
-        <tr><th>am.humanize</th><td>고급 휴머나이징: AIMarker 인간화 엔진(생성 AI를 사용하지 않음, 같은 글 · 같은 설정이면 같은 결과). 후보 3개 가운데 숫자 · 인용을 모두 지키고 AI 작성률(추정)이 가장 낮은 것을 돌려줌. 무료 키는 첫 문단 미리 보기, pass(고급 횟수)나 유료 키면 글 전체(한 번에 6,000자) · 다른 버전 · 문장 후보</td><td>text · tone(auto · keep · plain · polite · formal) · variant(0~9) · alts · guide(map[[바꿀 말, 쓸 말]] · ban[] · tone) · probe · pass</td><td>text · tone · toneNote · applied[] · stats(sent · changed · reverted · toneMiss) · facts · guide{mapped · banned} · before · after · ai · aiAfter · cands / preview · src · cut / alts[]</td></tr>
-        <tr><th>am.markalt</th><td>표시본 해시 등록(20건)</td><td>items[{id · key(관리 키) · alt}]</td><td>results[]</td></tr>
-        <tr class="sub"><th>am.check · am.auto</th><td>부가: 광고 문구 검수 · 자동 수정</td><td>text · ind · flags · guide</td><td>decision · findings[] · labels[] / outcome · text · left[]</td></tr>
-        <tr class="sub"><th>am.batch · am.label · am.scan</th><td>부가: 일괄 검수 · 표시 문구 · 사이트 진단</td><td>items · kind · url</td><td>results · text · level</td></tr>
-        <tr class="sub"><th>am.share · am.status</th><td>부가: 광고주 승인 링크(90일)</td><td>data · ids</td><td>id · url · items</td></tr>
-        <tr class="sub"><th>am.stamp · am.verify</th><td>원장 기록 · 확인</td><td>h(SHA-256) · k · n / h 또는 id</td><td>id · at / found · kind · at</td></tr>
+        <tr><th>am.analyze</th><td>AI 사용 확인</td><td>features, pack</td><td>verdict{ai, scope, basis, allowed, suggest}, signals[], signer, registry[]</td></tr>
+        <tr><th>am.analyzebatch</th><td>20건까지 한 번에 확인(발급 안 함)</td><td>items[{ref, features, pack}]</td><td>results[{ok, ref, verdict, …} | {ok:false, code, msg}], failed</td></tr>
+        <tr><th>am.mark</th><td>마크 발급</td><td>features, pack, label, tools, title, issuer, confirm</td><td>id, url, key(관리 키), cred(JWS), kid, basis, ledger, xmp</td></tr>
+        <tr><th>am.markbatch</th><td>20개까지 한 번에 발급</td><td>items[{ref, features, pack, label(auto)}], issuer</td><td>results[], issued</td></tr>
+        <tr><th>am.markinfo</th><td>마크 정보, 누구나</td><td>id</td><td>status, label, basis, evidence[], history[], sha256, alts, cred</td></tr>
+        <tr><th>am.lookup</th><td>마크 찾기, 누구나</td><td>sha256, dhash</td><td>items[{id, label, basis, exact, alt, dist}]</td></tr>
+        <tr><th>am.markedit</th><td>변경, 철회, 관리 키로만</td><td>id, mkey, label, title, issuer, alt[], revoke</td><td>changed, mark, ledger</td></tr>
+        <tr><th>am.pubkey</th><td>서명 공개키, 누구나</td><td>없음</td><td>keys[{kty, crv, x, kid}], current</td></tr>
+        <tr><th>am.anchor</th><td>공개 앵커, 누구나</td><td>date 또는 id(LG…)</td><td>root, prev, text, proofs, status, position</td></tr>
+        <tr><th>am.geo</th><td>GEO 진단, AI 상품 피드</td><td>url</td><td>score, parts[], bots[], fixes[](붙여 넣을 코드), feed</td></tr>
+        <tr><th>am.detect</th><td>AI 작성률과 판정(AIMarker 판정 기준 1.0: 안전, 고위험, 부적합, 판정 근거). 추정이며 증명이 아님, 같은 글이면 같은 값과 판정. 무료 키는 맛보기(판정, 수치는 같은 값, 문장 위치는 2개만), pass나 유료 키면 문장별, 구간별 전체</td><td>text, sentences, pass(개인 이용권, 선택)</td><td>rate, band{key, ko, label, why[]}, lv, segN, segAi, segs[], feat[], opinion[], opDetail[], chat, aiN, aiChars, cn, full, sentences[{t, p, g, ai | lock}], pass</td></tr>
+        <tr><th>am.style</th><td>휴머나이징: 문체 점검, 표현 다듬기, 말투. 무료 키는 미리 보기, pass나 유료 키면 다듬은 글 전체</td><td>text, mode(check, fix), tone(auto, keep, plain, polite, formal), guide(map, ban, tone, 브랜드 말투 규칙), pass</td><td>before, paragraphs[], ai / text, applied[], left[], after, aiAfter, facts</td></tr>
+        <tr><th>am.humanize</th><td>고급 휴머나이징: AIMarker 인간화 엔진(생성 AI를 사용하지 않음, 같은 글, 같은 설정이면 같은 결과). 후보 3개 가운데 숫자, 인용을 모두 지키고 AI 작성률(추정)이 가장 낮은 것을 돌려줌. 무료 키는 첫 문단 미리 보기, pass(고급 횟수)나 유료 키면 글 전체(한 번에 6,000자), 다른 버전, 문장 후보</td><td>text, tone(auto, keep, plain, polite, formal), variant(0~9), alts, guide(map[[바꿀 말, 쓸 말]], ban[], tone), probe, pass</td><td>text, tone, toneNote, applied[], stats(sent, changed, reverted, toneMiss), facts, guide{mapped, banned}, before, after, ai, aiAfter, cands / preview, src, cut / alts[]</td></tr>
+        <tr><th>am.markalt</th><td>표시본 해시 등록(20건)</td><td>items[{id, key(관리 키), alt}]</td><td>results[]</td></tr>
+        <tr class="sub"><th>am.check, am.auto</th><td>부가: 광고 문구 검수, 자동 수정</td><td>text, ind, flags, guide</td><td>decision, findings[], labels[] / outcome, text, left[]</td></tr>
+        <tr class="sub"><th>am.batch, am.label, am.scan</th><td>부가: 일괄 검수, 표시 문구, 사이트 진단</td><td>items, kind, url</td><td>results, text, level</td></tr>
+        <tr class="sub"><th>am.share, am.status</th><td>부가: 광고주 승인 링크(90일)</td><td>data, ids</td><td>id, url, items</td></tr>
+        <tr class="sub"><th>am.stamp, am.verify</th><td>원장 기록, 확인</td><td>h(SHA-256), k, n / h 또는 id</td><td>id, at / found, kind, at</td></tr>
       </tbody></table></div>
     <div class="cols3">
-      <div class="col-it"><b>표시 · 근거</b><p>label: ai_generated · ai_edited · ai_assisted · no_ai. basis: verified(서명 검증) · record(파일 기록) · declared(발급자 신고). 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지 · 표시본에 AI 마크가 있으면 CONFIRM.</p></div>
-      <div class="col-it"><b>인증 · 한도</b><p>본문에 "key": "amk_…"를 넣습니다. 무료 키는 하루 300회(일괄 요청은 항목 수만큼 셉니다). 마크 확인 · 찾기 · 공개키 · 앵커는 키 없이, 마크 관리는 관리 키만으로 쓸 수 있습니다. 한도를 늘리려면 <a href="{{root}}contact/?plan=api">상담</a>을 신청하세요.</p></div>
-      <div class="col-it"><b>오류</b><p>오류가 나면 ok:false와 code를 돌려줍니다. code: KEY · QUOTA · BUSY · HASH · CONFLICT(allowed · reasons) · CONFIRM(related) · DECLARE · REVOKED · NOT_FOUND. 전체 설명은 <a href="{{root}}llms-full.txt">llms-full.txt</a>에 있습니다.</p></div>
+      <div class="col-it"><b>표시, 근거</b><p>label: ai_generated, ai_edited, ai_assisted, no_ai. basis: verified(서명 검증), record(파일 기록), declared(발급자 신고). 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지, 표시본에 AI 마크가 있으면 CONFIRM.</p></div>
+      <div class="col-it"><b>인증, 한도</b><p>본문에 "key": "amk_…"를 넣습니다. 무료 키는 하루 300회(일괄 요청은 항목 수만큼 셉니다). 마크 확인, 찾기, 공개키, 앵커는 키 없이, 마크 관리는 관리 키만으로 쓸 수 있습니다. 한도를 늘리려면 <a href="{{root}}contact/?plan=api">상담</a>을 신청하세요.</p></div>
+      <div class="col-it"><b>오류</b><p>오류가 나면 ok:false와 code를 돌려줍니다. code: KEY, QUOTA, BUSY, HASH, CONFLICT(allowed, reasons), CONFIRM(related), DECLARE, REVOKED, NOT_FOUND. 전체 설명은 <a href="{{root}}llms-full.txt">llms-full.txt</a>에 있습니다.</p></div>
     </div>
     <div class="dev-batch" id="batch">
-      <h3>여러 파일 일괄 확인 · am.analyzebatch</h3>
-      <p>한 번에 20건까지 확인합니다(발급은 하지 않음). 서명 묶음(pack)은 한 요청에 합계 120만 자까지이고, 이를 넘거나 시간이 모자란 항목은 <code>PACK_BUDGET</code> · <code>TIME</code>으로 돌려주니 그 항목만 <code>am.analyze</code>로 따로 보내세요. 사용 한도는 항목 수만큼 셉니다. SDK의 <code>analyzeFiles</code>와 MCP의 <code>aimarker_analyze_folder</code>는 이를 알아서 나눠 호출하고, 화면에서는 <a href="{{root}}report/">일괄 확인 리포트</a>가 같은 일을 합니다.</p>
-      <div class="code mt16"><div class="code-h"><span>터미널 · 특징값 만들기 → 20건까지 한 번에</span><button class="btn btn-g btn-s" type="button" data-copy="#bt1"><span>복사</span></button></div><pre class="code-b" id="bt1">API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec"
+      <h3>여러 파일 일괄 확인, am.analyzebatch</h3>
+      <p>한 번에 20건까지 확인합니다(발급은 하지 않음). 서명 묶음(pack)은 한 요청에 합계 120만 자까지이고, 이를 넘거나 시간이 모자란 항목은 <code>PACK_BUDGET</code>, <code>TIME</code>으로 돌려주니 그 항목만 <code>am.analyze</code>로 따로 보내세요. 사용 한도는 항목 수만큼 셉니다. SDK의 <code>analyzeFiles</code>와 MCP의 <code>aimarker_analyze_folder</code>는 이를 알아서 나눠 호출하고, 화면에서는 <a href="{{root}}report/">일괄 확인 리포트</a>가 같은 일을 합니다.</p>
+      <div class="code mt16"><div class="code-h"><span>터미널, 특징값 만들기 → 20건까지 한 번에</span><button class="btn btn-g btn-s" type="button" data-copy="#bt1"><span>복사</span></button></div><pre class="code-b" id="bt1">API="https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec"
 # 1) 파일마다 특징값(원본은 이 컴퓨터에서만 읽음)
 for f in a.jpg b.png c.webp; do node aimarker-mcp.mjs --features "$f" &gt; "$f.json"; done
 # 2) 한 번에 확인: ref 는 돌려받을 때 맞춰 볼 이름
@@ -282,10 +282,10 @@ jq -s '{action:"am.analyzebatch", key:"amk_발급받은_키", items:[to_entries[
 
 <section class="blk" id="verify">
   <div class="wrap">
-    <div class="blk-h"><span class="k">서명 확인</span><h2>AIMarker 서버에 묻지 않고 마크를 확인하는 법</h2><p>마크마다 붙는 서명(cred)은 JWS(EdDSA · Ed25519)이며, 표시본 파일 안(XMP aimarker:Credential)에도 들어 있습니다. 공개키는 <a href="{{root}}.well-known/aimarker-keys.json">/.well-known/aimarker-keys.json</a>에 있습니다. 서명이 맞으면 그 마크 번호 · 표시 · 근거 · 원본 해시를 AIMarker가 발급했다는 뜻입니다.</p></div>
+    <div class="blk-h"><span class="k">서명 확인</span><h2>AIMarker 서버에 묻지 않고 마크를 확인하는 법</h2><p>마크마다 붙는 서명(cred)은 JWS(EdDSA, Ed25519)이며, 표시본 파일 안(XMP aimarker:Credential)에도 들어 있습니다. 공개키는 <a href="{{root}}.well-known/aimarker-keys.json">/.well-known/aimarker-keys.json</a>에 있습니다. 서명이 맞으면 그 마크 번호, 표시, 근거, 원본 해시를 AIMarker가 발급했다는 뜻입니다.</p></div>
     <div class="code mt24" data-tabs>
       <div class="tabs code-tabs" role="tablist" aria-label="서명 확인">
-        <button type="button" role="tab" aria-selected="true">브라우저 · Node 20+</button>
+        <button type="button" role="tab" aria-selected="true">브라우저, Node 20+</button>
         <button type="button" role="tab" aria-selected="false">확인할 것</button>
       </div>
       <div class="tabpane on" role="tabpanel"><div class="code-h"><span>Web Crypto만으로</span><button class="btn btn-g btn-s" type="button" data-copy="#vf1"><span>복사</span></button></div><pre class="code-b" id="vf1">const b64u = (x) =&gt; Uint8Array.from(atob(x.replace(/-/g, '+').replace(/_/g, '/')), (c) =&gt; c.charCodeAt(0));
@@ -298,7 +298,7 @@ const ok = await crypto.subtle.verify({ name: 'Ed25519' }, key, b64u(s), new Tex
 const claims = JSON.parse(new TextDecoder().decode(b64u(p)));         // sub · label · basis · sha256 · at · ledger …</pre></div>
       <div class="tabpane" role="tabpanel"><div class="code-b"><ol class="n8n">
         <li>서명이 맞는지: 머리의 kid와 같은 공개키로 <code>머리.내용</code>을 확인합니다.</li>
-        <li>내용이 마크와 같은지: <code>sub</code>(마크 번호) · <code>label</code> · <code>basis</code> · <code>sha256</code>을 <code>am.markinfo</code>와 맞춰 봅니다. 표시를 바꾸면 새 서명이 나오고 <code>upd</code>가 붙습니다.</li>
+        <li>내용이 마크와 같은지: <code>sub</code>(마크 번호), <code>label</code>, <code>basis</code>, <code>sha256</code>을 <code>am.markinfo</code>와 맞춰 봅니다. 표시를 바꾸면 새 서명이 나오고 <code>upd</code>가 붙습니다.</li>
         <li>파일이 같은지: 갖고 있는 파일의 SHA-256이 <code>sha256</code>(원본) 또는 <code>alts</code>(발급자가 등록한 표시본)와 같은지 봅니다.</li>
         <li>철회됐는지: <code>am.markinfo</code>의 <code>status</code>가 revoked이면 더는 유효하지 않습니다.</li>
         <li>언제 기록됐는지: <code>ledger</code>(원장 번호)로 <code>am.anchor</code>를 불러 그날 공개 앵커에 들어 있는지 봅니다.</li>
@@ -309,8 +309,8 @@ const claims = JSON.parse(new TextDecoder().decode(b64u(p)));         // sub · 
 
 <section class="blk soft" id="anchor">
   <div class="wrap">
-    <div class="blk-h"><span class="k">공개 앵커</span><h2>하루치 원장은 우리도 바꿀 수 없습니다</h2><p>매일 0시 10분이 지나면 전날 원장(발급 · 변경 · 철회 기록)을 글 하나로 묶고, 그 SHA-256(뿌리 해시)을 OpenTimestamps 달력 서버 세 곳에 올립니다. 이전 날의 뿌리 해시를 함께 넣어 날마다 사슬로 이어지므로, 지난 기록을 고치면 뿌리 해시가 달라집니다.</p></div>
-    <div class="code mt24"><div class="code-h"><span>터미널 · jq · OpenTimestamps 클라이언트</span><button class="btn btn-g btn-s" type="button" data-copy="#an1"><span>복사</span></button></div><pre class="code-b" id="an1">API='https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec'
+    <div class="blk-h"><span class="k">공개 앵커</span><h2>하루치 원장은 우리도 바꿀 수 없습니다</h2><p>매일 0시 10분이 지나면 전날 원장(발급, 변경, 철회 기록)을 글 하나로 묶고, 그 SHA-256(뿌리 해시)을 OpenTimestamps 달력 서버 세 곳에 올립니다. 이전 날의 뿌리 해시를 함께 넣어 날마다 사슬로 이어지므로, 지난 기록을 고치면 뿌리 해시가 달라집니다.</p></div>
+    <div class="code mt24"><div class="code-h"><span>터미널, jq, OpenTimestamps 클라이언트</span><button class="btn btn-g btn-s" type="button" data-copy="#an1"><span>복사</span></button></div><pre class="code-b" id="an1">API='https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec'
 curl -sL -H 'Content-Type: text/plain' -d '{"action":"am.anchor","date":"2026-10-16"}' "$API" &gt; day.json
 jq -j .text day.json &gt; day.txt      # 그날 원장 글(끝 줄바꿈까지 그대로)
 sha256sum day.txt                   # = jq -r .root day.json
@@ -328,14 +328,14 @@ sha256sum day.txt                   # = jq -r .root day.json
         <button type="button" role="tab" aria-selected="false">부가: 문구 검수 am.check</button>
       </div>
       <div class="tabpane on" role="tabpanel"><div class="grid g2 dev-try">
-        <div class="form3"><label class="drop3" id="tdrop" for="tfile">{{ico:upload}}<b id="tname">파일을 고르거나 끌어다 놓으세요</b><span>이미지 · 영상 · 오디오 · 이 브라우저에서만 읽습니다</span><input id="tfile" type="file" accept="image/*,video/*,audio/*,.heic,.avif,.webp" hidden></label>
+        <div class="form3"><label class="drop3" id="tdrop" for="tfile">{{ico:upload}}<b id="tname">파일을 고르거나 끌어다 놓으세요</b><span>이미지, 영상, 오디오, 이 브라우저에서만 읽습니다</span><input id="tfile" type="file" accept="image/*,video/*,audio/*,.heic,.avif,.webp" hidden></label>
           <button class="btn btn-p mt16" type="button" id="trun" disabled>{{ico:zap}}<span>판독하고 am.analyze 호출</span></button>
           <div class="code mt16" style="max-height:240px;overflow:auto"><div class="code-h"><span>서버로 보내는 특징값(features)</span><span id="tfsz"></span></div><pre class="code-b" id="tfeat">파일을 고르세요</pre></div></div>
         <div class="code" style="max-height:520px;overflow:auto"><div class="code-h"><span>응답</span><span id="tms"></span></div><pre class="code-b" id="tout">{ "ok": true, "verdict": { ... } }</pre></div>
       </div></div>
       <div class="tabpane" role="tabpanel"><div class="grid g2 dev-try">
         <div class="form3"><div class="field"><label for="mid">마크 번호</label><input class="inp" id="mid" placeholder="AM-로 시작하는 13자리" maxlength="16"></div>
-          <button class="btn btn-p mt16" type="button" id="mrun">{{ico:zap}}<span>am.markinfo 호출 · 서명 확인</span></button>
+          <button class="btn btn-p mt16" type="button" id="mrun">{{ico:zap}}<span>am.markinfo 호출, 서명 확인</span></button>
           <p class="dev-note" id="msig"></p></div>
         <div class="code" style="max-height:520px;overflow:auto"><div class="code-h"><span>응답</span><span id="mms"></span></div><pre class="code-b" id="mout">{ "ok": true, "id": "AM-…", ... }</pre></div>
       </div></div>
@@ -352,11 +352,11 @@ sha256sum day.txt                   # = jq -r .root day.json
 
 <section class="blk soft" id="samples">
   <div class="wrap">
-    <div class="blk-h"><span class="k">자동화 도구</span><h2>시트 · n8n · curl에서 바로</h2></div>
+    <div class="blk-h"><span class="k">자동화 도구</span><h2>시트, n8n, curl에서 바로</h2></div>
     <div class="code mt24" data-tabs>
       <div class="tabs code-tabs" role="tablist" aria-label="예시">
         <button type="button" role="tab" aria-selected="true">구글 시트 함수</button>
-        <button type="button" role="tab" aria-selected="false">n8n · Make</button>
+        <button type="button" role="tab" aria-selected="false">n8n, Make</button>
         <button type="button" role="tab" aria-selected="false">curl</button>
       </div>
       <div class="tabpane on" role="tabpanel"><div class="code-h"><span>확장 프로그램 → Apps Script에 붙여 넣고 셀에서 =AIMARKER_MARK(A2)</span><button class="btn btn-g btn-s" type="button" data-copy="#cSheet"><span>복사</span></button></div><pre class="code-b" id="cSheet">const AIMARKER_URL = 'https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec';
@@ -374,12 +374,12 @@ function AIMARKER_MARK(id) {
   return r.labelKo + ' · ' + r.basisKo + ' · ' + (r.status === 'revoked' ? '철회됨' : '유효');
 }</pre></div>
       <div class="tabpane" role="tabpanel"><div class="code-b"><ol class="n8n">
-        <li>파일이 들어오는 곳(쇼핑몰 · CMS · 드라이브)에서 내 서버의 작은 함수로 넘깁니다. 이 함수가 SDK로 <code>markBatch</code>를 호출합니다(파일 판독은 내 서버에서).</li>
-        <li>결과가 <code>ok</code>이면 마크 번호와 확인 주소를 상품 · 기사 데이터에 저장하고, 배지를 페이지에 붙입니다.</li>
-        <li><code>DECLARE</code>(기록 없음)이면 판매자 · 기자에게 AI 사용 여부를 묻는 알림을 보내고, 그 답으로 <code>am.mark</code>를 호출합니다.</li>
-        <li>n8n의 HTTP Request 노드에서는 <b>Follow Redirects</b>를 켜고 Body를 <b>Raw · text/plain</b>으로 보냅니다. 마크 확인(<code>am.markinfo</code>)은 키 없이 됩니다.</li>
+        <li>파일이 들어오는 곳(쇼핑몰, CMS, 드라이브)에서 내 서버의 작은 함수로 넘깁니다. 이 함수가 SDK로 <code>markBatch</code>를 호출합니다(파일 판독은 내 서버에서).</li>
+        <li>결과가 <code>ok</code>이면 마크 번호와 확인 주소를 상품, 기사 데이터에 저장하고, 배지를 페이지에 붙입니다.</li>
+        <li><code>DECLARE</code>(기록 없음)이면 판매자, 기자에게 AI 사용 여부를 묻는 알림을 보내고, 그 답으로 <code>am.mark</code>를 호출합니다.</li>
+        <li>n8n의 HTTP Request 노드에서는 <b>Follow Redirects</b>를 켜고 Body를 <b>Raw, text/plain</b>으로 보냅니다. 마크 확인(<code>am.markinfo</code>)은 키 없이 됩니다.</li>
       </ol></div></div>
-      <div class="tabpane" role="tabpanel"><div class="code-h"><span>터미널 · -L로 리다이렉트 따라가기</span><button class="btn btn-g btn-s" type="button" data-copy="#cCurl"><span>복사</span></button></div><pre class="code-b" id="cCurl">API='https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec'
+      <div class="tabpane" role="tabpanel"><div class="code-h"><span>터미널, -L로 리다이렉트 따라가기</span><button class="btn btn-g btn-s" type="button" data-copy="#cCurl"><span>복사</span></button></div><pre class="code-b" id="cCurl">API='https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec'
 # 마크 확인(누구나)
 curl -sL -H 'Content-Type: text/plain' -d '{"action":"am.markinfo","id":"AM-7K2Q9XR4TB"}' "$API"
 # 파일 해시로 마크 찾기(누구나)
@@ -396,10 +396,10 @@ node aimarker-mcp.mjs --features banner.jpg | jq -c '. + {action:"am.analyze", k
     <div class="dl3 six">
       <a href="{{root}}llms.txt">{{ico:file}}<b>llms.txt</b><span>사이트 요약과 문서 목록</span></a>
       <a href="{{root}}llms-full.txt">{{ico:file}}<b>llms-full.txt</b><span>API 전체 설명을 한 파일로</span></a>
-      <a href="openapi.json">{{ico:code}}<b>OpenAPI 3.1</b><span>요청 · 응답 형식</span></a>
-      <a href="{{root}}lib/aim-extract.js">{{ico:code}}<b>aim-extract</b><span>출처 판독기 · 브라우저 · Node</span></a>
-      <a href="{{root}}.well-known/aimarker-keys.json">{{ico:shield}}<b>서명 공개키</b><span>JWS · EdDSA(Ed25519)</span></a>
-      <a href="{{root}}mcp/aimarker-mcp.mjs">{{ico:plug}}<b>MCP 서버</b><span>Node 18+ · 의존성 없음</span></a>
+      <a href="openapi.json">{{ico:code}}<b>OpenAPI 3.1</b><span>요청, 응답 형식</span></a>
+      <a href="{{root}}lib/aim-extract.js">{{ico:code}}<b>aim-extract</b><span>출처 판독기, 브라우저, Node</span></a>
+      <a href="{{root}}.well-known/aimarker-keys.json">{{ico:shield}}<b>서명 공개키</b><span>JWS, EdDSA(Ed25519)</span></a>
+      <a href="{{root}}mcp/aimarker-mcp.mjs">{{ico:plug}}<b>MCP 서버</b><span>Node 18+, 의존성 없음</span></a>
     </div>
   </div>
 </section>
@@ -408,10 +408,10 @@ node aimarker-mcp.mjs --features banner.jpg | jq -c '. + {action:"am.analyze", k
   <div class="wrap" style="max-width:760px">
     <div class="blk-h"><span class="k">무료 API 키</span><h2>키는 바로 발급되고, 한 번만 보여 드립니다</h2><p>하루 300회 무료입니다. 서버에는 키 대신 해시만 남습니다. 적어 주신 연동 목적을 보고, 도움이 필요해 보이면 먼저 연락드릴 수 있습니다.</p></div>
     <form class="form3 mt32 form" id="keyForm" autocomplete="on">
-      <div class="grid g2"><div class="field"><label for="korg">회사 · 팀 이름</label><input class="inp" id="korg" name="org" maxlength="60" required autocomplete="organization"></div>
+      <div class="grid g2"><div class="field"><label for="korg">회사, 팀 이름</label><input class="inp" id="korg" name="org" maxlength="60" required autocomplete="organization"></div>
       <div class="field"><label for="kct">이메일 또는 휴대전화</label><input class="inp" id="kct" name="contact" maxlength="80" required autocomplete="email"></div></div>
       <div class="field"><label for="kuse">어디에 연동하나요 <small>선택</small></label><textarea class="txt" id="kuse" name="use" maxlength="300" rows="3" placeholder="예: 쇼핑몰 상품 이미지를 올릴 때 AI 사용 확인과 마크 자동 발급"></textarea></div>
-      <label class="consent"><input type="checkbox" name="agree"><span>키 발급 · 연동 지원 안내를 위해 회사 이름 · 연락처를 받는 데 동의합니다. 마지막 사용 뒤 1년이 지나면 지웁니다(<a href="{{root}}privacy/">개인정보처리방침</a>). <a href="{{root}}terms/">이용약관</a>의 API 조항에 동의합니다.</span></label>
+      <label class="consent"><input type="checkbox" name="agree"><span>키 발급, 연동 지원 안내를 위해 회사 이름, 연락처를 받는 데 동의합니다. 마지막 사용 뒤 1년이 지나면 지웁니다(<a href="{{root}}privacy/">개인정보처리방침</a>). <a href="{{root}}terms/">이용약관</a>의 API 조항에 동의합니다.</span></label>
       <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button class="btn btn-p btn-l" type="submit">API 키 받기</button>
       <div class="msg" role="status"></div>

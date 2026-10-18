@@ -1,295 +1,237 @@
 <!--
 path: commerce/
 key: commerce
-title: AI 커머스 엔진 · AI 상품 피드 무료 만들기 · AI 쇼핑 대응 | AIMarker
+title: AI 커머스 엔진 | AI 상품 피드, 상품 구조화 데이터, 상품 이미지 AI 표시 | AIMarker
 ogtitle: AI 쇼핑 답변에 우리 상품이 빠지지 않게 · AIMarker AI 커머스 엔진
-desc: 상품 상세 주소를 넣으면 상품 이름 · 가격 · 브랜드 · 이미지를 뽑아 AI 검색 · 쇼핑에 넘길 상품 피드(CSV · JSON)를 무료로 만듭니다. 쇼핑몰 세팅(1회 149만 원, 부가세 별도)으로 상품 구조화 데이터 · AI 상품 피드 · 상품 이미지 AI 표시를 한 번에 넣고, 필요할 때만 월 관리로 피드를 자동 갱신합니다.
+desc: 고객은 AI에게 상품을 추천받습니다. 상품 주소만 넣으면 AI 상품 피드(CSV, JSON)와 구조화 데이터를 만들고, AI로 만든 상세 이미지에는 근거에 맞는 표시를, 상세페이지 문구에는 위험 후보 검수를 붙입니다. 피드 만들기는 무료, 쇼핑몰 세팅 149만 원(1회).
 scripts: assets/geo.js
 selflabel: footer
 -->
-<section class="x-hero" id="top">
-  <div class="wrap">
-    <div class="x-hero-in">
-      <p class="x-kick x-rise">AI 커머스 엔진 · 쇼핑몰 · 브랜드</p>
-      <h1 class="x-h1 x-rise d1">AI 쇼핑 답변에<br>우리 상품이<br>빠지지 않게</h1>
-      <p class="x-lead x-rise d2">고객은 AI에게 “3만 원대 린넨 원피스 추천해 줘”라고 묻고, AI는 가격 · 재고 · 브랜드 · 이미지가 정리된 상품 정보를 비교해 답합니다. AIMarker는 상품 페이지에서 이 정보를 뽑아 AI 상품 피드와 구조화 데이터로 만들고, AI로 만든 상세 이미지에는 근거에 맞는 표시를 붙입니다.</p>
-      <form class="x-url x-rise d3" data-goto-feed aria-label="AI 상품 피드 만들기">
-        <label class="sr" for="cUrl">상품 상세 페이지 주소</label>
+<section class="k-phero k-ph2" id="top" aria-labelledby="h1">
+  <div class="k-wrap">
+    <div>
+      <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}business/">기업용</a>{{ico:chev}}<span>AI 커머스 엔진</span></p>
+      <h1 class="k-h1" id="h1">AI 쇼핑 답변에<br>우리 상품이 빠지지 않게</h1>
+      <p class="k-lead">고객은 AI에게 “3만 원대 린넨 원피스 추천해 줘”라고 묻고, AI는 가격과 재고와 브랜드와 이미지가 정리된 상품 정보를 비교해 답합니다. AIMarker는 상품 페이지에서 이 정보를 뽑아 AI 상품 피드와 구조화 데이터로 만들고, AI로 만든 상세 이미지에는 근거에 맞는 표시를 붙입니다.</p>
+      <form class="k-url" data-goto-feed aria-label="AI 상품 피드 만들기" style="margin-top:28px;max-width:600px">
+        <label class="k-sr" for="cUrl">상품 상세 페이지 주소</label>
         <input id="cUrl" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="상품 상세 페이지 주소(예: myshop.co.kr/product/123)" maxlength="300" required>
-        <button class="btn btn-p" type="submit">{{ico:layers}}<span>피드 만들기</span></button>
+        <button class="k-btn k-btn-p" type="submit">{{ico:layers}}피드 만들기</button>
       </form>
-      <p class="x-ticks"><span>{{ico:check}}가입 없이 무료</span><span>{{ico:check}}공개된 상품 페이지만 읽음</span><span>{{ico:check}}CSV · JSON으로 받기</span></p>
-      <div class="x-acts"><a class="btn btn-g" href="{{root}}geo/">{{ico:search}}<span>무료 GEO 진단</span></a><a class="btn btn-g" href="{{root}}contact/?type=commerce&amp;plan=shop">쇼핑몰 세팅 상담</a></div>
+      <div class="k-hero-foot"><span>{{ico:check}}가입 없이 무료</span><span>{{ico:check}}공개된 상품 페이지만 읽음</span><span>{{ico:check}}CSV와 JSON으로 받기</span></div>
     </div>
-    <div class="x-hero-vis" aria-hidden="true">
-      <div class="x-console">
-        <div class="x-console-bar"><i></i><i></i><i></i><span>aimarker.kr / commerce · 상품 페이지 읽기</span></div>
-        <div class="x-console-body">
-          <div class="x-pdp">
-            <div>
-              <div class="x-pdp-img"><em>AI 편집</em></div>
-              <h5>봄 린넨 원피스</h5>
-              <p class="pp">39,000원 · 봄날상회</p>
-            </div>
-            <div>
-              <p class="x-pdp-k"><span>AI가 읽은 상품 정보</span><span>2 / 6</span></p>
-              <div class="x-rows">
-                <div><span>상품 이름</span><em class="ok">읽힘</em></div>
-                <div><span>가격</span><em class="ok">읽힘</em></div>
-                <div><span>재고</span><em class="no">없음</em></div>
-                <div><span>브랜드</span><em class="no">없음</em></div>
-                <div><span>이미지 설명(대체 텍스트)</span><em class="no">없음</em></div>
-                <div><span>AI 사용 표시</span><em class="mid">빠짐</em></div>
-              </div>
-            </div>
+    <div class="k-screen" aria-hidden="true">
+      <div class="k-screen-bar"><i></i><i></i><i></i><span>aimarker.kr/commerce/ 상품 페이지 읽기</span><em class="k-ex">예시, 가상 상품</em></div>
+      <div class="k-screen-body">
+        <div class="k-screen-cols">
+          <div class="k-prodcard"><div class="k-thumb" style="aspect-ratio:4/5"><span>AI 편집</span></div><b>봄 린넨 원피스</b><span>39,000원, 봄날상회</span></div>
+          <div class="k-rows">
+            <div class="h"><span>AI가 읽은 상품 정보</span><span></span><span>2 / 6</span></div>
+            <div><b>상품 이름</b><span></span><span class="k-dot ok">읽힘</span></div>
+            <div><b>가격</b><span></span><span class="k-dot ok">읽힘</span></div>
+            <div><b>재고</b><span></span><span class="k-dot hi">없음</span></div>
+            <div><b>브랜드</b><span></span><span class="k-dot hi">없음</span></div>
+            <div><b>이미지 대체 텍스트</b><span></span><span class="k-dot hi">없음</span></div>
+            <div><b>AI 사용 표시</b><span></span><span class="k-dot mid">빠짐</span></div>
           </div>
-          <div class="x-console-foot"><span>사람에게는 다 보이는 정보도, 정해진 형식이 없으면 AI는 놓칩니다</span><b>피드 · 구조화 데이터로 <i>6 / 6</i></b></div>
         </div>
+        <p class="k-small" style="margin-top:12px">사람에게는 다 보이는 정보도 정해진 형식이 없으면 AI는 놓칩니다. 피드와 구조화 데이터로 6 / 6을 채웁니다.</p>
       </div>
-      <p class="x-cap">예시 화면입니다. 상품과 브랜드는 가상입니다.</p>
     </div>
   </div>
 </section>
 
-<section class="x-sec" id="feed">
-  <div class="wrap">
-    <div class="x-head">
-      <p class="x-kick">AI 상품 피드 · 지금 무료</p>
-      <h2 class="x-h2">상품 주소만 넣으면,<br>AI가 읽는 상품 피드로</h2>
-      <p class="x-lead">상품 상세 페이지 주소를 한 줄에 하나씩 넣으세요. 페이지마다 상품 이름 · 가격 · 브랜드 · 이미지를 뽑고 AI 검색 준비 점수를 매겨, 바로 올릴 수 있는 CSV · JSON 피드로 드립니다.</p>
+<section class="k-sec" id="feed" aria-labelledby="fdTitle">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="fdTitle">상품 주소만 넣으면, AI가 읽는 상품 피드로</h2>
+      <p class="k-lead">상품 상세 페이지 주소를 한 줄에 하나씩 넣으세요. 페이지마다 상품 이름, 가격, 브랜드, 이미지를 뽑고 AI 검색 준비 점수를 매겨, 바로 올릴 수 있는 CSV와 JSON 피드로 드립니다. 지금 무료입니다.</p>
     </div>
     <div class="x-tool">
       <form id="feedForm">
-        <label for="feedUrls" class="sr">상품 주소</label>
+        <label for="feedUrls" class="k-sr">상품 주소</label>
         <textarea id="feedUrls" spellcheck="false" placeholder="https://myshop.co.kr/product/123&#10;https://myshop.co.kr/product/124&#10;(한 줄에 하나씩, 최대 20개)"></textarea>
-        <div class="x-tool-bar"><span>공개된 상품 페이지만 읽고, 페이지 내용은 보관하지 않습니다</span><button class="btn btn-p" type="submit">{{ico:layers}}<span>AI 상품 피드 만들기</span></button></div>
+        <div class="x-tool-bar"><span>공개된 상품 페이지만 읽고, 페이지 내용은 보관하지 않습니다</span><button class="k-btn k-btn-p" type="submit">{{ico:layers}}AI 상품 피드 만들기</button></div>
       </form>
       <aside>
         <h4>AI 상품 피드란</h4>
-        <p>상품마다 이름 · 설명 · 가격 · 재고 · 이미지 · 브랜드를 한 줄씩 정리한 목록입니다. AI 검색 · 쇼핑에 상품을 정확히 알리는 기본 자료입니다.</p>
+        <p>상품마다 이름, 설명, 가격, 재고, 이미지, 브랜드를 한 줄씩 정리한 목록입니다. AI 검색과 쇼핑에 상품을 정확히 알리는 기본 자료입니다.</p>
         <dl>
-          <div><dt>CSV</dt><dd>쇼핑 광고 · 판매자 센터처럼 상품 목록을 받는 곳에 올릴 때</dd></div>
+          <div><dt>CSV</dt><dd>쇼핑 광고, 판매자 센터처럼 상품 목록을 받는 곳에 올릴 때</dd></div>
           <div><dt>JSON</dt><dd>사이트 구조화 데이터와 API 연동에</dd></div>
         </dl>
-        <p class="x-note">항목 이름은 Google 판매자 센터 상품 데이터와 같습니다(id · title · description · link · image_link · price · availability · brand).</p>
+        <p class="k-small">항목 이름은 Google 판매자 센터 상품 데이터와 같습니다(id, title, description, link, image_link, price, availability, brand).</p>
       </aside>
     </div>
     <div class="x-tool-out" id="feedOut" hidden></div>
-    <p class="x-note">상품 페이지 하나의 크롤러 설정 · 구조화 데이터 · FAQ 고칠 거리를 자세히 보려면 <a href="{{root}}geo/">무료 GEO 진단</a>을 사용하세요.</p>
+    <p class="k-small" style="margin-top:14px">상품 페이지 하나의 크롤러 설정과 구조화 데이터와 자주 묻는 질문 고칠 거리를 자세히 보려면 <a href="{{root}}geo/">무료 GEO 진단</a>을 사용하세요.</p>
   </div>
 </section>
 
-<section class="x-sec alt" id="why">
-  <div class="wrap">
-    <div class="x-head">
-      <p class="x-kick">왜 지금인가요</p>
-      <h2 class="x-h2">AI를 거쳐 오는 손님이<br>빠르게 늘고 있습니다</h2>
-      <p class="x-lead">AI 쇼핑은 상품을 목록으로 받아 비교합니다. Google 쇼핑은 판매자 센터에 올린 상품 피드로 상품을 보여 주고, OpenAI도 판매자가 ChatGPT에 상품 정보를 피드로 보내는 방법을 공개했습니다.</p>
+<section class="k-sec k-panel" id="why" aria-labelledby="whTitle">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="whTitle">AI를 거쳐 오는 손님이 빠르게 늘고 있습니다</h2>
+      <p class="k-lead">AI 쇼핑은 상품을 목록으로 받아 비교합니다. Google 쇼핑은 판매자 센터에 올린 상품 피드로 상품을 보여 주고, OpenAI도 판매자가 ChatGPT에 상품 정보를 피드로 보내는 방법을 공개했습니다.</p>
     </div>
-    <div class="x-facts">
-      <div class="x-fact"><b>693<small>%</small></b><h4>AI를 거쳐 온 소매 사이트 방문 증가</h4><p>2025년 연말 쇼핑 시즌, 미국 소매 사이트에 AI 서비스를 거쳐 들어온 방문이 1년 전보다 이만큼 늘었습니다.</p><span class="x-src"><a href="https://business.adobe.com/blog/ai-driven-traffic-surges-across-industries" target="_blank" rel="noopener">Adobe, 2026.1.12</a></span></div>
-      <div class="x-fact"><b>31<small>% 더</small></b><h4>AI를 거쳐 온 방문의 구매 전환</h4><p>같은 기간, AI 서비스를 거쳐 온 방문은 다른 유입보다 구매로 더 많이 이어졌습니다.</p><span class="x-src"><a href="https://business.adobe.com/blog/ai-driven-traffic-surges-across-industries" target="_blank" rel="noopener">Adobe, 2026.1.12</a></span></div>
-      <div class="x-fact"><b>20<small>%+</small></b><h4>네이버 검색 중 AI 브리핑</h4><p>국내 검색 1위 네이버도 검색 다섯 번에 한 번 이상은 AI가 요약해 답합니다(2025년 말 기준).</p><span class="x-src"><a href="https://www.ceoscoredaily.com/page/view/2026031016373092535" target="_blank" rel="noopener">네이버 발표 · CEO스코어데일리, 2026.3.11</a></span></div>
-      <div class="x-fact"><b>2026<small>.7</small></b><h4>네이버 쇼핑 광고 AI 활용 표시</h4><p>AI로 만들거나 바꾼 쇼핑 광고 소재에 AI 활용 표시를 의무로 하고, 어기면 쇼핑 검색 제외 같은 불이익이 있을 수 있다고 보도되었습니다.</p><span class="x-src"><a href="https://news.mtn.co.kr/news-detail/2026072417015682342" target="_blank" rel="noopener">MTN, 2026.7.25</a></span></div>
+    <div class="k-stats">
+      <div class="k-stat"><b>693<small>%</small></b><h4>AI를 거쳐 온 소매 사이트 방문 증가</h4><p>2025년 연말 쇼핑 시즌, 미국 소매 사이트에 AI 서비스를 거쳐 들어온 방문이 1년 전보다 이만큼 늘었습니다.</p><cite><a href="https://business.adobe.com/blog/ai-driven-traffic-surges-across-industries" target="_blank" rel="noopener">Adobe, 2026.1.12</a></cite></div>
+      <div class="k-stat"><b>31<small>% 더</small></b><h4>AI를 거쳐 온 방문의 구매 전환</h4><p>같은 기간, AI 서비스를 거쳐 온 방문은 다른 유입보다 구매로 더 많이 이어졌습니다.</p><cite><a href="https://business.adobe.com/blog/ai-driven-traffic-surges-across-industries" target="_blank" rel="noopener">Adobe, 2026.1.12</a></cite></div>
+      <div class="k-stat"><b>20<small>%+</small></b><h4>네이버 검색 중 AI 브리핑</h4><p>국내 검색도 다섯 번에 한 번 이상은 AI가 요약해 답합니다(2025년 말 기준).</p><cite><a href="https://www.ceoscoredaily.com/page/view/2026031016373092535" target="_blank" rel="noopener">CEO스코어데일리, 2026.3.11</a></cite></div>
+      <div class="k-stat"><b>2026<small>.7</small></b><h4>네이버 쇼핑 광고 AI 활용 표시</h4><p>AI로 만들거나 바꾼 쇼핑 광고 소재에 AI 활용 표시를 의무로 하고, 어기면 쇼핑 검색 제외 같은 불이익이 있을 수 있다고 보도되었습니다.</p><cite><a href="https://news.mtn.co.kr/news-detail/2026072417015682342" target="_blank" rel="noopener">MTN, 2026.7.25</a></cite></div>
     </div>
-    <p class="x-statement">AI는 정리된 상품 정보로 비교하고, 표시가 빠진 AI 이미지는 불이익을 받을 수 있습니다. <em>AIMarker는 두 가지를 상품마다 자동으로 갖춥니다.</em></p>
   </div>
 </section>
 
-<section class="x-sec" id="engine">
-  <div class="wrap">
-    <div class="x-head">
-      <p class="x-kick">AI 커머스 엔진</p>
-      <h2 class="x-h2">상품 정보를 정리하고,<br>표시하고, 점검합니다</h2>
-      <p class="x-lead">상품을 올릴 때마다 사람이 따로 챙기던 일을 한 번의 세팅으로 묶었습니다. 쇼핑몰 세팅은 상품 500개까지 한 번에 끝냅니다.</p>
+<section class="k-sec" id="engine" aria-labelledby="enTitle">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="enTitle">상품 정보를 정리하고, 표시하고, 점검합니다</h2>
+      <p class="k-lead">상품을 올릴 때마다 사람이 따로 챙기던 일을 한 번의 세팅으로 묶었습니다. 쇼핑몰 세팅은 상품 500개까지 한 번에 끝냅니다.</p>
     </div>
-
-    <article class="x-pillar">
-      <div class="x-pillar-t">
-        <p class="x-pillar-no"><b>FEED</b>AI 상품 피드 · 구조화 데이터<span class="x-live">피드 만들기 무료</span></p>
-        <h2 class="x-h2">AI가 비교할 수 있는<br>상품 정보로</h2>
-        <p>상세페이지에 사람이 보는 정보가 다 있어도, 정해진 형식이 없으면 AI는 가격과 재고를 짐작해야 합니다. 상품마다 Product · Offer · Brand 정보를 넣고, 같은 내용으로 AI 상품 피드를 만들어 둡니다.</p>
-        <dl class="x-dl">
-          <div><dt>구조화 데이터</dt><dd>상품 페이지마다 Product · Offer · Brand · 이미지 정보(JSON-LD)</dd></div>
-          <div><dt>AI 상품 피드</dt><dd>CSV · JSON, Google 판매자 센터와 같은 항목 이름</dd></div>
-          <div><dt>자동 갱신</dt><dd>가격 · 재고가 바뀌면 피드도 다시(성장 관리)</dd></div>
-          <div><dt>설치</dt><dd>쇼핑몰 세팅부터 원격 설치를 도와 드립니다</dd></div>
-        </dl>
-        <div class="x-acts"><a class="btn btn-p" href="#feed">상품 피드 만들기</a><a class="btn btn-g" href="{{root}}geo/">상품 페이지 진단</a></div>
-      </div>
-      <div class="x-pillar-v" aria-hidden="true">
-        <div class="x-panel">
-          <div class="x-panel-h"><b>AI 상품 피드</b><span>예시 · feed.csv</span></div>
-          <div class="x-panel-b" style="padding:0">
-            <table class="x-feed">
-              <thead><tr><th>상품</th><th>가격</th><th>재고</th><th>브랜드</th><th>점수</th></tr></thead>
-              <tbody>
-                <tr><td>봄 린넨 원피스</td><td>39,000</td><td class="y">있음</td><td>봄날상회</td><td>88</td></tr>
-                <tr><td>여름 샌들</td><td>59,000</td><td class="y">있음</td><td>봄날상회</td><td>84</td></tr>
-                <tr><td>린넨 셔츠</td><td>42,000</td><td>품절</td><td>봄날상회</td><td>81</td></tr>
-                <tr><td>코튼 에코백</td><td>19,000</td><td class="y">있음</td><td>봄날상회</td><td>86</td></tr>
-                <tr><td>니트 카디건</td><td>52,000</td><td class="y">있음</td><td>봄날상회</td><td>79</td></tr>
-              </tbody>
-            </table>
+    <div class="k-prods">
+      <article class="k-prod">
+        <div class="k-prod-t">
+          <p class="k-prod-k">{{ico:layers}}AI 상품 피드와 구조화 데이터<span class="k-tag ok">피드 만들기 무료</span></p>
+          <h3 class="k-h3">AI가 비교할 수 있는 상품 정보로</h3>
+          <p class="k-p">상세페이지에 사람이 보는 정보가 다 있어도, 정해진 형식이 없으면 AI는 가격과 재고를 짐작해야 합니다. 상품마다 Product, Offer, Brand 정보를 넣고, 같은 내용으로 AI 상품 피드를 만들어 둡니다.</p>
+          <ul class="k-facts">
+            <li>{{ico:check}}<span><b>구조화 데이터</b>: 상품 페이지마다 Product, Offer, Brand, 이미지 정보(JSON-LD)</span></li>
+            <li>{{ico:check}}<span><b>AI 상품 피드</b>: CSV와 JSON, Google 판매자 센터와 같은 항목 이름</span></li>
+            <li>{{ico:check}}<span><b>자동 갱신</b>: 가격과 재고가 바뀌면 피드도 다시(성장 관리)</span></li>
+          </ul>
+          <div class="k-acts"><a class="k-btn k-btn-p" href="#feed">상품 피드 만들기</a><a class="k-a" href="{{root}}geo/">상품 페이지 진단</a></div>
+        </div>
+        <div class="k-screen" aria-hidden="true">
+          <div class="k-screen-bar"><i></i><i></i><i></i><span>feed.csv</span><em class="k-ex">예시, 가상 상품</em></div>
+          <div class="k-screen-body">
+            <table class="k-feed"><thead><tr><th>상품</th><th>가격</th><th>재고</th><th>브랜드</th><th>점수</th></tr></thead><tbody>
+              <tr><td>봄 린넨 원피스</td><td>39,000</td><td class="y">있음</td><td>봄날상회</td><td>88</td></tr>
+              <tr><td>여름 샌들</td><td>59,000</td><td class="y">있음</td><td>봄날상회</td><td>84</td></tr>
+              <tr><td>린넨 셔츠</td><td>42,000</td><td>품절</td><td>봄날상회</td><td>81</td></tr>
+              <tr><td>코튼 에코백</td><td>19,000</td><td class="y">있음</td><td>봄날상회</td><td>86</td></tr>
+            </tbody></table>
           </div>
         </div>
-      </div>
-    </article>
-
-    <article class="x-pillar rev">
-      <div class="x-pillar-t">
-        <p class="x-pillar-no"><b>MARK</b>상품 이미지 AI 표시<span class="x-live">자동 마킹 무료</span></p>
-        <h2 class="x-h2">AI로 만든 상세 이미지,<br>근거대로 표시를</h2>
-        <p>모델 컷 · 배경 합성 · 연출 컷을 AI로 만들었다면 파일 속 기록으로 확인하고, 근거에 맞는 표시만 붙입니다. 이미지 위 표시 · 파일 속 정보 · 대체 텍스트를 한 번에 넣어, 검색과 AI가 이미지도 정확히 읽게 합니다.</p>
-        <dl class="x-dl">
-          <div><dt>확인</dt><dd>C2PA 서명 · 생성 도구 기록으로 AI 사용과 범위를</dd></div>
-          <div><dt>표시</dt><dd>이미지 위 · 파일 속(IPTC · XMP) · 대체 텍스트</dd></div>
-          <div><dt>대량</dt><dd>쇼핑몰 세팅에 상품 이미지 2,000건 포함</dd></div>
-          <div><dt>증빙</dt><dd>표시마다 전자서명 마크와 원장 기록</dd></div>
-        </dl>
-        <div class="x-acts"><a class="btn btn-p" href="{{root}}mark/">자동 마킹 해 보기</a><a class="btn btn-g" href="{{root}}compliance/">표시와 기록 자세히</a></div>
-      </div>
-      <div class="x-pillar-v" aria-hidden="true">
-        <div class="x-panel">
-          <div class="x-panel-h"><b>상품 이미지 일괄 표시</b><span>예시 · 이미지 4개</span></div>
-          <div class="x-panel-b">
-            <div class="x-rows">
-              <div><span>대표 이미지 · 배경 합성</span><em class="ok">AI 편집 표시</em></div>
-              <div><span>모델 컷 01</span><em class="ok">AI 생성 표시</em></div>
-              <div><span>상세 컷 · 원단 확대</span><em class="ok">AI 미사용 · 근거 있음</em></div>
-              <div><span>연출 컷 02</span><em class="mid">기록 없음 · 제작자 확인</em></div>
+      </article>
+      <article class="k-prod r">
+        <div class="k-prod-t">
+          <p class="k-prod-k">{{ico:badge}}상품 이미지 AI 표시<span class="k-tag ok">자동 마킹 무료</span></p>
+          <h3 class="k-h3">AI로 만든 상세 이미지, 근거대로 표시를</h3>
+          <p class="k-p">모델 컷, 배경 합성, 연출 컷을 AI로 만들었다면 파일 속 기록으로 확인하고, 근거에 맞는 표시만 붙입니다. 이미지 위 표시, 파일 속 정보, 대체 텍스트를 한 번에 넣어 검색과 AI가 이미지도 정확히 읽게 합니다.</p>
+          <ul class="k-facts">
+            <li>{{ico:check}}<span><b>확인</b>: C2PA 서명과 생성 도구 기록으로 AI 사용과 범위를</span></li>
+            <li>{{ico:check}}<span><b>표시</b>: 이미지 위, 파일 속(IPTC, XMP), 대체 텍스트</span></li>
+            <li>{{ico:check}}<span><b>증빙</b>: 표시마다 전자서명 마크와 원장 기록</span></li>
+          </ul>
+          <div class="k-acts"><a class="k-btn k-btn-p" href="{{root}}mark/">자동 마킹 해 보기</a><a class="k-a" href="{{root}}compliance/">표시와 기록 자세히</a></div>
+        </div>
+        <div class="k-screen" aria-hidden="true">
+          <div class="k-screen-bar"><i></i><i></i><i></i><span>상품 이미지 일괄 표시</span><em class="k-ex">예시</em></div>
+          <div class="k-screen-body">
+            <div class="k-rows">
+              <div class="h"><span>이미지</span><span></span><span>결과</span></div>
+              <div><b>대표 이미지, 배경 합성</b><span></span><span class="k-dot ok">AI 편집 표시</span></div>
+              <div><b>모델 컷 01</b><span></span><span class="k-dot ok">AI 생성 표시</span></div>
+              <div><b>상세 컷, 원단 확대</b><span></span><span class="k-dot ok">AI 미사용, 근거 있음</span></div>
+              <div><b>연출 컷 02</b><span></span><span class="k-dot mid">기록 없음, 제작자 확인</span></div>
             </div>
-            <div class="x-ledger"><b>서명</b> EdDSA · amk1-3b9c52d10e7a<br><b>원장</b> 2026-10-17 · 4건 추가 · <i>공개 타임스탬프 대기</i></div>
+<pre class="k-code" style="margin-top:12px"><span class="k">sig</span>     <span class="s">EdDSA, amk1-f4e2e03c4c04</span>
+<span class="k">ledger</span>  <span class="s">2026-10-18, 4건 추가, 공개 타임스탬프 대기</span></pre>
           </div>
         </div>
-      </div>
-    </article>
-
-    <article class="x-pillar">
-      <div class="x-pillar-t">
-        <p class="x-pillar-no"><b>CHECK</b>상세페이지 · 광고 문구 검수<span class="x-live">검수 무료</span></p>
-        <h2 class="x-h2">올리기 전에,<br>위험한 표현 후보를</h2>
-        <p>AI로 문구를 빠르게 많이 만들수록 놓치는 표현도 늘어납니다. 표시광고법과 식품 · 화장품 · 건강기능식품 광고 규칙으로 위험 후보와 근거, 바꿀 말을 보여 줍니다. 문구는 점검할 때만 받고 저장하지 않습니다.</p>
-        <dl class="x-dl">
-          <div><dt>위험 후보</dt><dd>업종별 규칙 · 협찬 · 가상인물 · AI 표시 요건</dd></div>
-          <div><dt>근거</dt><dd>어느 규칙의 어떤 내용과 겹치는지</dd></div>
-          <div><dt>바꿀 말</dt><dd>뜻은 살리고 위험은 줄인 문장 제안</dd></div>
-          <div><dt>한계</dt><dd>위반이라고 단정하지 않으며 법률 자문이 아닙니다</dd></div>
-        </dl>
-        <div class="x-acts"><a class="btn btn-p" href="{{root}}check/">광고 문구 검수 해 보기</a></div>
-      </div>
-      <div class="x-pillar-v" aria-hidden="true">
-        <div class="x-panel">
-          <div class="x-panel-h"><b>광고 문구 검수</b><span>예시 · 상세페이지 첫 줄</span></div>
-          <div class="x-panel-b">
-            <p class="x-adline">아침마다 한 그릇, <mark>면역력을 높여 주는</mark> 수제 그래놀라</p>
-            <div class="x-rows">
-              <div><span>일반식품을 건강기능식품처럼 보이게 하는 표현</span><em class="mid">위험 후보</em></div>
-              <div><span>식품표시광고법 제8조(부당한 표시 · 광고)</span><em class="inf">근거</em></div>
+      </article>
+      <article class="k-prod">
+        <div class="k-prod-t">
+          <p class="k-prod-k">{{ico:megaphone}}상세페이지와 광고 문구 검수<span class="k-tag ok">검수 무료</span></p>
+          <h3 class="k-h3">올리기 전에, 위험한 표현 후보를</h3>
+          <p class="k-p">AI로 문구를 빠르게 많이 만들수록 놓치는 표현도 늘어납니다. 표시광고법과 식품, 화장품, 건강기능식품 광고 규칙으로 위험 후보와 근거, 바꿀 말을 보여 줍니다. 문구는 점검할 때만 받고 저장하지 않습니다.</p>
+          <ul class="k-facts">
+            <li>{{ico:check}}<span><b>위험 후보</b>: 업종별 규칙, 협찬, 가상 인물, AI 표시 요건</span></li>
+            <li>{{ico:check}}<span><b>근거와 바꿀 말</b>: 어느 규칙과 겹치는지, 뜻은 살리고 위험은 줄인 문장</span></li>
+            <li>{{ico:check}}<span><b>한계</b>: 위반이라고 단정하지 않으며 법률 자문이 아닙니다</span></li>
+          </ul>
+          <div class="k-acts"><a class="k-btn k-btn-p" href="{{root}}check/">광고 문구 검수 해 보기</a></div>
+        </div>
+        <div class="k-screen" aria-hidden="true">
+          <div class="k-screen-bar"><i></i><i></i><i></i><span>광고 문구 검수</span><em class="k-ex">예시</em></div>
+          <div class="k-screen-body">
+            <div class="k-cmp"><div><small>상세페이지 첫 줄</small><p>아침마다 한 그릇, <span class="k-s l3">면역력을 높여 주는</span> 수제 그래놀라</p></div></div>
+            <div class="k-rows" style="margin-top:10px">
+              <div><b>일반식품을 건강기능식품처럼 보이게 하는 표현</b><span></span><span class="k-dot hi">위험 후보</span></div>
+              <div><b>식품표시광고법 제8조(부당한 표시, 광고)</b><span></span><span class="k-dot wait">근거</span></div>
             </div>
-            <p class="x-adline alt">아침마다 한 그릇, <b>귀리와 견과를 듬뿍 넣은</b> 수제 그래놀라</p>
+            <div class="k-cmp" style="margin-top:10px"><div class="after"><small>바꿀 말 제안</small><p>아침마다 한 그릇, 귀리와 견과를 듬뿍 넣은 수제 그래놀라</p></div></div>
           </div>
         </div>
-      </div>
-    </article>
-  </div>
-</section>
-
-<section class="x-sec alt" id="pilot">
-  <div class="wrap">
-    <div class="x-head">
-      <p class="x-kick">다음 모듈 · 세팅 고객과 함께</p>
-      <h2 class="x-h2">만들고, 세고, 비교합니다</h2>
-      <p class="x-lead">상세페이지를 만들고, AI 검색에서 들어온 구매를 세고, 경쟁사와 나란히 비교하는 모듈입니다. 세팅 고객과 함께 2026년 12월부터 차례로 엽니다.</p>
-    </div>
-    <div class="x-auto c3">
-      <div>{{ico:sparkle}}<h4>AI Content Studio</h4><p>상품 정보와 브랜드 말투를 넣으면 상품 설명 · FAQ · 광고 문구 초안을 만들고, AI로 만든 이미지 · 글에는 표시와 대체 텍스트를 자동으로 붙입니다.</p><small class="soon">파일럿</small></div>
-      <div>{{ico:trend}}<h4>AI Conversion Analytics</h4><p>ChatGPT · Perplexity · Gemini 같은 AI 검색에서 들어온 방문과 구매를 다른 유입과 나눠 세고, 상품별로 리포트합니다. 성과형 요금의 측정 기준이 됩니다.</p><small class="soon">파일럿</small></div>
-      <div>{{ico:radar}}<h4>Competitor Intelligence</h4><p>고객이 물을 만한 질문에서 우리와 경쟁사가 어떻게 나오는지 봅니다. 경쟁사 페이지와 AI 검색 준비 점수를 나란히 비교하는 기능은 지금 무료입니다.</p><small>비교는 지금 무료</small><a href="{{root}}geo/#compare">경쟁사와 비교하기</a></div>
+      </article>
     </div>
   </div>
 </section>
 
-<section class="x-sec" id="todo">
-  <div class="wrap">
-    <div class="x-head">
-      <p class="x-kick">체크리스트</p>
-      <h2 class="x-h2">쇼핑몰이 오늘 할 일 여섯 가지</h2>
-      <p class="x-lead">모두 무료 도구로 할 수 있습니다. 위에서부터 차례로 하면 AI가 상품을 읽을 기본 준비가 끝납니다.</p>
+<section class="k-sec k-panel" id="todo" aria-labelledby="tdTitle">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="tdTitle">쇼핑몰이 오늘 할 일 여섯 가지</h2>
+      <p class="k-lead">모두 무료 도구로 할 수 있습니다. 위에서부터 차례로 하면 AI가 상품을 읽을 기본 준비가 끝납니다.</p>
     </div>
-    <ol class="x-steps">
-      <li><h3>대표 상품 페이지 진단</h3><p>잘 팔리는 상품 페이지 주소로 AI 검색 준비 점수와 고칠 코드를 받습니다.</p><small><a href="{{root}}geo/">무료 GEO 진단</a> · 10초 안팎</small></li>
-      <li><h3>AI 검색 크롤러 열기</h3><p>robots.txt에서 OAI-SearchBot · PerplexityBot · Claude-SearchBot 같은 검색용 크롤러가 막혀 있지 않은지 봅니다. 학습용 허용은 따로 정하면 됩니다.</p><small>진단 결과의 'AI 크롤러' 표에서 확인</small></li>
-      <li><h3>상품 구조화 데이터 넣기</h3><p>상품 페이지에 Product 정보(이름 · 이미지 · 가격 · 브랜드 · 재고)를 JSON-LD로 넣고, 사이트 맨 위 주소에 llms.txt를 올립니다.</p><small>진단이 붙여 넣을 코드를 만들어 드립니다</small></li>
-      <li><h3>AI 상품 피드 만들어 두기</h3><p>상품 주소를 넣고 CSV · JSON 피드를 받아 둡니다. 쇼핑 광고 · 판매자 센터 등록과 API 연동에 사용합니다.</p><small><a href="#feed">피드 만들기</a> · 한 번에 20개</small></li>
-      <li><h3>질문과 답 올리기</h3><p>고객이 AI에게 물을 만한 질문과 답을 상세페이지에 FAQ로 올립니다. 사이즈 · 소재 · 배송 · 교환처럼 구체적일수록 좋습니다.</p><small>진단이 질문 틀을 드립니다</small></li>
-      <li><h3>AI 이미지 표시 · 문구 점검</h3><p>AI로 만든 모델 컷 · 배경 합성 이미지에는 표시와 대체 텍스트를 넣고, 상세페이지 문구는 위험 후보와 근거를 확인합니다.</p><small><a href="{{root}}mark/">자동 마킹</a> · <a href="{{root}}check/">광고 문구 검수</a></small></li>
+    <ol class="k-todo">
+      <li><h3>대표 상품 페이지 진단</h3><p>잘 팔리는 상품 페이지 주소로 AI 검색 준비 점수와 고칠 코드를 받습니다. <a href="{{root}}geo/">무료 GEO 진단</a>, 10초 안팎.</p></li>
+      <li><h3>AI 검색 크롤러 열기</h3><p>robots.txt에서 OAI-SearchBot, PerplexityBot, Claude-SearchBot 같은 검색용 크롤러가 막혀 있지 않은지 봅니다. 학습용 허용은 따로 정하면 됩니다.</p></li>
+      <li><h3>상품 구조화 데이터 넣기</h3><p>상품 페이지에 Product 정보(이름, 이미지, 가격, 브랜드, 재고)를 JSON-LD로 넣고, 사이트 맨 위 주소에 llms.txt를 올립니다. 진단이 붙여 넣을 코드를 만들어 드립니다.</p></li>
+      <li><h3>AI 상품 피드 만들어 두기</h3><p>상품 주소를 넣고 CSV와 JSON 피드를 받아 둡니다. 쇼핑 광고, 판매자 센터 등록, API 연동에 사용합니다. <a href="#feed">피드 만들기</a>, 한 번에 20개.</p></li>
+      <li><h3>질문과 답 올리기</h3><p>고객이 AI에게 물을 만한 질문과 답을 상세페이지에 올립니다. 사이즈, 소재, 배송, 교환처럼 구체적일수록 좋습니다.</p></li>
+      <li><h3>AI 이미지 표시와 문구 점검</h3><p>AI로 만든 모델 컷과 배경 합성 이미지에는 표시와 대체 텍스트를 넣고, 상세페이지 문구는 위험 후보와 근거를 확인합니다. <a href="{{root}}mark/">자동 마킹</a>, <a href="{{root}}check/">광고 문구 검수</a>.</p></li>
     </ol>
   </div>
 </section>
 
-<section class="x-sec alt" id="pricing">
-  <div class="wrap">
-    <div class="x-head row">
-      <div>
-        <p class="x-kick">요금</p>
-        <h2 class="x-h2">쇼핑몰은 쇼핑몰 세팅<br>한 번으로</h2>
-        <p class="x-lead">상품 구조화 데이터 · AI 상품 피드 · 상품 이미지 AI 표시를 한 번에 넣습니다. 상품이 자주 바뀌면 성장 관리로 피드를 자동 갱신합니다. 부가세 별도입니다.</p>
+<section class="k-sec" id="pricing" aria-labelledby="pcTitle">
+  <div class="k-wrap">
+    <div class="k-head-row">
+      <div class="k-head">
+        <h2 class="k-h2" id="pcTitle">쇼핑몰은 쇼핑몰 세팅 한 번으로</h2>
+        <p class="k-lead">상품 구조화 데이터, AI 상품 피드, 상품 이미지 AI 표시를 한 번에 넣습니다. 상품이 자주 바뀌면 성장 관리로 피드를 자동 갱신합니다. 부가세 별도입니다.</p>
       </div>
-      <a class="btn btn-g" href="{{root}}pricing/#business">기업 요금 전체</a>
+      <a class="k-btn k-btn-l" href="{{root}}pricing/#business">기업 요금 전체</a>
     </div>
-    <div class="x-plans c3">
-      <div class="x-plan"><h3>기본 세팅</h3><p class="who">소형 · 브랜드 사이트(페이지 30개까지)</p><p class="pr"><b>49만 원</b><span>1회</span></p><ul><li>{{ico:check}}GEO 진단 · 고칠 코드 설치</li><li>{{ico:check}}기존 AI 콘텐츠 200건 확인 · 표시</li><li>{{ico:check}}다시 진단 · 전후 리포트</li><li>{{ico:check}}첫 달 자동 관리 포함</li></ul><a class="btn btn-g" href="{{root}}contact/?type=commerce&amp;plan=basic">상담 신청</a></div>
-      <div class="x-plan best"><span class="x-tag">쇼핑몰 추천</span><h3>쇼핑몰 세팅</h3><p class="who">상품 500개까지</p><p class="pr"><b>149만 원</b><span>1회</span></p><ul><li>{{ico:check}}기본 세팅의 모든 것</li><li>{{ico:check}}상품 구조화 데이터 · AI 상품 피드(CSV · JSON)</li><li>{{ico:check}}상품 이미지 AI 표시 2,000건</li><li>{{ico:check}}광고 문구 검수 1회 · 원격 설치 지원</li></ul><a class="btn btn-p" href="{{root}}contact/?type=commerce&amp;plan=shop">쇼핑몰 세팅 상담</a></div>
-      <div class="x-plan"><h3>Enterprise</h3><p class="who">오픈마켓 · 대형 플랫폼</p><p class="pr"><b>견적</b></p><ul><li>{{ico:check}}상품 수만 개 · 전용 한도 · 전용 규칙</li><li>{{ico:check}}서비스 수준 협약 · 보안 검토</li><li>{{ico:check}}성과 연동 요금 선택</li></ul><a class="btn btn-g" href="{{root}}contact/?type=commerce&amp;plan=enterprise">견적 요청</a></div>
+    <div class="k-plans">
+      <article class="k-plan"><h3>기본 세팅</h3><p class="who">소형, 브랜드 사이트(페이지 30개까지)</p><p class="pr"><b>49만</b><span>원, 1회</span></p><ul><li>{{ico:check}}GEO 진단과 고칠 코드 설치</li><li>{{ico:check}}기존 AI 콘텐츠 200건 확인과 표시</li><li>{{ico:check}}다시 진단, 전후 리포트</li></ul><a class="k-btn k-btn-l" href="{{root}}contact/?type=commerce&amp;plan=basic">상담 신청</a></article>
+      <article class="k-plan best"><h3>쇼핑몰 세팅 <span class="k-tag mk">쇼핑몰 추천</span></h3><p class="who">상품 500개까지</p><p class="pr"><b>149만</b><span>원, 1회</span></p><ul><li>{{ico:check}}기본 세팅의 모든 것</li><li>{{ico:check}}상품 구조화 데이터, AI 상품 피드</li><li>{{ico:check}}상품 이미지 AI 표시 2,000건</li><li>{{ico:check}}광고 문구 검수 1회, 원격 설치</li></ul><a class="k-btn k-btn-p" href="{{root}}contact/?type=commerce&amp;plan=shop">상담 신청</a></article>
+      <article class="k-plan"><h3>Enterprise</h3><p class="who">오픈마켓, 대형 플랫폼</p><p class="pr"><b>견적</b></p><ul><li>{{ico:check}}상품 수만 개, 전용 한도와 규칙</li><li>{{ico:check}}서비스 수준 협약, 보안 검토</li><li>{{ico:check}}성과 연동 요금 선택</li></ul><a class="k-btn k-btn-l" href="{{root}}contact/?type=commerce&amp;plan=enterprise">견적 요청</a></article>
     </div>
-    <div class="x-mgmt">
-      <div><h4>자동 관리</h4><p class="pr">9.9만 원<span>/ 월</span></p><p>새 상품 이미지 자동 마킹 월 500건 · 월 1회 다시 진단 · 표시 누락 알림 · 월간 리포트.</p></div>
-      <div><h4>성장 관리</h4><p class="pr">29만 원<span>/ 월</span></p><p>상품 피드 자동 갱신 · 주 1회 다시 진단 · 자동 마킹 월 3,000건 · 광고 문구 검수 · 분기 개선 제안. 상품과 광고가 자주 바뀌는 곳에 맞습니다.</p></div>
+    <div class="k-cols c2" style="margin-top:28px">
+      <div class="k-col"><h4>자동 관리 <span class="k-ver">월 9.9만 원</span></h4><p>새 상품 이미지 자동 마킹 월 500건, 월 1회 다시 진단, 표시 누락 알림, 월간 리포트.</p></div>
+      <div class="k-col"><h4>성장 관리 <span class="k-ver">월 29만 원</span></h4><p>상품 피드 자동 갱신, 주 1회 다시 진단, 자동 마킹 월 3,000건, 광고 문구 검수, 분기 개선 제안.</p></div>
     </div>
-    <table class="x-addons" style="margin-top:40px">
-      <caption>쇼핑몰에 맞는 옵션(부가세 별도) · <a href="{{root}}business/#addons">추가 옵션 전체 보기</a></caption>
-      <tbody>
-        <tr><th>상품 피드 매일 갱신<b class="x-rec">먼저 권함</b></th><td>가격 · 재고가 바뀌면 다음 날 AI 상품 피드에 반영합니다(성장 관리에는 들어 있습니다)</td><td class="pr">월 4.9만 원</td></tr>
-        <tr><th>상품 추가</th><td>쇼핑몰 세팅 범위(500개)를 넘는 상품을 500개 단위로 구조화 데이터 · 피드</td><td class="pr">39만 원<small>500개마다</small></td></tr>
-        <tr><th>쇼핑몰 · 채널 추가 연결</th><td>두 번째 쇼핑몰이나 다른 판매 채널(아임웹 · 카페24 · 고도몰 · 워드프레스 · 자체몰)에 표시 · 구조화 데이터 · 피드 갱신을 원격으로 연결합니다</td><td class="pr">29만 원<small>한 곳마다</small></td></tr>
-        <tr><th>광고 문구 검수</th><td>상세페이지 · 배너 · SNS 문구 월 50건의 위험 후보 · 근거 · 바꿀 말과 광고주 승인 링크(법률 자문은 아닙니다)</td><td class="pr">월 9.9만 원</td></tr>
-        <tr><th>팀 이용권</th><td>상세페이지 · 상품 설명 원고를 담당자마다 고급 휴머나이징으로 다듬는 30일 이용권(5명부터, 세금계산서 한 장)</td><td class="pr">1명 월 8,000원</td></tr>
-      </tbody>
-    </table>
+    <p class="k-small" style="margin-top:14px">상품 피드 매일 갱신(월 4.9만 원), 상품 추가(500개마다 39만 원), 쇼핑몰과 채널 추가 연결(한 곳마다 29만 원) 같은 옵션은 <a href="{{root}}pricing/#addons">추가 옵션</a>에 있습니다. 상세페이지를 만들고(AI Content Studio), AI 검색 유입과 구매를 세는(AI Conversion Analytics) 모듈은 세팅 고객과 함께 2026년 12월부터 차례로 엽니다.</p>
   </div>
 </section>
 
-<section class="x-sec" id="faq">
-  <div class="wrap">
-    <div class="x-head">
-      <p class="x-kick">자주 묻는 질문</p>
-      <h2 class="x-h2">AI 커머스 엔진, 이것이 궁금합니다</h2>
-    </div>
-    <div class="x-faq">
-      <details><summary>스마트스토어 · 오픈마켓 상품도 되나요?</summary><p>외부에서 페이지를 읽지 못하게 막아 둔 곳은 피드를 만들지 못할 수 있습니다. 이때는 자체몰(카페24 · 아임웹 · 고도몰 등) 상품 페이지를 넣거나, 상품 이미지 자동 마킹(대체 텍스트 · AI 표시)부터 사용하세요.</p></details>
-      <details><summary>만든 피드는 어디에 사용하나요?</summary><p>CSV는 쇼핑 광고 · 판매자 센터처럼 상품 목록을 받는 곳에 올릴 때, JSON은 사이트 구조화 데이터 · API 연동에 사용합니다. 항목 이름(id · title · description · link · image_link · price · availability · brand)은 Google 판매자 센터 상품 데이터와 같습니다. 올리기 전에 각 서비스의 필수 항목을 한 번 확인하세요.</p></details>
+<section class="k-sec" id="faq" aria-labelledby="fqTitle">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="fqTitle">AI 커머스 엔진, 이것이 궁금합니다</h2></div>
+    <div class="k-faq">
+      <details><summary>스마트스토어, 오픈마켓 상품도 되나요?</summary><p>외부에서 페이지를 읽지 못하게 막아 둔 곳은 피드를 만들지 못할 수 있습니다. 이때는 자체몰(카페24, 아임웹, 고도몰 등) 상품 페이지를 넣거나, 상품 이미지 자동 마킹(대체 텍스트, AI 표시)부터 사용하세요.</p></details>
+      <details><summary>만든 피드는 어디에 사용하나요?</summary><p>CSV는 쇼핑 광고, 판매자 센터처럼 상품 목록을 받는 곳에 올릴 때, JSON은 사이트 구조화 데이터, API 연동에 사용합니다. 항목 이름(id, title, description, link, image_link, price, availability, brand)은 Google 판매자 센터 상품 데이터와 같습니다. 올리기 전에 각 서비스의 필수 항목을 한 번 확인하세요.</p></details>
       <details><summary>상품이 수백 개면 어떻게 하나요?</summary><p>무료 도구는 한 번에 20개까지라 여러 번 나눠 만들 수 있습니다. 쇼핑몰 세팅은 상품 500개까지 피드와 구조화 데이터를 한 번에 넣고, 성장 관리를 켜면 상품이 바뀔 때 피드를 자동으로 갱신합니다.</p></details>
       <details><summary>상품 정보가 서버에 남나요?</summary><p>공개된 상품 페이지를 읽을 때만 사용하고, 결과는 같은 주소를 다시 물을 때를 위해 6시간만 서버 캐시에 둡니다. 페이지 내용을 따로 보관하지 않습니다.</p></details>
       <details><summary>피드를 만들면 AI 검색에 나오고 매출이 오르나요?</summary><p>약속하지 않습니다. 어떤 상품을 답에 넣을지는 각 AI 서비스가 정합니다. AIMarker는 AI가 상품 정보를 정확히 읽을 준비를 갖추게 하고, 세팅 전후 점수를 리포트로 드립니다. AI 검색 유입과 구매를 따로 세는 분석은 파일럿입니다.</p></details>
-      <details><summary>AI로 만든 상품 이미지는 꼭 표시해야 하나요?</summary><p>플랫폼 · 업종마다 기준이 다릅니다. 네이버 쇼핑 광고는 AI로 만들거나 바꾼 콘텐츠에 AI 활용 표시를 요구한다고 보도되었고, Google 판매자 센터는 AI로 만든 이미지에 그 사실을 알리는 메타데이터를 넣고 지우지 말라고 안내합니다(<a href="https://support.google.com/merchants/answer/14743464" target="_blank" rel="noopener">Google 판매자 센터 도움말</a>). 자동 마킹은 화면 표시 · 파일 속 정보 · 대체 텍스트를 한 번에 넣습니다. 법률 자문이 아니므로 업종별 적용은 전문가와 확인하세요.</p></details>
+      <details><summary>AI로 만든 상품 이미지는 꼭 표시해야 하나요?</summary><p>플랫폼, 업종마다 기준이 다릅니다. 네이버 쇼핑 광고는 AI로 만들거나 바꾼 콘텐츠에 AI 활용 표시를 요구한다고 보도되었고, Google 판매자 센터는 AI로 만든 이미지에 그 사실을 알리는 메타데이터를 넣고 지우지 말라고 안내합니다(<a href="https://support.google.com/merchants/answer/14743464" target="_blank" rel="noopener">Google 판매자 센터 도움말</a>). 자동 마킹은 화면 표시, 파일 속 정보, 대체 텍스트를 한 번에 넣습니다. 법률 자문이 아니므로 업종별 적용은 전문가와 확인하세요.</p></details>
     </div>
   </div>
 </section>
 
-<section class="x-cta">
-  <div class="wrap">
+<section class="k-cta" aria-labelledby="ctaT">
+  <div class="k-wrap k-cta-in">
+    <div><h2 class="k-h2" id="ctaT">우리 상품, AI가 읽을 준비가 됐을까요</h2><p class="k-lead">상품 주소 하나로 피드를 만들어 보세요. 대표 상품 페이지는 무료 GEO 진단으로 고칠 거리까지 받을 수 있습니다.</p></div>
     <div>
-      <h2 class="x-h2">우리 상품,<br>AI가 읽을 준비가 됐을까요</h2>
-      <p>상품 주소 하나로 피드를 만들어 보세요. 대표 상품 페이지는 무료 GEO 진단으로 고칠 거리까지 받을 수 있습니다.</p>
-    </div>
-    <div>
-      <form class="x-url" data-goto-feed aria-label="AI 상품 피드 만들기">
-        <label class="sr" for="cUrl2">상품 상세 페이지 주소</label>
+      <form class="k-url" data-goto-feed aria-label="AI 상품 피드 만들기">
+        <label class="k-sr" for="cUrl2">상품 상세 페이지 주소</label>
         <input id="cUrl2" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="상품 상세 페이지 주소" maxlength="300" required>
-        <button class="btn btn-p" type="submit">피드 만들기</button>
+        <button class="k-btn k-btn-p" type="submit">피드 만들기</button>
       </form>
-      <div class="x-acts" style="margin-top:14px"><a class="btn btn-gl" href="{{root}}contact/?type=commerce&amp;plan=shop">{{ico:store}}<span>쇼핑몰 세팅 상담</span></a><a class="btn btn-gl" href="{{root}}business/">기업용 전체 보기</a></div>
+      <div class="k-acts" style="margin-top:12px"><a class="k-btn k-btn-l" href="{{root}}contact/?type=commerce&amp;plan=shop">쇼핑몰 세팅 상담</a><a class="k-btn k-btn-l" href="{{root}}business/">기업용 한눈에</a></div>
     </div>
   </div>
 </section>

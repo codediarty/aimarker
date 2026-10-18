@@ -12,7 +12,7 @@
 .au-rail li.is-on { color: var(--ink); }
 .au-rail li.is-on i { background: var(--blue); color: #fff; box-shadow: 0 0 0 4px var(--blue-50); }
 .au-rail li.is-done { color: var(--mk-d); }
-.au-rail li.is-done i { background: var(--mk); color: #06231E; }
+.au-rail li.is-done i { background: var(--mk); color: #062318; }
 .au-rail li.is-done + li::before, .au-rail li.is-done + li.is-on::before { background: var(--mk); }
 
 /* 두 칸: 작업 줄 · 설정 */
@@ -40,25 +40,25 @@
 .au-ans button > small { color: var(--mute); font-size: 12.5px; font-weight: 650; }
 .au-ans button:hover { border-color: var(--amber); }
 .au-ans button.on { border-color: var(--navy); background: var(--navy); color: #fff; box-shadow: var(--sh-2); }
-.au-ans button.on small { color: #C3CFEE; }
+.au-ans button.on small { color: #CECFD1; }
 .au-why summary { cursor: pointer; font-size: 13.5px; font-weight: 750; color: #7A4A00; }
 .au-why p { margin-top: 8px; font-size: 14px; color: #5D4C2C; }
 
 /* 다 박음 */
-.au-done { border-radius: 18px; padding: 18px; background: linear-gradient(135deg, #0A1F52, #16399A); color: #fff; display: grid; gap: 14px; }
+.au-done { border-radius: 18px; padding: 18px; background: linear-gradient(135deg, #1F2229, #121418); color: #fff; display: grid; gap: 14px; }
 .au-done-h { display: flex; gap: 12px; align-items: flex-start; }
 .au-done-h > .ico { width: 30px; height: 30px; color: var(--mk); margin-top: 2px; }
 .au-done-h > div > b { display: block; font-size: 20px; font-weight: 850; letter-spacing: -.02em; }
-.au-done-h > div > span { display: block; color: #C3CFEE; font-size: 14px; margin-top: 2px; }
+.au-done-h > div > span { display: block; color: #CECFD1; font-size: 14px; margin-top: 2px; }
 .au-done-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-.au-done .btn-p { background: var(--mk); color: #06231E; box-shadow: none; }
-.au-done .btn-p:hover { background: #5BE3CC; }
+.au-done .btn-p { background: var(--mk); color: #062318; box-shadow: none; }
+.au-done .btn-p:hover { background: #5BE3B1; }
 .au-done .btn-g { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .35); }
 .au-three { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .au-three li { padding: 10px 12px; border-radius: 12px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .1); display: grid; gap: 2px; }
 .au-three li > b { font-size: 13px; color: var(--mk); }
-.au-three li > span { font-size: 13px; color: #DCE4F7; line-height: 1.5; }
-.au-done .note { color: #9FB0D6; }
+.au-three li > span { font-size: 13px; color: #E3E4E6; line-height: 1.5; }
+.au-done .note { color: #AEB0B3; }
 
 /* 파일 줄 */
 .au-list { display: grid; gap: 8px; }
@@ -66,7 +66,7 @@
 .au-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto auto 28px; gap: 12px; align-items: center; padding: 10px 10px 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: #fff; transition: border-color .2s, background .2s; }
 .au-row.is-need, .au-row.is-confirm, .au-row.is-conflict { border-color: #F0D199; background: #FFFCF4; }
 .au-row.is-err { border-color: #F2C4C6; background: #FFF8F8; }
-.au-row.is-done { border-color: #BDEBDF; }
+.au-row.is-done { border-color: #BDEBDA; }
 .au-th { width: 52px; height: 52px; border-radius: 11px; overflow: hidden; background: var(--soft-2); display: flex; align-items: center; justify-content: center; position: relative; }
 .au-th img { width: 100%; height: 100%; object-fit: cover; }
 .au-row.is-stamped .au-th { box-shadow: 0 0 0 2px var(--mk); }
@@ -180,11 +180,11 @@
 .au-tri h3 { font-size: 21px; font-weight: 850; margin-top: 6px; }
 .au-tri p { font-size: 15px; color: var(--ink-2); }
 .au-tri-v { height: 150px; border-radius: 14px; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; padding: 14px; overflow: hidden; }
-.au-tri-v.v1 { background: radial-gradient(120px 80px at 70% 30%, rgba(255, 255, 255, .55), transparent 70%), linear-gradient(135deg, #9DB8F5, #7FD8C8); align-items: flex-start; }
+.au-tri-v.v1 { background: radial-gradient(120px 80px at 70% 30%, rgba(255, 255, 255, .55), transparent 70%), linear-gradient(135deg, #B6B8BB, #7FD8B7); align-items: flex-start; }
 .au-tri-v.v1 .mkb { font-size: 13px; }
-.au-tri-v.v2, .au-tri-v.v3 { background: #0B1430; justify-content: center; }
-.au-tri-v code { font: 600 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; color: #8FA2D1; display: flex; justify-content: space-between; gap: 8px; white-space: nowrap; overflow: hidden; }
-.au-tri-v code em { font-style: normal; color: #7FF0DA; overflow: hidden; text-overflow: ellipsis; }
+.au-tri-v.v2, .au-tri-v.v3 { background: #121418; justify-content: center; }
+.au-tri-v code { font: 600 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; color: #A0A2A5; display: flex; justify-content: space-between; gap: 8px; white-space: nowrap; overflow: hidden; }
+.au-tri-v code em { font-style: normal; color: #7FF0C7; overflow: hidden; text-overflow: ellipsis; }
 
 /* 광고 */
 .au-ad { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
@@ -206,7 +206,7 @@
   .au-side { position: static; }
   .au-tri { grid-template-columns: 1fr; }
   .au-ad { grid-template-columns: 1fr; gap: 28px; }
-  .au-bar:not([hidden]) { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; align-items: center; gap: 10px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(255, 255, 255, .96); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(14, 42, 107, .08); backdrop-filter: blur(8px); }
+  .au-bar:not([hidden]) { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; align-items: center; gap: 10px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(255, 255, 255, .96); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(18, 20, 24, .08); backdrop-filter: blur(8px); }
   .au-bar span { flex: 1; min-width: 0; font-size: 12.5px; color: var(--mute); line-height: 1.4; }
   .au-bar .btn { flex: 0 0 auto; }
 }

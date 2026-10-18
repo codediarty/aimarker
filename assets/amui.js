@@ -33,7 +33,7 @@
 
   /* 점수 고리 */
   U.ring = function (score, size) {
-    var s = Math.max(0, Math.min(100, Math.round(score || 0))), r = 26, c = 2 * Math.PI * r, col = s >= 50 ? '#E5484D' : s >= 20 ? '#E59A1A' : '#12A594';
+    var s = Math.max(0, Math.min(100, Math.round(score || 0))), r = 26, c = 2 * Math.PI * r, col = s >= 50 ? '#E5484D' : s >= 20 ? '#E59A1A' : '#12A56F';
     return '<span class="ring" style="--rc:' + col + '" title="출고 위험 점수 ' + s + '"><svg viewBox="0 0 64 64" width="' + (size || 64) + '" height="' + (size || 64) + '" aria-hidden="true"><circle cx="32" cy="32" r="' + r + '" fill="none" stroke="currentColor" stroke-opacity=".12" stroke-width="7"/>' +
       '<circle cx="32" cy="32" r="' + r + '" fill="none" stroke="' + col + '" stroke-width="7" stroke-linecap="round" stroke-dasharray="' + (c * s / 100).toFixed(1) + ' ' + c.toFixed(1) + '" transform="rotate(-90 32 32)"/></svg><b>' + s + '</b></span>';
   };

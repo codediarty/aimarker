@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261018b"
+VER = "20261018c"
 TODAY = "2026-10-16"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -100,11 +100,16 @@ ICONS = {
     "rocket": '<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>',
     "check2": '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
     "dot": '<circle cx="12" cy="12" r="4" fill="currentColor"/>',
+    "home": '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h5v-6h4v6h5V9.5"/>',
+    "pen": '<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>',
+    "grid": '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
 }
 SPARK = '<path d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.5l-1.9-5.4a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8z" fill="currentColor"/>'
-LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#0E2A6B"/>'
-        '<path d="M20 7.6l1.86 5.1a2.8 2.8 0 0 0 1.68 1.68l5.1 1.86-5.1 1.86a2.8 2.8 0 0 0-1.68 1.68L20 24.9l-1.86-5.12a2.8 2.8 0 0 0-1.68-1.68l-5.1-1.86 5.1-1.86a2.8 2.8 0 0 0 1.68-1.68z" fill="#fff"/>'
-        '<rect x="11" y="28.6" width="18" height="3.6" rx="1.8" fill="#3BD6BD"/></svg>')
+LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#121418"/>'
+        '<rect x="9" y="9.6" width="22" height="3.4" rx="1.7" fill="#fff" fill-opacity=".9"/>'
+        '<rect x="6.4" y="16.4" width="27.2" height="9" rx="2.6" fill="#FFD84D" transform="rotate(-4 20 20.9)"/>'
+        '<rect x="9" y="19.2" width="17" height="3.4" rx="1.7" fill="#121418"/>'
+        '<rect x="9" y="28.8" width="13" height="3.4" rx="1.7" fill="#fff" fill-opacity=".9"/></svg>')
 
 # 한국AI윤리위원회 상징(인증 기업 표시용, 8.0). 밝은 바탕 · 어두운 바탕 두 가지
 KAIEC_SVG = ('<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="%(bg)s" stroke="%(g)s" stroke-width="3"/>'
@@ -124,35 +129,18 @@ def kaiec_badge(dark=False, lg=False):
             % (" dk" if dark else "", " lg" if lg else "", KAIEC_SVG % (KAIEC_DK if dark else KAIEC_LT)))
 
 
-# 메뉴(6.0, 2026.10.17): 기업용 · 개인용 두 갈래 + 마크 확인 · 기술 · 요금 · 회사
-# 펼침 메뉴 항목: (주소, 아이콘, 제목, 설명) · 묶음 제목은 ("#", None, "묶음 이름", None)
-NAV = [("business", "business", "기업용", [
-           ("#", None, "핵심 제품", None),
-           ("geo/", "globe", "GEO 자동 최적화", "AI 검색이 읽고 인용하게 · 무료 진단"),
-           ("commerce/", "store", "AI 커머스 엔진", "AI 상품 피드 · 상세페이지 · 전환 분석"),
-           ("compliance/", "shield", "AI 신뢰 · 컴플라이언스", "출고 전 확인 · 자동 표시 · 감사 기록"),
-           ("#", None, "도구 · 연동", None),
-           ("mark/", "badge", "자동 마킹", "파일을 넣으면 AI 표시가 박힘"),
-           ("report/", "bars", "일괄 확인 리포트", "콘텐츠 수백 건을 한 번에"),
-           ("check/", "megaphone", "광고 문구 검수", "위험 후보 · 근거 · 바꿀 말"),
-           ("site/", "tag", "AI 표시 자동 태그", "코드 한 줄 · 아임웹 앱"),
-           ("developers/", "code", "API · MCP", "우리 서비스에 바로 연결"),
-           ("business/", "building", "기업용 전체 보기", "업종별 쓰임 · 요금")]),
-       ("personal", "personal", "개인용", [
-           ("humanize/", "sparkle", "AI 작성률 검사 · 휴머나이징", "AI가 쓴 티를 확인하고 다듬기"),
-           ("mark/", "badge", "무료 AI 표시", "AI 이미지 · 영상에 서명된 표시"),
-           ("proof/", "printer", "AI 활용 증빙서", "과제 · 공모전에 AI 사용 밝히기"),
-           ("creators/", "users", "크리에이터 사전 등록", "AI 작업으로 기업 의뢰 받기"),
-           ("personal/", "user", "개인용 전체 보기", "무료로 시작 · 요금")]),
-       ("m/", "mcheck", "마크 확인", None),
-       ("technology/", "technology", "기술", None),
-       ("pricing/", "pricing", "요금", None),
-       ("company/", "company", "회사", None)]
-GROUP_KEYS = {"business": ["business", "geo", "commerce", "compliance", "product", "app", "developers", "verify", "check", "scan", "site", "report"],
-              "personal": ["personal", "humanize", "proof", "creators", "mark"]}
-PRODUCT_KEYS = GROUP_KEYS["business"]
-ANNOUNCE = ("geo/", "기업", "월 구독 없이 1회 세팅으로 AI 검색 최적화와 AI 표시를 끝냅니다. 주소만 넣고 무료 진단부터 받아 보세요", "무료 진단")
-ANNOUNCE_P = ("humanize/", "개인", "학교 · 기관 · 기업은 이미 AI 작성 여부를 확인합니다. 내기 전에 판정과 문장별 색으로 먼저 확인하세요", "무료 맛보기")
+# 메뉴(9.0, 2026.10.18): 제품 · 기업용 · 기술 · 요금 · 회사. 펼침은 제품 하나, 휴대폰은 아래 탭(앱처럼)
+PRODUCTS = [("humanize/", "pen", "AI 작성률 검사와 휴머나이징", "문장마다 AI 작성 가능성을 표시하고 사람 말투로 다듬기"),
+            ("geo/", "globe", "GEO 자동 최적화", "AI 검색이 우리 사이트를 정확히 읽고 인용하게"),
+            ("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 상품 피드"),
+            ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 자동 표시, 광고주 승인, 감사 기록"),
+            ("mark/", "badge", "AI 표시 자동 마킹", "이미지와 영상에 서명된 AI 표시를 무료로"),
+            ("developers/", "code", "API와 MCP", "우리 서비스와 AI 에이전트에 바로 연결")]
+NAV = [("products", "제품"), ("business/", "기업용"), ("technology/", "기술"), ("pricing/", "요금"), ("company/", "회사")]
+PRODUCT_PAGE_KEYS = ["humanize", "personal", "geo", "commerce", "compliance", "mark", "developers", "report", "check", "site", "scan", "verify", "proof", "creators", "product", "app", "mcheck"]
+NAV_KEY = {"business/": ["business", "contact"], "technology/": ["technology", "trust", "guide"], "pricing/": ["pricing"], "company/": ["company"]}
+TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "글 검사", ["humanize", "personal", "proof"]),
+        ("geo/", "globe", "GEO 진단", ["geo", "commerce", "business"]), ("mark/", "badge", "AI 표시", ["mark", "mcheck", "report", "site"])]
 
 
 def ico(name, cls="ico"):
@@ -162,41 +150,39 @@ def ico(name, cls="ico"):
 
 
 def brand(root):
-    return '<a class="brand" href="%s" aria-label="AIMarker 홈">%s<span><b>AI</b>Marker</span></a>' % (root or "./", LOGO)
+    return '<a class="k-logo" href="%s" aria-label="AIMarker 홈">%s<span>AIMarker</span></a>' % (root or "./", LOGO)
 
 
 def header(root, key):
     items = []
-    for href, k, label, sub in NAV:
-        if sub:
-            cur = ' class="cur"' if (k == key or key in GROUP_KEYS.get(k, [])) else ""
-            parts, mega = [], any(h == "#" for h, _, _, _ in sub)
-            for h, ic, t, d in sub:
-                if h == "#":
-                    parts.append('<span class="mg">%s</span>' % t)
-                else:
-                    parts.append('<a href="%s%s"><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ico(ic), t, d))
-            items.append('<div class="dd%s"><button type="button"%s aria-haspopup="true" aria-expanded="false">%s%s</button><div class="menu">%s</div></div>'
-                         % (" dd-mega" if mega else "", cur, label, ico("chev"), "".join(parts)))
+    for href, label in NAV:
+        if href == "products":
+            cur = " cur" if key in PRODUCT_PAGE_KEYS else ""
+            links = "".join('<a href="%s%s"><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ico(ic), t, d) for h, ic, t, d in PRODUCTS)
+            items.append('<div class="k-dd%s"><button type="button" aria-haspopup="true" aria-expanded="false"><span>%s</span>%s</button>'
+                         '<div class="k-menu">%s<div class="k-menu-f"><span>가입 없이 무료로 먼저 써 볼 수 있습니다</span><a href="%spersonal/">개인용 한눈에</a></div></div></div>'
+                         % (cur, label, ico("chev"), links, root))
         else:
-            items.append('<a href="%s%s"%s>%s</a>' % (root, href, ' aria-current="page"' if k == key else "", label))
-    mgroups = ""
-    for href, k, label, sub in NAV:
-        if sub:
-            mgroups += '<span class="grp">%s</span>' % label + "".join(
-                ('<span class="grp2">%s</span>' % t) if h == "#" else ('<a href="%s%s">%s</a>' % (root, h, t)) for h, _, t, _ in sub)
-        else:
-            mgroups += '<a href="%s%s">%s</a>' % (root, href, label)
-    personal = key in GROUP_KEYS["personal"]
-    ah, ab, at, ac = ANNOUNCE_P if personal else ANNOUNCE
-    bar = ('<a class="annc" href="%s%s"><span class="annc-in"><b>%s</b><span>%s</span><em>%s%s</em></span></a>' % (root, ah, ab, at, ac, ico("arrow"))) if key not in ("contact", "404", "humanize", "home", "geo") else ""
-    c1 = ("humanize/", "AI 작성률 검사") if personal else ("geo/", "무료 GEO 진단")
-    return (bar + '<header class="hd" id="hd"><div class="wrap">%s<nav class="nav" aria-label="주 메뉴">%s</nav>'
-            '<div class="hd-cta"><a class="btn btn-g btn-s" href="%s%s">%s</a><a class="btn btn-p btn-s" href="%scontact/">기업 상담</a></div>'
-            '<button class="menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">%s</button></div></header>'
-            '<nav class="mnav" id="mnav" aria-label="모바일 메뉴">%s'
-            '<a class="btn btn-p" href="%scontact/">기업 상담</a><a class="btn btn-g" href="%s%s">%s</a></nav>'
-            % (brand(root), "".join(items), root, c1[0], c1[1], root, ico("menu"), mgroups, root, root, c1[0], c1[1]))
+            on = key in NAV_KEY.get(href, [])
+            items.append('<a href="%s%s"%s><span>%s</span></a>' % (root, href, ' aria-current="page"' if on else "", label))
+    sheet = '<span class="grp">제품</span>' + "".join('<a href="%s%s">%s</a>' % (root, h, t) for h, ic, t, d in PRODUCTS)
+    sheet += '<span class="grp">기업용</span><a href="%sbusiness/">기업용 한눈에</a><a href="%sapp/">작업 공간 열기</a><a href="%scontact/">도입 상담</a>' % (root, root, root)
+    sheet += '<span class="grp">더 보기</span><a href="%stechnology/">기술</a><a href="%spricing/">요금</a><a href="%scompany/">회사</a><a href="%sm/">마크 확인</a><a href="%spersonal/">개인용 한눈에</a>' % (root, root, root, root, root)
+    return ('<a class="k-skip" href="#main">본문으로 건너뛰기</a>'
+            '<header class="k-hd" id="hd"><div class="k-hd-in">%s<nav class="k-nav" aria-label="주 메뉴">%s</nav>'
+            '<div class="k-hd-r"><a class="k-hl opt" href="%sm/">%s마크 확인</a><a class="k-hl opt" href="%sapp/">작업 공간</a>'
+            '<a class="k-btn k-btn-p k-btn-s" href="%scontact/">도입 상담</a>'
+            '<button class="k-menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">%s</button></div></div></header>'
+            '<nav class="k-sheet" id="mnav" aria-label="모바일 메뉴">%s</nav>'
+            % (brand(root), "".join(items), root, ico("search"), root, root, ico("menu"), sheet))
+
+
+def tabbar(root, key):
+    out = []
+    for h, ic, label, keys in TABS:
+        out.append('<a href="%s%s"%s>%s<span>%s</span></a>' % (root or "./" if not h else root, h, ' aria-current="page"' if key in keys else "", ico(ic), label))
+    out.append('<button type="button" data-open-menu aria-controls="mnav">%s<span>메뉴</span></button>' % ico("grid"))
+    return '<nav class="k-tab" aria-label="빠른 이동">%s</nav>' % "".join(out)
 
 
 def footer(root):
@@ -209,23 +195,22 @@ def footer(root):
     if b["addr"]:
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
-    cols = [("기업용", [("geo/", "GEO 자동 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 신뢰 · 컴플라이언스"), ("business/", "기업용 전체 보기"), ("pricing/#business", "기업 요금 · 추가 옵션")]),
-            ("개인용", [("humanize/", "AI 작성률 검사 · 휴머나이징"), ("mark/", "무료 AI 표시 · 자동 마킹"), ("proof/", "AI 활용 증빙서"), ("creators/", "크리에이터 사전 등록"), ("pricing/#personal", "개인 요금")]),
-            ("도구", [("m/", "마크 확인"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("scan/", "사이트 진단"), ("site/", "AI 표시 자동 태그"), ("verify/", "원장 · 공개 타임스탬프")]),
-            ("기술 · 개발자", [("technology/", "기술"), ("developers/", "API · AI 연동"), ("developers/#mcp", "MCP 서버"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("llms.txt", "llms.txt"), ("developers/openapi.json", "OpenAPI 명세")]),
-            ("회사", [("company/", "회사 소개"), ("contact/", "기업 상담"), ("trust/", "신뢰 · 판단 기준"), ("guide/", "광고 · AI 표시 가이드"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
-    colhtml = "".join('<div><b class="ct">%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
-    std = ('<div class="ft8-std"><span><b>표준</b> C2PA · IPTC · XMP · schema.org · llms.txt</span>'
-           '<span><b>서명</b> Ed25519(JWS) · <a href="%s.well-known/aimarker-keys.json">공개키</a></span>'
-           '<span><b>원장</b> 하루치를 OpenTimestamps에 고정 · <a href="%sverify/">확인하기</a></span></div>' % (root, root))
-    return ('<footer class="ft"><div class="wrap"><div class="ft8-top"><div class="ft8-brand">%s'
-            '<p class="about">AIMarker는 AI 검색이 우리 회사를 정확히 읽고 인용하게 만들고(GEO), AI로 만든 콘텐츠에는 근거 있는 표시와 기록을 남기는 AI 콘텐츠 신뢰 플랫폼입니다.</p>'
-            '<div class="ft8-cred">%s</div><div id="aimarker" class="ft-label"></div></div>'
-            '<div class="ft8-cols">%s</div></div>%s'
-            '<div class="biz">%s<br>'
-            '<span>AIMarker 마크는 표시와 그 근거를 기록하는 것이며, 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. 광고 검수 결과는 위험 후보와 근거입니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
+    cols = [("제품", [("humanize/", "AI 작성률 검사와 휴머나이징"), ("geo/", "GEO 자동 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("mark/", "AI 표시 자동 마킹"), ("m/", "마크 확인")]),
+            ("개인과 기업", [("personal/", "개인용 한눈에"), ("proof/", "AI 활용 증빙서"), ("creators/", "크리에이터 사전 등록"), ("business/", "기업용 한눈에"), ("app/", "작업 공간"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "도입 상담")]),
+            ("개발자", [("developers/", "API와 AI 연동"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("site/", "AI 표시 자동 태그"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
+            ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
+    colhtml = "".join('<div><b>%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
+    std = ('<div class="k-ft-std"><span><b>표준</b>C2PA, IPTC, XMP, schema.org, llms.txt</span>'
+           '<span><b>서명</b>Ed25519(JWS), <a href="%s.well-known/aimarker-keys.json">공개키</a></span>'
+           '<span><b>원장</b>하루치를 OpenTimestamps에 고정, <a href="%sverify/">확인하기</a></span></div>' % (root, root))
+    return ('<footer class="k-ft"><div class="k-wrap"><div class="k-ft-top"><div class="k-ft-brand">%s'
+            '<p>AIMarker는 AI로 만든 글, 이미지, 광고, 상품 정보가 믿을 수 있게 쓰이도록 확인하고 표시하고 기록하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
+            '<div id="aimarker" class="ft-label"></div></div>'
+            '<div class="k-ft-cols">%s</div></div>%s'
+            '<div class="k-ft-biz">%s<br>'
+            '<span>AIMarker 마크는 표시와 그 근거를 기록하는 것이며, 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. 광고 검수 결과는 위험 후보와 근거입니다. AI 작성률은 정해진 기준에 따른 추정이며 증명이 아닙니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
             '<span>© 2026 AIMarker</span></div></div></footer>'
-            % (brand(root), kaiec_badge(dark=True), colhtml, std, "".join(biz)))
+            % (brand(root), kaiec_badge(), colhtml, std, "".join(biz)))
 
 
 def auto_ld(meta, body, path, title, desc):
@@ -270,12 +255,13 @@ def page(meta, body):
     if sl == "preview":
         scripts = '<script src="%sm.js?v=%s" data-preview defer></script>' % (root, VER) + scripts
     elif sl != "none":
-        # footer: 도구 화면은 떠 있는 배지 대신 바닥글 안에 둠(버튼을 가리지 않게)
-        look = 'data-style="inline" data-theme="dark"' if sl == "footer" else 'data-side="right"'
+        # 9.0: 휴대폰 아래 탭과 겹치지 않게 늘 바닥글 안에 둠(밝은 바닥글)
+        look = 'data-style="inline" data-theme="light"' if meta.get("layout") != "app" else 'data-side="right"'
         scripts += ('<script src="%sm.js?v=%s" data-name="AIMarker" data-use="text" data-level="assist" data-review="all" '
                     'data-privacy="1" data-auto="0" %s data-date="2026-10" defer></script>' % (root, VER, look))
     pre = "".join('<script src="%s"></script>' % s.strip() for s in meta.get("prescripts", "").split(",") if s.strip())
     pre += "".join('<link rel="stylesheet" href="%s%s?v=%s">' % (root, s.strip(), VER) for s in meta.get("styles", "").split(",") if s.strip())
+    pre += '<link rel="stylesheet" href="%sassets/v9.css?v=%s">' % (root, VER)
     if meta.get("manifest"):
         pre += ('<link rel="manifest" href="%sapp/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
                 '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' % root)
@@ -285,20 +271,23 @@ def page(meta, body):
             '<title>%s</title><meta name="description" content="%s">%s<link rel="canonical" href="%s%s">'
             '<meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker"><meta property="og:title" content="%s">'
             '<meta property="og:description" content="%s"><meta property="og:url" content="%s%s"><meta property="og:image" content="%sassets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
-            '<meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="%sassets/og.jpg"><meta name="theme-color" content="#0B1736">'
+            '<meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="%sassets/og.jpg"><meta name="theme-color" content="#FFFFFF">'
             '<link rel="icon" href="%sassets/favicon.svg" type="image/svg+xml"><link rel="icon" href="%sassets/favicon-32.png" sizes="32x32" type="image/png">'
             '<link rel="apple-touch-icon" href="%sassets/apple-touch-icon.png">'
             '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>'
             '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">'
             '<link rel="stylesheet" href="%sassets/am.css?v=%s">%s%s%s</head>'
             % (title, desc, noindex, SITE, path, meta.get("ogtitle", title), desc, SITE, path, SITE, SITE, root, root, root, root, VER,
-               ('' if meta.get("layout") == "app" else '<link rel="stylesheet" href="%sassets/site4.css?v=%s"><link rel="stylesheet" href="%sassets/v8.css?v=%s">' % (root, VER, root, VER)), jsonld, pre))
+               ('' if (meta.get("layout") == "app" or meta.get("v9")) else '<link rel="stylesheet" href="%sassets/site4.css?v=%s"><link rel="stylesheet" href="%sassets/v8.css?v=%s">' % (root, VER, root, VER)), jsonld, pre))
+    if meta.get("layout") != "app" and not meta.get("manifest"):   # 9.0: 휴대폰 홈 화면에 추가(웹 앱)
+        head = head.replace('</head>', '<link rel="manifest" href="%smanifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
+                            '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="default"></head>' % root)
     if meta.get("layout") == "app":   # 작업 공간 · 승인 화면: 머리글 · 바닥글 없이
         return (head + '<body class="app" data-page="%s" data-root="%s">' % (meta.get("key", ""), root) + body +
                 '<script src="%sassets/am.js?v=%s" defer></script>' % (root, VER) + scripts + '</body></html>\n')
-    html = (head + '<body data-page="%s" data-root="%s">' % (meta.get("key", ""), root) + header(root, meta.get("key", "")) +
-            '<main id="main">' + body + '</main>' + footer(root) +
-            '<script src="%sassets/am.js?v=%s" defer></script>' % (root, VER) + scripts + '</body></html>\n')
+    html = (head + '<body class="has-tab%s" data-page="%s" data-root="%s">' % (" v9" if meta.get("v9") else "", meta.get("key", ""), root) + header(root, meta.get("key", "")) +
+            '<main id="main">' + body + '</main>' + footer(root) + tabbar(root, meta.get("key", "")) +
+            '<script src="%sassets/am.js?v=%s" defer></script><script src="%sassets/k.js?v=%s" defer></script>' % (root, VER, root, VER) + scripts + '</body></html>\n')
     return html
 
 

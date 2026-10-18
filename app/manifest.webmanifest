@@ -1,13 +1,13 @@
 {
  "name": "AIMarker 검수 작업 공간",
  "short_name": "AIMarker",
- "description": "광고 · 콘텐츠 자동 점검, 승인 링크, 보고서 · 원장",
+ "description": "광고와 콘텐츠 자동 점검, 승인 링크, 보고서와 원장",
  "lang": "ko",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
- "background_color": "#F3F6FB",
- "theme_color": "#0A1430",
+ "background_color": "#F4F5F7",
+ "theme_color": "#121418",
  "icons": [
   {
    "src": "../assets/icon-192.png",

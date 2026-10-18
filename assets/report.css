@@ -35,7 +35,7 @@
 .rp-pl { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--ink-2); margin-top: 8px; }
 .rp-pl:first-child { margin-top: 0; }
 .rp-pl b { font-variant-numeric: tabular-nums; }
-.rp-pb { height: 8px; border-radius: 4px; background: #E3E8F1; overflow: hidden; margin-top: 6px; }
+.rp-pb { height: 8px; border-radius: 4px; background: #E7E8EA; overflow: hidden; margin-top: 6px; }
 .rp-pb i { display: block; height: 100%; width: 0; background: var(--blue); border-radius: 4px; transition: width .35s ease; }
 .rp-pb + .rp-pl + .rp-pb i { background: var(--navy); }
 .rp-ps { margin-top: 10px; font-size: 13.5px; color: var(--mute); }
@@ -43,7 +43,7 @@
 .rp-acts { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 18px 22px; border-radius: 18px; background: var(--navy); color: #fff; box-shadow: var(--sh-2); }
 .rp-acts > div:first-child { display: flex; flex-direction: column; gap: 4px; max-width: 560px; }
 .rp-acts > div:first-child b { font-size: 17px; }
-.rp-acts > div:first-child span { color: #C3CFEE; font-size: 13.5px; }
+.rp-acts > div:first-child span { color: #CECFD1; font-size: 13.5px; }
 .rp-acts .btn-g { background: rgba(255, 255, 255, .08); color: #fff; border-color: rgba(255, 255, 255, .28); }
 .rp-acts .btn-p { background: #fff; color: var(--navy); }
 .rp-frame { display: block; width: 100%; min-height: 900px; margin-top: 16px; border: 1px solid var(--line); border-radius: 18px; background: #fff; box-shadow: var(--sh-1); }
