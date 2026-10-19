@@ -63,8 +63,8 @@
     var g = MK.GRADE[m.basis] || 1, f = h * 0.4, small = h * 0.27, pad = h * 0.34, ic = h * 0.56, gap = h * 0.24, barW = h * 0.085, barG = h * 0.06, barH = h * 0.44;
     var w = MK.measure(ctx, h, m, opt), text = opt.short ? MK.SHORT[m.label] : MK.LABEL[m.label];
     ctx.save();
-    if (opt.shadow !== false) { ctx.shadowColor = 'rgba(18, 20, 24,.28)'; ctx.shadowBlur = h * 0.35; ctx.shadowOffsetY = h * 0.06; }
-    rr(ctx, x, y, w, h, h * 0.24); ctx.fillStyle = 'rgba(18, 20, 24,.93)'; ctx.fill();
+    if (opt.shadow !== false) { ctx.shadowColor = 'rgba(14, 31, 71,.28)'; ctx.shadowBlur = h * 0.35; ctx.shadowOffsetY = h * 0.06; }
+    rr(ctx, x, y, w, h, h * 0.24); ctx.fillStyle = 'rgba(14, 31, 71,.93)'; ctx.fill();
     ctx.shadowColor = 'transparent';
     ctx.lineWidth = Math.max(1, h * 0.03); ctx.strokeStyle = 'rgba(255,255,255,.16)'; ctx.stroke();
     // 반짝이 표
@@ -75,7 +75,7 @@
     // 근거 막대 세 칸
     for (var i = 0; i < 3; i++) {
       var bh = barH * (0.62 + 0.19 * i), by = y + (h + barH) / 2 - bh;
-      rr(ctx, cx + i * (barW + barG), by, barW, bh, barW / 2); ctx.fillStyle = i < g ? '#FFD84D' : 'rgba(255,255,255,.24)'; ctx.fill();
+      rr(ctx, cx + i * (barW + barG), by, barW, bh, barW / 2); ctx.fillStyle = i < g ? '#4DB5FF' : 'rgba(255,255,255,.24)'; ctx.fill();
     }
     cx += barW * 3 + barG * 2 + gap;
     ctx.font = '650 ' + small + 'px ' + FONT; ctx.fillStyle = 'rgba(255,255,255,.92)'; ctx.textBaseline = 'alphabetic';
@@ -90,11 +90,11 @@
   MK.qrSvg = function (text, px) {
     var q = MK.qr(text), n = q.getModuleCount(), m = 2, s = n + m * 2, d = '';
     for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) d += 'M' + (c + m) + ' ' + (r + m) + 'h1v1h-1z';
-    return '<svg class="mk-qr" viewBox="0 0 ' + s + ' ' + s + '" width="' + (px || 132) + '" height="' + (px || 132) + '" role="img" aria-label="마크 확인 QR 코드" shape-rendering="crispEdges"><rect width="' + s + '" height="' + s + '" fill="#fff"/><path d="' + d + '" fill="#121418"/></svg>';
+    return '<svg class="mk-qr" viewBox="0 0 ' + s + ' ' + s + '" width="' + (px || 132) + '" height="' + (px || 132) + '" role="img" aria-label="마크 확인 QR 코드" shape-rendering="crispEdges"><rect width="' + s + '" height="' + s + '" fill="#fff"/><path d="' + d + '" fill="#0E1F47"/></svg>';
   };
   MK.qrDraw = function (ctx, text, x, y, size) {
     var q = MK.qr(text), n = q.getModuleCount(), cell = size / n;
-    ctx.save(); ctx.fillStyle = '#121418';
+    ctx.save(); ctx.fillStyle = '#0E1F47';
     for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) ctx.fillRect(Math.floor(x + c * cell), Math.floor(y + r * cell), Math.ceil(cell), Math.ceil(cell));
     ctx.restore();
   };
@@ -108,12 +108,12 @@
       x.fillStyle = '#F6F7F9'; x.fillRect(0, 0, W, 6);
       rr(x, 1, 1, W - 2, H - 2, 28); x.lineWidth = 2; x.strokeStyle = '#E8E9EB'; x.stroke();
       MK.draw(x, 56, 64, 92, m, { shadow: false });
-      x.fillStyle = '#121418'; x.font = '800 40px ' + FONT; x.textBaseline = 'alphabetic';
+      x.fillStyle = '#0E1F47'; x.font = '800 40px ' + FONT; x.textBaseline = 'alphabetic';
       x.fillText(MK.DESC[m.label] || '', 56, 236);
       x.fillStyle = '#65676A'; x.font = '600 26px ' + FONT;
       x.fillText('근거: ' + (MK.BASIS[m.basis] || '') + (m.at ? ' · 발급 ' + String(m.at).slice(0, 10) : ''), 56, 290);
       x.fillText('이 마크가 맞는지 QR이나 아래 주소에서 확인하세요', 56, 334);
-      x.fillStyle = '#121418'; x.font = '700 26px ' + FONT; x.fillText(MK.markUrl(m.id).replace('https://', ''), 56, 404);
+      x.fillStyle = '#0E1F47'; x.font = '700 26px ' + FONT; x.fillText(MK.markUrl(m.id).replace('https://', ''), 56, 404);
       MK.qrDraw(x, MK.markUrl(m.id), W - 56 - 300, 90, 300);
       x.fillStyle = '#919396'; x.font = '600 20px ' + FONT; x.fillText('AIMarker 전자서명 마크', W - 56 - 300, 430);
       return new Promise(function (ok) { c.toBlob(ok, 'image/png'); });
@@ -132,10 +132,10 @@
   MK.tagWidth = function (ctx, h, text) { ctx.save(); ctx.font = '850 ' + (h * 0.42) + 'px ' + FONT; var w = ctx.measureText(text).width + h * 0.62; ctx.restore(); return w; };
   MK.drawTag = function (ctx, x, y, h, text) {
     var w = MK.tagWidth(ctx, h, text);
-    ctx.save(); ctx.shadowColor = 'rgba(18, 20, 24,.24)'; ctx.shadowBlur = h * 0.3; ctx.shadowOffsetY = h * 0.05;
+    ctx.save(); ctx.shadowColor = 'rgba(14, 31, 71,.24)'; ctx.shadowBlur = h * 0.3; ctx.shadowOffsetY = h * 0.05;
     rr(ctx, x, y, w, h, h * 0.24); ctx.fillStyle = '#FFFFFF'; ctx.fill(); ctx.shadowColor = 'transparent';
-    ctx.lineWidth = Math.max(1, h * 0.04); ctx.strokeStyle = 'rgba(18, 20, 24,.9)'; ctx.stroke();
-    ctx.fillStyle = '#1F2229'; ctx.font = '850 ' + (h * 0.42) + 'px ' + FONT; ctx.textBaseline = 'middle'; ctx.fillText(text, x + h * 0.31, y + h / 2 + h * 0.02);
+    ctx.lineWidth = Math.max(1, h * 0.04); ctx.strokeStyle = 'rgba(14, 31, 71,.9)'; ctx.stroke();
+    ctx.fillStyle = '#13224A'; ctx.font = '850 ' + (h * 0.42) + 'px ' + FONT; ctx.textBaseline = 'middle'; ctx.fillText(text, x + h * 0.31, y + h / 2 + h * 0.02);
     ctx.restore(); return w;
   };
   /* 이미 그림이 그려진 캔버스에 마크를 얹음. o: { pos: tl · tr · bl · br, size: s · m · l, qr, tags: ['광고', '가상인물'] } */
@@ -176,8 +176,8 @@
     if (img) { var s = Math.max(cw / W, vh / H); x.drawImage(img, (cw - W * s) / 2, (vh - H * s) / 2, W * s, H * s); }
     else {
       var g = x.createLinearGradient(0, 0, cw, vh); g.addColorStop(0, '#E5E6E8'); g.addColorStop(1, '#E7F7F1'); x.fillStyle = g; x.fillRect(0, 0, cw, vh);
-      x.fillStyle = 'rgba(18, 20, 24,.10)'; for (var i = 0; i < 7; i++) { x.beginPath(); x.arc(cw * (0.15 + i * 0.13), vh * (0.35 + 0.18 * Math.sin(i)), vh * (0.08 + 0.03 * (i % 3)), 0, Math.PI * 2); x.fill(); }
-      x.fillStyle = 'rgba(18, 20, 24,.45)'; x.font = '700 ' + Math.round(cw * 0.04) + 'px ' + FONT; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('견본 이미지', cw / 2, vh / 2);
+      x.fillStyle = 'rgba(14, 31, 71,.10)'; for (var i = 0; i < 7; i++) { x.beginPath(); x.arc(cw * (0.15 + i * 0.13), vh * (0.35 + 0.18 * Math.sin(i)), vh * (0.08 + 0.03 * (i % 3)), 0, Math.PI * 2); x.fill(); }
+      x.fillStyle = 'rgba(14, 31, 71,.45)'; x.font = '700 ' + Math.round(cw * 0.04) + 'px ' + FONT; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('견본 이미지', cw / 2, vh / 2);
     }
     x.restore();
     // 마크 크기는 실제 그림 비율 그대로(짧은 변 기준) 보이도록 같은 캔버스에 그림

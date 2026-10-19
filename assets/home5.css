@@ -1,5 +1,5 @@
 /* AIMarker 5.0 홈: AI 사용 확인 · 마킹 · 관리 (2026.10) */
-.h5 { position: relative; overflow: hidden; color: #fff; padding: 76px 0 92px; background: radial-gradient(1100px 520px at 85% -10%, rgba(59, 214, 157, .17), transparent 62%), radial-gradient(900px 520px at -10% 110%, rgba(18, 20, 24, .30), transparent 60%), #121418; }
+.h5 { position: relative; overflow: hidden; color: #fff; padding: 76px 0 92px; background: radial-gradient(1100px 520px at 85% -10%, rgba(59, 214, 157, .17), transparent 62%), radial-gradient(900px 520px at -10% 110%, rgba(14, 31, 71, .30), transparent 60%), #0E1F47; }
 .h5::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px); background-size: 56px 56px; -webkit-mask-image: radial-gradient(ellipse 60% 70% at 72% 40%, #000 15%, transparent 70%); mask-image: radial-gradient(ellipse 60% 70% at 72% 40%, #000 15%, transparent 70%); }
 .h5 .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center; }
 .h5-kicker { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 750; color: #7FF0C7; }
@@ -20,7 +20,7 @@
 .h5-art { position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: 0 30px 70px rgba(0, 0, 0, .45); border: 1px solid rgba(255, 255, 255, .12); width: 84%; }
 .h5-art svg { display: block; width: 100%; height: 100%; }
 .h5-art .mkb { position: absolute; left: 16px; top: 16px; }
-.h5-slip { position: absolute; right: 0; top: 18%; width: 58%; background: #fff; color: var(--ink); border-radius: 18px; padding: 16px 16px 14px; box-shadow: 0 24px 60px rgba(18, 20, 24, .5); font-size: 12.5px; }
+.h5-slip { position: absolute; right: 0; top: 18%; width: 58%; background: #fff; color: var(--ink); border-radius: 18px; padding: 16px 16px 14px; box-shadow: 0 24px 60px rgba(14, 31, 71, .5); font-size: 12.5px; }
 .h5-slip-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 10px; border-bottom: 1px dashed var(--line-2); }
 .h5-slip-h b { font-size: 13.5px; font-variant-numeric: tabular-nums; }
 .h5-ok { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 999px; background: var(--mint-50); color: #0B7F54; font-weight: 800; font-size: 11.5px; white-space: nowrap; }
@@ -90,7 +90,7 @@
 .h5-grades > span { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; }
 
 /* 베끼기 어려운 네 겹 */
-.h5-moat { background: #121418; color: #fff; }
+.h5-moat { background: #0E1F47; color: #fff; }
 .h5-moat .eyebrow { color: #7FF0C7; }
 .h5-moat h2 { color: #fff; }
 .h5-moat .lead { color: #C4C6C9; }
@@ -106,7 +106,7 @@
 
 /* 기업 */
 .h5-biz { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; margin-top: 40px; }
-.h5-code { border-radius: 18px; background: #121418; color: #E0E1E3; padding: 18px 20px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.7; overflow-x: auto; white-space: pre; }
+.h5-code { border-radius: 18px; background: #0E1F47; color: #E0E1E3; padding: 18px 20px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.7; overflow-x: auto; white-space: pre; }
 .h5-code .c { color: #8E9093; }
 .h5-code .s { color: #7FF0C7; }
 .h5-code .k { color: #B7B9BC; }
@@ -129,7 +129,7 @@
 /* 요금 맛보기 */
 .h5-price { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 36px; }
 .h5-price article { border: 1px solid var(--line); border-radius: 18px; padding: 20px 18px; display: grid; gap: 8px; align-content: start; background: #fff; }
-.h5-price article.on { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(18, 20, 24, .08); }
+.h5-price article.on { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(14, 31, 71, .08); }
 .h5-price h3 { font-size: 15px; font-weight: 850; color: var(--mute); }
 .h5-price .p { font-size: 21px; font-weight: 900; letter-spacing: -.03em; color: var(--ink); }
 .h5-price .p small { font-size: 13px; font-weight: 700; color: var(--mute); }
@@ -147,7 +147,7 @@
 .h5-road li::before { content: ""; position: absolute; left: 0; top: 10px; width: 5px; height: 5px; border-radius: 50%; background: var(--line-2); }
 
 /* 마지막 */
-.h5-end { background: #121418; color: #fff; text-align: center; padding: 88px 0; }
+.h5-end { background: #0E1F47; color: #fff; text-align: center; padding: 88px 0; }
 .h5-end h2 { font-size: clamp(28px, 3.8vw, 44px); font-weight: 900; letter-spacing: -.045em; color: #fff; }
 .h5-end p { color: #C4C6C9; margin: 14px auto 0; max-width: 620px; font-size: 17px; }
 .h5-end .h5-cta { justify-content: center; }
@@ -231,4 +231,4 @@
 @media (max-width: 720px) { .free5 { grid-template-columns: 1fr; } .cmp5 { grid-template-columns: 1fr; } }
 
 .ar5 { grid-template-columns: repeat(7, minmax(0, 1fr)); }
-.ar5 li:nth-child(3) { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(18, 20, 24, .08); }
+.ar5 li:nth-child(3) { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(14, 31, 71, .08); }

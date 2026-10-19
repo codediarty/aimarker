@@ -48,12 +48,12 @@
       out.innerHTML = '<div class="gr6-err"><b>진단하지 못했어요</b><p>' + esc(m) + '</p></div>';
     }).then(function () { clearInterval(tick); busy = false; btn.disabled = false; });
   }
-  function color(g) { return g === 'A' ? '#0FA870' : g === 'B' ? '#121418' : g === 'C' ? '#F5B740' : '#E5484D'; }
+  function color(g) { return g === 'A' ? '#0FA870' : g === 'B' ? '#0E1F47' : g === 'C' ? '#F5B740' : '#E5484D'; }
   function ring(score, grade, lg) {
     var r = lg ? 52 : 36, c = 2 * Math.PI * r, s = lg ? 120 : 84, off = c * (1 - Math.max(0, Math.min(100, score)) / 100);
     return '<div class="ring6' + (lg ? ' lg' : '') + '"><svg viewBox="0 0 ' + s + ' ' + s + '"><circle class="bg" cx="' + s / 2 + '" cy="' + s / 2 + '" r="' + r + '"/><circle class="fg" cx="' + s / 2 + '" cy="' + s / 2 + '" r="' + r + '" stroke="' + color(grade) + '" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '"/></svg><b>' + score + '<small>/ 100</small></b></div>';
   }
-  function partColor(p) { var x = p.got / p.max; return x >= 0.85 ? '#0FA870' : x >= 0.5 ? '#121418' : x > 0 ? '#F5B740' : '#E5484D'; }
+  function partColor(p) { var x = p.got / p.max; return x >= 0.85 ? '#0FA870' : x >= 0.5 ? '#0E1F47' : x > 0 ? '#F5B740' : '#E5484D'; }
   function paint(r) {
     var bad = 0; r.parts.forEach(function (p) { p.items.forEach(function (it) { if (it.ok !== 'ok') bad++; }); });
     var head = '<div class="gr6-top">' + ring(r.score, r.grade, true) +

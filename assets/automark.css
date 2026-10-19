@@ -45,7 +45,7 @@
 .au-why p { margin-top: 8px; font-size: 14px; color: #5D4C2C; }
 
 /* 다 박음 */
-.au-done { border-radius: 18px; padding: 18px; background: linear-gradient(135deg, #1F2229, #121418); color: #fff; display: grid; gap: 14px; }
+.au-done { border-radius: 18px; padding: 18px; background: linear-gradient(135deg, #13224A, #0E1F47); color: #fff; display: grid; gap: 14px; }
 .au-done-h { display: flex; gap: 12px; align-items: flex-start; }
 .au-done-h > .ico { width: 30px; height: 30px; color: var(--mk); margin-top: 2px; }
 .au-done-h > div > b { display: block; font-size: 20px; font-weight: 850; letter-spacing: -.02em; }
@@ -182,7 +182,7 @@
 .au-tri-v { height: 150px; border-radius: 14px; display: flex; flex-direction: column; justify-content: flex-end; gap: 6px; padding: 14px; overflow: hidden; }
 .au-tri-v.v1 { background: radial-gradient(120px 80px at 70% 30%, rgba(255, 255, 255, .55), transparent 70%), linear-gradient(135deg, #B6B8BB, #7FD8B7); align-items: flex-start; }
 .au-tri-v.v1 .mkb { font-size: 13px; }
-.au-tri-v.v2, .au-tri-v.v3 { background: #121418; justify-content: center; }
+.au-tri-v.v2, .au-tri-v.v3 { background: #0E1F47; justify-content: center; }
 .au-tri-v code { font: 600 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; color: #A0A2A5; display: flex; justify-content: space-between; gap: 8px; white-space: nowrap; overflow: hidden; }
 .au-tri-v code em { font-style: normal; color: #7FF0C7; overflow: hidden; text-overflow: ellipsis; }
 
@@ -206,7 +206,7 @@
   .au-side { position: static; }
   .au-tri { grid-template-columns: 1fr; }
   .au-ad { grid-template-columns: 1fr; gap: 28px; }
-  .au-bar:not([hidden]) { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; align-items: center; gap: 10px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(255, 255, 255, .96); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(18, 20, 24, .08); backdrop-filter: blur(8px); }
+  .au-bar:not([hidden]) { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; align-items: center; gap: 10px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(255, 255, 255, .96); border-top: 1px solid var(--line); box-shadow: 0 -8px 24px rgba(14, 31, 71, .08); backdrop-filter: blur(8px); }
   .au-bar span { flex: 1; min-width: 0; font-size: 12.5px; color: var(--mute); line-height: 1.4; }
   .au-bar .btn { flex: 0 0 auto; }
 }

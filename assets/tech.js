@@ -33,7 +33,7 @@
       var x = cv.getContext('2d'), s = cv.width / 8;
       for (var i = 0; i < 64; i++) {
         var on = bits[i], diff = ref && ref[i] !== bits[i];
-        x.fillStyle = diff ? '#E5484D' : on ? '#1F2229' : '#E7E8EA';
+        x.fillStyle = diff ? '#E5484D' : on ? '#13224A' : '#E7E8EA';
         x.fillRect((i % 8) * s + .5, Math.floor(i / 8) * s + .5, s - 1, s - 1);
       }
     };

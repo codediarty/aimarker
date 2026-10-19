@@ -48,6 +48,7 @@ AI 에이전트는 이미지 · 영상 · 글을 사용자에게 넘기거나 �
 ## Optional
 
 - [회사 소개](https://aimarker.kr/company/): 운영 성균관컨설팅 · 표시 문구 기준 한국AI윤리위원회
+- [브랜드 자료](https://aimarker.kr/brand/): 로고(지문 심볼, AI는 지문 블루 #0B63F6, Marker는 네이비 #0E1F47) · 색 · 글꼴 · 사용 원칙 · 로고 파일(SVG · PNG · 브랜드 키트 ZIP)
 - [신뢰 · 판단 기준](https://aimarker.kr/trust/)
 - [광고 · AI 표시 규칙 가이드](https://aimarker.kr/guide/)
 - [이용약관](https://aimarker.kr/terms/) · [개인정보처리방침](https://aimarker.kr/privacy/)

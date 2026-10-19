@@ -21,8 +21,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261018c"
-TODAY = "2026-10-16"
+VER = "20261019a"
+TODAY = "2026-10-19"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
@@ -105,11 +105,16 @@ ICONS = {
     "grid": '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
 }
 SPARK = '<path d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.5l-1.9-5.4a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8z" fill="currentColor"/>'
-LOGO = ('<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#121418"/>'
-        '<rect x="9" y="9.6" width="22" height="3.4" rx="1.7" fill="#fff" fill-opacity=".9"/>'
-        '<rect x="6.4" y="16.4" width="27.2" height="9" rx="2.6" fill="#FFD84D" transform="rotate(-4 20 20.9)"/>'
-        '<rect x="9" y="19.2" width="17" height="3.4" rx="1.7" fill="#121418"/>'
-        '<rect x="9" y="28.8" width="13" height="3.4" rx="1.7" fill="#fff" fill-opacity=".9"/></svg>')
+# 9.1 로고 '지문'(2026.10.19): 지문 심볼 + 워드마크(AI 지문 블루 · Marker 네이비). 파일은 assets/brand/
+LOGO_W, LOGO_H = 413.17, 100.0   # 가로형 로고 비율(aimarker-logo.svg viewBox)
+
+
+def logo_img(root, dark=False):
+    """심볼만(작업 공간 · 승인 · 관리 화면의 {{logo}}, 어두운 바탕은 {{logo_dk}})"""
+    return '<img src="%sassets/brand/aimarker-symbol%s.svg?v=%s" alt="" width="26" height="30">' % (root, "-dark" if dark else "", VER)
+
+
+LOGO = ""   # 예전 이름(쓰지 않음, {{logo}} 는 logo_img 로 바뀜)
 
 # 한국AI윤리위원회 상징(인증 기업 표시용, 8.0). 밝은 바탕 · 어두운 바탕 두 가지
 KAIEC_SVG = ('<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="%(bg)s" stroke="%(g)s" stroke-width="3"/>'
@@ -138,7 +143,7 @@ PRODUCTS = [("humanize/", "pen", "AI 작성률 검사와 휴머나이징", "문�
             ("developers/", "code", "API와 MCP", "우리 서비스와 AI 에이전트에 바로 연결")]
 NAV = [("products", "제품"), ("business/", "기업용"), ("technology/", "기술"), ("pricing/", "요금"), ("company/", "회사")]
 PRODUCT_PAGE_KEYS = ["humanize", "personal", "geo", "commerce", "compliance", "mark", "developers", "report", "check", "site", "scan", "verify", "proof", "creators", "product", "app", "mcheck"]
-NAV_KEY = {"business/": ["business", "contact"], "technology/": ["technology", "trust", "guide"], "pricing/": ["pricing"], "company/": ["company"]}
+NAV_KEY = {"business/": ["business", "contact"], "technology/": ["technology", "trust", "guide"], "pricing/": ["pricing"], "company/": ["company", "brand"]}
 TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "글 검사", ["humanize", "personal", "proof"]),
         ("geo/", "globe", "GEO 진단", ["geo", "commerce", "business"]), ("mark/", "badge", "AI 표시", ["mark", "mcheck", "report", "site"])]
 
@@ -150,7 +155,9 @@ def ico(name, cls="ico"):
 
 
 def brand(root):
-    return '<a class="k-logo" href="%s" aria-label="AIMarker 홈">%s<span>AIMarker</span></a>' % (root or "./", LOGO)
+    h = 30
+    return ('<a class="k-logo" href="%s" aria-label="AIMarker 홈"><img src="%sassets/brand/aimarker-logo.svg?v=%s" alt="AIMarker" width="%d" height="%d"></a>'
+            % (root or "./", root, VER, round(h * LOGO_W / LOGO_H), h))
 
 
 def header(root, key):
@@ -198,7 +205,7 @@ def footer(root):
     cols = [("제품", [("humanize/", "AI 작성률 검사와 휴머나이징"), ("geo/", "GEO 자동 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("mark/", "AI 표시 자동 마킹"), ("m/", "마크 확인")]),
             ("개인과 기업", [("personal/", "개인용 한눈에"), ("proof/", "AI 활용 증빙서"), ("creators/", "크리에이터 사전 등록"), ("business/", "기업용 한눈에"), ("app/", "작업 공간"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "도입 상담")]),
             ("개발자", [("developers/", "API와 AI 연동"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("site/", "AI 표시 자동 태그"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
-            ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
+            ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b>%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
     std = ('<div class="k-ft-std"><span><b>표준</b>C2PA, IPTC, XMP, schema.org, llms.txt</span>'
            '<span><b>서명</b>Ed25519(JWS), <a href="%s.well-known/aimarker-keys.json">공개키</a></span>'
@@ -245,7 +252,7 @@ def page(meta, body):
     depth = len([p for p in path.split("/") if p])
     root = "/" if meta.get("absroot") else "../" * depth
     body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
-    body = body.replace("{{root}}", root).replace("{{logo}}", LOGO).replace("{{kaiec}}", kaiec_badge()).replace("{{kaiec_lg}}", kaiec_badge(lg=True)).replace("{{kaiec_dk}}", kaiec_badge(dark=True))
+    body = body.replace("{{root}}", root).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge()).replace("{{kaiec_lg}}", kaiec_badge(lg=True)).replace("{{kaiec_dk}}", kaiec_badge(dark=True))
     body = re.sub(r"\{\{ico:([a-z0-9]+)\}\}", lambda m: ico(m.group(1)), body)
     title = meta["title"]
     desc = meta.get("desc", "")
