@@ -104,7 +104,7 @@
       out.push(['info', 'C2PA 출처 기록이 있습니다' + (sg ? '(서명자 ' + sg + ')' : '') + '.']);
       if (c.state === 'tampered' || c.state === 'changed' || c.state === 'signature_bad') out.push(['warn', '출처 기록과 파일 내용이 서로 맞지 않습니다.']);
     }
-    if (r.xmp && r.xmp.dst && r.xmp.dst.length) out.push(['info', '디지털 소스 유형 기록: ' + r.xmp.dst.slice(0, 3).join(', ')]);
+    if (r.xmp && r.xmp.dst && r.xmp.dst.length) out.push(['info', '디지털 출처 유형 기록: ' + r.xmp.dst.slice(0, 3).join(', ')]);
     if (r.xmp && r.xmp.aimarker) out.push(['info', '이미 AIMarker 마크(' + r.xmp.aimarker.id + ')가 들어 있습니다.']);
     if (r.gen) out.push(['info', '생성 도구가 남긴 설정값이 있습니다' + (r.gen.tools && r.gen.tools.length ? '(' + r.gen.tools.slice(0, 2).join(', ') + ')' : '') + '.']);
     if (r.exif && (r.exif.make || r.exif.model)) out.push(['info', '촬영 정보: ' + [r.exif.make, r.exif.model].filter(Boolean).join(' ')]);

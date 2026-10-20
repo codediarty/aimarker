@@ -1,7 +1,7 @@
 {
   "name": "AIMarker",
   "short_name": "AIMarker",
-  "description": "AI 작성률 검사와 휴머나이징, GEO 진단, AI 표시를 한곳에서. 글은 저장하지 않습니다.",
+  "description": "AI로 만든 이미지와 글에 지문 마크를 자동으로. AI 표시 자동화, 지문 마크 넣기, AI 검색 노출 진단, 글 검사를 한곳에서. 파일과 글은 저장하지 않습니다.",
   "id": "/",
   "start_url": "/?src=app",
   "scope": "/",
@@ -31,24 +31,48 @@
   ],
   "shortcuts": [
     {
-      "name": "글 검사와 휴머나이징",
-      "short_name": "글 검사",
-      "url": "/humanize/?src=app"
+      "name": "빠른 지문 마크",
+      "short_name": "지문 마크",
+      "url": "/mark/?src=app#auto"
     },
     {
-      "name": "GEO 진단",
-      "short_name": "GEO 진단",
+      "name": "AI 표시 자동화",
+      "short_name": "AI 표시",
+      "url": "/label/?src=app"
+    },
+    {
+      "name": "AI 검색 노출 진단",
+      "short_name": "AI 검색",
       "url": "/geo/?src=app"
     },
     {
-      "name": "AI 표시 자동 마킹",
-      "short_name": "AI 표시",
-      "url": "/mark/?src=app"
-    },
-    {
-      "name": "작업 공간",
-      "short_name": "작업 공간",
-      "url": "/app/?src=app"
+      "name": "글 검사와 휴머나이징",
+      "short_name": "글 검사",
+      "url": "/humanize/?src=app"
     }
-  ]
+  ],
+  "share_target": {
+    "action": "/mark/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "img",
+          "accept": [
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp"
+          ]
+        }
+      ]
+    }
+  }
 }

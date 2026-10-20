@@ -107,3 +107,10 @@
   });
   outT.addEventListener('click', function (e) { var b = e.target.closest('[data-go]'); if (b) handoff(b.getAttribute('data-go')); });
 })();
+/* 휴대폰 공유하기로 이미지 받기(웹 앱 공유 대상): 공유받은 요청만 맡는 작은 서비스 워커를 둡니다 */
+(function () {
+  if (!('serviceWorker' in navigator)) return;
+  if (location.protocol !== 'https:' && !/^(127\.0\.0\.1|localhost)$/.test(location.hostname)) return;
+  var root = document.body.getAttribute('data-root') || '';
+  window.addEventListener('load', function () { setTimeout(function () { navigator.serviceWorker.register(root + 'aimarker-sw.js', { scope: root || './' }).catch(function () { /* 무시 */ }); }, 1200); });
+})();

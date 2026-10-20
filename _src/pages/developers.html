@@ -3,7 +3,7 @@ path: developers/
 key: developers
 title: API · MCP · SDK · AI 사용 확인과 서명된 마크를 코드로 | AIMarker
 ogtitle: AIMarker API · AI 사용 확인과 서명된 마크를 코드 한 줄로
-desc: 파일의 AI 사용 근거 확인(am.analyze), 근거 맞춤 마크 발급(am.mark), 여러 파일 일괄 확인(am.analyzebatch), GEO 진단(am.geo), AI 작성 추정률(am.detect) · 마크 확인 · 서명 확인 · 공개 앵커까지 API · MCP 서버 2.4 · 함수 호출 · JavaScript · Python SDK로 사용하세요. 원본 파일은 보내지 않고, 마크마다 Ed25519로 서명합니다. 무료 API 키로 하루 300회.
+desc: 파일의 AI 사용 근거 확인(am.analyze), 근거 맞춤 마크 발급(am.mark), 여러 파일 일괄 확인(am.analyzebatch), AI 검색 노출 진단(am.geo), AI 작성 추정률(am.detect) · 마크 확인 · 서명 확인 · 공개 앵커까지 API · MCP 서버 2.4 · 함수 호출 · JavaScript · Python SDK로 사용하세요. 원본 파일은 보내지 않고, 마크마다 Ed25519로 서명합니다. 무료 API 키로 하루 300회.
 styles: assets/app.css, assets/mark.css
 scripts: lib/aim-extract.js, assets/amui.js, assets/dev.js
 selflabel: footer
@@ -93,7 +93,7 @@ node aimarker-mcp.mjs --features 사진.jpg   # 서버로 보내는 특징값만
         <tr><th>aimarker_mark_info, find_marks</th><td>마크 번호로 확인, 같은 파일, 표시본, 비슷한 이미지의 마크 찾기</td><td>번호, 해시</td></tr>
         <tr><th>aimarker_edit_mark</th><td>관리 키로 표시 변경(근거 범위 안에서), 이름 변경, 철회</td><td>관리 키</td></tr>
         <tr><th>aimarker_anchor</th><td>하루치 원장의 뿌리 해시, OpenTimestamps 증명 확인, .ots 저장</td><td>날짜(조회)</td></tr>
-        <tr><th>aimarker_geo_check, detect_text</th><td>주소 하나로 GEO 진단, 고칠 코드, AI 상품 피드(2.2), 글의 AI 작성 추정률(2.2). 2.3부터 pass(개인 이용권), AIMARKER_PASS로 문장별 결과 전체</td><td>주소, 글(저장 안 함)</td></tr>
+        <tr><th>aimarker_geo_check, detect_text</th><td>주소 하나로 AI 검색 노출 진단(GEO), 고칠 코드, AI 상품 피드(2.2), 글의 AI 작성 추정률(2.2). 2.3부터 pass(개인 이용권), AIMARKER_PASS로 문장별 결과 전체</td><td>주소, 글(저장 안 함)</td></tr>
         <tr><th>부가 기능 9개</th><td>광고 문구 검수, 자동 수정, 일괄 검수, 표시 문구, 사이트 진단, 광고주 승인, 승인 상태, 원장 기록, 원장 확인</td><td>문구(저장 안 함)</td></tr>
       </tbody></table></div>
     <p class="dev-note">프롬프트: <code>mark_content</code>(확인하고 마크 받기), <code>check_received_file</code>(받은 파일의 마크 확인), <code>report_folder</code>(폴더 리포트), <code>review_ad_copy</code>(광고 문구 검수). 이전 1.0.0, 2.0.0, 2.1.0, 2.2.0 패키지도 그대로 동작합니다.</p>
@@ -252,7 +252,7 @@ while (res.output.some((o) =&gt; o.type === 'function_call')) {
         <tr><th>am.markedit</th><td>변경, 철회, 관리 키로만</td><td>id, mkey, label, title, issuer, alt[], revoke</td><td>changed, mark, ledger</td></tr>
         <tr><th>am.pubkey</th><td>서명 공개키, 누구나</td><td>없음</td><td>keys[{kty, crv, x, kid}], current</td></tr>
         <tr><th>am.anchor</th><td>공개 앵커, 누구나</td><td>date 또는 id(LG…)</td><td>root, prev, text, proofs, status, position</td></tr>
-        <tr><th>am.geo</th><td>GEO 진단, AI 상품 피드</td><td>url</td><td>score, parts[], bots[], fixes[](붙여 넣을 코드), feed</td></tr>
+        <tr><th>am.geo</th><td>AI 검색 노출 진단(GEO), AI 상품 피드</td><td>url</td><td>score, parts[], bots[], fixes[](붙여 넣을 코드), feed</td></tr>
         <tr><th>am.detect</th><td>AI 작성률과 판정(AIMarker 판정 기준 1.0: 안전, 고위험, 부적합, 판정 근거). 추정이며 증명이 아님, 같은 글이면 같은 값과 판정. 무료 키는 맛보기(판정, 수치는 같은 값, 문장 위치는 2개만), pass나 유료 키면 문장별, 구간별 전체</td><td>text, sentences, pass(개인 이용권, 선택)</td><td>rate, band{key, ko, label, why[]}, lv, segN, segAi, segs[], feat[], opinion[], opDetail[], chat, aiN, aiChars, cn, full, sentences[{t, p, g, ai | lock}], pass</td></tr>
         <tr><th>am.style</th><td>휴머나이징: 문체 점검, 표현 다듬기, 말투. 무료 키는 미리 보기, pass나 유료 키면 다듬은 글 전체</td><td>text, mode(check, fix), tone(auto, keep, plain, polite, formal), guide(map, ban, tone, 브랜드 말투 규칙), pass</td><td>before, paragraphs[], ai / text, applied[], left[], after, aiAfter, facts</td></tr>
         <tr><th>am.humanize</th><td>고급 휴머나이징: AIMarker 인간화 엔진(생성 AI를 사용하지 않음, 같은 글, 같은 설정이면 같은 결과). 후보 3개 가운데 숫자, 인용을 모두 지키고 AI 작성률(추정)이 가장 낮은 것을 돌려줌. 무료 키는 첫 문단 미리 보기, pass(고급 횟수)나 유료 키면 글 전체(한 번에 6,000자), 다른 버전, 문장 후보</td><td>text, tone(auto, keep, plain, polite, formal), variant(0~9), alts, guide(map[[바꿀 말, 쓸 말]], ban[], tone), probe, pass</td><td>text, tone, toneNote, applied[], stats(sent, changed, reverted, toneMiss), facts, guide{mapped, banned}, before, after, ai, aiAfter, cands / preview, src, cut / alts[]</td></tr>

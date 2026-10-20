@@ -1,0 +1,7 @@
+{
+ "about": "AIMarker 등록 사이트 목록. 유료 요금제(스탠다드 이상)로 등록한 사이트만 들어갑니다. 등록은 AIMarker가 운영자와 사이트 주소를 확인한 뒤 넣습니다. 표시 하나하나의 정확성을 보증하는 것이 아니라, 이 사이트가 AIMarker 자동 표시를 쓰고 운영 책임자가 확인됐다는 기록입니다.",
+ "updated": "2026-10-20",
+ "sites": {
+  "aimarker.kr": {"id": "AMS-0001", "org": "AIMarker (운영 성균관컨설팅)", "plan": "운영사", "since": "2026-10-20", "policy": "https://aimarker.kr/company/", "contact": "contact@skkc.co.kr"}
+ }
+}

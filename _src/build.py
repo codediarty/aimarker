@@ -21,17 +21,97 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261019a"
-TODAY = "2026-10-19"
+VER = "20261020a"
+TODAY = "2026-10-20"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
+
+# ---------- 10.0 상품 · 요금(한 곳에서 관리: 요금 칸 {{tiers:키}} · 결제 시트 assets/products.js) ----------
+# 결제는 공식 결제처 성균관컨설팅(skkc.co.kr) 쇼핑몰. 상품을 등록하면 SHOP_IDX 에 상품 번호를 적으세요(비어 있으면 '결제 링크 받기'로 주문 요청).
+SHOP_URL = "https://skkc.co.kr/shop_view?idx=%s&kaiec_buy=1"
+SHOP_IDX = {
+    "label-standard-m": "", "label-standard-y": "", "label-business-m": "", "label-business-y": "",
+    "geo-lite": "", "geo-standard": "", "geo-pro": "", "geocare-care-m": "", "geocare-grow-m": "",
+    "service-starter-m": "", "bundle-trust": "",
+}
+CATALOG = {
+    "label": {"name": "AI 표시 자동화", "vat": "부가세 별도", "tiers": [
+        {"id": "label-free", "name": "무료", "who": "개인 · 1인 사이트", "price": "0원", "per": "", "cta": "무료로 설치하기", "href": "site/",
+         "feat": ["코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글 자동 표시", "지문 마크와 근거 창, AI 활용 안내 창", "점검 모드: 무엇을 왜 표시했는지 한눈에", "검색 · AI가 읽는 표시(구조화 데이터) 자동", "생성물 지문 마크와 서명 마크(웹 도구) 무료"]},
+        {"id": "label-standard", "name": "스탠다드", "who": "1인 사업자 · 소상공인", "price": "9,900원", "per": "월", "m": 9900, "y": 99000,
+         "feat": ["무료의 모든 기능", "AIMarker 등록 사이트: 확인 페이지에 회사와 담당자 표시", "안내 창에 문의처와 등록 확인 링크", "매달 AI 표시 현황 메일 리포트", "서명 마크에 회사 이름과 등록 사이트 표시", "설치 도움 1회(원격)"]},
+        {"id": "label-business", "name": "비즈니스", "who": "소규모 · 중견 기업", "price": "49,000원", "per": "월", "m": 49000, "y": 490000, "best": "추천",
+         "feat": ["스탠다드의 모든 기능, 사이트 3개", "위치 규칙 설정 대행(상세페이지 · 배너 · 블로그)", "표시 누락 점검 매주, 새 AI 콘텐츠 알림", "AI 활용 고지문과 사내 AI 표시 가이드", "API로 서명 마크 대량 발급, 감사 기록과 분기 보고서", "API 키(하루 1만 회), 담당자 온라인 교육 1회"]},
+        {"id": "label-enterprise", "name": "엔터프라이즈", "who": "대기업 · 공공기관 · 학교", "price": "월 30만 원부터", "per": "", "cta": "견적 받기", "href": "contact/?plan=label-enterprise&type=enterprise",
+         "feat": ["사이트 · 건수 제한 없음", "우리 브랜드로 표시(화이트 라벨)", "전용 규칙과 내부 시스템 연동(API · MCP · 대량 처리)", "보안 검토, 계약서 · 세금계산서, 서비스 수준 협약", "표시 정책 수립과 임직원 교육"]},
+    ]},
+    "service": {"name": "AI 서비스 표시 의무 대응", "vat": "부가세 별도", "tiers": [
+        {"id": "service-starter", "name": "스타터", "who": "생성형 AI 서비스를 막 시작한 곳", "price": "99,000원", "per": "월", "m": 99000,
+         "feat": ["결과물마다 서명된 AIMarker 마크(월 1만 건)", "파일 속 출처 기록(IPTC · XMP)과 보이는 지문 마크", "이용자 사전 고지 문구와 약관 문안", "다운로드할 때 한 번 안내하는 창", "이메일 지원"]},
+        {"id": "service-growth", "name": "그로스", "who": "이용자가 빠르게 느는 서비스", "price": "490,000원", "per": "월", "best": "추천", "cta": "상담 후 시작", "href": "contact/?plan=service-growth&type=ai",
+         "feat": ["서명된 마크 월 10만 건", "AI기본법 제31조 표시 정책 문서", "실제와 헷갈리는 결과물(딥페이크) 보이는 표시 규칙", "감사 기록과 분기 보고서", "기술 지원(영업일 당일 답변)"]},
+        {"id": "service-enterprise", "name": "엔터프라이즈", "who": "대형 플랫폼 · 기관", "price": "견적", "per": "", "cta": "견적 받기", "href": "contact/?plan=service-enterprise&type=ai",
+         "feat": ["대량 처리와 전용 한도", "사내 설치형 판정 엔진 라이선스", "보안 검토와 서비스 수준 협약", "넘는 건수는 1,000건 단위로 정산"]},
+    ]},
+    "geo": {"name": "AI 검색 노출 최적화", "vat": "부가세 별도, 1회", "tiers": [
+        {"id": "geo-lite", "name": "라이트", "who": "1인 · 소상공인, 페이지 10개까지", "price": "199,000원", "per": "1회", "m": 199000,
+         "feat": ["AI 검색 노출 진단 리포트(100점, 7영역)", "AI 크롤러 출입 설정(ChatGPT · Claude · Perplexity · 구글 · 네이버 등 17종)", "구조화 데이터(회사 · 상품 기본) 설치", "llms.txt 작성과 등록", "네이버 서치어드바이저 · 구글 서치 콘솔 등록, 사이트맵 제출", "설치 뒤 다시 진단, 전후 비교"]},
+        {"id": "geo-standard", "name": "스탠다드", "who": "소규모 기업, 페이지 30개까지", "price": "490,000원", "per": "1회", "m": 490000, "best": "추천",
+         "feat": ["라이트의 모든 것", "AI가 인용하는 자주 묻는 질문 20개 작성 · 설치", "페이지별 제목 · 설명 · 요약 문장 다듬기", "경쟁사 1곳과 나란히 비교", "빙 웹마스터 등록, 브랜드 정보 한 줄로 맞추기", "첫 달 AI 답변 언급 리포트"]},
+        {"id": "geo-pro", "name": "프로", "who": "쇼핑몰 · 중견 기업, 페이지 100개 · 상품 500개", "price": "1,490,000원", "per": "1회", "m": 1490000,
+         "feat": ["스탠다드의 모든 것", "상품 구조화 데이터와 AI 쇼핑 상품 피드", "가격 · 재고 · 리뷰 정보 구조화", "경쟁사 3곳 비교 리포트", "상품 이미지 AI 표시 2,000건", "원격 설치까지"]},
+        {"id": "geo-enterprise", "name": "엔터프라이즈", "who": "대기업 · 공공기관 · 학교, 여러 사이트", "price": "390만 원부터", "per": "", "cta": "견적 받기", "href": "contact/?plan=geo-enterprise&type=enterprise",
+         "feat": ["여러 사이트와 영문 페이지", "맞춤 콘텐츠 전략과 분기 리포트", "담당자 교육과 내부 가이드", "계약서 · 세금계산서"]},
+    ]},
+    "geocare": {"name": "AI 검색 관리(월)", "vat": "부가세 별도", "tiers": [
+        {"id": "geocare-care", "name": "AI 검색 관리", "full": "AI 검색 관리(월 관리)", "who": "세팅을 마치고 꾸준히 관리할 회사", "price": "99,000원", "per": "월", "m": 99000,
+         "feat": ["매달 다시 진단과 크롤러 변화 알림", "AI 답변 언급 모니터링: 질문 20개를 ChatGPT · 제미나이 · 퍼플렉시티 · 네이버에 물어 기록", "월간 리포트와 다음 달 할 일"]},
+        {"id": "geocare-grow", "name": "AI 검색 성장", "full": "AI 검색 성장(월 관리)", "who": "경쟁이 센 업종", "price": "290,000원", "per": "월", "m": 290000, "best": "추천",
+         "feat": ["관리의 모든 것", "AI가 인용하기 좋은 글 매달 2편", "자주 묻는 질문 · 상품 피드 갱신", "경쟁사 추적과 분기 전략 회의"]},
+    ]},
+}
+BUNDLES = [{"id": "bundle-trust", "name": "AI 신뢰 올인원", "who": "소규모 · 중견 기업", "was": "980,000원", "price": "790,000원", "m": 790000,
+            "feat": ["AI 검색 노출 최적화 스탠다드(1회)", "AI 표시 자동화 비즈니스 12개월", "AI 활용 고지문 · 사내 표시 가이드"]}]
+
+
+def tiers_html(key, root):
+    c = CATALOG[key]
+    out = []
+    for t in c["tiers"]:
+        feats = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in t["feat"])
+        per = ('<span>/ %s</span>' % t["per"]) if t.get("per") else ""
+        yr = ('<small class="yr">12개월 %s원, 10개월 요금</small>' % format(t["y"], ",")) if t.get("y") else ""
+        best = ('<em class="k-best">%s</em>' % t["best"]) if t.get("best") else ""
+        if t.get("href"):
+            btn = '<a class="k-btn %s" href="%s%s">%s</a>' % ("k-btn-l" if t["price"] != "0원" else "k-btn-p", root, t["href"], t.get("cta", "자세히"))
+        else:
+            btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % ("k-btn-p" if t.get("best") else "k-btn-l", t["id"], t.get("cta", "결제하기"))
+        out.append('<div class="k-plan%s" id="%s"><h3>%s%s</h3><p class="who">%s</p><p class="pr"><b>%s</b>%s</p>%s<ul>%s</ul>%s</div>'
+                   % (" best" if t.get("best") else "", t["id"], t["name"], best, t["who"], t["price"], per, yr, feats, btn))
+    n = len(c["tiers"])
+    return '<div class="k-plans%s">%s</div><p class="k-small k-vat">%s · 결제는 공식 결제처 성균관컨설팅에서 카드 · 간편결제 · 계좌이체로 합니다.</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"])
+
+
+def products_js():
+    d = {"shop": SHOP_URL, "idx": SHOP_IDX, "items": {}}
+    for key, c in CATALOG.items():
+        for t in c["tiers"]:
+            if t.get("m"):
+                d["items"][t["id"]] = {"name": t.get("full") or ("%s %s" % (c["name"], t["name"]) if t["name"] != c["name"] else t["name"]), "group": c["name"], "who": t["who"], "m": t["m"], "y": t.get("y", 0), "per": t.get("per", ""), "vat": c["vat"], "feat": t["feat"][:4]}
+    for b in BUNDLES:
+        d["items"][b["id"]] = {"name": b["name"], "group": "묶음", "who": b["who"], "m": b["m"], "y": 0, "per": "1회", "vat": "부가세 별도", "feat": b["feat"]}
+    return "/* AIMarker 상품 · 요금(빌드에서 만듦: _src/build.py CATALOG) */\nwindow.AMP = " + json.dumps(d, ensure_ascii=False) + ";\n"
+
 # 옮긴 주소(2.0 → 3.0): 베타 → 파일럿, 작동 방식 → 제품
 REDIRECTS = [("beta/", "contact/"), ("pilot/", "contact/"), ("how/", "product/"), ("mcp/", "developers/#mcp"), ("image/", "mark/")]
 # 마크 서명 공개키(서버 am.pubkey 와 같은 값. 서버가 스스로 만든 키, 비밀 키는 서버 밖으로 나오지 않음)
 MARK_KEYS = [{"kty": "OKP", "crv": "Ed25519", "x": "XdbkQ_O_R4Aq19ugDnJVpMcCX5OYPAV1NobuLhL-AEA", "kid": "amk1-f4e2e03c4c04", "use": "sig", "alg": "EdDSA", "since": "2026-10-16"}]
 
 ICONS = {
+    "share": '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98"/><path d="m15.41 6.51-6.82 3.98"/>',
+    "phone": '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
+    "monitor": '<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>',
     "check": '<path d="M20 6 9 17l-5-5"/>',
     "arrow": '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
     "image": '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
@@ -135,17 +215,18 @@ def kaiec_badge(dark=False, lg=False):
 
 
 # 메뉴(9.0, 2026.10.18): 제품 · 기업용 · 기술 · 요금 · 회사. 펼침은 제품 하나, 휴대폰은 아래 탭(앱처럼)
-PRODUCTS = [("humanize/", "pen", "AI 작성률 검사와 휴머나이징", "문장마다 AI 작성 가능성을 표시하고 사람 말투로 다듬기"),
-            ("geo/", "globe", "GEO 자동 최적화", "AI 검색이 우리 사이트를 정확히 읽고 인용하게"),
+PRODUCTS = [("label/", "fingerprint", "AI 표시 자동화", "코드 한 줄로 사이트 속 AI 생성물에 지문 마크 자동 부착"),
+            ("mark/", "badge", "생성물 자동 마킹", "이미지 · 영상 · 문서에 지문 마크와 출처 기록"),
+            ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리를 찾고 추천하게"),
+            ("humanize/", "pen", "AI 작성률 검사와 휴머나이징", "문장마다 AI 작성 가능성을 표시하고 사람 말투로"),
             ("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 상품 피드"),
-            ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 자동 표시, 광고주 승인, 감사 기록"),
-            ("mark/", "badge", "AI 표시 자동 마킹", "이미지와 영상에 서명된 AI 표시를 무료로"),
-            ("developers/", "code", "API와 MCP", "우리 서비스와 AI 에이전트에 바로 연결")]
-NAV = [("products", "제품"), ("business/", "기업용"), ("technology/", "기술"), ("pricing/", "요금"), ("company/", "회사")]
-PRODUCT_PAGE_KEYS = ["humanize", "personal", "geo", "commerce", "compliance", "mark", "developers", "report", "check", "site", "scan", "verify", "proof", "creators", "product", "app", "mcheck"]
-NAV_KEY = {"business/": ["business", "contact"], "technology/": ["technology", "trust", "guide"], "pricing/": ["pricing"], "company/": ["company", "brand"]}
-TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "글 검사", ["humanize", "personal", "proof"]),
-        ("geo/", "globe", "GEO 진단", ["geo", "commerce", "business"]), ("mark/", "badge", "AI 표시", ["mark", "mcheck", "report", "site"])]
+            ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 광고주 승인, 감사 기록"),
+            ("label/#service", "code", "AI 서비스 표시 의무 대응", "AI 서비스 결과물마다 표시를 자동으로(API · SDK · MCP)")]
+NAV = [("products", "제품"), ("label/", "AI 표시"), ("geo/", "AI 검색"), ("business/", "기업용"), ("pricing/", "요금"), ("company/", "회사")]
+PRODUCT_PAGE_KEYS = ["humanize", "personal", "commerce", "compliance", "developers", "report", "check", "scan", "verify", "proof", "creators", "product", "app"]
+NAV_KEY = {"label/": ["label", "site", "v", "mark", "mcheck", "m"], "geo/": ["geo"], "business/": ["business", "contact"], "pricing/": ["pricing"], "company/": ["company", "brand", "technology", "trust", "guide"]}
+TABS = [("", "home", "홈", ["home"]), ("label/", "fingerprint", "AI 표시", ["label", "site", "v", "mark", "mcheck", "m"]),
+        ("geo/", "globe", "AI 검색", ["geo", "commerce", "business"]), ("humanize/", "pen", "글 검사", ["humanize", "personal", "proof"])]
 
 
 def ico(name, cls="ico"):
@@ -167,18 +248,18 @@ def header(root, key):
             cur = " cur" if key in PRODUCT_PAGE_KEYS else ""
             links = "".join('<a href="%s%s"><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ico(ic), t, d) for h, ic, t, d in PRODUCTS)
             items.append('<div class="k-dd%s"><button type="button" aria-haspopup="true" aria-expanded="false"><span>%s</span>%s</button>'
-                         '<div class="k-menu">%s<div class="k-menu-f"><span>가입 없이 무료로 먼저 써 볼 수 있습니다</span><a href="%spersonal/">개인용 한눈에</a></div></div></div>'
+                         '<div class="k-menu">%s<div class="k-menu-f"><span>AI 표시 자동화는 무료로 바로 설치할 수 있습니다</span><a href="%ssite/">설치 마법사</a></div></div></div>'
                          % (cur, label, ico("chev"), links, root))
         else:
             on = key in NAV_KEY.get(href, [])
             items.append('<a href="%s%s"%s><span>%s</span></a>' % (root, href, ' aria-current="page"' if on else "", label))
     sheet = '<span class="grp">제품</span>' + "".join('<a href="%s%s">%s</a>' % (root, h, t) for h, ic, t, d in PRODUCTS)
-    sheet += '<span class="grp">기업용</span><a href="%sbusiness/">기업용 한눈에</a><a href="%sapp/">작업 공간 열기</a><a href="%scontact/">도입 상담</a>' % (root, root, root)
-    sheet += '<span class="grp">더 보기</span><a href="%stechnology/">기술</a><a href="%spricing/">요금</a><a href="%scompany/">회사</a><a href="%sm/">마크 확인</a><a href="%spersonal/">개인용 한눈에</a>' % (root, root, root, root, root)
+    sheet += '<span class="grp">시작하기</span><a href="%ssite/">AI 표시 무료로 설치</a><a href="%sgeo/">AI 검색 노출 무료 진단</a><a href="%spricing/">요금과 결제</a><a href="%scontact/">도입 상담</a>' % (root, root, root, root)
+    sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%sapp/">작업 공간</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a><a href="%sm/">마크 확인</a><a href="%spersonal/">개인용 한눈에</a>' % (root, root, root, root, root, root)
     return ('<a class="k-skip" href="#main">본문으로 건너뛰기</a>'
             '<header class="k-hd" id="hd"><div class="k-hd-in">%s<nav class="k-nav" aria-label="주 메뉴">%s</nav>'
-            '<div class="k-hd-r"><a class="k-hl opt" href="%sm/">%s마크 확인</a><a class="k-hl opt" href="%sapp/">작업 공간</a>'
-            '<a class="k-btn k-btn-p k-btn-s" href="%scontact/">도입 상담</a>'
+            '<div class="k-hd-r"><a class="k-hl opt" href="%sm/">%s마크 확인</a><a class="k-hl opt" href="%scontact/">도입 상담</a>'
+            '<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 시작</a>'
             '<button class="k-menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">%s</button></div></div></header>'
             '<nav class="k-sheet" id="mnav" aria-label="모바일 메뉴">%s</nav>'
             % (brand(root), "".join(items), root, ico("search"), root, root, ico("menu"), sheet))
@@ -202,16 +283,17 @@ def footer(root):
     if b["addr"]:
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
-    cols = [("제품", [("humanize/", "AI 작성률 검사와 휴머나이징"), ("geo/", "GEO 자동 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("mark/", "AI 표시 자동 마킹"), ("m/", "마크 확인")]),
-            ("개인과 기업", [("personal/", "개인용 한눈에"), ("proof/", "AI 활용 증빙서"), ("creators/", "크리에이터 사전 등록"), ("business/", "기업용 한눈에"), ("app/", "작업 공간"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "도입 상담")]),
-            ("개발자", [("developers/", "API와 AI 연동"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("site/", "AI 표시 자동 태그"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
+    biz.append('<span>결제 · 세금계산서는 운영사 성균관컨설팅이 처리합니다</span>')
+    cols = [("제품", [("label/", "AI 표시 자동화"), ("site/", "설치 마법사"), ("mark/", "생성물 자동 마킹"), ("geo/", "AI 검색 노출 최적화"), ("humanize/", "AI 작성률 검사와 휴머나이징"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
+            ("고객별", [("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("personal/", "개인"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("app/", "작업 공간"), ("contact/", "도입 상담")]),
+            ("개발자", [("developers/", "API와 SDK"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("m.js", "자동 표시 스크립트(공개 코드)"), ("v/", "표시 확인"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
             ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b>%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
     std = ('<div class="k-ft-std"><span><b>표준</b>C2PA, IPTC, XMP, schema.org, llms.txt</span>'
            '<span><b>서명</b>Ed25519(JWS), <a href="%s.well-known/aimarker-keys.json">공개키</a></span>'
            '<span><b>원장</b>하루치를 OpenTimestamps에 고정, <a href="%sverify/">확인하기</a></span></div>' % (root, root))
     return ('<footer class="k-ft"><div class="k-wrap"><div class="k-ft-top"><div class="k-ft-brand">%s'
-            '<p>AIMarker는 AI로 만든 글, 이미지, 광고, 상품 정보가 믿을 수 있게 쓰이도록 확인하고 표시하고 기록하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
+            '<p>AIMarker는 AI가 만든 이미지, 영상, 글에 지문 마크를 붙여 누구나 알아볼 수 있게 하고, AI 검색이 우리 회사를 정확히 읽고 추천하도록 돕는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
             '<div id="aimarker" class="ft-label"></div></div>'
             '<div class="k-ft-cols">%s</div></div>%s'
             '<div class="k-ft-biz">%s<br>'
@@ -236,7 +318,7 @@ def auto_ld(meta, body, path, title, desc):
                       "isPartOf": {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": "AIMarker"}, "publisher": {"@id": SITE + "#org"}})
     tx = lambda s: re.sub(r"\s+", " ", _h.unescape(re.sub(r"<[^>]+>", "", s))).strip()
     qa = []
-    for m in re.finditer(r"<details[^>]*>\s*<summary[^>]*>(.*?)</summary>\s*<p>(.*?)</p>\s*</details>", body, re.S):
+    for m in re.finditer(r"<details[^>]*>\s*<summary[^>]*>((?:(?!</summary>|<details).)*?)</summary>\s*<p>((?:(?!</details>|<details).)*?)</p>\s*</details>", body, re.S):
         q, a = tx(m.group(1)), tx(m.group(2))
         if q and a:
             qa.append({"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}})
@@ -252,7 +334,8 @@ def page(meta, body):
     depth = len([p for p in path.split("/") if p])
     root = "/" if meta.get("absroot") else "../" * depth
     body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
-    body = body.replace("{{root}}", root).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge()).replace("{{kaiec_lg}}", kaiec_badge(lg=True)).replace("{{kaiec_dk}}", kaiec_badge(dark=True))
+    body = body.replace("{{root}}", root).replace("{{ver}}", VER).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge()).replace("{{kaiec_lg}}", kaiec_badge(lg=True)).replace("{{kaiec_dk}}", kaiec_badge(dark=True))
+    body = re.sub(r"\{\{tiers:([a-z]+)\}\}", lambda m: tiers_html(m.group(1), root), body)
     body = re.sub(r"\{\{ico:([a-z0-9]+)\}\}", lambda m: ico(m.group(1)), body)
     title = meta["title"]
     desc = meta.get("desc", "")
@@ -268,7 +351,7 @@ def page(meta, body):
                     'data-privacy="1" data-auto="0" %s data-date="2026-10" defer></script>' % (root, VER, look))
     pre = "".join('<script src="%s"></script>' % s.strip() for s in meta.get("prescripts", "").split(",") if s.strip())
     pre += "".join('<link rel="stylesheet" href="%s%s?v=%s">' % (root, s.strip(), VER) for s in meta.get("styles", "").split(",") if s.strip())
-    pre += '<link rel="stylesheet" href="%sassets/v9.css?v=%s">' % (root, VER)
+    pre += '<link rel="stylesheet" href="%sassets/v9.css?v=%s"><link rel="stylesheet" href="%sassets/v10.css?v=%s">' % (root, VER, root, VER)
     if meta.get("manifest"):
         pre += ('<link rel="manifest" href="%sapp/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
                 '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' % root)
@@ -294,7 +377,8 @@ def page(meta, body):
                 '<script src="%sassets/am.js?v=%s" defer></script>' % (root, VER) + scripts + '</body></html>\n')
     html = (head + '<body class="has-tab%s" data-page="%s" data-root="%s">' % (" v9" if meta.get("v9") else "", meta.get("key", ""), root) + header(root, meta.get("key", "")) +
             '<main id="main">' + body + '</main>' + footer(root) + tabbar(root, meta.get("key", "")) +
-            '<script src="%sassets/am.js?v=%s" defer></script><script src="%sassets/k.js?v=%s" defer></script>' % (root, VER, root, VER) + scripts + '</body></html>\n')
+            '<script src="%sassets/am.js?v=%s" defer></script><script src="%sassets/k.js?v=%s" defer></script>' % (root, VER, root, VER) +
+            '<script src="%sassets/products.js?v=%s" defer></script><script src="%sassets/order.js?v=%s" defer></script>' % (root, VER, root, VER) + scripts + '</body></html>\n')
     return html
 
 
@@ -436,6 +520,28 @@ def build_ai_assets():
     shutil.copyfile(os.path.join(HERE, "lib", "aim-seo.js"), os.path.join(ROOT, "lib", "aim-seo.js"))   # 6.0 검색 · AI 검색 꾸러미
     os.makedirs(os.path.join(ROOT, "m"), exist_ok=True)
     shutil.copyfile(os.path.join(HERE, "m", "embed.js"), os.path.join(ROOT, "m", "embed.js"))
+    # 10.0 자동 표시 3.0: 지문 심볼(작은 크기용) 경로를 넣어 m.js 한 파일로
+    sym = open(os.path.join(ROOT, "assets", "brand", "aimarker-symbol-small.svg"), encoding="utf-8").read()
+    fp_d = re.search(r'<path fill="url\(#amg\)" d="([^"]+)"', sym).group(1)
+    lab = open(os.path.join(HERE, "m", "label.src.js"), encoding="utf-8").read()
+    assert "@@FP_SMALL@@" in lab
+    out = lab.replace("@@FP_SMALL@@", fp_d)
+    old_m = open(os.path.join(ROOT, "m.js"), encoding="utf-8").read() if os.path.exists(os.path.join(ROOT, "m.js")) else ""
+    if old_m != out:
+        open(os.path.join(ROOT, "m.js"), "w", encoding="utf-8").write(out)
+    # 10.0 지문 마크 넣기(브라우저) 라이브러리
+    st = open(os.path.join(HERE, "lib", "aimarker-stamp.src.js"), encoding="utf-8").read()
+    assert "@@FP_SMALL@@" in st
+    st = st.replace("@@FP_SMALL@@", fp_d)
+    sp = os.path.join(ROOT, "lib", "aimarker-stamp.js")
+    if not os.path.exists(sp) or open(sp, encoding="utf-8").read() != st:
+        open(sp, "w", encoding="utf-8").write(st)
+    # 등록 사이트 목록(정적, AIMarker 확인 페이지가 읽음)
+    os.makedirs(os.path.join(ROOT, "r"), exist_ok=True)
+    reg = json.load(open(os.path.join(HERE, "registry", "sites.json"), encoding="utf-8"))
+    with open(os.path.join(ROOT, "r", "sites.json"), "w", encoding="utf-8") as f:
+        json.dump(reg, f, ensure_ascii=False, indent=1)
+        f.write("\n")
     os.makedirs(os.path.join(ROOT, ".well-known"), exist_ok=True)
     with open(os.path.join(ROOT, ".well-known", "aimarker-keys.json"), "w", encoding="utf-8") as f:
         json.dump({"issuer": "https://aimarker.kr", "about": "AIMarker 마크 서명 공개키(JWS · EdDSA/Ed25519). 마크의 kid 와 같은 키로 서명을 확인하세요. https://aimarker.kr/developers/#verify",
@@ -484,6 +590,8 @@ def main():
         if sw2 != sw:
             open(swp, "w", encoding="utf-8").write(sw2)
     build_ai_assets()
+    with open(os.path.join(ROOT, "assets", "products.js"), "w", encoding="utf-8") as f:
+        f.write(products_js())
     print("만든 페이지:", ", ".join(built))
 
 

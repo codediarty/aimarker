@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>봄결 리빙 · AIMarker 예시 사이트</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="AIMarker 자동 표시를 보여 주려고 만든 가상의 쇼핑몰입니다. 글과 이미지는 생성형 AI(Claude)로 만들었습니다.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root { --ink: #2E2A27; --sub: #6E655D; --line: #E9E0D5; --bg: #FBF8F3; --card: #FFFFFF; --terra: #C8775A; --sage: #7F9479; }
+  * { box-sizing: border-box; }
+  html, body { word-break: keep-all; margin: 0; background: var(--bg); color: var(--ink); font-family: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; letter-spacing: -.01em; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  .note { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px 16px; background: #0E1F47; color: #DCE6FA; font-size: 12.5px; text-align: center; }
+  .note b { color: #fff; } .note a { color: #8FC2FF; text-decoration: underline; text-underline-offset: 3px; }
+  body.embed .note { display: none; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  header.top { position: sticky; top: 0; z-index: 20; background: rgba(251, 248, 243, .92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; gap: 28px; height: 64px; }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: -.03em; display: flex; align-items: center; gap: 8px; }
+  .logo i { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #F2C9A8, #C8775A); display: inline-block; }
+  nav.menu { display: flex; gap: 22px; font-size: 14.5px; color: var(--sub); font-weight: 600; }
+  nav.menu a:hover { color: var(--ink); }
+  .icons { margin-left: auto; display: flex; gap: 14px; color: var(--ink); }
+  .icons svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+  .hero { position: relative; margin: 22px auto 0; border-radius: 22px; overflow: hidden; }
+  .hero img { width: 100%; height: auto; aspect-ratio: 1600 / 760; object-fit: cover; }
+  .hero .cap { position: absolute; left: 40px; bottom: 40px; max-width: 440px; padding: 20px 22px; border-radius: 18px; background: rgba(251, 248, 243, .86); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); word-break: keep-all; }
+  .hero .cap small { display: inline-block; padding: 6px 10px; border-radius: 999px; background: rgba(255, 255, 255, .72); font-size: 12.5px; font-weight: 700; color: var(--terra); }
+  .hero .cap h1 { margin: 12px 0 8px; font-size: clamp(26px, 3.6vw, 42px); line-height: 1.2; letter-spacing: -.04em; font-weight: 800; }
+  .hero .cap p { margin: 0 0 18px; color: var(--sub); font-size: 15px; line-height: 1.6; }
+  .btn { display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 12px; background: var(--ink); color: #fff; font-weight: 700; font-size: 14.5px; }
+  h2.sec { margin: 56px 0 18px; font-size: 22px; letter-spacing: -.03em; display: flex; align-items: baseline; gap: 10px; }
+  h2.sec small { font-size: 13.5px; color: var(--sub); font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .prod .ph { position: relative; border-radius: 16px; overflow: hidden; background: #EFE7DC; }
+  .prod img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; transition: transform .4s ease; }
+  .prod:hover img { transform: scale(1.03); }
+  .prod .sale { position: absolute; right: 10px; top: 10px; height: 24px; padding: 0 9px; border-radius: 7px; background: var(--terra); color: #fff; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; }
+  .prod b { display: block; margin-top: 12px; font-size: 15px; font-weight: 700; }
+  .prod span { display: block; margin-top: 4px; font-size: 13.5px; color: var(--sub); }
+  .prod em { font-style: normal; font-weight: 800; color: var(--ink); }
+  .mag { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: center; margin-top: 8px; }
+  .mag .ph { border-radius: 20px; overflow: hidden; }
+  .mag .ph img { width: 100%; height: auto; aspect-ratio: 1400 / 760; object-fit: cover; }
+  .story { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 26px 26px 22px; }
+  .story h3 { margin: 0 0 10px; font-size: 20px; letter-spacing: -.03em; }
+  .story p { margin: 0 0 10px; font-size: 15px; line-height: 1.75; color: #4A433D; }
+  .story small { color: var(--sub); font-size: 12.5px; }
+  footer.bot { margin-top: 72px; padding: 32px 0 120px; border-top: 1px solid var(--line); color: var(--sub); font-size: 13px; line-height: 1.7; }
+  footer.bot b { color: var(--ink); }
+  @media (max-width: 860px) { .hero img { aspect-ratio: 4 / 3; } .grid { grid-template-columns: repeat(2, 1fr); } .mag { grid-template-columns: 1fr; } nav.menu { display: none; } .hero .cap { left: 16px; right: auto; max-width: min(80%, 400px); bottom: 16px; padding: 14px 16px; } .hero .cap h1 { margin: 8px 0 10px; } .hero .cap p { display: none; } .hero { border-radius: 16px; } }
+</style>
+</head>
+<body>
+<div class="note"><span><b>AIMarker 예시 사이트</b> · '봄결 리빙'은 설명을 위해 만든 가상의 쇼핑몰이며, 글과 이미지는 모두 생성형 AI(Claude)로 만들었습니다.</span> <a href="../label/" target="_top">AI 표시 자동화 보기</a></div>
+<header class="top"><div class="wrap bar">
+  <a class="logo" href="./"><i></i>봄결 리빙</a>
+  <nav class="menu" aria-label="쇼핑몰 메뉴"><a href="#new">신상품</a><a href="#new">리빙</a><a href="#new">침구</a><a href="#new">향</a><a href="#mag">매거진</a></nav>
+  <div class="icons" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></div>
+</div></header>
+
+<main class="wrap">
+  <section class="hero" aria-label="가을 컬렉션">
+    <img src="img/bomgyeol-living-hero.jpg" width="1600" height="760" alt="햇살이 드는 거실에 세이지색 소파와 화분, 스탠드가 놓인 장면">
+    <div class="cap"><small>가을 리빙 컬렉션</small><h1>가을,<br>집에 머무는 시간</h1><p>부드러운 세이지와 테라코타로 채운 거실. 이번 시즌 새로 들어온 소품을 만나 보세요.</p><a class="btn" href="#new">컬렉션 보기</a></div>
+  </section>
+
+  <h2 class="sec" id="new">이번 주 새로 들어온 것 <small>4개</small></h2>
+  <div class="grid">
+    <a class="prod" href="#new"><div class="ph"><img src="img/bomgyeol-vase.jpg" width="1000" height="1000" alt="테라코타 화병과 마른 꽃"></div><b>테라코타 화병 · 드라이 플라워</b><span><em>32,000원</em> · 무료 배송</span></a>
+    <a class="prod" href="#new"><div class="ph"><span class="sale">NEW</span><img src="img/bomgyeol-mug.jpg" width="1000" height="1000" alt="AI로 생성한 머그잔 상품 이미지"></div><b>세이지 라인 머그 · 소서 세트</b><span><em>18,500원</em></span></a>
+    <a class="prod" href="#new"><div class="ph"><img src="img/bomgyeol-candle.jpg" width="1000" height="1000" alt="유리 병에 담긴 캔들"></div><b>우드 세이지 캔들 220g</b><span><em>26,000원</em></span></a>
+    <a class="prod" href="#new"><div class="ph"><img src="img/bomgyeol-bedding.jpg" width="1000" height="1000" alt="리넨 침구 세트" data-ai="generated"></div><b>워싱 리넨 침구 세트</b><span><em>129,000원</em> · 퀸</span></a>
+  </div>
+
+  <h2 class="sec" id="mag">봄결 매거진 <small>책 읽는 구석 만들기</small></h2>
+  <div class="mag magazine">
+    <div class="ph"><img src="img/bomgyeol-reading-nook.jpg" width="1400" height="760" alt="창가의 테라코타 암체어와 작은 협탁"></div>
+    <div class="story" data-ai="text">
+      <h3>창가 한 칸에서 시작해요</h3>
+      <p>해가 길게 들어오는 창가에 낮은 암체어 하나를 두면, 그 자리가 금세 집에서 가장 오래 머무는 곳이 됩니다. 협탁에는 읽다 만 책 두어 권과 작은 화병을 올려 두세요.</p>
+      <p>조명은 눈높이보다 조금 낮게, 따뜻한 색으로 고르는 편이 좋습니다. 저녁에는 캔들 하나로도 공간의 온도가 달라집니다.</p>
+      <small>이 글은 생성형 AI의 도움을 받아 쓰고 담당자가 확인했습니다.</small>
+    </div>
+  </div>
+</main>
+
+<footer class="bot"><div class="wrap">
+  <b>봄결 리빙</b> · AIMarker 자동 표시를 보여 주려고 만든 가상의 쇼핑몰입니다. 실제로 판매하지 않습니다.<br>
+  이 페이지의 이미지는 생성형 AI(Claude)가 그렸고, 일부 파일에는 그 사실을 적은 출처 기록(IPTC 디지털 출처 유형)이 들어 있습니다.
+</div></footer>
+
+<script>
+  // 예시 화면 설정: AIMarker 설치 마법사와 소개 화면이 주소 뒤 값으로 모양을 바꿔 봅니다(?am=0 이면 끔)
+  (function () {
+    var q = new URLSearchParams(location.search);
+    if (q.get('embed') === '1') document.body.classList.add('embed');
+    if (q.get('am') === '0') return;
+    var s = document.createElement('script');
+    s.src = '../m.js' + (q.get('v') && /^[\w.-]{1,20}$/.test(q.get('v')) ? '?v=' + q.get('v') : '');
+    var attrs = { name: '봄결 리빙', use: 'image,text', review: 'all', date: '2026-10', 'ai-gen': '.magazine' };
+    var map = { tag: 'tag', pos: 'pos', tt: 'tag-theme', style: 'style', side: 'side', theme: 'theme', check: 'check', lang: 'lang' };
+    if (q.get('embed') === '1') attrs.side = 'right';   // 작은 창에서는 안내 단추가 첫 화면 단추를 가리지 않게 오른쪽에(주소 값이 있으면 그 값)
+    Object.keys(map).forEach(function (k) { var v = q.get(k); if (v && /^[a-z0-9-]{1,12}$/.test(v)) attrs[map[k]] = v; });
+    Object.keys(attrs).forEach(function (k) { s.setAttribute('data-' + k, attrs[k]); });
+    s.async = true;
+    document.body.appendChild(s);
+  })();
+</script>
+</body>
+</html>
