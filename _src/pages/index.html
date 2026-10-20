@@ -70,9 +70,9 @@ selflabel: footer
 
         <div class="k-desk-out" aria-live="polite">
           <div id="do-text" hidden>
-            <div class="k-out-h"><small>예시 결과</small><span class="k-legend"><span><i class="l3"></i>높음</span><span><i class="l2"></i>중간</span><span><i class="l1"></i>낮음</span></span></div>
-            <div class="k-score"><div class="k-ring" style="--p:47"><b>47<small>%</small></b></div><div class="t"><b><span class="k-verdict unfit">부적합</span>개선 필요</b><span>AI 작성률 47%, 부적합 기준은 40% 이상</span></div></div>
-            <p class="k-paper k-draw">지난 학기 조별 과제로 동네 시장 상인 다섯 분을 인터뷰했다. 처음엔 거절도 많이 당했는데, 두 번째 주부터는 먼저 말을 걸어 주시는 분도 생겼다. <span class="k-s l3">전통시장은 지역 경제 활성화에 있어서 중요한 역할을 합니다.</span> <span class="k-s l2">또한, 다양한 먹거리와 문화를 경험할 수 있는 공간으로서 그 가치가 높습니다.</span> <span class="k-s l1">따라서, 앞으로도 많은 관심이 필요하다고 할 수 있습니다.</span></p>
+            <div class="k-out-h"><small>예시 결과</small><span class="k-legend"><span><i class="ai"></i>AI 검출 문장</span></span></div>
+            <div class="k-score"><div class="k-ring" style="--p:58"><b>58<small>%</small></b></div><div class="t"><b><span class="k-verdict unfit">부적합</span>AI 검출됨</b><span>5문장 가운데 3문장 AI 검출, 작성률 58%(부적합 기준 40% 이상)</span></div></div>
+            <p class="k-paper k-draw">지난 학기 조별 과제로 동네 시장 상인 다섯 분을 인터뷰했다. 처음엔 거절도 많이 당했는데, 두 번째 주부터는 먼저 말을 걸어 주시는 분도 생겼다. <span class="k-s ai">전통시장은 지역 경제 활성화에 있어서 중요한 역할을 합니다.</span> <span class="k-s ai">또한, 다양한 먹거리와 문화를 경험할 수 있는 공간으로서 그 가치가 높습니다.</span> <span class="k-s ai">따라서, 앞으로도 많은 관심이 필요하다고 할 수 있습니다.</span></p>
             <div class="k-out-f"><p class="k-small">예시 화면입니다. 글을 넣고 검사하면 내 글로 바로 나옵니다.</p><span class="k-tag">판정 기준 AMJ-1.0</span></div>
           </div>
           <div id="do-site" hidden>
@@ -153,7 +153,7 @@ selflabel: footer
         <div class="k-prod-t">
           <p class="k-prod-k">{{ico:pen}}AI 작성률 검사와 휴머나이징<span class="k-tag">개인</span></p>
           <h3 class="k-h3">AI가 쓴 티가 나는 문장을 찾아, 사람 말투로 고칩니다</h3>
-          <p class="k-p">글을 붙여 넣으면 AI 작성률과 판정(안전, 고위험, 부적합)을 정해진 기준으로 보여 주고, AI가 쓴 것으로 보이는 문장을 형광펜 색으로 표시합니다. 휴머나이징은 생성 AI 없이 AIMarker 인간화 엔진이 사람 말투로 바꿉니다.</p>
+          <p class="k-p">글을 붙여 넣으면 AI 작성률과 판정(안전, 고위험, 부적합)을 정해진 기준으로 보여 주고, AI가 쓴 것으로 보이는 문장을 빨간 형광펜으로 표시합니다. 휴머나이징은 생성 AI 없이 AIMarker 인간화 엔진이 사람 말투로 바꿉니다.</p>
           <ul class="k-facts">
             <li>{{ico:check}}<span><b>같은 글은 같은 판정</b>, 검사 번호로 언제든 다시 확인</span></li>
             <li>{{ico:check}}<span><b>숫자, 이름, 인용은 그대로</b> 두고 말투와 버릇만 고침</span></li>
@@ -164,9 +164,9 @@ selflabel: footer
         <div class="k-screen" aria-hidden="true">
           <div class="k-screen-bar"><i></i><i></i><i></i><span>aimarker.kr/humanize/</span></div>
           <div class="k-screen-body">
-            <div class="k-score"><div class="k-ring" style="--p:100"><b>100<small>%</small></b></div><div class="t"><b><span class="k-verdict unfit">부적합</span>AI 작성 패턴이 많음</b><span>4문장 모두 AI 가능성 높음, 대화창 흔적 없음</span></div></div>
+            <div class="k-score"><div class="k-ring" style="--p:100"><b>100<small>%</small></b></div><div class="t"><b><span class="k-verdict unfit">부적합</span>AI 검출됨</b><span>4문장 모두 AI 검출, 대화창 흔적 없음</span></div></div>
             <div class="k-screen-cols" style="margin-top:14px">
-              <div class="k-cmp"><div><small>원문</small><p><span class="k-s l3">인공지능 기술은 현대 사회에서 중요한 역할을 하고 있습니다.</span> <span class="k-s l3">또한, 다양한 산업 분야에 있어서 혁신적인 변화를 이끌고 있습니다.</span> <span class="k-s l3">이를 통해 기업은 업무를 효과적으로 처리할 수 있습니다.</span> <span class="k-s l3">따라서, 인공지능을 적극적으로 활용하는 것이 중요합니다.</span></p></div></div>
+              <div class="k-cmp"><div><small>원문</small><p><span class="k-s ai">인공지능 기술은 현대 사회에서 중요한 역할을 하고 있습니다.</span> <span class="k-s ai">또한, 다양한 산업 분야에 있어서 혁신적인 변화를 이끌고 있습니다.</span> <span class="k-s ai">이를 통해 기업은 업무를 효과적으로 처리할 수 있습니다.</span> <span class="k-s ai">따라서, 인공지능을 적극적으로 활용하는 것이 중요합니다.</span></p></div></div>
               <div class="k-cmp"><div class="after"><small>사람 말투로(해요체)</small><p>인공지능 기술은 <span class="k-s ok">오늘날</span> 중요한 역할을 하고 <span class="k-s ok">있어요</span>. <span class="k-s ok">그리고 여러</span> 산업 분야에서 <span class="k-s ok">큰</span> 변화를 이끌고 <span class="k-s ok">있어요</span>. 이를 통해 기업은 업무를 효과적으로 처리할 수 <span class="k-s ok">있어서</span> 인공지능을 적극적으로 활용하는 <span class="k-s ok">게 중요해요</span>.</p></div></div>
             </div>
             <p class="k-small" style="margin-top:12px">인간화 엔진 HUM 1.1의 실제 결과입니다.</p>

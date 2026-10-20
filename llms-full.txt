@@ -157,7 +157,7 @@ AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 
 ### am.detect · AI 작성률과 판정(키 필요 · 글은 저장하지 않음)
 
 {"action":"am.detect","key":"amk_…","text":"…"} → rate(AI 작성률 0~100: AI 검출 문장의 글자 수 ÷ 전체 글자 수, 빈칸 뺌) · band{key: unfit · risk · safe · short, ko: 부적합 · 고위험 · 안전 · 판단 보류, label, why[](판정 근거)} · crit(AMJ-1.0) · lv{hi · mid · low}(등급별 문장 수) · aiN · aiChars · segN · segAi(검출 구간 수) · segs[]{no · s · e(문장 번호) · c · a · share · ai · feat[]} · chat(AI 대화창 흔적 수) · feat[]{cat · name · segs · share · n · tags[] · why}(AI 문체 특성) · cats[] · opinion[](종합 분석 의견) · opDetail[](먼저 고칠 문장 · 구간 위치) · level · levelKo · short · verse · n · chars · sentences[]{t, p 판별 확률 0~100, g 등급(3 높음 · 2 중간 · 1 낮음 · 0 없음), ai, nl, para} · cn(검사 번호 D-XXXXX-XXXXX) · model · note. 한 번에 6,000자. sentences:false 로 문장별을 뺄 수 있습니다.
-- 판정 기준 AMJ-1.0(AIMarker 판정 기준 1.0): 문장 등급은 판별 확률 85 이상 높음 · 65 이상 중간 · 65 미만이지만 앞뒤 문맥까지 본 구간 판정에서 AI로 든 문장 낮음. 구간은 문단(빈 줄, 없으면 줄 바꿈. 30자 미만은 다음 문단과 합치고 1,000자를 넘으면 문장 경계에서 나눔), 구간 글자의 20% 이상이 AI 검출 문장이면 검출 구간. 부적합 = 작성률 40% 이상 · 검출 구간이 전체의 절반 이상(2구간 이상일 때) · AI 대화창 흔적(줄 첫머리 굵게 표시 · 제목 기호 · 글 맨 앞 AI 답변 첫마디) 1곳 이상, 고위험 = 작성률 20% 이상 · 검출 구간 1곳 이상 · 중간 이상 문장 1개 이상, 그 밖에 안전, 60자 미만은 판단 보류.
+- 판정 기준 AMJ-1.0(AIMarker 판정 기준 1.0): AI 검출 문장은 판별 확률(AI 점수) 65 이상인 문장, 또는 65 미만이어도 앞뒤 문맥까지 본 구간 판정에서 AI로 든 문장입니다. 화면에는 한 가지 표시(AI 검출, 빨간 형광펜)로 나타내고, 응답의 lv{hi · mid · low}는 점수 구간별 문장 수(85 이상 · 65 이상 · 구간 판정)입니다. 구간은 문단(빈 줄, 없으면 줄 바꿈. 30자 미만은 다음 문단과 합치고 1,000자를 넘으면 문장 경계에서 나눔), 구간 글자의 20% 이상이 AI 검출 문장이면 검출 구간. 부적합 = 작성률 40% 이상 · 검출 구간이 전체의 절반 이상(2구간 이상일 때) · AI 대화창 흔적(줄 첫머리 굵게 표시 · 제목 기호 · 글 맨 앞 AI 답변 첫마디) 1곳 이상, 고위험 = 작성률 20% 이상 · 검출 구간 1곳 이상 · AI 점수 65 이상 문장 1개 이상, 그 밖에 안전, 60자 미만은 판단 보류. 결과 화면은 판정을 쉬운 말로도 보여 줍니다(부적합 = AI 검출됨 · 고위험 = AI 일부 검출 · 안전 = AI 검출 안 됨).
 - 무료 맛보기와 전체: 무료 키(하루 300회)로 부르면 full:false 입니다. 작성률 · 판정 · 판정 근거 · 수치 · 종합 의견은 전체와 같은 값이고, 문장은 가장 뚜렷한 2개만 등급을 보여 줍니다(locked · shown, 나머지 문장은 {t · nl · para · lock:1}). segs · opDetail 은 빠지고 개수(segLock · opDetailN)만, 문체 특성의 걸린 표현(tags)은 맨 위 하나만 옵니다. 개인 이용권 코드 "pass":"K7Q4-F9XD-2MTA-8PLW" 를 함께 보내거나 유료 키(하루 한도 1,000회 이상, 비즈니스 요금제는 1만 회)면 full:true 로 모두 받고, 이용권은 1회를 씁니다(600자 이하는 세지 않음, 남은 상태는 pass). 이용권은 https://aimarker.kr/humanize/#price 에서 삽니다.
 - 결정적 모델과 정해진 기준입니다. 같은 글은 언제, 몇 번을 보내도 같은 값 · 같은 판정입니다(줄바꿈 종류 · 겹친 빈칸 같은 붙여넣기 차이는 무시).
 - 추정일 뿐 증명이 아닙니다. 보고서체 · 공문체처럼 사람 글이 높게, 사람이 많이 고친 AI 글이 낮게 나올 수 있습니다. 결과만으로 다른 사람을 판단하는 데 쓰지 마세요. 마크 발급 근거로 쓰지 않습니다.
@@ -168,7 +168,7 @@ AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 
 
 ### am.humanize · 고급 휴머나이징(이용권 고급 횟수, 준비되면)
 
-{"action":"am.humanize","key":"amk_…","pass":"K7Q4-F9XD-2MTA-8PLW","text":"…","tone":"keep"} → text · facts · before · after · ai · aiAfter. 생성 AI가 문장을 다시 쓰고 같은 사실 확인을 거칩니다. 이용권(고급 횟수 1회)이나 유료 키가 없으면 code PASS_NEED. {"probe":true} 로 켜졌는지 확인합니다(꺼져 있으면 code NOT_READY).
+{"action":"am.humanize","key":"amk_…","pass":"K7Q4-F9XD-2MTA-8PLW","text":"…","tone":"keep"} → text · facts · before · after · ai · aiAfter. AIMarker 인간화 엔진(HUM)이 생성 AI 없이 서버 안에서 다시 쓰고, 숫자 · 인용을 지켰는지 확인합니다. 이용권(고급 횟수 1회)이나 유료 키가 없으면 code PASS_NEED. {"probe":true} 로 켜졌는지 확인합니다(꺼져 있으면 code NOT_READY).
 
 ### am.passinfo · am.pass · 개인 이용권(누구나)
 

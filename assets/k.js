@@ -86,6 +86,22 @@
     try { sessionStorage.setItem('am_hz_in', JSON.stringify({ text: t.slice(0, 50000), act: act, tone: tone ? tone.value : 'auto' })); } catch (e) { /* 저장 없이 */ }
     location.href = ROOT + 'humanize/#hz';
   }
+  function diffOps(a, b) {   // 낱말 단위로 바뀐 곳(뺀 말 · 넣은 말)
+    var tk = function (x) { return x.match(/\s+|[^\s]+/g) || []; }, A = tk(a), B = tk(b), n = A.length, m = B.length, ops = [], i, j;
+    if (n * m > 4000000) return [['-', a], ['+', b]];
+    var W = m + 1, dp = new Uint16Array((n + 1) * W);
+    for (i = n - 1; i >= 0; i--) for (j = m - 1; j >= 0; j--) dp[i * W + j] = A[i] === B[j] ? dp[(i + 1) * W + j + 1] + 1 : Math.max(dp[(i + 1) * W + j], dp[i * W + j + 1]);
+    var push = function (k, t) { var l = ops[ops.length - 1]; if (l && l[0] === k) l[1] += t; else ops.push([k, t]); };
+    i = 0; j = 0;
+    while (i < n && j < m) { if (A[i] === B[j]) { push('=', A[i]); i++; j++; } else if (dp[(i + 1) * W + j] >= dp[i * W + j + 1]) { push('-', A[i]); i++; } else { push('+', B[j]); j++; } }
+    while (i < n) push('-', A[i++]); while (j < m) push('+', B[j++]);
+    var R = [], del = '', ins = '', open = false, flush = function () { if (del) R.push(['-', del]); if (ins) R.push(['+', ins]); del = ins = ''; open = false; };
+    ops.forEach(function (o, k) {   // 빈칸만 사이에 둔 바뀜은 한 덩어리로
+      if (o[0] === '=') { var nx = ops[k + 1]; if (open && !o[1].trim() && nx && nx[0] !== '=') { del += o[1]; ins += o[1]; return; } flush(); R.push(o); return; }
+      open = true; if (o[0] === '-') del += o[1]; else ins += o[1];
+    });
+    flush(); return R;
+  }
   var bC = $('#dkCheck'), bP = $('#dkPro');
   if (bC) bC.addEventListener('click', function () { handoff('check'); });
   if (bP) bP.addEventListener('click', function () {
@@ -94,9 +110,11 @@
     outT.innerHTML = '<div class="k-busy"><i></i>첫 문단을 사람 말투로 바꾸는 중입니다</div>';
     AM.call('am.humanize', { text: t.slice(0, 6000), tone: tone ? tone.value : 'auto', cid: cid() }, 60000).then(function (r) {
       if (!r || !r.ok) throw r || {};
-      var same = String(r.text || '').trim() === String(r.src || '').trim();
+      var same = String(r.text || '').trim() === String(r.src || '').trim(), ops = diffOps(String(r.src || ''), String(r.text || ''));
+      var left = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '-' ? '<del>' + esc(o[1]) + '</del>' : ''; }).join('');
+      var right = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '+' ? '<ins>' + esc(o[1]) + '</ins>' : ''; }).join('');
       outT.innerHTML = '<div class="k-out-h"><small>다듬은 첫 문단, 무료 맛보기</small><span class="k-tag ok">바꾼 곳 ' + (r.changes || 0) + '곳</span></div>' +
-        '<div class="k-cmp"><div><small>원문</small><p>' + esc(r.src || '') + '</p></div><div class="after"><small>사람 말투로</small><p>' + esc(r.text || '') + '</p></div></div>' +
+        '<div class="k-cmp"><div><small>원문</small><p>' + left + '</p></div><div class="after"><small>사람 말투로</small><p>' + right + '</p></div></div>' +
         (r.toneNote ? '<p class="k-note-line">' + esc(r.toneNote) + '</p>' : '') +
         (same && !r.toneNote ? '<p class="k-note-line">이 문단은 이미 사람 말투에 가까워 바꿀 곳이 거의 없었습니다.</p>' : '') +
         '<div class="k-out-f"><p class="k-small">숫자, 이름, 인용은 그대로 지킵니다. 글 전체와 다른 버전은 이용권으로 열립니다.</p>' +

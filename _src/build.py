@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261020a"
+VER = "20261020b"
 TODAY = "2026-10-20"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -218,7 +218,7 @@ def kaiec_badge(dark=False, lg=False):
 PRODUCTS = [("label/", "fingerprint", "AI 표시 자동화", "코드 한 줄로 사이트 속 AI 생성물에 지문 마크 자동 부착"),
             ("mark/", "badge", "생성물 자동 마킹", "이미지 · 영상 · 문서에 지문 마크와 출처 기록"),
             ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리를 찾고 추천하게"),
-            ("humanize/", "pen", "AI 작성률 검사와 휴머나이징", "문장마다 AI 작성 가능성을 표시하고 사람 말투로"),
+            ("humanize/", "pen", "AI 작성률 검사와 휴머나이징", "AI가 쓴 문장을 찾아 표시하고 사람 말투로"),
             ("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 상품 피드"),
             ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 광고주 승인, 감사 기록"),
             ("label/#service", "code", "AI 서비스 표시 의무 대응", "AI 서비스 결과물마다 표시를 자동으로(API · SDK · MCP)")]

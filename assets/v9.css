@@ -2,7 +2,7 @@
    - 글에도 지문이 있습니다. 로고의 두 색이 화면 전체의 규칙입니다.
      네이비(Marker) = 확인하고 표시하고 기록하는 도구: 글자, 단추, 틀
      지문 블루(AI)  = 찾아내 표시한 것: 지금 위치, 핵심 낱말, 링크 밑줄, 고른 칸, 근거 막대
-   - 판정 색(높음 빨강, 중간 주황, 낮음 노랑)은 결과에만 씁니다.
+   - 판정 색(부적합 빨강, 고위험 주황, 안전 초록)과 AI 검출 표시(빨간 형광펜 하나)는 결과에만 씁니다.
    - 새 부품은 k- 로 시작. 예전 부품(x- · hz7- · btn …)은 아래 '예전 부품 맞춤'에서 같은 색 · 모양으로 */
 
 :root {
@@ -13,6 +13,7 @@
   --k-grad: linear-gradient(45deg, #0030C4 0%, #0858F0 45%, #0E8BFB 80%, #33C8FF 100%);
   --k-marker: #0B63F6; --k-marker-hl: rgba(11, 99, 246, .15); --k-marker-soft: #E8F1FF;
   --k-hi: #E5484D; --k-hi-hl: rgba(255, 77, 79, .28); --k-mid: #F28C28; --k-mid-hl: rgba(255, 150, 28, .30); --k-lo: #D9AE00; --k-lo-hl: rgba(255, 214, 10, .40);
+  --k-ai-hl: rgba(255, 77, 79, .19); --k-ai-ln: rgba(229, 72, 77, .78);   /* AI 검출 문장 표시는 한 가지(형광펜 + 밑줄) */
   --k-ok: #0E9A6A; --k-ok-bg: #E6F5EE; --k-warn-bg: #FFF4E5;
   --k-code: #0B1734; --k-code-2: #13224A; --k-code-ink: #E4E9F2; --k-code-dim: #8A94A8;
   --k-r-app: 18px; --k-r: 14px; --k-r-in: 12px; --k-r-s: 8px;
@@ -47,17 +48,17 @@ a { color: var(--k-ink); }
 /* 형광펜: 글자 아래쪽 띠(제목 · 핵심 낱말), 문장 표시 */
 .k-mk { background: linear-gradient(transparent 56%, var(--k-marker-hl) 56%, var(--k-marker-hl) 94%, transparent 94%); -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 .06em; }
 .k-s { -webkit-box-decoration-break: clone; box-decoration-break: clone; border-radius: 3px; padding: 1px 0; background-repeat: no-repeat; background-size: 100% 100%; transition: background-size .55s cubic-bezier(.2, .7, .2, 1); }
-.k-s.l3 { background-image: linear-gradient(var(--k-hi-hl), var(--k-hi-hl)); }
-.k-s.l2 { background-image: linear-gradient(var(--k-mid-hl), var(--k-mid-hl)); }
-.k-s.l1 { background-image: linear-gradient(var(--k-lo-hl), var(--k-lo-hl)); }
 .k-s.ok { background-image: linear-gradient(rgba(14, 154, 106, .16), rgba(14, 154, 106, .16)); }
 .k-draw .k-s { background-size: 0% 100%; }
 .k-draw.on .k-s { background-size: 100% 100%; }
+.k-s.ai, .k-s.l3, .k-s.l2, .k-s.l1 { background-image: linear-gradient(var(--k-ai-hl), var(--k-ai-hl)), linear-gradient(var(--k-ai-ln), var(--k-ai-ln)); background-size: 100% 86%, 100% 1.5px; background-position: 0 40%, 0 100%; }
+.k-draw .k-s.ai, .k-draw .k-s.l3, .k-draw .k-s.l2, .k-draw .k-s.l1 { background-size: 0% 86%, 0% 1.5px; }
+.k-draw.on .k-s.ai, .k-draw.on .k-s.l3, .k-draw.on .k-s.l2, .k-draw.on .k-s.l1 { background-size: 100% 86%, 100% 1.5px; }
 .k-draw.on .k-s:nth-of-type(2) { transition-delay: .35s; } .k-draw.on .k-s:nth-of-type(3) { transition-delay: .7s; } .k-draw.on .k-s:nth-of-type(4) { transition-delay: 1.05s; } .k-draw.on .k-s:nth-of-type(5) { transition-delay: 1.4s; }
 .k-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--k-gray); }
 .k-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .k-legend i { width: 18px; height: 10px; border-radius: 3px; display: inline-block; }
-.k-legend .l3 { background: var(--k-hi-hl); } .k-legend .l2 { background: var(--k-mid-hl); } .k-legend .l1 { background: var(--k-lo-hl); } .k-legend .ok { background: rgba(14, 154, 106, .2); }
+.k-legend .ai, .k-legend .l3, .k-legend .l2, .k-legend .l1 { background: linear-gradient(var(--k-ai-hl), var(--k-ai-hl)) 0 0 / 100% 82% no-repeat, linear-gradient(var(--k-ai-ln), var(--k-ai-ln)) 0 100% / 100% 2px no-repeat; } .k-legend .ok { background: rgba(14, 154, 106, .2); }
 
 /* ---------- 글자 ---------- */
 .k-h1 { text-wrap: balance; font-size: clamp(34px, 5vw, 60px); line-height: 1.13; letter-spacing: -.042em; font-weight: 780; color: var(--k-ink); margin: 0; word-break: keep-all; }
@@ -220,6 +221,8 @@ a { color: var(--k-ink); }
 .k-cmp > div p { margin: 0; font-size: 15px; line-height: 1.85; color: var(--k-ink-2); white-space: pre-wrap; word-break: keep-all; }
 .k-cmp > div.after { border-color: rgba(14, 154, 106, .45); background: #FAFDFB; }
 .k-cmp > div.after small { color: var(--k-ok); }
+.k-cmp del { padding: 0 1px; border-radius: 3px; background: #FDEEEE; color: #B42328; text-decoration-thickness: 1.5px; }
+.k-cmp ins { padding: 0 1px; border-radius: 3px; background: #E7F6EF; color: #0A7550; text-decoration: none; font-weight: 650; }
 .k-note-line { font-size: 13.5px; color: var(--k-gray); line-height: 1.65; margin-top: 10px; }
 .k-busy { display: flex; align-items: center; gap: 10px; color: var(--k-gray); font-size: 14.5px; padding: 18px 0; }
 .k-busy i { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--k-rule-2); border-top-color: var(--k-ink); animation: kspin .8s linear infinite; }
@@ -468,6 +471,7 @@ a { color: var(--k-ink); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
   .k-draw .k-s { background-size: 100% 100%; }
+  .k-draw .k-s.ai, .k-draw .k-s.l3, .k-draw .k-s.l2, .k-draw .k-s.l1 { background-size: 100% 86%, 100% 1.5px; }
 }
 .k-screen-bar .k-ex { margin-left: auto; font-style: normal; font-size: 11.5px; font-weight: 700; color: var(--k-dim); }
 .k-desk-tabs [role="tab"] .sm { display: none; }
@@ -498,7 +502,7 @@ a { color: var(--k-ink); }
 .k-levels > div { display: grid; grid-template-columns: 112px 1fr; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--k-rule); font-size: 14.5px; }
 .k-levels dt { display: flex; align-items: center; gap: 8px; font-weight: 720; }
 .k-levels dt i { width: 22px; height: 12px; border-radius: 3px; display: inline-block; border: 1px solid var(--k-rule); }
-.k-levels dt i.l3 { background: var(--k-hi-hl); border-color: transparent; } .k-levels dt i.l2 { background: var(--k-mid-hl); border-color: transparent; } .k-levels dt i.l1 { background: var(--k-lo-hl); border-color: transparent; }
+.k-levels dt i.ai, .k-levels dt i.l3, .k-levels dt i.l2, .k-levels dt i.l1 { background: linear-gradient(var(--k-ai-hl), var(--k-ai-hl)) 0 0 / 100% 82% no-repeat, linear-gradient(var(--k-ai-ln), var(--k-ai-ln)) 0 100% / 100% 2px no-repeat; border-color: transparent; }
 .k-levels dd { margin: 0; color: var(--k-gray); line-height: 1.6; }
 .k-traits { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--k-rule); }
 .k-traits li { display: grid; grid-template-columns: 170px 1fr; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--k-rule); font-size: 14.5px; }
@@ -546,14 +550,6 @@ body.v9 { --tl0: #000000; --tl1: #0E1F47; --tl2: #586179; --tl-ink: #586179; }
 .k9-tool .hz7-pass { background: var(--k-panel); }
 .k9-tool .hz7-pass .chip.on { background: var(--k-ok-bg); border-color: rgba(14, 154, 106, .3); color: var(--k-ok); }
 .k9-tool .hz7-out { border-top: 1px solid var(--k-rule); }
-.hz-s.l3, .hz7-paper .hz-s.l3 { background: var(--k-hi-hl); }
-.hz-s.l2, .hz7-paper .hz-s.l2 { background: var(--k-mid-hl); }
-.hz-s.l1, .hz7-paper .hz-s.l1 { background: var(--k-lo-hl); }
-body.v9 .hz8-cta { color: var(--k-ink); background: var(--k-marker-soft); border: 1px solid #C7DBFF; }
-body.v9 .hz8-cta h3 { color: var(--k-ink); }
-body.v9 .hz8-cta .l small { color: #0A4FCB; }
-body.v9 .hz8-cta li { color: var(--k-ink-2); }
-body.v9 .hz8-cta li .ico { color: var(--k-ok); }
 body.v9 .hz7-dlg { border-radius: var(--k-r-app); }
 @media (max-width: 760px) { .k9-tool { padding-bottom: 48px !important; } .k9-tool .hz7-in { padding: 14px; } }
 
