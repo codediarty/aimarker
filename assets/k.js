@@ -108,7 +108,8 @@
     var t = need(); if (!t || !window.AM || !AM.call) return;
     bP.disabled = true;
     outT.innerHTML = '<div class="k-busy"><i></i>첫 문단을 사람 말투로 바꾸는 중입니다</div>';
-    AM.call('am.humanize', { text: t.slice(0, 6000), tone: tone ? tone.value : 'auto', cid: cid() }, 60000).then(function (r) {
+    var hq = { text: t.slice(0, 6000), tone: tone ? tone.value : 'auto', cid: cid() };   // 무료 맛보기라 응답이 없으면 한 번 더 보냄(AM.callRetry)
+    (AM.callRetry ? AM.callRetry('am.humanize', hq, 60000, function () { var b = outT.querySelector('.k-busy'); if (b) b.lastChild.textContent = '서버 응답이 늦어 한 번 더 보냈습니다. 조금만 더 기다려 주세요'; }) : AM.call('am.humanize', hq, 60000)).then(function (r) {
       if (!r || !r.ok) throw r || {};
       var same = String(r.text || '').trim() === String(r.src || '').trim(), ops = diffOps(String(r.src || ''), String(r.text || ''));
       var left = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '-' ? '<del>' + esc(o[1]) + '</del>' : ''; }).join('');
@@ -120,7 +121,8 @@
         '<div class="k-out-f"><p class="k-small">숫자, 이름, 인용은 그대로 지킵니다. 글 전체와 다른 버전은 이용권으로 열립니다.</p>' +
         '<span><button class="k-btn k-btn-p k-btn-s" type="button" data-go="pro">글 전체 다듬기</button> <button class="k-btn k-btn-l k-btn-s" type="button" data-go="check">AI 작성률 보기</button></span></div>';
     }).catch(function (e) {
-      outT.innerHTML = '<div class="k-err">' + esc((e && e.message) || '지금은 다듬기를 할 수 없습니다. 잠시 뒤 다시 시도해 주세요.') + '</div>';
+      var slow = e && (e.name === 'AbortError' || e.name === 'TypeError');
+      outT.innerHTML = '<div class="k-err">' + esc(slow ? (e.name === 'TypeError' ? '서버에 연결하지 못했습니다. 잠시 뒤 다시 시도해 주세요.' : '서버 응답이 늦어 결과를 받지 못했습니다. 잠시 뒤 다시 시도해 주세요.') : (e && e.message) || '지금은 다듬기를 할 수 없습니다. 잠시 뒤 다시 시도해 주세요.') + '</div>';
     }).then(function () { bP.disabled = false; });
   });
   outT.addEventListener('click', function (e) { var b = e.target.closest('[data-go]'); if (b) handoff(b.getAttribute('data-go')); });

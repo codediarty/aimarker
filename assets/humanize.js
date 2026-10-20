@@ -41,8 +41,16 @@
   function toneFor() { var t = tone(); return t === 'auto' && S.toneUsed ? S.toneUsed : t; }   // 문장 도우미는 글 전체에서 정한 말투로
   function prod(id) { var L = (S.info && S.info.products && S.info.products.length) ? S.info.products : PRODS; for (var i = 0; i < L.length; i++) if (L[i].id === id) return L[i]; return null; }
   function prods() { return (S.info && S.info.products && S.info.products.length) ? S.info.products : PRODS; }
+  var RETRY = { 'am.style': 1, 'am.humanize': 1, 'am.passinfo': 1 };   // 응답이 없으면 한 번 더(무료 요청만. 이용권 요청은 늦게 끝나면 횟수가 두 번 빠질 수 있어 다시 보내지 않음)
   function call(action, data, ms) {
-    return AM.call(action, Object.assign({ cid: cid() }, data || {}), ms || 60000).then(function (r) { if (!r || !r.ok) throw r || { message: '응답이 없습니다. 잠시 뒤 다시 시도해 주세요.' }; if (r.pass) { S.ps = r.pass; renderPass(); } return r; });
+    var d = Object.assign({ cid: cid() }, data || {}), t = ms || 60000;
+    var p = RETRY[action] && !d.pass && AM.callRetry ? AM.callRetry(action, d, t, action === 'am.passinfo' ? null : slowNote) : AM.call(action, d, t);
+    return p.then(function (r) { if (!r || !r.ok) throw r || { message: '응답이 없습니다. 잠시 뒤 다시 시도해 주세요.' }; if (r.pass) { S.ps = r.pass; renderPass(); } return r; });
+  }
+  function slowNote() {   // 다시 보낼 때 진행 표시에 알림
+    var el = $('.hz7-prog', out), p = el && $('p', el);
+    if (p) p.textContent = '서버 응답이 늦어 한 번 더 보냈습니다. 조금만 더 기다려 주세요.';
+    stat('서버 응답이 늦어 한 번 더 보냈습니다');
   }
   function ico(name) {
     var P = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', check: '<path d="M20 6 9 17l-5-5"/>', alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>', back: '<path d="M15 18l-6-6 6-6"/>', file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>', clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>' };
@@ -285,16 +293,17 @@
   }
   function note(msg) { out.innerHTML = '<div class="hz7-prog"><b>' + esc(msg) + '</b></div>'; stat(msg); }
   function stat(t) { var st = document.getElementById('hzStat'); if (st) st.textContent = t || ''; }   // 화면 읽기 프로그램에는 한 줄만 알림
-  function fail(e, retry) {
-    var code = e && e.code, m = e && e.name === 'AbortError' ? '응답이 늦습니다. 잠시 뒤 다시 시도해 주세요.' : (e && (e.message || e.msg)) || '지금은 처리하지 못했어요. 잠시 뒤 다시 시도해 주세요.';
-    var acts = '';
+  function fail(e, retry, redo) {
+    var code = e && e.code, slow = !!e && (e.name === 'AbortError' || e.name === 'TypeError');   // 시간 초과 · 연결 끊김
+    var m = slow ? (e.name === 'TypeError' ? '서버에 연결하지 못했습니다. 넣은 글은 그대로 있으니 잠시 뒤 다시 시도해 주세요.' : '서버 응답이 늦어 결과를 받지 못했습니다. 넣은 글은 그대로 있으니 다시 시도해 주세요.') : (e && (e.message || e.msg)) || '지금은 처리하지 못했어요. 잠시 뒤 다시 시도해 주세요.';
+    var acts = slow && redo ? '<button class="btn btn-p btn-s" type="button" data-redo>다시 시도</button>' : '';
     var again = retry ? '<button class="btn btn-g btn-s" type="button" data-again>무료 맛보기로 보기</button>' : '';
     if (code === 'PASS') { clearPass(); S.passMsg = m; renderPass(); acts = '<button class="btn btn-g btn-s" type="button" data-code>코드 다시 넣기</button>' + again; }
     else if (code === 'PASS_END' || code === 'PASS_USED') acts = '<button class="btn btn-p btn-s" type="button" data-buy="d1">새 이용권 구매</button>' + again;
     else if (code === 'PASS_NEED') acts = '<button class="btn btn-p btn-s" type="button" data-buy="d1">24시간 이용권 2,900원</button><button class="btn btn-g btn-s" type="button" data-code>이용권 코드 넣기</button>';
     else if (code === 'FREE_DAY') acts = '<button class="btn btn-p btn-s" type="button" data-buy="s1">1건 이용권 1,900원</button><button class="btn btn-g btn-s" type="button" data-buy="d1">24시간 이용권 2,900원</button>';
-    out.innerHTML = '<div class="hz7-err"><b>' + (code === 'PASS_NEED' ? '이용권이 필요해요' : '처리하지 못했어요') + '</b><span>' + esc(m) + '</span>' + (acts ? '<div class="row">' + acts + '</div>' : '') + '</div>'; stat(m);
-    S.retry = retry || null;
+    out.innerHTML = '<div class="hz7-err"><b>' + (code === 'PASS_NEED' ? '이용권이 필요해요' : slow ? (e.name === 'TypeError' ? '연결하지 못했어요' : '응답이 늦어요') : '처리하지 못했어요') + '</b><span>' + esc(m) + '</span>' + (acts ? '<div class="row">' + acts + '</div>' : '') + '</div>'; stat(m);
+    S.retry = retry || null; S.redo = redo || null;
   }
   function need(t) { if (!String(t).replace(/\s+/g, '')) { ta.focus(); out.innerHTML = '<div class="hz7-err">검사할 글을 먼저 넣어 주세요. 위의 예시 단추로 바로 해 볼 수도 있습니다.</div>'; return false; } return true; }
   function toOut() { if (S.first) { S.first = false; } try { var r = out.getBoundingClientRect(); if (r.top < 0 || r.top > window.innerHeight * .6) out.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' }); } catch (e) { /* 그대로 */ } }
@@ -322,7 +331,7 @@
     }).then(function (M) {
       M.src = t; M.C = C; if (!M.full && C0.parts.length > 1) { M.cut = true; M.cutAt = C.parts[0].length; }
       S.res = M; S.edits = {}; S.sel = -1; S.side = 'ai'; S.fx = null; renderRes(); toOut(); return M;
-    }).catch(function (e) { fail(e, function (free) { check(t, { free: free }); }); return null; })
+    }).catch(function (e) { fail(e, function (free) { check(t, { free: free }); }, function () { check(t, opt); }); return null; })
       .then(function (M) { setBusy(false); return M; });
   }
   btnC.addEventListener('click', function () { check(); });
@@ -624,6 +633,7 @@
     var tl = e.target.closest('.hz9-t[data-seg], .hz9-map [data-seg], .hz9-go[data-seg]'); if (tl) { goSeg(tl.getAttribute('data-seg')); return; }
     var tp = e.target.closest('[data-tip]'); if (tp) { var x = $('#hzSent'); if (x) { var a = x.selectionStart || x.value.length; x.value = x.value.slice(0, a) + ' ' + tp.getAttribute('data-tip') + ' ' + x.value.slice(a); x.focus(); } return; }
     var ag = e.target.closest('[data-again]'); if (ag) { if (S.retry) S.retry(true); return; }
+    var rd = e.target.closest('[data-redo]'); if (rd) { var f = S.redo; S.redo = null; if (f) f(); return; }
     var cb = e.target.closest('[data-cand]'); if (cb) { var y = $('#hzSent'); if (y) { y.value = cb.getAttribute('data-cand'); y.focus(); } return; }
     var b = e.target.closest('[data-act]'); if (!b) return;
     var act = b.getAttribute('data-act');
@@ -695,7 +705,7 @@
           A.src = text; S.fx = { kind: 'fix', src: t, text: text, applied: applied, left: left, facts: { total: tot, missing: miss }, beforeRate: before.chars ? Math.round(before.ai / before.chars * 100) : 0, beforeBand: bandBefore(t), after: A, toneNote: tnote };
           renderFix(); toOut();
         });
-      }).catch(function (e) { fail(e); }).then(function () { setBusy(false); });
+      }).catch(function (e) { fail(e, null, fix); }).then(function () { setBusy(false); });
   }
   btnF.addEventListener('click', fix);
   function pro(again) {
@@ -706,7 +716,7 @@
     if (!S.pass) {   // 무료 맛보기: 첫 문단만
       setBusy(true); prog('첫 문단을 사람 말투로 바꾸는 중', 0, 1);
       call('am.humanize', { text: t.slice(0, HUM_MAX), tone: tone() }, 60000).then(function (r) { S.fx = { kind: 'proFree', src: r.src, text: r.text, total: t.length, shown: r.shown, changes: r.changes, samples: r.samples || [], tone: r.tone, toneNote: r.toneNote || '' }; renderProFree(); toOut(); })
-        .catch(function (e) { fail(e); }).then(function () { setBusy(false); });
+        .catch(function (e) { fail(e, null, function () { pro(); }); }).then(function () { setBusy(false); });
       return;
     }
     if (t.length > PAID_MAX) { out.innerHTML = '<div class="hz7-err">이용권은 한 번에 5만 자까지 인간화합니다.</div>'; return; }
@@ -722,7 +732,7 @@
           A.src = text; S.fx = { kind: 'pro', src: t, text: text, applied: applied, left: [], facts: { total: tot, missing: miss }, beforeRate: bc ? Math.round(ba / bc * 100) : 0, beforeBand: bandBefore(t), after: A, tone: tn, variant: S.variant, toneMiss: tmiss, toneNote: tnote };
           renderFix(); toOut();
         });
-      }).catch(function (e) { fail(e); }).then(function () { setBusy(false); });
+      }).catch(function (e) { fail(e, null, function () { pro(true); }); }).then(function () { setBusy(false); });
   }
   function chgList(L) {   // 바꾼 곳 목록: 갈래 · 원래 표현 → 바꾼 표현 · 까닭
     return '<ul class="hz9-chg">' + L.map(function (a) {
