@@ -124,6 +124,8 @@
   });
 
   /* 복사 · 메일 */
+  /* 11.0: 휴대폰 아래 고정 줄의 '코드 복사'는 위의 복사 단추와 같은 일 */
+  document.addEventListener('click', function (e) { var px = e.target.closest && e.target.closest('[data-copyproxy]'); if (px) { e.preventDefault(); $('#copyBtn').click(); var sp = px.querySelector('span'); if (sp) { sp.textContent = '복사했어요'; setTimeout(function () { sp.textContent = '코드 복사'; }, 1600); } } });
   $('#copyBtn').addEventListener('click', function () {
     var b = this, t = $('#codeOut').textContent;
     function done() { b.classList.add('done'); b.querySelector('span').textContent = '복사했어요'; setTimeout(function () { b.classList.remove('done'); b.querySelector('span').textContent = '복사'; }, 1600); }

@@ -52,7 +52,7 @@ selflabel: footer
   <div class="wrap">
     <div class="blk-h"><span class="k">출처 판정 엔진 AMP</span><h2>서명을 다시 검증하고, 근거의 세기까지 판정합니다</h2><p>판정 규칙과 AI 도구 지문 DB는 서버에만 있습니다. 공개된 코드만으로는 같은 판정을 재현할 수 없도록 나눠 두었습니다.</p></div>
     <div class="mods4">
-      <article class="mod4"><header><span class="mod4-ic">{{ico:key}}</span><div><h3>서명 재검증</h3><small>클라이언트를 믿지 않음</small></div></header><p>기기에서 보낸 판독 결과를 그대로 믿지 않고, 서버가 서명, 클레임, 단정 해시를 처음부터 다시 계산합니다. ECDSA(P-256, P-384, P-521), RSA-PSS, Ed25519까지 7가지 서명 방식을 직접 구현했습니다.</p></article>
+      <article class="mod4"><header><span class="mod4-ic">{{ico:key}}</span><div><h3>서명 재검증</h3><small>클라이언트를 믿지 않음</small></div></header><p>기기에서 보낸 판독 결과를 그대로 믿지 않고, 서버가 서명, 클레임, 단정 해시를 처음부터 다시 계산합니다. ECDSA(<span class="nw">P-256</span>, <span class="nw">P-384</span>, <span class="nw">P-521</span>), <span class="nw">RSA-PSS</span>, Ed25519까지 7가지 서명 방식을 직접 구현했습니다.</p></article>
       <article class="mod4"><header><span class="mod4-ic">{{ico:shield}}</span><div><h3>인증서 사슬, 신뢰 목록</h3><small>누가 서명했는지</small></div></header><p>서명 인증서 사슬을 C2PA 공식 신뢰 목록, 임시 신뢰 목록과 대조하고, 용도(EKU), 기간, 타임스탬프까지 확인합니다. 목록은 7일마다 자동으로 갱신합니다.</p></article>
       <article class="mod4"><header><span class="mod4-ic">{{ico:fingerprint}}</span><div><h3>도구 지문, 서명자 분류</h3><small>무엇으로 만들었는지</small></div></header><p>생성 도구, 편집기, 카메라, 플랫폼을 구분하는 지문 DB로 AI 생성, 편집, 합성, 보정, 촬영 원본을 가려냅니다. 이름만 일치하는 약한 단서로는 판정을 좁히지 않습니다.</p></article>
       <article class="mod4"><header><span class="mod4-ic">{{ico:scale}}</span><div><h3>충돌 규칙, 오염 막기</h3><small>틀린 표시를 막는 규칙</small></div></header><p>AI 흔적이 하나라도 있으면 'AI 미사용' 표시를 막고, 신뢰할 수 있는 촬영 원본 서명이 있으면 AI 표시를 막습니다. 다른 사람이 등록한 표시본 해시나 비슷한 이미지의 마크는 참고로만 사용해, 남의 등록 기록이 내 표시를 가로막지 못하게 했습니다.</p></article>
@@ -88,7 +88,7 @@ selflabel: footer
 <section class="blk" id="anchor">
   <div class="wrap">
     <div class="blk-h"><span class="k">공개 원장</span><h2>AIMarker도 지난 기록을 몰래 고칠 수 없도록</h2><p>발급, 변경, 철회 기록은 해시와 서버 시각으로 원장에 남습니다. 매일 그날의 원장 줄을 글 하나로 묶어 전날 뿌리 해시와 잇고, 그 글의 SHA-256을 공개 타임스탬프 서비스(OpenTimestamps)에 올려 비트코인 블록체인 시각에 고정합니다.</p></div>
-    <ol class="fl5 ar5" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+    <ol class="fl5 ar5 ds-c4">
       <li><b>1 기록</b><span>원장 번호, 시각, 해시, 종류</span></li>
       <li><b>2 하루 묶기</b><span>그날 기록 + 전날 뿌리 해시로 사슬 연결</span></li>
       <li><b>3 고정</b><span>뿌리 해시를 공개 달력 서버 세 곳에 보냄</span></li>
@@ -200,6 +200,6 @@ selflabel: footer
   <div class="wrap">
     <h2>기술을 직접 확인해 보세요</h2>
     <p>파일 하나를 넣으면 판독부터 서명 검증, 판정, 서명된 마크 발급까지 한 번에 볼 수 있습니다.</p>
-    <div class="h5-cta"><a class="btn btn-w btn-l" href="{{root}}mark/">AI 사용 확인하기</a><a class="btn btn-gl btn-l" href="{{root}}developers/">개발자 문서</a></div>
+    <div class="h5-cta"><a class="btn btn-p btn-l" href="{{root}}mark/">AI 사용 확인하기</a><a class="btn btn-g btn-l" href="{{root}}developers/">개발자 문서</a></div>
   </div>
 </section>

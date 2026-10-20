@@ -133,11 +133,15 @@
     var cnt = function (f) { return items.filter(f).length; };
     var k = { fix: cnt(function (x) { var s = statusOf(x); return s === 'fix' || s === 'changes'; }), sent: cnt(function (x) { return statusOf(x) === 'sent'; }),
       ok: cnt(function (x) { var s = statusOf(x); return s === 'approved' || s === 'published'; }), avg: Math.round(items.filter(function (x) { return x.check; }).reduce(function (a, x) { return a + x.check.score; }, 0) / Math.max(1, cnt(function (x) { return x.check; }))) };
-    var html = top('검수함', '올린 소재를 자동으로 점검하고, 승인까지 한곳에서 관리합니다.', '<a class="btn btn-p btn-s" href="#/new">' + ico(I.plus) + '새 소재</a>');
+    var html = top('검수함', '올린 소재를 자동으로 점검하고, 승인까지 한곳에서 관리합니다.', '<a class="btn btn-g btn-s" href="#/new">' + ico(I.plus) + '새 소재</a>');
     if (!n) html += '<div class="quick"><div class="qbox" id="qbox"><b>광고 문구를 붙여 넣거나 이미지를 끌어다 놓으세요</b><textarea id="qtext" placeholder="예: 부작용 없는 순한 크림, 바르자마자 주름이 사라져요!"></textarea>' +
-      '<div class="row"><span class="hint">업종 · 협찬 · AI 사용 여부는 자동으로 알아봅니다</span><button class="btn btn-p btn-s" id="qgo" type="button">' + ico(I.spark) + '바로 점검</button></div><input type="file" id="qfile" accept="image/*" multiple hidden></div>' +
-      '<div class="qdemo"><b>처음이라면 예시로 둘러보세요</b><p>화장품 · 건강기능식품 · 인플루언서 협찬 · AI 이미지 광고 예시 4개를 실제 엔진으로 점검해 넣어 드립니다.</p><button class="btn btn-w btn-s" id="demo" type="button">예시 소재 넣기</button></div></div>';
-    else html += '<div class="quick1" id="qbox"><input type="text" id="qtext" placeholder="광고 문구를 붙여 넣고 Enter, 이미지는 여기로 끌어다 놓기" aria-label="새 소재 문구"><button class="btn btn-p btn-s" id="qgo" type="button">' + ico(I.spark) + '바로 점검</button><label class="btn btn-g btn-s">' + ico(I.upload) + '이미지<input type="file" id="qfile" accept="image/*" multiple hidden></label></div>';
+      '<div class="row"><span class="hint">업종 · 협찬 · AI 사용 여부는 자동으로 알아봅니다</span><button class="btn btn-p btn-s" id="qgo" type="button">' + ico(I.check) + '바로 점검</button></div><input type="file" id="qfile" accept="image/*" multiple hidden></div>' +
+      '<div class="qdemo"><b>처음이라면 예시로 둘러보세요</b><p>화장품 · 건강기능식품 · 인플루언서 협찬 · AI 이미지 광고 예시 4개를 실제 엔진으로 점검해 넣어 드립니다.</p><button class="btn btn-w btn-s" id="demo" type="button">예시 소재 넣기</button></div></div>' +
+      /* 11.0: 처음 여는 검수함은 쓰는 순서를 함께 보여 줌(빈 화면 대신) */
+      '<ol class="ap-how"><li><b>붙여 넣거나 끌어다 놓기</b><span>광고 문구, 상세페이지 글, 이미지. 업종과 협찬, AI 사용 여부는 자동으로 알아봅니다.</span></li>' +
+      '<li><b>위험 후보와 고칠 문구</b><span>근거와 바꿀 말을 보고, 한 번에 고치거나 하나씩 적용합니다.</span></li>' +
+      '<li><b>광고주 승인과 기록</b><span>로그인 없이 보는 승인 링크를 보내고, 보고서와 원장 기록으로 남깁니다.</span></li></ol>';
+    else html += '<div class="quick1" id="qbox"><input type="text" id="qtext" placeholder="광고 문구를 붙여 넣고 Enter, 이미지는 여기로 끌어다 놓기" aria-label="새 소재 문구"><button class="btn btn-p btn-s" id="qgo" type="button">' + ico(I.check) + '바로 점검</button><label class="btn btn-g btn-s">' + ico(I.upload) + '이미지<input type="file" id="qfile" accept="image/*" multiple hidden></label></div>';
     if (n) {
       html += '<div class="kp5"><div><b>' + n + '</b><span>전체 소재</span></div><div class="hi"><b>' + k.fix + '</b><span>수정 필요</span></div><div class="bl"><b>' + k.sent + '</b><span>승인 대기</span></div><div class="ok"><b>' + k.ok + '</b><span>승인 · 게시 완료</span></div><div class="mid"><b>' + k.avg + '</b><span>평균 위험 점수</span></div></div>';
       html += '<div class="flt3"><div class="pills" id="stf">' + [['all', '전체'], ['fix', '수정 필요'], ['ready', '출고 준비'], ['sent', '승인 요청함'], ['approved', '승인 완료'], ['published', '게시 완료']].map(function (p) { return '<button type="button" data-st="' + p[0] + '" aria-pressed="' + (FIL.st === p[0]) + '">' + p[1] + '</button>'; }).join('') + '</div>' +
@@ -246,7 +250,7 @@
     var box = $('#res'); if (!box) return;
     paintStatus(it); paintFlow(it); paintTl(it); paintFlagsAuto(it);
     var r = it.check;
-    if (!r) { box.innerHTML = '<div class="empty3">' + ico(I.spark) + '<b>문구를 넣으면 바로 점검합니다</b><p>6가지(AI 사용 근거 · 가상인물 · 업종 표현 · 추천 · 보증 · 저작권 단서 · 브랜드 가이드)를 한 번에 봅니다.</p></div>'; return; }
+    if (!r) { box.innerHTML = '<div class="empty3">' + ico(I.shield) + '<b>문구를 넣으면 바로 점검합니다</b><p>6가지(AI 사용 근거 · 가상인물 · 업종 표현 · 추천 · 보증 · 저작권 단서 · 브랜드 가이드)를 한 번에 봅니다.</p></div>'; return; }
     var cc = U.catCounts(r.findings), fresh = r.copy === it.copy;
     var cats = '<div class="cats3" id="cats"><button type="button" data-cat="0" aria-pressed="' + (CAT === 0) + '">전체 <i>' + r.findings.length + '</i></button>' + [1, 2, 3, 4, 5, 6].map(function (k) {
       var c = cc[k], cls = c[3] ? 'hi' : c[2] ? 'mid' : '';

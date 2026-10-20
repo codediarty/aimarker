@@ -34,13 +34,18 @@
   /* 모바일 메뉴 */
   var mb = document.getElementById('menuBtn'), mn = document.getElementById('mnav');
   if (mb && mn) {
-    mb.addEventListener('click', function () {
-      var on = !mn.classList.contains('on');
+    /* 11.0: 열면 단추가 닫기(X)로 바뀌고, Esc 로도 닫힘 */
+    var ICO_MENU = '<path d="M4 6h16M4 12h16M4 18h16"/>', ICO_X = '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>';
+    function setMenu(on) {
       if (on && hd) mn.style.top = Math.max(0, Math.round(hd.getBoundingClientRect().bottom)) + 'px';
       mn.classList.toggle('on', on); mb.setAttribute('aria-expanded', on ? 'true' : 'false');
+      mb.setAttribute('aria-label', on ? '메뉴 닫기' : '메뉴 열기');
+      var sv = mb.querySelector('svg'); if (sv) sv.innerHTML = on ? ICO_X : ICO_MENU;
       document.body.style.overflow = on ? 'hidden' : '';
-    });
-    mn.addEventListener('click', function (e) { if (e.target.closest('a')) { mn.classList.remove('on'); document.body.style.overflow = ''; mb.setAttribute('aria-expanded', 'false'); } });
+    }
+    mb.addEventListener('click', function () { setMenu(!mn.classList.contains('on')); });
+    mn.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && mn.classList.contains('on')) { setMenu(false); mb.focus(); } });
   }
 
   /* 복사 */
@@ -89,7 +94,7 @@
       var btn = f.querySelector('button[type="submit"]'); if (btn) { btn.disabled = true; btn.setAttribute('data-t', btn.innerHTML); btn.innerHTML = '보내는 중…'; }
       AM.call('am.lead', d).then(function (r) {
         if (r && r.ok) {
-          show(f, 'ok', (kind === 'pilot' ? '기업 상담 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 상담과 무료 GEO 진단 · 콘텐츠 100건 AI 사용 확인 리포트 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : kind === 'creator' ? '크리에이터 사전 등록이 접수되었습니다. 첫 의뢰 연결을 열 때 분야에 맞는 의뢰를 먼저 안내해 드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
+          show(f, 'ok', (kind === 'pilot' ? '도입 상담 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 상담과 무료 GEO 진단 · 콘텐츠 100건 AI 사용 확인 리포트 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : kind === 'creator' ? '크리에이터 사전 등록이 접수되었습니다. 첫 의뢰 연결을 열 때 분야에 맞는 의뢰를 먼저 안내해 드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
           f.reset(); t0 = Date.now();
           if (window.gtag) try { window.gtag('event', 'generate_lead', { method: kind }); } catch (eG) { /* 무시 */ }
         } else if (r && r.message && /^(CONTACT|ORG|NAME|SLOW|BUSY|MEMO)$/.test(r.code || '')) {

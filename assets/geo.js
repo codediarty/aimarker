@@ -45,7 +45,8 @@
       if (window.gtag) try { window.gtag('event', 'geo_diag', { score: r.score, kind: r.kind }); } catch (eG) { /* 무시 */ }
     }).catch(function (e) {
       var m = e && e.name === 'AbortError' ? '사이트 응답이 늦습니다. 잠시 뒤 다시 시도해 주세요.' : (e && (e.message || e.msg)) || '지금은 진단하지 못했어요. 잠시 뒤 다시 시도해 주세요.';
-      out.innerHTML = '<div class="gr6-err"><b>진단하지 못했어요</b><p>' + esc(m) + '</p></div>';
+      out.innerHTML = '<div class="gr6-err"><b>진단하지 못했어요</b><p>' + esc(m) + '</p><p class="gr6-err-act"><button type="button" class="k-btn k-btn-l k-btn-s" data-regeo>다시 진단하기</button><a class="k-a" href="' + AM.root + 'contact/?type=geo">세팅 상담</a></p></div>';
+      var rb = out.querySelector('[data-regeo]'); if (rb) rb.addEventListener('click', function () { run(url); });
     }).then(function () { clearInterval(tick); busy = false; btn.disabled = false; });
   }
   function color(g) { return g === 'A' ? '#0FA870' : g === 'B' ? '#0E1F47' : g === 'C' ? '#F5B740' : '#E5484D'; }

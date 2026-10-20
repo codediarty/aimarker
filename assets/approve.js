@@ -4,10 +4,10 @@
   var U = window.AMUI, AM = window.AM, esc = U.esc, box = document.getElementById('apv');
   var id = (new URLSearchParams(location.search).get('id') || '').toUpperCase().replace(/[^A-Z0-9\-]/g, '');
   function toast(m) { var t = document.getElementById('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(function () { t.classList.remove('on'); }, 3200); }
-  function msg(title, text) { box.innerHTML = '<div class="ac"><div class="empty3">' + U.ico(U.I.alert) + '<b>' + esc(title) + '</b><p>' + esc(text) + '</p></div></div>'; }
+  function msg(title, text, retry) { box.innerHTML = '<div class="ac"><div class="empty3">' + U.ico(U.I.alert) + '<h1 class="apv-err">' + esc(title) + '</h1><p>' + esc(text) + '</p><div class="row">' + (retry ? '<button class="btn btn-p btn-s" type="button" data-reload>다시 열기</button>' : '') + '<a class="btn btn-g btn-s" href="' + AM.root + '">AIMarker 홈</a></div></div></div>'; var rb = box.querySelector('[data-reload]'); if (rb) rb.addEventListener('click', function () { location.reload(); }); }
   if (!/^AP\d{6}-[A-Z0-9]{8}$/.test(id)) { msg('승인 요청 주소가 올바르지 않아요', '받은 링크 전체를 다시 열어 주세요.'); return; }
   AM.call('am.view', { id: id }, 20000).then(function (r) { if (!r || !r.ok) throw new Error(r && r.message || ''); render(r); })
-    .catch(function (e) { msg('승인 요청을 열지 못했어요', e && e.message ? e.message : '잠시 뒤 다시 열어 주세요.'); });
+    .catch(function (e) { var m = e && e.message && !/fetch|network|abort|load failed/i.test(e.message) ? e.message : '연결이 고르지 않아요. 잠시 뒤 다시 열어 주세요.'; msg('승인 요청을 열지 못했어요', m, true); });
   function done(st, by, at, ledger) {
     var ok = st === '승인';
     return '<div class="ac apv-done' + (ok ? '' : ' bad') + '">' + U.ico(ok ? U.I.check : U.I.alert) + '<b>' + (ok ? '승인했어요' : '수정을 요청했어요') + '</b><p class="note mt8">' + esc((by ? by + ' · ' : '') + (at || '')) + '</p>' +

@@ -23,7 +23,7 @@ selflabel: footer
     <div class="k-qm-top"><h2 class="k-h3" id="qmTitle">빠른 지문 마크</h2><p>이미지(JPG, PNG, WebP)를 넣으면 마크가 들어간 사본이 바로 만들어집니다. 원본은 그대로 둡니다.</p></div>
     <div class="k-qm" id="qm">
       <div class="k-qm-in">
-        <div class="k-qm-drop" id="qmDrop" tabindex="0" role="button" aria-label="이미지를 끌어 놓거나 붙여 넣기, 눌러서 고르기">
+        <div class="k-qm-drop" id="qmDrop" tabindex="0" role="region" aria-label="이미지를 끌어 놓거나 붙여 넣는 곳">
           <span class="ic">{{ico:upload}}</span>
           <b>이미지를 여기에 놓거나, 붙여 넣으세요</b>
           <span class="hint hint-pc">AI 도구에서 이미지를 복사했다면 이 페이지에서 <kbd>Ctrl</kbd>+<kbd>V</kbd>(맥은 <kbd>⌘</kbd>+<kbd>V</kbd>)만 누르면 됩니다. 여러 개도 한 번에 됩니다.</span>
@@ -163,7 +163,7 @@ selflabel: footer
             <label class="au-in"><span>사용한 AI 도구(있으면)</span><input type="text" id="oTools" maxlength="120" placeholder="예: Midjourney, ChatGPT"></label>
           </details>
           <label class="au-agree"><input type="checkbox" id="oAgree"><span>표시 내용이 사실과 같음을 확인합니다. 사실과 다르면 마크가 철회될 수 있고, 표시 책임은 발급자에게 있습니다.</span></label>
-          <button class="btn btn-p btn-l au-go" type="button" id="auGo" disabled>{{ico:sparkle}}<span id="auGoT">자동 마킹 시작</span></button>
+          <button class="btn btn-p btn-l au-go" type="button" id="auGo" disabled>{{ico:badge}}<span id="auGoT">자동 마킹 시작</span></button>
           <p class="au-hint" id="auHint">파일을 넣으면 시작할 수 있습니다.</p>
         </aside>
       </div>
@@ -187,7 +187,7 @@ selflabel: footer
             <label class="au-ck"><input type="checkbox" id="tAd"><span>광고, 협찬 글이에요</span></label>
             <label class="au-ck"><input type="checkbox" id="tPerson"><span>AI 가상인물이 나와요</span></label>
             <label class="au-ck"><input type="checkbox" id="tMedia"><span>AI로 만든 이미지, 영상을 함께 올려요</span></label>
-            <button class="btn btn-p au-tgo" type="button" id="tGo">{{ico:sparkle}}<span>자동으로 고치고 표시 붙이기</span></button>
+            <button class="btn btn-p au-tgo" type="button" id="tGo">{{ico:pen}}<span>자동으로 고치고 표시 붙이기</span></button>
             <p class="au-hint" id="tHint">글은 기술로 AI 사용을 단정할 수 없어, 고른 답을 '발급자 신고'로 표시합니다.</p>
           </div>
         </div>
@@ -207,7 +207,7 @@ selflabel: footer
     </div>
     <div class="au-tri">
       <article>
-        <div class="au-tri-v v1" aria-hidden="true"><span class="mkb" data-g="2"><i class="mkb-ic"><svg viewBox="0 0 24 24"><path d="M12 2.5l1.9 5.2a3 3 0 0 0 1.8 1.8L21 11.4l-5.3 1.9a3 3 0 0 0-1.8 1.8L12 20.5l-1.9-5.4a3 3 0 0 0-1.8-1.8L3 11.4l5.3-1.9a3 3 0 0 0 1.8-1.8z" fill="currentColor"/></svg></i><b>AI 생성</b><span class="mkb-bars"><i></i><i></i><i></i></span></span></div>
+        <div class="au-tri-v v1" aria-hidden="true"><span class="mkb" data-g="2"><i class="mkb-ic f" aria-hidden="true"><img src="{{root}}assets/brand/aimarker-symbol.svg" alt="" width="15" height="17"></i><b>AI 생성</b><span class="mkb-bars"><i></i><i></i><i></i></span></span></div>
         <h3>화면</h3>
         <p>AI를 사용한 이미지 위에 보이는 마크를 넣습니다. 광고라면 [광고], [가상인물] 표시도 나란히 붙고, QR을 찍으면 근거와 이력이 열립니다.</p>
       </article>

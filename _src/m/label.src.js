@@ -120,6 +120,7 @@
       '.k svg{flex:0 0 auto}' +
       '.badge{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 8px 0 7px;border-radius:12px;border:1px solid ' + C.line + ';background:' + C.bg + ';color:' + C.fg + ';font-family:inherit;font-weight:760;font-size:13px;line-height:1;cursor:pointer;box-shadow:0 8px 24px rgba(9,20,47,.16);transition:transform .15s ease,box-shadow .15s ease}' +
       '.badge:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(9,20,47,.22)}' +
+      '.inl .badge{box-shadow:none}.inl .badge:hover{transform:none;box-shadow:none;border-color:' + C.acc + '}' +
       '.badge .ic{width:26px;height:26px;border-radius:8px;background:' + C.chip + ';display:inline-flex;align-items:center;justify-content:center}.badge .ic svg{width:15px;height:17px}' +
       '.badge .n{min-width:22px;height:22px;padding:0 6px;border-radius:7px;background:' + C.acc + ';color:#fff;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}.badge .n[hidden]{display:none}' +
       '.badge .lb{padding-right:4px}' +
@@ -180,7 +181,7 @@
     var trigger = style === 'line'
       ? '<div class="line"><button type="button" aria-expanded="false">' + fp('m') + '<span>' + (c.name ? esc(c.name) + josa(c.name) : '이 사이트는') + ' 일부 콘텐츠에 AI를 활용합니다 · <b>' + t('open') + '</b></span></button></div>'
       : '<button class="badge" type="button" aria-expanded="false"><span class="ic">' + fp('b') + '</span><span class="lb">AI 활용 안내</span><span class="n" hidden></span></button>';
-    root.innerHTML = '<style>' + noticeCss(C, c.side) + '</style><div class="k"><div class="wrap">' + pop + trigger + '</div></div>';
+    root.innerHTML = '<style>' + noticeCss(C, c.side) + '</style><div class="k' + (box ? ' inl' : '') + '"><div class="wrap">' + pop + trigger + '</div></div>';
     var p = root.querySelector('.pop'), tr = root.querySelector('.badge, .line button');
     if (style === 'line') { var wr = root.querySelector('.wrap'); wr.style.display = 'block'; p.style.left = '50%'; p.style.right = 'auto'; p.style.transform = 'translateX(-50%)'; p.style.bottom = '48px'; }
     if (mountEl) { p.style.maxWidth = Math.max(240, (mountEl.clientWidth || 360) - 28) + 'px'; p.style.maxHeight = 'none'; }

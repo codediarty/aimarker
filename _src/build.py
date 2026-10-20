@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261020c"
+VER = "20261021a"
 TODAY = "2026-10-20"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -37,21 +37,21 @@ SHOP_IDX = {
 }
 CATALOG = {
     "label": {"name": "AI 표시 자동화", "vat": "부가세 별도", "tiers": [
-        {"id": "label-free", "name": "무료", "who": "개인 · 1인 사이트", "price": "0원", "per": "", "cta": "무료로 설치하기", "href": "site/",
+        {"id": "label-free", "name": "무료", "who": "개인 · 1인 사이트", "price": "0원", "note": "사이트 1개까지", "per": "", "cta": "무료로 시작", "href": "site/",
          "feat": ["코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글 자동 표시", "지문 마크와 근거 창, AI 활용 안내 창", "점검 모드: 무엇을 왜 표시했는지 한눈에", "검색 · AI가 읽는 표시(구조화 데이터) 자동", "생성물 지문 마크와 서명 마크(웹 도구) 무료"]},
         {"id": "label-standard", "name": "스탠다드", "who": "1인 사업자 · 소상공인", "price": "9,900원", "per": "월", "m": 9900, "y": 99000,
          "feat": ["무료의 모든 기능", "AIMarker 등록 사이트: 확인 페이지에 회사와 담당자 표시", "안내 창에 문의처와 등록 확인 링크", "매달 AI 표시 현황 메일 리포트", "서명 마크에 회사 이름과 등록 사이트 표시", "설치 도움 1회(원격)"]},
         {"id": "label-business", "name": "비즈니스", "who": "소규모 · 중견 기업", "price": "49,000원", "per": "월", "m": 49000, "y": 490000, "best": "추천",
          "feat": ["스탠다드의 모든 기능, 사이트 3개", "위치 규칙 설정 대행(상세페이지 · 배너 · 블로그)", "표시 누락 점검 매주, 새 AI 콘텐츠 알림", "AI 활용 고지문과 사내 AI 표시 가이드", "API로 서명 마크 대량 발급, 감사 기록과 분기 보고서", "API 키(하루 1만 회), 담당자 온라인 교육 1회"]},
-        {"id": "label-enterprise", "name": "엔터프라이즈", "who": "대기업 · 공공기관 · 학교", "price": "월 30만 원부터", "per": "", "cta": "견적 받기", "href": "contact/?plan=label-enterprise&type=enterprise",
+        {"id": "label-enterprise", "name": "엔터프라이즈", "who": "대기업 · 공공기관 · 학교", "price": "견적", "note": "월 30만 원부터", "per": "", "cta": "견적 받기", "href": "contact/?plan=label-enterprise&type=enterprise",
          "feat": ["사이트 · 건수 제한 없음", "우리 브랜드로 표시(화이트 라벨)", "전용 규칙과 내부 시스템 연동(API · MCP · 대량 처리)", "보안 검토, 계약서 · 세금계산서, 서비스 수준 협약", "표시 정책 수립과 임직원 교육"]},
     ]},
     "service": {"name": "AI 서비스 표시 의무 대응", "vat": "부가세 별도", "tiers": [
         {"id": "service-starter", "name": "스타터", "who": "생성형 AI 서비스를 막 시작한 곳", "price": "99,000원", "per": "월", "m": 99000,
          "feat": ["결과물마다 서명된 AIMarker 마크(월 1만 건)", "파일 속 출처 기록(IPTC · XMP)과 보이는 지문 마크", "이용자 사전 고지 문구와 약관 문안", "다운로드할 때 한 번 안내하는 창", "이메일 지원"]},
-        {"id": "service-growth", "name": "그로스", "who": "이용자가 빠르게 느는 서비스", "price": "490,000원", "per": "월", "best": "추천", "cta": "상담 후 시작", "href": "contact/?plan=service-growth&type=ai",
+        {"id": "service-growth", "name": "그로스", "who": "이용자가 빠르게 느는 서비스", "price": "490,000원", "per": "월", "best": "추천", "cta": "도입 상담", "href": "contact/?plan=service-growth&type=ai",
          "feat": ["서명된 마크 월 10만 건", "AI기본법 제31조 표시 정책 문서", "실제와 헷갈리는 결과물(딥페이크) 보이는 표시 규칙", "감사 기록과 분기 보고서", "기술 지원(영업일 당일 답변)"]},
-        {"id": "service-enterprise", "name": "엔터프라이즈", "who": "대형 플랫폼 · 기관", "price": "견적", "per": "", "cta": "견적 받기", "href": "contact/?plan=service-enterprise&type=ai",
+        {"id": "service-enterprise", "name": "엔터프라이즈", "who": "대형 플랫폼 · 기관", "price": "견적", "note": "처리 건수와 설치 방식에 맞춰", "per": "", "cta": "견적 받기", "href": "contact/?plan=service-enterprise&type=ai",
          "feat": ["대량 처리와 전용 한도", "사내 설치형 판정 엔진 라이선스", "보안 검토와 서비스 수준 협약", "넘는 건수는 1,000건 단위로 정산"]},
     ]},
     "geo": {"name": "AI 검색 노출 최적화", "vat": "부가세 별도, 1회", "tiers": [
@@ -61,7 +61,7 @@ CATALOG = {
          "feat": ["라이트의 모든 것", "AI가 인용하는 자주 묻는 질문 20개 작성 · 설치", "페이지별 제목 · 설명 · 요약 문장 다듬기", "경쟁사 1곳과 나란히 비교", "빙 웹마스터 등록, 브랜드 정보 한 줄로 맞추기", "첫 달 AI 답변 언급 리포트"]},
         {"id": "geo-pro", "name": "프로", "who": "쇼핑몰 · 중견 기업, 페이지 100개 · 상품 500개", "price": "1,490,000원", "per": "1회", "m": 1490000,
          "feat": ["스탠다드의 모든 것", "상품 구조화 데이터와 AI 쇼핑 상품 피드", "가격 · 재고 · 리뷰 정보 구조화", "경쟁사 3곳 비교 리포트", "상품 이미지 AI 표시 2,000건", "원격 설치까지"]},
-        {"id": "geo-enterprise", "name": "엔터프라이즈", "who": "대기업 · 공공기관 · 학교, 여러 사이트", "price": "390만 원부터", "per": "", "cta": "견적 받기", "href": "contact/?plan=geo-enterprise&type=enterprise",
+        {"id": "geo-enterprise", "name": "엔터프라이즈", "who": "대기업 · 공공기관 · 학교, 여러 사이트", "price": "견적", "note": "390만 원부터", "per": "", "cta": "견적 받기", "href": "contact/?plan=geo-enterprise&type=enterprise",
          "feat": ["여러 사이트와 영문 페이지", "맞춤 콘텐츠 전략과 분기 리포트", "담당자 교육과 내부 가이드", "계약서 · 세금계산서"]},
     ]},
     "geocare": {"name": "AI 검색 관리(월)", "vat": "부가세 별도", "tiers": [
@@ -75,22 +75,67 @@ BUNDLES = [{"id": "bundle-trust", "name": "AI 신뢰 올인원", "who": "소규�
             "feat": ["AI 검색 노출 최적화 스탠다드(1회)", "AI 표시 자동화 비즈니스 12개월", "AI 활용 고지문 · 사내 표시 가이드"]}]
 
 
-def tiers_html(key, root):
+def tiers_html(key, root, pick=None):
+    """요금 칸(11.0): 이름 · 대상 → 값 → 보조 줄(12개월, 보통 얼마부터) → 단추 → 포함 기능.
+    값과 단추가 칸마다 같은 높이에 오도록 모든 칸이 같은 다섯 줄 구조. 주 단추(파랑)는 '추천' 칸 하나만.
+    pick: 그 페이지가 권하는 칸 id 끝(예: {{tiers:geo:pro}} 이면 geo-pro 를 '추천'으로, 다른 칸의 추천은 뺌)."""
     c = CATALOG[key]
     out = []
-    for t in c["tiers"]:
+    for t0 in c["tiers"]:
+        t = dict(t0)
+        if pick:
+            if t["id"] == "%s-%s" % (key, pick):
+                t["best"] = t0.get("best") or "추천"
+            else:
+                t.pop("best", None)
         feats = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in t["feat"])
         per = ('<span>/ %s</span>' % t["per"]) if t.get("per") else ""
-        yr = ('<small class="yr">12개월 %s원, 10개월 요금</small>' % format(t["y"], ",")) if t.get("y") else ""
-        best = ('<em class="k-best">%s</em>' % t["best"]) if t.get("best") else ""
-        if t.get("href"):
-            btn = '<a class="k-btn %s" href="%s%s">%s</a>' % ("k-btn-l" if t["price"] != "0원" else "k-btn-p", root, t["href"], t.get("cta", "자세히"))
+        if t.get("y"):
+            sub = '12개월 %s원(10개월 요금)' % format(t["y"], ",")
         else:
-            btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % ("k-btn-p" if t.get("best") else "k-btn-l", t["id"], t.get("cta", "결제하기"))
-        out.append('<div class="k-plan%s" id="%s"><h3>%s%s</h3><p class="who">%s</p><p class="pr"><b>%s</b>%s</p>%s<ul>%s</ul>%s</div>'
-                   % (" best" if t.get("best") else "", t["id"], t["name"], best, t["who"], t["price"], per, yr, feats, btn))
+            sub = t.get("note", "")
+        sub = '<p class="yr">%s</p>' % (sub or '<span aria-hidden="true">&nbsp;</span>')
+        best = (' <em class="k-best">%s</em>' % t["best"]) if t.get("best") else ""
+        kind = "k-btn-p" if t.get("best") else "k-btn-l"
+        if t.get("href"):
+            btn = '<a class="k-btn %s" href="%s%s">%s</a>' % (kind, root, t["href"], t.get("cta", "자세히"))
+        else:
+            btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], t.get("cta", "결제하기"))
+        out.append('<div class="k-plan%s" id="%s"><div class="hd"><h3>%s%s</h3><p class="who">%s</p></div><p class="pr"><b>%s</b>%s</p>%s%s<ul>%s</ul></div>'
+                   % (" best" if t.get("best") else "", t["id"], t["name"], best, t["who"], t["price"], per, sub, btn, feats))
     n = len(c["tiers"])
-    return '<div class="k-plans%s">%s</div><p class="k-small k-vat">%s · 결제는 공식 결제처 성균관컨설팅에서 카드 · 간편결제 · 계좌이체로 합니다.</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"])
+    return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">%s. 결제는 공식 결제처 성균관컨설팅에서 카드, 간편결제, 계좌이체로 합니다.</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"])
+
+
+# 개인 이용권(AI 작성률 검사 · 휴머나이징). 글 검사, 요금, 개인용 페이지가 같은 칸을 씀(값은 서버 PASS_.PRODUCTS 와 같게)
+PASSES = [
+    {"id": "s1", "name": "1건 이용권", "who": "글 한 편, 처음 사용한 때부터 24시간", "price": "1,900원", "sub": "",
+     "feat": ["검사 3회(6,000자마다 1회)", "휴머나이징 1회(6,000자)", "모든 AI 검출 문장과 이유, 구간별 분석", "결과상세내역서(PDF)"]},
+    {"id": "d1", "name": "24시간 이용권", "tag": "제출 직전에", "who": "처음 사용한 때부터 24시간", "price": "2,900원", "sub": "한 번에 5만 자, 논문도 한 번에",
+     "feat": ["검사 40회", "휴머나이징 10회, 다른 버전 보기", "문장 고쳐 쓰기 도우미", "결과상세내역서(PDF)"]},
+    {"id": "m1", "name": "30일 이용권", "who": "처음 사용한 날부터 30일", "price": "9,900원", "sub": "하루 약 330원",
+     "feat": ["하루 검사 40회", "휴머나이징 하루 20회", "24시간 이용권의 모든 기능", "레포트와 자기소개서를 자주 쓰는 달에"]},
+    {"id": "q1", "name": "90일 이용권", "who": "처음 사용한 날부터 90일", "price": "19,900원", "sub": "하루 약 220원",
+     "feat": ["하루 검사 40회", "휴머나이징 하루 20회", "30일 이용권의 모든 기능", "한 학기, 논문 쓰는 기간 내내"]},
+]
+
+
+def passes_html(mode, root):
+    """mode 'buy': 글 검사 페이지(그 자리에서 결제 창), 'link': 다른 페이지(글 검사 페이지의 결제 창으로)."""
+    out = []
+    for t in PASSES:
+        feats = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in t["feat"])
+        tag = (' <span class="k-tag mk">%s</span>' % t["tag"]) if t.get("tag") else ""
+        kind = "k-btn-p" if t.get("tag") else "k-btn-l"
+        label = "%s 구매" % t["name"]
+        if mode == "buy":
+            btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], label)
+        else:
+            btn = '<a class="k-btn %s" href="%shumanize/#buy-%s">%s</a>' % (kind, root, t["id"], label)
+        sub = '<p class="yr">%s</p>' % (t["sub"] or '<span aria-hidden="true">&nbsp;</span>')
+        out.append('<article class="k-plan%s"><div class="hd"><h3>%s%s</h3><p class="who">%s</p></div><p class="pr"><b>%s</b></p>%s%s<ul>%s</ul></article>'
+                   % (" best" if t.get("tag") else "", t["name"], tag, t["who"], t["price"], sub, btn, feats))
+    return '<div class="k-plans ds-plans c4">%s</div>' % "".join(out)
 
 
 def products_js():
@@ -218,15 +263,28 @@ def kaiec_badge(dark=False, lg=False):
 PRODUCTS = [("label/", "fingerprint", "AI 표시 자동화", "코드 한 줄로 사이트 속 AI 생성물에 지문 마크 자동 부착"),
             ("mark/", "badge", "생성물 자동 마킹", "이미지 · 영상 · 문서에 지문 마크와 출처 기록"),
             ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리를 찾고 추천하게"),
-            ("humanize/", "pen", "AI 작성률 검사와 휴머나이징", "AI가 쓴 문장을 찾아 표시하고 사람 말투로"),
+            ("humanize/", "pen", "AI 작성률 검사 · 휴머나이징", "레포트 · 논문 · 자기소개서의 AI 문장을 찾아 사람 말투로"),
             ("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 상품 피드"),
             ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 광고주 승인, 감사 기록"),
             ("label/#service", "code", "AI 서비스 표시 의무 대응", "AI 서비스 결과물마다 표시를 자동으로(API · SDK · MCP)")]
-NAV = [("products", "제품"), ("label/", "AI 표시"), ("geo/", "AI 검색"), ("business/", "기업용"), ("pricing/", "요금"), ("company/", "회사")]
-PRODUCT_PAGE_KEYS = ["humanize", "personal", "commerce", "compliance", "developers", "report", "check", "scan", "verify", "proof", "creators", "product", "app"]
-NAV_KEY = {"label/": ["label", "site", "v", "mark", "mcheck", "m"], "geo/": ["geo"], "business/": ["business", "contact"], "pricing/": ["pricing"], "company/": ["company", "brand", "technology", "trust", "guide"]}
+# 11.0 제품 메뉴: 누구를 위한 것인지로 묶음(기업 · 운영 · 개인과 개발자)
+MENU_GROUPS = [("기업용", [("label/", "fingerprint", "AI 표시 자동화", "코드 한 줄로 사이트 속 AI 생성물에 지문 마크"),
+                          ("mark/", "badge", "생성물 자동 마킹", "이미지 · 영상 · 문서에 지문 마크와 출처 기록"),
+                          ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 네이버 AI 브리핑이 우리를 찾게"),
+                          ("label/#service", "code", "AI 서비스 표시 의무 대응", "AI 서비스 결과물마다 자동 표시")]),
+               ("운영과 관리", [("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 피드"),
+                            ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 승인, 감사 기록"),
+                            ("report/", "file", "일괄 확인 리포트", "여러 파일의 AI 표시 상태를 한 번에"),
+                            ("m/", "search", "마크 확인", "받은 마크가 진짜인지 확인")]),
+               ("개인 · 개발자", [("humanize/", "pen", "AI 작성률 검사 · 휴머나이징", "레포트 · 논문 · 자기소개서를 문장마다"),
+                              ("personal/", "user", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"),
+                              ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결")])]
+NAV = [("products", "제품"), ("business/", "기업용"), ("humanize/", "글 검사"), ("pricing/", "요금"), ("developers/", "개발자"), ("company/", "회사")]
+PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app"]
+NAV_KEY = {"business/": ["business", "contact"], "humanize/": ["humanize", "personal", "proof"], "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
+B2C_KEYS = ["humanize", "personal", "proof"]
 TABS = [("", "home", "홈", ["home"]), ("label/", "fingerprint", "AI 표시", ["label", "site", "v", "mark", "mcheck", "m"]),
-        ("geo/", "globe", "AI 검색", ["geo", "commerce", "business"]), ("humanize/", "pen", "글 검사", ["humanize", "personal", "proof"])]
+        ("geo/", "globe", "AI 검색", ["geo", "commerce"]), ("humanize/", "pen", "글 검사", ["humanize", "personal", "proof"])]
 
 
 def ico(name, cls="ico"):
@@ -246,23 +304,31 @@ def header(root, key):
     for href, label in NAV:
         if href == "products":
             cur = " cur" if key in PRODUCT_PAGE_KEYS else ""
-            links = "".join('<a href="%s%s"><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ico(ic), t, d) for h, ic, t, d in PRODUCTS)
+            groups = "".join('<div class="grp"><span>%s</span>%s</div>' % (g, "".join('<a href="%s%s"><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ico(ic), t, d) for h, ic, t, d in links)) for g, links in MENU_GROUPS)
             items.append('<div class="k-dd%s"><button type="button" aria-haspopup="true" aria-expanded="false"><span>%s</span>%s</button>'
-                         '<div class="k-menu">%s<div class="k-menu-f"><span>AI 표시 자동화는 무료로 바로 설치할 수 있습니다</span><a href="%ssite/">설치 마법사</a></div></div></div>'
-                         % (cur, label, ico("chev"), links, root))
+                         '<div class="k-menu">%s<div class="k-menu-f"><span>AI 표시 자동화는 무료로 바로 설치할 수 있습니다</span><a href="%ssite/">설치 마법사 열기</a></div></div></div>'
+                         % (cur, label, ico("chev"), groups, root))
         else:
             on = key in NAV_KEY.get(href, [])
             items.append('<a href="%s%s"%s><span>%s</span></a>' % (root, href, ' aria-current="page"' if on else "", label))
-    sheet = '<span class="grp">제품</span>' + "".join('<a href="%s%s">%s</a>' % (root, h, t) for h, ic, t, d in PRODUCTS)
-    sheet += '<span class="grp">시작하기</span><a href="%ssite/">AI 표시 무료로 설치</a><a href="%sgeo/">AI 검색 노출 무료 진단</a><a href="%spricing/">요금과 결제</a><a href="%scontact/">도입 상담</a>' % (root, root, root, root)
-    sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%sapp/">작업 공간</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a><a href="%sm/">마크 확인</a><a href="%spersonal/">개인용 한눈에</a>' % (root, root, root, root, root, root)
+    # 11.0 주 단추는 보는 사람에 맞춤: 개인 페이지는 글 검사, 그 밖에는 AI 표시 무료 설치
+    if key == "humanize":
+        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#plan">이용권 보기</a>' % root)
+    elif key in B2C_KEYS:
+        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/">무료로 검사하기</a>' % root)
+    else:
+        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 시작</a>' % root)
+    sheet = ""
+    for g, links in MENU_GROUPS:
+        sheet += '<span class="grp">%s</span>' % g + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, ic, t, d in links)
+    sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%spricing/">요금과 결제</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a>' % (root, root, root, root)
+    sheet += '<div class="ds-sheet-cta"><a href="%scontact/">도입 상담</a><a class="p" href="%s">%s</a></div>' % (root, (root + "humanize/") if key in B2C_KEYS else (root + "site/"), "무료로 검사하기" if key in B2C_KEYS else "무료로 시작")
     return ('<a class="k-skip" href="#main">본문으로 건너뛰기</a>'
             '<header class="k-hd" id="hd"><div class="k-hd-in">%s<nav class="k-nav" aria-label="주 메뉴">%s</nav>'
-            '<div class="k-hd-r"><a class="k-hl opt" href="%sm/">%s마크 확인</a><a class="k-hl opt" href="%scontact/">도입 상담</a>'
-            '<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 시작</a>'
+            '<div class="k-hd-r"><a class="k-hl opt" href="%scontact/">도입 상담</a>%s'
             '<button class="k-menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">%s</button></div></div></header>'
             '<nav class="k-sheet" id="mnav" aria-label="모바일 메뉴">%s</nav>'
-            % (brand(root), "".join(items), root, ico("search"), root, root, ico("menu"), sheet))
+            % (brand(root), "".join(items), root, cta, ico("menu"), sheet))
 
 
 def tabbar(root, key):
@@ -335,7 +401,12 @@ def page(meta, body):
     root = "/" if meta.get("absroot") else "../" * depth
     body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
     body = body.replace("{{root}}", root).replace("{{ver}}", VER).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge()).replace("{{kaiec_lg}}", kaiec_badge(lg=True)).replace("{{kaiec_dk}}", kaiec_badge(dark=True))
-    body = re.sub(r"\{\{tiers:([a-z]+)\}\}", lambda m: tiers_html(m.group(1), root), body)
+    body = re.sub(r"\{\{tiers:([a-z]+)(?::([a-z]+))?\}\}", lambda m: tiers_html(m.group(1), root, m.group(2)), body)
+    body = re.sub(r"\{\{passes:(buy|link)\}\}", lambda m: passes_html(m.group(1), root), body)
+    # 11.0: 확인 도구 세 쪽(/v/ · /m/ · /verify/)을 잇는 같은 탭 줄
+    body = re.sub(r"\{\{checknav:([a-z]+)\}\}", lambda m: '<nav class="ds-segnav" aria-label="확인 도구">' + "".join(
+        '<a href="%s%s"%s>%s</a>' % (root, h, ' aria-current="page"' if k == m.group(1) else '', t)
+        for k, h, t in (("v", "v/", "사이트 표시 확인"), ("m", "m/", "마크 번호, 파일 확인"), ("verify", "verify/", "원장 확인"))) + '</nav>', body)
     body = re.sub(r"\{\{ico:([a-z0-9]+)\}\}", lambda m: ico(m.group(1)), body)
     title = meta["title"]
     desc = meta.get("desc", "")
@@ -351,7 +422,7 @@ def page(meta, body):
                     'data-privacy="1" data-auto="0" %s data-date="2026-10" defer></script>' % (root, VER, look))
     pre = "".join('<script src="%s"></script>' % s.strip() for s in meta.get("prescripts", "").split(",") if s.strip())
     pre += "".join('<link rel="stylesheet" href="%s%s?v=%s">' % (root, s.strip(), VER) for s in meta.get("styles", "").split(",") if s.strip())
-    pre += '<link rel="stylesheet" href="%sassets/v9.css?v=%s"><link rel="stylesheet" href="%sassets/v10.css?v=%s">' % (root, VER, root, VER)
+    pre += '<link rel="stylesheet" href="%sassets/v9.css?v=%s"><link rel="stylesheet" href="%sassets/v10.css?v=%s"><link rel="stylesheet" href="%sassets/v11.css?v=%s">' % (root, VER, root, VER, root, VER)
     if meta.get("manifest"):
         pre += ('<link rel="manifest" href="%sapp/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
                 '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' % root)

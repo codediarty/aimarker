@@ -90,14 +90,18 @@
   dz.addEventListener('drop', function (e) { if (e.dataTransfer.files[0]) file(e.dataTransfer.files[0]); });
 
   /* 최근 공개 앵커 목록 */
+  function loadDays() {
   AM.call('am.anchor', {}, 30000).then(function (r) {
+    if (!r || r.ok === false) throw new Error((r && r.message) || '');
     var items = (r && r.items) || [];
     if (!items.length) { list.innerHTML = '<p class="dev-note">아직 묶인 날이 없습니다. 하루치 원장은 다음 날 0시 10분 뒤 첫 시간 작업에서 묶여 올라갑니다.</p>'; return; }
     list.innerHTML = '<ul class="vl-days">' + items.map(function (x) {
       return '<li><button type="button" data-d="' + esc(x.date) + '"><b>' + esc(x.date) + '</b><span>' + x.count + '줄</span><code>' + esc(String(x.root || '').slice(0, 20)) + '…</code>' + (x.status === 'anchored' ? pill('ok', '올림') : pill('warn', '다시 보내는 중')) + '</button></li>';
     }).join('') + '</ul>';
-    list.addEventListener('click', function (e) { var b = e.target.closest('button[data-d]'); if (!b) return; q.value = b.getAttribute('data-d'); run(q.value); out.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
-  }).catch(function () { list.innerHTML = '<p class="dev-note">지금은 목록을 불러오지 못했어요. 날짜를 직접 넣어 확인해 보세요.</p>'; });
+  }).catch(function () { list.innerHTML = '<p class="dev-note">지금은 목록을 불러오지 못했어요. 날짜를 직접 넣어 확인하거나 <button type="button" class="btn btn-g btn-s" data-reload>다시 불러오기</button></p>'; var rb = list.querySelector('[data-reload]'); if (rb) rb.addEventListener('click', function () { list.innerHTML = '<p class="dev-note">불러오는 중…</p>'; loadDays(); }); });
+  }
+  list.addEventListener('click', function (e) { var b = e.target.closest('button[data-d]'); if (!b) return; q.value = b.getAttribute('data-d'); run(q.value); out.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  loadDays();
 
   var p = new URLSearchParams(location.search), v = p.get('id') || p.get('h') || p.get('date');
   if (v) { q.value = v; run(v); }

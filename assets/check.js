@@ -2,7 +2,9 @@
 (function () {
   'use strict';
   var U = window.AMUI, AM = window.AM, $ = function (s) { return document.querySelector(s); };
-  var ta = $('#ctext'), out = $('#cout'), ind = $('#cind'), go = $('#cgo'), last = null, t0 = 0, lastKey = '', keepInd = false;
+  var ta = $('#ctext'), out = $('#cout'), ind = $('#cind'), go = $('#cgo'), last = null, t0 = 0, lastKey = '', keepInd = false, wantScroll = false;
+  /* 11.0: 휴대폰에서는 결과가 입력 아래에 있으므로, 단추로 검사했을 때만 결과로 내려 줌(입력 중 자동 검사는 그대로) */
+  function toOut() { if (!wantScroll) return; wantScroll = false; if (window.matchMedia && matchMedia('(max-width: 900px)').matches) { try { out.scrollIntoView({ block: 'start' }); } catch (eS) { out.scrollIntoView(); } } }
   var SAMPLES = [
     { t: '피부과 전문의가 직접 개발한 재생 크림! 부작용 없는 순한 성분으로 바르자마자 주름이 사라져요. 국내 최초 특허 성분, 지금 30% 할인.', ind: '' },
     { t: '혈당 걱정 끝! 당뇨에 좋은 여주차. 하루 3잔이면 혈당이 쭉 내려갑니다. 약 대신 자연의 힘으로 관리하세요.', ind: '' },
@@ -20,9 +22,9 @@
       if (r && r.ok && keepInd && last && last.auto && !ind.value) r.auto = true;
       keepInd = false;
       if (!r || !r.ok) throw new Error(r && r.message || '');
-      last = r; last.copy = text; paint();
+      last = r; last.copy = text; paint(); toOut();
       if (window.gtag) try { window.gtag('event', 'ad_check', { decision: r.decision, ind: r.ind }); } catch (eG) { /* 무시 */ }
-    }).catch(function (e) { out.innerHTML = '<div class="res2"><div class="res2-h"><b>지금은 검사하지 못했어요</b></div><p class="why" style="padding-bottom:16px">' + U.esc(e.message || '잠시 뒤 다시 시도해 주세요.') + '</p></div>'; })
+    }).catch(function (e) { lastKey = ''; var m = e && e.message && !/fetch|network|abort|load failed/i.test(e.message) ? e.message : '연결이 끊겼어요. 잠시 뒤 다시 검사해 주세요.'; out.innerHTML = '<div class="res2 err"><div class="res2-h"><b>지금은 검사하지 못했어요</b></div><p class="why" style="padding-bottom:12px">' + U.esc(m) + '</p><p class="res2-act"><button class="btn btn-g btn-s" type="button" data-retry>다시 검사하기</button></p></div>'; toOut(); })
       .then(function () { busy(false); });
   }
   function paint() {
@@ -37,6 +39,7 @@
       '<p class="note mt12">' + U.esc(r.pack.name + ' ' + r.pack.ver) + ' · 규칙 ' + r.pack.rules + '개 · ' + r.ms + 'ms · 문구는 저장하지 않습니다</p></div>';
   }
   out.addEventListener('click', function (e) {
+    if (e.target.closest('[data-retry]')) { wantScroll = true; run(true); return; }
     var r = last; if (!r) return;
     var b = e.target.closest('[data-fix]');
     if (b) { var p = b.getAttribute('data-fix').split(':'), f = r.findings[+p[0]], t = U.applyFix(r.copy, f, f.reps[+p[1]]); if (t !== r.copy) { ta.value = t; count(); keepInd = true; run(true); } return; }
@@ -50,8 +53,8 @@
   function toastish(m) { var n = document.createElement('div'); n.className = 'callout m mt12'; n.textContent = m; out.prepend(n); setTimeout(function () { n.remove(); }, 3500); }
   function count() { $('#ccnt').textContent = ta.value.length.toLocaleString('ko-KR'); }
   ta.addEventListener('input', function () { count(); clearTimeout(t0); if (ta.value.trim().length >= 8) t0 = setTimeout(function () { run(false); }, 1300); });
-  go.addEventListener('click', function () { run(true); });
+  go.addEventListener('click', function () { wantScroll = true; run(true); });
   [ind, $('#fspon'), $('#fperson'), $('#fmedia')].forEach(function (el) { el.addEventListener('change', function () { if (ta.value.trim()) run(false); }); });
-  $('#samples').addEventListener('click', function (e) { var b = e.target.closest('[data-s]'); if (!b) return; var s = SAMPLES[+b.getAttribute('data-s')]; last = null; ta.value = s.t; $('#fspon').checked = !!s.spon; $('#fperson').checked = false; $('#fmedia').checked = false; ind.value = s.ind; count(); run(true); });
+  $('#samples').addEventListener('click', function (e) { var b = e.target.closest('[data-s]'); if (!b) return; var s = SAMPLES[+b.getAttribute('data-s')]; last = null; ta.value = s.t; $('#fspon').checked = !!s.spon; $('#fperson').checked = false; $('#fmedia').checked = false; ind.value = s.ind; count(); wantScroll = true; run(true); });
   var q = new URLSearchParams(location.search).get('t'); if (q) { ta.value = q.slice(0, 5000); count(); run(true); }
 })();
