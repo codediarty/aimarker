@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261021a"
+VER = "20261021b"
 TODAY = "2026-10-20"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -263,12 +263,12 @@ def kaiec_badge(dark=False, lg=False):
 PRODUCTS = [("label/", "fingerprint", "AI 표시 자동화", "코드 한 줄로 사이트 속 AI 생성물에 지문 마크 자동 부착"),
             ("mark/", "badge", "생성물 자동 마킹", "이미지 · 영상 · 문서에 지문 마크와 출처 기록"),
             ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리를 찾고 추천하게"),
-            ("humanize/", "pen", "AI 작성률 검사 · 휴머나이징", "레포트 · 논문 · 자기소개서의 AI 문장을 찾아 사람 말투로"),
+            ("humanize/", "pen", "AI 휴머나이징 · AI 작성률 검사", "레포트 · 논문 · 자기소개서의 AI 말버릇을 사람 말투로"),
             ("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 상품 피드"),
             ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 광고주 승인, 감사 기록"),
             ("label/#service", "code", "AI 서비스 표시 의무 대응", "AI 서비스 결과물마다 표시를 자동으로(API · SDK · MCP)")]
-# 11.0 제품 메뉴: 누구를 위한 것인지로 묶음(기업 · 운영 · 개인과 개발자)
-MENU_GROUPS = [("기업용", [("label/", "fingerprint", "AI 표시 자동화", "코드 한 줄로 사이트 속 AI 생성물에 지문 마크"),
+# 12.0 메뉴: 개인(AI 휴머나이징)은 맨 앞 단독 메뉴, 기업용 제품은 펼침 하나로
+MENU_GROUPS = [("표시와 검색", [("label/", "fingerprint", "AI 표시 자동화", "코드 한 줄로 사이트 속 AI 생성물에 지문 마크"),
                           ("mark/", "badge", "생성물 자동 마킹", "이미지 · 영상 · 문서에 지문 마크와 출처 기록"),
                           ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 네이버 AI 브리핑이 우리를 찾게"),
                           ("label/#service", "code", "AI 서비스 표시 의무 대응", "AI 서비스 결과물마다 자동 표시")]),
@@ -276,15 +276,18 @@ MENU_GROUPS = [("기업용", [("label/", "fingerprint", "AI 표시 자동화", "
                             ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 승인, 감사 기록"),
                             ("report/", "file", "일괄 확인 리포트", "여러 파일의 AI 표시 상태를 한 번에"),
                             ("m/", "search", "마크 확인", "받은 마크가 진짜인지 확인")]),
-               ("개인 · 개발자", [("humanize/", "pen", "AI 작성률 검사 · 휴머나이징", "레포트 · 논문 · 자기소개서를 문장마다"),
-                              ("personal/", "user", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"),
-                              ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결")])]
-NAV = [("products", "제품"), ("business/", "기업용"), ("humanize/", "글 검사"), ("pricing/", "요금"), ("developers/", "개발자"), ("company/", "회사")]
-PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app"]
-NAV_KEY = {"business/": ["business", "contact"], "humanize/": ["humanize", "personal", "proof"], "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
+               ("시작하기", [("business/", "building", "기업용 한눈에", "필요한 일로 고르는 제품과 요금"),
+                          ("site/", "rocket", "설치 마법사", "AI 표시 자동화를 무료로 설치"),
+                          ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결"),
+                          ("contact/", "chat", "도입 상담", "견적, 파일럿, 세금계산서")])]
+B2C_MENU = [("humanize/", "AI 휴머나이징", "AI 말버릇을 사람 말투로, AI 작성률 검사"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 썼는지 정리")]
+NAV = [("humanize/", "AI 휴머나이징"), ("products", "기업용"), ("pricing/", "요금"), ("developers/", "개발자"), ("company/", "회사")]
+PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
+NAV_KEY = {"humanize/": ["humanize", "personal", "proof"], "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
 B2C_KEYS = ["humanize", "personal", "proof"]
-TABS = [("", "home", "홈", ["home"]), ("label/", "fingerprint", "AI 표시", ["label", "site", "v", "mark", "mcheck", "m"]),
-        ("geo/", "globe", "AI 검색", ["geo", "commerce"]), ("humanize/", "pen", "글 검사", ["humanize", "personal", "proof"])]
+TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "휴머나이징", ["humanize", "personal", "proof"]),
+        ("business/", "building", "기업용", ["business", "contact", "label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "app"]),
+        ("pricing/", "tag", "요금", ["pricing"])]
 
 
 def ico(name, cls="ico"):
@@ -311,18 +314,19 @@ def header(root, key):
         else:
             on = key in NAV_KEY.get(href, [])
             items.append('<a href="%s%s"%s><span>%s</span></a>' % (root, href, ' aria-current="page"' if on else "", label))
-    # 11.0 주 단추는 보는 사람에 맞춤: 개인 페이지는 글 검사, 그 밖에는 AI 표시 무료 설치
+    # 12.0 주 단추는 보는 사람에 맞춤: 기업 페이지는 AI 표시 무료 설치, 그 밖(첫 화면 · 개인 · 안내)은 AI 휴머나이징
+    biz = key in PRODUCT_PAGE_KEYS
     if key == "humanize":
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#plan">이용권 보기</a>' % root)
-    elif key in B2C_KEYS:
-        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/">무료로 검사하기</a>' % root)
+    elif biz:
+        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 설치</a>' % root)
     else:
-        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 시작</a>' % root)
-    sheet = ""
-    for g, links in MENU_GROUPS:
+        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/">무료로 시작</a>' % root)
+    sheet = '<span class="grp">개인 · 학생</span>' + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, t, d in B2C_MENU)
+    for g, links in MENU_GROUPS[:2]:
         sheet += '<span class="grp">%s</span>' % g + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, ic, t, d in links)
-    sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%spricing/">요금과 결제</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a>' % (root, root, root, root)
-    sheet += '<div class="ds-sheet-cta"><a href="%scontact/">도입 상담</a><a class="p" href="%s">%s</a></div>' % (root, (root + "humanize/") if key in B2C_KEYS else (root + "site/"), "무료로 검사하기" if key in B2C_KEYS else "무료로 시작")
+    sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%spricing/">요금과 결제</a><a href="%sdevelopers/">개발자</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a>' % (root, root, root, root, root)
+    sheet += '<div class="ds-sheet-cta"><a href="%scontact/">도입 상담</a><a class="p" href="%s">%s</a></div>' % (root, (root + "site/") if biz else (root + "humanize/"), "무료로 설치" if biz else "무료로 시작")
     return ('<a class="k-skip" href="#main">본문으로 건너뛰기</a>'
             '<header class="k-hd" id="hd"><div class="k-hd-in">%s<nav class="k-nav" aria-label="주 메뉴">%s</nav>'
             '<div class="k-hd-r"><a class="k-hl opt" href="%scontact/">도입 상담</a>%s'
@@ -350,8 +354,8 @@ def footer(root):
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
     biz.append('<span>결제 · 세금계산서는 운영사 성균관컨설팅이 처리합니다</span>')
-    cols = [("제품", [("label/", "AI 표시 자동화"), ("site/", "설치 마법사"), ("mark/", "생성물 자동 마킹"), ("geo/", "AI 검색 노출 최적화"), ("humanize/", "AI 작성률 검사와 휴머나이징"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
-            ("고객별", [("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("personal/", "개인"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("app/", "작업 공간"), ("contact/", "도입 상담")]),
+    cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 표시 자동화"), ("site/", "설치 마법사"), ("mark/", "생성물 자동 마킹"), ("geo/", "AI 검색 노출 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
+            ("고객별", [("personal/", "개인 · 학생"), ("proof/", "AI 활용 증빙서"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "도입 상담")]),
             ("개발자", [("developers/", "API와 SDK"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("m.js", "자동 표시 스크립트(공개 코드)"), ("v/", "표시 확인"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
             ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b>%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
