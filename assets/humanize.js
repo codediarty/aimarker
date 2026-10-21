@@ -976,7 +976,7 @@
   function renderProFree() {
     var F = S.fx, ops = clump(diff(F.src, F.text)), rest = Math.max(0, F.total - F.shown), allT = cur(), needA = humCost(allT.replace(/\s+/g, '') ? chunk(allT).parts : []);
     var right = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '+' ? '<ins>' + esc(o[1]) + '</ins>' : ''; }).join('');   // 12.1 무료 맛보기는 바꾼 글만(지운 말 · 바꾼 이유는 크레딧 결과에서)
-    var TN = { plain: '한다체로', polite: '해요체로', formal: '습니다체로', keep: '말투는 원문 그대로' }[F.tone] || '';
+    var TN = { plain: '한다체', polite: '해요체', formal: '습니다체', keep: '원문 그대로' }[F.tone] || '';
     var PT = F.part || '첫 문단', h2 = !F.changes ? PT + '에서는 바꿀 AI 말버릇을 찾지 못했어요' : rest ? PT + '을 사람 말투에 가깝게 다듬었어요' : '사람 말투에 가깝게 다듬었어요';
     stat(h2); setStep(3); collapse(true); outShown();
     out.innerHTML = '<div class="hz7-res hz9"><section class="hz9-ph"><h2>' + esc(h2) + '</h2><ul class="hz9-tagl"><li class="on">휴머나이징 무료 맛보기</li><li>바꾼 곳 <b>' + n2(F.changes) + '</b></li>' + (TN ? '<li>말투 자동 · ' + TN + '</li>' : '') + '<li>생성 AI 없이 AIMarker 인간화 엔진</li></ul></section>' +
