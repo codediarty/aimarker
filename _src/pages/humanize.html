@@ -2,74 +2,29 @@
 path: humanize/
 key: humanize
 v9: 1
-title: AI 휴머나이징 · AI 작성률 검사 | 레포트 · 논문 · 자기소개서 | AIMarker
-ogtitle: AI 초안을 내 문장으로 · AIMarker AI 휴머나이징과 AI 작성률 검사
-desc: 대학 레포트, 논문, 자기소개서를 내기 전에 확인하세요. 글을 붙여 넣으면 AI 작성률과 판정(안전, 고위험, 부적합), 판정 근거를 보여 주고 AI가 쓴 것으로 보이는 문장을 표시합니다. 휴머나이징은 생성 AI 없이 AIMarker 인간화 엔진이 사람 말투로 바꿉니다(첫 문단 무료). 무료 맛보기, 크레딧은 3,000원부터.
-scripts: assets/humanize.js
-styles: assets/mark.css, assets/v6.css, assets/humanize.css
+title: AI 휴머나이징 · AI 작성률 검사 | 한글 · 워드 · PDF 파일 바로 검사 | AIMarker
+ogtitle: AI가 쓴 글에는 흔적이 남습니다, AIMarker AI 작성률 검사와 휴머나이징
+desc: 제출 전에 미리 확인하세요. 글을 붙여 넣거나 한글(HWP, HWPX), 워드(DOCX), PDF 파일을 올리면 AI 작성률과 판정(안전, 고위험, 부적합), AI로 보이는 문장을 바로 보여 드립니다. 휴머나이징은 AI 말버릇과 번역투를 사람 문장으로 다듬고 말투는 원문에 맞춰 자동으로 정합니다(첫 문단 무료). 크레딧은 3,000원부터.
+scripts: assets/textin.js, assets/humanize.js
+styles: assets/mark.css, assets/v6.css, assets/humanize.css, assets/hz12.css
 selflabel: footer
 -->
-<section class="k-apphead" aria-labelledby="h1">
+<section class="hz12-hero" id="tool" aria-labelledby="h1">
   <div class="k-wrap">
-    <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<span>개인 · 학생</span></p>
-    <div class="k-apphead-row">
-      <div>
-        <h1 class="k-h1 sm" id="h1">AI 휴머나이징</h1>
-        <p class="k-lead">AI 말버릇과 번역투를 사람 말투로 바꾸고, 무엇을 왜 바꿨는지 보여 줍니다. AI 작성률 검사로 문장마다 AI 검출 여부를 <span class="k-s ai">표시</span>하고, 바꾸기 전과 뒤를 같은 기준으로 비교합니다.</p>
-      </div>
-      <ul class="k-apphead-facts" aria-label="미리 알아 둘 것">
-        <li>{{ico:lock}}글은 저장하지 않음</li>
-        <li>{{ico:check}}같은 글은 같은 판정</li>
-        <li>{{ico:file}}결과상세내역서 PDF</li>
-      </ul>
+    <div class="hz12-hd">
+      <p class="hz12-k">{{ico:fingerprint}}AI 작성률 검사 · AI 휴머나이징</p>
+      <h1 class="hz12-h1" id="h1">AI가 쓴 글에는<br> 흔적이 남습니다</h1>
+      <p class="hz12-lead">사람이 남긴 지문처럼, AI가 작성한 글에도 특유의 문장 패턴이 남습니다.<b>AI 작성으로 의심받기 전에, 제출 전 미리 확인하세요.</b><span class="hz12-lead2">AI 작성 가능성을 검사하고, 부자연스러운 표현과 문장 패턴을 자연스럽게 다듬어 드립니다.</span></p>
     </div>
-  </div>
-</section>
-
-<section class="hz7-tool-sec k9-tool" id="tool">
-  <div class="wrap">
-    <div class="hz7" id="hz">
-      <div class="hz7-in">
-        <div class="hz7-bar">
-          <label for="hzText"><b>검사할 글</b></label>
-          <div class="hz7-ex" aria-label="예시 글 넣기"><span>예시</span><button type="button" data-ex="report">대학 레포트</button><button type="button" data-ex="thesis">논문</button><button type="button" data-ex="essay">자기소개서</button><button type="button" data-ex="blog">블로그 후기</button><button type="button" data-ex="human">사람이 쓴 글</button></div>
-        </div>
-        <div class="hz7-drop" id="hzDrop">
-          <textarea id="hzText" rows="8" maxlength="50000" placeholder="대학 레포트, 논문, 자기소개서, 블로그 글을 붙여 넣으세요. 150자 이상이면 더 정확합니다. Word(.docx), 한글(.hwpx), 텍스트 파일을 여기에 끌어다 놓아도 됩니다."></textarea>
-          <div class="hz7-drop-hint" aria-hidden="true">{{ico:upload}}<span>파일을 놓으면 글을 꺼내 옵니다</span></div>
-        </div>
-        <div class="hz7-opts">
-          <span class="hz7-count"><b id="hzCount">0</b>자, <span id="hzLimit">무료 맛보기 6,000자 · 크레딧은 한 번에 5만 자</span></span>
-          <div class="hz7-optr">
-            <label class="hz7-file btn btn-g btn-s">{{ico:file}}<span>파일 불러오기</span><input type="file" id="hzFile" accept=".docx,.hwpx,.txt,.md,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden></label>
-            <label class="hz7-tone"><span class="sr">휴머나이징 말투</span><select id="hzTone" aria-label="휴머나이징 말투"><option value="auto" selected>말투 자동(추천)</option><option value="keep">말투 그대로</option><option value="plain">한다체(레포트, 논문)</option><option value="polite">해요체(블로그, 후기)</option><option value="formal">습니다체(자기소개서, 공식 글)</option></select></label>
-          </div>
-        </div>
-        <div class="hz7-act">
-          <button class="btn btn-p btn-l" type="button" id="hzCheck">{{ico:search}}<span>AI 작성률 검사</span><em class="hz7-pill" id="hzChkTag">무료</em></button>
-          <button class="btn btn-g btn-l" type="button" id="hzPro">{{ico:pen}}<span>휴머나이징</span><em class="hz7-pill" id="hzProTag">첫 문단 무료</em></button>
-        </div>
-        <div class="hz7-pass" id="hzPass" aria-live="polite"></div>
-        <p class="hz7-note">{{ico:lock}}글은 검사할 때만 서버로 보내고 저장하지 않습니다. 같은 글은 언제나 같은 결과가 나옵니다.</p>
-      </div>
-      <p class="k-sr" id="hzStat" role="status" aria-live="polite"></p>
-      <div class="hz7-out" id="hzOut">
-        <div class="hz7-empty">
-          <div class="hz9-demo" aria-hidden="true">
-            <div class="hz9-demo-h is-u"><div class="hz9-g is-u sm"><p class="gl">AI 작성률</p><b class="gv">73<small>%</small></b><div class="mt"><i class="z s"></i><i class="z r"></i><i class="z u on"></i><em style="left:73%"></em></div></div><div><small>예시 결과</small><p class="hz9-hl xs"><i class="hz9-st is-u"><svg viewBox="0 0 24 24"><circle class="bg" cx="12" cy="12" r="11"/><path class="fg" d="M12 6.9v6.2M12 16.9v.2"/></svg></i><span>AI 검출됨</span></p><span class="hz9-v is-u"><b>부적합</b><span>개선 필요</span></span></div></div>
-            <p class="hz7-paper"><span class="hz-s ai">인공지능은 현대 사회에서 중요한 역할을 하고 있습니다.</span> <span class="hz-s ai">또한, 다양한 산업 분야에 있어서 혁신적인 변화를 이끌고 있습니다.</span> 지난주 우리 팀은 이 방식으로 회의록 정리를 20분 줄였다. <span class="hz-s ai">결론적으로, 앞으로가 기대됩니다.</span></p>
-          </div>
-          <div class="hz9-legend"><span><i class="ai"></i>AI 검출 문장</span><span><i></i>표시 없음</span></div>
-          <p>검사하면 결과를 ‘AI 검출됨’, ‘AI 일부 검출’, ‘AI 검출 안 됨’ 가운데 하나로 보여 드리고, AI 작성률과 판정 근거, 구간별 검출 현황과 함께 AI가 쓴 것으로 보이는 문장을 표시합니다. 판정과 수치는 무료 맛보기에서도 크레딧으로 볼 때와 같은 실제 값입니다.</p>
-        </div>
-      </div>
-    </div>
+{{inc:hz-tool.inc}}
   </div>
 </section>
 
 <nav class="k-toc" aria-label="이 페이지 차례">
-  <div class="k-wrap"><a href="#tool">검사하기</a><a href="#read">판정 기준</a><a href="#human">인간화 엔진</a><a href="#flow">쓰는 순서</a><a href="#filter">왜 지금</a><a href="#price">요금</a><a href="#faq">자주 묻는 질문</a></div>
+  <div class="k-wrap"><a href="#tool">검사하기</a><a href="#how">진행 순서</a><a href="#read">판정 기준</a><a href="#human">인간화 엔진</a><a href="#filter">왜 지금</a><a href="#price">요금</a><a href="#faq">자주 묻는 질문</a></div>
 </nav>
+
+{{inc:hz-demo.inc}}
 
 <section class="k-sec" id="read" aria-labelledby="rTitle">
   <div class="k-wrap">
@@ -124,25 +79,11 @@ selflabel: footer
     </div>
     <div class="k-cols c2" style="margin-top:40px">
       <div class="k-col"><h4>AI 말버릇을 사람 말로</h4><p>문장마다 붙는 ‘또한,’과 ‘결론적으로,’, ‘다양한’과 ‘이러한’ 같은 빈말, ‘~에 있어서’와 ‘~을 통해’ 같은 번역투를 문맥에 맞게 바꿉니다. 가운뎃점으로 늘어놓기, ‘첫째, 둘째, 셋째’, ‘A, B, 그리고 C’, 힘주려고 씌운 작은따옴표, 문장 끝의 쌍점처럼 AI 글에 유난히 많은 버릇도 고칩니다.</p></div>
-      <div class="k-col"><h4>말투와 리듬까지</h4><p>말투 자동은 보고서, 과제, 에세이를 한다체로 맞추고, 해요체나 습니다체도 고를 수 있습니다. 지원서, 안내문, 사과문처럼 읽는 사람에게 부탁하거나 높여 말하는 글은 한다체로 낮추지 않고 까닭을 알려 드립니다.</p></div>
+      <div class="k-col"><h4>말투는 원문에 맞춰 자동</h4><p>올린 글을 보고 말투를 정합니다. 보고서, 과제, 에세이는 한다체로 맞추고, 지원서, 안내문, 사과문처럼 읽는 사람에게 부탁하거나 높여 말하는 글은 원래 말투를 지키고 까닭을 알려 드립니다.</p></div>
       <div class="k-col"><h4>뜻과 사실은 그대로</h4><p>숫자, 날짜, 고유명사, 인용, 주소는 건드리지 않고, 없는 경험이나 근거를 지어내지 않습니다. ‘할 수 있다’를 ‘한다’로 단정하는 식으로 말의 세기를 바꾸지 않고, 바꾼 문장은 다시 읽어 어긋나면 원문으로 둡니다.</p></div>
       <div class="k-col"><h4>같은 글은 같은 결과</h4><p>정해진 규칙과 사전으로 바꾸므로 같은 글, 같은 설정이면 언제나 같은 결과입니다. 마음에 들지 않으면 ‘다른 버전’으로 다른 후보를 봅니다.</p></div>
     </div>
     <p class="k-note-box">{{ico:info}}<span>AI 사용 사실을 밝혀야 하는 과제, 공모전, 채용 서류라면 휴머나이징 뒤에도 그 규정대로 밝히세요(<a href="{{root}}proof/">AI 활용 증빙서</a>). 휴머나이징은 문체를 바꾸는 도구이며, 다른 검사기의 결과를 약속하지 않습니다.</span></p>
-  </div>
-</section>
-
-<section class="k-sec" id="flow" aria-labelledby="flTitle">
-  <div class="k-wrap">
-    <div class="k-head">
-      <h2 class="k-h2" id="flTitle">확인하고, 고쳐 쓰고, 다시 확인</h2>
-      <p class="k-lead">문장별로 보여 주는 데서 그치지 않고, 고쳐 쓰고 다시 확인하는 데까지 돕습니다.</p>
-    </div>
-    <div class="k-steps">
-      <div class="k-step"><span class="n"><b>1</b>확인</span><h4>판정과 AI 검출 문장</h4><p>판정과 판정 근거를 먼저 보고, 어느 문장이 왜 AI처럼 읽히는지 문장마다 확인합니다. AI 문장이 어느 구간에 몰려 있는지도 한눈에 봅니다.</p></div>
-      <div class="k-step"><span class="n"><b>2</b>고쳐 쓰기</span><h4>문장 도우미와 휴머나이징</h4><p>AI 검출 문장을 누르면 바꿀 표현과 다시 쓴 문장 후보를 보여 줍니다. 글 전체는 휴머나이징으로 말투와 리듬까지 바꾸고, 내 경험을 하나만 더해도 내 글에 가까워집니다.</p></div>
-      <div class="k-step"><span class="n"><b>3</b>다시 확인</span><h4>다시 검사와 결과상세내역서</h4><p>고친 글을 같은 기준으로 다시 검사해 판정이 어떻게 바뀌었는지 보고, 검사 번호와 판정 근거와 구간별 분석이 담긴 결과상세내역서를 PDF로 저장합니다.</p></div>
-    </div>
   </div>
 </section>
 
@@ -156,7 +97,7 @@ selflabel: footer
       <div class="k-stat"><b>57만<small>7천 건</small></b><h4>교수자가 과제를 검사한 건수</h4><p>2026년 4월 한 달, 국내 한 검사 서비스의 교수자용 검사 문서량. 1년 전보다 75.9% 늘었습니다.</p><cite>유니콘팩토리, 2026.5.26 <a href="#src">[1]</a></cite></div>
       <div class="k-stat"><b>10.7<small>번</small></b><h4>학생이 내기 전 다시 검사한 횟수</h4><p>1년 전 평균 6.6번에서 늘었습니다.</p><cite>유니콘팩토리, 2026.5.26 <a href="#src">[1]</a></cite></div>
       <div class="k-stat"><b>D-<small>학점</small></b><h4>AI 사용이 확인된 학생의 성적</h4><p>서울대 한 전공과목에서 과제에 AI 사용이 확인된 학생이 받은 성적입니다.</p><cite>세계일보, 2026.7.30 <a href="#src">[2]</a></cite></div>
-      <div class="k-stat"><b>3.6<small>배</small></b><h4>자기소개서 등 AI 판별 검사량</h4><p>2025년 10~11월 검사량이 1년 전의 3.6배였고, 일부 기업은 서류 심사에 씁니다.</p><cite>디지털타임스, 2025.11.23 <a href="#src">[3]</a></cite></div>
+      <div class="k-stat"><b>3.6<small>배</small></b><h4>한 서비스의 자기소개서 등 AI 판별 검사량</h4><p>2025년 10~11월 검사량이 1년 전의 3.6배였고, 일부 기업은 서류 심사에 씁니다.</p><cite>디지털타임스, 2025.11.23 <a href="#src">[3]</a></cite></div>
     </div>
     <p class="k-note-box" style="margin-top:28px">{{ico:info}}<span>AI를 사용해도 되는 과제라면 규정에 맞게 밝히고, 내 생각과 경험으로 고쳐 쓰는 것이 가장 안전합니다. 검사 결과는 추정값이며, 다른 검사기에서 같은 결과가 나온다고 약속하지 않습니다.</span></p>
   </div>
@@ -187,14 +128,15 @@ selflabel: footer
       <details><summary>무료 맛보기와 크레딧은 무엇이 다른가요?</summary><p>무료 맛보기는 첫 6,000자의 AI 작성률, 판정과 판정 근거, 검출 수치, 종합 분석 의견, 문체 특성 이름, 가장 뚜렷한 문장 2개를 보여 줍니다. 수치는 크레딧으로 볼 때와 같은 실제 값입니다. 크레딧으로는 모든 AI 검출 문장의 위치와 이유, 문장마다의 AI 점수, 구간별 위치와 비중, 특성마다 해당하는 표현, 먼저 고칠 문장을 볼 수 있고, 문장 고쳐 쓰기 도우미와 글 전체 휴머나이징, 결과상세내역서(PDF), 5만 자까지 한 번에 검사하는 기능도 열립니다.</p></details>
       <details><summary>학교나 회사의 검사기와 결과가 같나요?</summary><p>검사기마다 학습한 글과 방법이 달라 결과가 다를 수 있습니다. AIMarker는 다른 서비스의 결과를 약속하지 않습니다. 어느 문장이 AI처럼 읽히는지 미리 살피고 내 글로 고쳐 쓰는 데 활용하세요.</p></details>
       <details><summary>AI 작성률이 높으면 AI가 썼다는 뜻인가요?</summary><p>아니요. 작성률과 판정은 정해진 기준으로 낸 추정이지 증명이 아닙니다. 딱딱한 보고서체나 공문체로 쓴 사람 글이 높게 나올 수도 있고, 사람이 많이 고친 AI 글은 낮게 나올 수 있습니다. 시와 노랫말처럼 줄이 짧은 글과 150자보다 짧은 글은 결과가 특히 불안정합니다. 결과만으로 다른 사람을 판단하지 마세요.</p></details>
-      <details><summary>휴머나이징은 무엇을 바꾸나요?</summary><p>번역투, 상투적 연결어, 빈말, AI 대화창에서 복사한 흔적 같은 AI 말버릇을 고치고, 고른 말투(한다체, 해요체, 습니다체)로 맞추고, 긴 문장은 나누고 짧은 문장은 잇습니다. 후보를 여러 개 만들어 숫자와 인용을 모두 지키면서 AI 작성률이 가장 낮은 것을 보여 드리고, ‘다른 버전’으로 다른 후보도 볼 수 있습니다. 뜻과 말의 세기가 달라질 수 있는 곳은 그대로 둡니다. 다른 버전도 같은 크레딧으로 볼 수 있습니다.</p></details>
-      <details><summary>한다체를 골랐는데 말투가 그대로인 곳이 있어요</summary><p>지원서, 안내문, 사과문, 초대장, 상담 답장처럼 읽는 사람에게 부탁하거나 높여 말하는 글을 한다체로 바꾸면 실례가 되거나 한 글 안에 말투가 섞입니다. 그래서 이런 글은 말투를 그대로 두고 결과 화면에 까닭을 알려 드립니다. 해요체나 습니다체로는 바꿀 수 있습니다.</p></details>
+      <details><summary>휴머나이징은 무엇을 바꾸나요?</summary><p>번역투, 상투적 연결어, 빈말, AI 대화창에서 복사한 흔적 같은 AI 말버릇을 고치고, 글에 맞는 말투(한다체, 해요체, 습니다체)로 자동으로 맞추고, 긴 문장은 나누고 짧은 문장은 잇습니다. 후보를 여러 개 만들어 숫자와 인용을 모두 지키면서 AI 작성률이 가장 낮은 것을 보여 드리고, ‘다른 버전’으로 다른 후보도 볼 수 있습니다. 뜻과 말의 세기가 달라질 수 있는 곳은 그대로 둡니다. 다른 버전을 볼 때도 글자 수만큼 크레딧이 빠집니다.</p></details>
+      <details><summary>말투는 어떻게 정하나요?</summary><p>올린 글을 보고 자동으로 정합니다. 레포트, 논문, 에세이처럼 한다체가 어울리는 글은 한다체로 맞춥니다. 지원서, 안내문, 사과문, 초대장, 상담 답장처럼 읽는 사람에게 부탁하거나 높여 말하는 글을 한다체로 바꾸면 실례가 되거나 한 글 안에 말투가 섞이므로, 이런 글은 원래 말투를 지키고 결과 화면에 까닭을 알려 드립니다.</p></details>
+      <details><summary>어떤 파일을 올릴 수 있나요?</summary><p>한글(HWP, HWPX), 워드(DOCX), PDF, 텍스트(TXT) 파일을 올리거나 끌어다 놓으면 이 브라우저 안에서 글만 꺼내 바로 검사합니다. 머리말, 꼬리말, 각주는 빼고 본문과 표, 글상자의 글을 꺼냅니다. 파일은 서버로 보내지 않습니다. 다듬은 글은 워드나 한글 파일로 받고, 올린 파일이 DOCX나 HWPX면 서식과 표, 그림은 그대로 두고 바뀐 문단의 글만 바꿔 드립니다. HWP와 PDF는 같은 형식으로 다시 만들 수 없어 워드 파일(한글에서도 열림)로 드립니다. 암호가 걸린 문서, 배포용 한글 문서, 스캔한 PDF는 글을 꺼낼 수 없으니 글을 붙여 넣어 주세요. PDF는 줄 바꿈 자리의 띄어쓰기가 원본과 조금 다를 수 있어, 원본 파일이 있으면 그 파일이 더 정확합니다.</p></details>
       <details><summary>휴머나이징도 생성 AI를 사용하나요?</summary><p>아니요. AIMarker 인간화 엔진은 생성 AI를 사용하지 않고, 사람 글과 AI 글을 비교해 만든 규칙과 사람 글 약 10억 자로 만든 용언 사전과 실제 쓰임 표로 우리 서버에서 바꿉니다. 그래서 글을 외부 AI 서비스에 보내지 않고, 같은 글은 같은 결과가 나오며, 없는 내용을 지어내지 않습니다.</p></details>
       <details><summary>휴머나이징하면 AI 작성률이 꼭 내려가나요?</summary><p>AI가 자주 쓰는 표현과 말투가 바뀌면 대개 내려가지만, 글의 짜임과 흐름에 AI 패턴이 남아 있으면 크게 내려가지 않을 수 있습니다. AI 검출 문장에 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰면 내 글에 가까워집니다. 다른 검사기의 결과는 약속하지 않습니다.</p></details>
       <details><summary>크레딧은 어떻게 빠지나요?</summary><p>글자 수만큼 빠집니다. AI 작성률 검사는 100자당 2크레딧(최소 10), AI 휴머나이징은 100자당 4크레딧(최소 20)입니다. 3,000자 레포트라면 검사 60크레딧, 휴머나이징 120크레딧입니다. 600자 이하 문장 도우미와 짧은 다시 검사는 크레딧이 남아 있으면 빠지지 않고, 서버 오류로 끝나지 않은 요청도 빠지지 않습니다. 단추 옆에 이 글에 드는 크레딧을 미리 보여 드리고, 100크레딧이 넘으면 한 번 더 묻습니다.</p></details>
       <details><summary>크레딧은 어떻게 받고 충전하나요?</summary><p>충전할 크레딧을 고르고 이메일을 남기면 주문 번호가 나오고, 공식 결제처 성균관컨설팅 결제 페이지에서 회원가입 없이 결제합니다. 결제가 확인되면 영업일 하루 안에 16자리 크레딧 코드를 메일로 보내 드리고, 메일의 단추를 누르면 코드가 들어간 채로 이 화면이 열립니다. 모자라면 ‘충전’을 눌러 같은 코드에 더하면 됩니다. 크레딧은 발급 또는 마지막 충전부터 5년 동안 쓸 수 있습니다.</p></details>
       <details><summary>환불되나요?</summary><p>충전한 날부터 7일 안에는 그 충전분의 유료 크레딧 가운데 쓰고 남은 만큼을 그대로 돌려 드립니다(하나도 쓰지 않았다면 전액). 7일이 지나면 남은 유료 크레딧 금액에서 10%를 뺀 금액을 돌려 드립니다. 환불을 셀 때는 쓴 크레딧을 유료 크레딧에서 먼저 빼고, 더 받은 크레딧은 환불하지 않습니다. 주문 번호와 함께 contact@skkc.co.kr로 요청해 주세요. 자세한 기준은 <a href="{{root}}terms/#pass">이용약관 제7조의3</a>을 따릅니다.</p></details>
-      <details><summary>내 글이 저장되나요?</summary><p>글은 검사하고 휴머나이징할 때만 서버로 보내며, 저장하지 않습니다. 크레딧은 남은 양과 유효기간만 세고, 글 내용은 남기지 않습니다. 결제 창으로 다녀오는 동안에는 넣은 글을 이 브라우저(탭)에만 잠시 두었다가 돌아오면 지웁니다. 결과상세내역서는 이 브라우저에서 만들어 저장합니다.</p></details>
+      <details><summary>내 글이나 파일이 저장되나요?</summary><p>글은 검사하고 휴머나이징할 때만 서버로 보내며, 저장하지 않습니다. 올린 파일은 이 브라우저 안에서 글만 꺼내고 서버로 보내지 않으며, 다듬은 파일도 이 브라우저에서 만듭니다. 크레딧은 남은 양과 유효기간만 세고, 글 내용은 남기지 않습니다. 결제 창으로 다녀오는 동안에는 넣은 글을 이 브라우저(탭)에만 잠시 두었다가 돌아오면 지웁니다. 결과상세내역서는 이 브라우저에서 만들어 저장합니다.</p></details>
     </div>
     <ol class="k-src" id="src">
       <li>유니콘팩토리, 「"GPT로 쓰고 흔적 지운다"…대학가 번지는 '과제 자가점검'」, 2026.5.26. 지난 4월 교수자 평가용 서비스 검사 문서량 32만 8천여 건에서 57만 7천여 건(75.9% 증가), 학생 1인당 평균 재검사 6.6회에서 10.7회.</li>
@@ -208,43 +150,7 @@ selflabel: footer
 
 <section class="k-cta" aria-labelledby="ctaT">
   <div class="k-wrap k-cta-in">
-    <div><h2 class="k-h2" id="ctaT">내기 전에, 한 번만 확인하세요</h2><p class="k-lead">무료 맛보기로 판정을 보고, 크레딧으로 어느 문장인지 확인해 고쳐 쓰세요.</p></div>
-    <div class="k-acts"><a class="k-btn k-btn-p k-btn-lg" href="#tool">AI 작성률 무료 검사</a><button class="k-btn k-btn-l k-btn-lg" type="button" data-buy="c3">3,000원 충전 · 300크레딧</button></div>
+    <div><h2 class="k-h2" id="ctaT">제출하기 전에, 한 번만 확인하세요</h2><p class="k-lead">글을 붙여 넣거나 파일을 올리면 바로 AI 작성률을 보여 드리고, 크레딧으로 글 전체를 자연스럽게 다듬어 드립니다.</p></div>
+    <div class="k-acts"><a class="k-btn k-btn-p k-btn-lg" href="#tool" data-focus="hzText">AI 작성률 무료 검사</a><button class="k-btn k-btn-l k-btn-lg" type="button" data-buy="c3">3,000원 충전 · 300크레딧</button></div>
   </div>
 </section>
-
-<dialog class="hz7-dlg" id="hzBuy" aria-labelledby="hzBuyT">
-  <form method="dialog" class="hz7-dlg-x"><button type="submit" aria-label="닫기">{{ico:x}}</button></form>
-  <div class="hz7-dlg-b" id="hzBuyBody">
-    <h2 id="hzBuyT">크레딧 충전</h2>
-    <form id="hzBuyForm" novalidate>
-      <fieldset class="hz7-to" hidden></fieldset>
-      <fieldset class="hz7-prod"><legend class="sr">충전할 크레딧</legend>
-        <label><input type="radio" name="product" value="c3"><span><b>300크레딧</b><em>3,000원</em><small>300크레딧 · 3,000자 글 검사와 휴머나이징 약 1번</small></span></label>
-        <label><input type="radio" name="product" value="c10" checked><span><b>1,100크레딧</b><em>10,000원</em><small>1,000크레딧 + 100크레딧 더 · 3,000자 글 검사와 휴머나이징 약 6번</small></span></label>
-        <label class="best"><input type="radio" name="product" value="c30"><span><b>3,500크레딧<i>추천</i></b><em>30,000원</em><small>3,000크레딧 + 500크레딧 더 · 3,000자 글 검사와 휴머나이징 약 19번</small></span></label>
-        <label><input type="radio" name="product" value="c50"><span><b>6,000크레딧</b><em>50,000원</em><small>5,000크레딧 + 1,000크레딧 더 · 3,000자 글 검사와 휴머나이징 약 33번</small></span></label>
-      </fieldset>
-      <div class="field"><label for="hzBuyMail">크레딧 코드, 영수증을 받을 이메일 <em>필수</em></label><input class="inp" id="hzBuyMail" name="contact" type="email" inputmode="email" autocomplete="email" maxlength="80" required placeholder="name@example.com"></div>
-      <label class="consent"><input type="checkbox" name="agree"><span>충전한 날부터 7일 안에는 그 충전분의 유료 크레딧 가운데 쓰고 남은 만큼을 그대로, 그 뒤에는 남은 유료 크레딧 금액에서 10%를 뺀 금액을 환불한다는 것(더 받은 크레딧은 환불 대상이 아님, 유효기간 5년)을 확인했고, 크레딧 약관과 주문 확인, 코드와 영수증 발송을 위한 이메일 수집에 동의합니다. <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a>, <a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a></span></label>
-      <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <button class="btn btn-p btn-l" type="submit"><span>주문하기</span></button>
-      <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n" id="hzBuyNote">주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 크레딧 코드를 메일로 보내 드립니다.</p>
-      <p class="hz7-dlg-n">가격은 부가세 포함입니다. 결제는 공식 결제처 성균관컨설팅에서 하며, 카드 명세서에는 성균관컨설팅으로 표시됩니다. 미성년자는 법정대리인의 동의를 받아 구매해 주세요(동의 없는 구매는 취소할 수 있습니다). 운영 성균관컨설팅(대표 이채연), 사업자등록번호 272-32-01885, 통신판매업 신고 제2026-경기송탄-0622, 문의 contact@skkc.co.kr</p>
-    </form>
-  </div>
-</dialog>
-
-<dialog class="hz7-dlg" id="hzCode" aria-labelledby="hzCodeT">
-  <form method="dialog" class="hz7-dlg-x"><button type="submit" aria-label="닫기">{{ico:x}}</button></form>
-  <div class="hz7-dlg-b">
-    <h2 id="hzCodeT">크레딧 코드 넣기</h2>
-    <form id="hzCodeForm" novalidate>
-      <div class="field"><label for="hzCodeIn">메일로 받은 16자리 코드</label><input class="inp hz7-code-in" id="hzCodeIn" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX"></div>
-      <button class="btn btn-p btn-l" type="submit">코드 넣기</button>
-      <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n">코드는 이 브라우저에만 저장됩니다. 다른 기기에서는 코드를 다시 넣어 주세요. 예전에 산 이용권 코드도 여기에 넣습니다. 코드가 없나요? <button type="button" class="hz7-link" data-buy="c10">크레딧 충전</button></p>
-    </form>
-  </div>
-</dialog>

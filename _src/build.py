@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261021c"
+VER = "20261021d"
 TODAY = "2026-10-20"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -315,7 +315,7 @@ MENU_GROUPS = [("표시와 검색", [("label/", "fingerprint", "AI 표시 자동
                           ("site/", "rocket", "설치 마법사", "AI 표시 자동화를 무료로 설치"),
                           ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결"),
                           ("contact/", "chat", "도입 상담", "견적, 파일럿, 세금계산서")])]
-B2C_MENU = [("humanize/", "AI 휴머나이징", "AI 말버릇을 사람 말투로, AI 작성률 검사"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 썼는지 정리")]
+B2C_MENU = [("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 썼는지 정리")]
 NAV = [("humanize/", "AI 휴머나이징"), ("products", "기업용"), ("pricing/", "요금"), ("developers/", "개발자"), ("company/", "회사")]
 PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
 NAV_KEY = {"humanize/": ["humanize", "personal", "proof"], "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
@@ -353,11 +353,13 @@ def header(root, key):
     biz = key in PRODUCT_PAGE_KEYS
     if key == "humanize":
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#price">크레딧 충전</a>' % root)
+    elif key == "home":   # 12.1 첫 화면은 바로 위 검사 칸으로
+        cta = '<a class="k-btn k-btn-p k-btn-s" href="#top" data-focus="hzText">무료로 검사</a>'
     elif biz:
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 설치</a>' % root)
     else:
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/">무료로 시작</a>' % root)
-    sheet = '<span class="grp">개인 · 학생</span>' + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, t, d in B2C_MENU)
+    sheet = '<span class="grp">AI 글 검사와 휴머나이징</span>' + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, t, d in B2C_MENU)
     for g, links in MENU_GROUPS[:2]:
         sheet += '<span class="grp">%s</span>' % g + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, ic, t, d in links)
     sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%spricing/">요금과 결제</a><a href="%sdevelopers/">개발자</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a>' % (root, root, root, root, root)

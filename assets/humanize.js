@@ -1,4 +1,11 @@
-/* AIMarker AI 작성률 검사 · 휴머나이징 12.0 (2026.10.21)
+/* AIMarker AI 작성률 검사 · 휴머나이징 12.1 (2026.10.21 오후)
+   - 12.1 누구나 한 흐름으로: ① 글 넣기(붙여넣기 · 파일 올리기) → ② AI 작성률 확인 → ③ 자연스럽게 다듬기(결제하면 이어서).
+     첫 화면과 /humanize/ 가 같은 도구(_src/pages/hz-tool.inc + 이 파일). 말투 고르기는 없애고 늘 '자동'(서버가 올린 글을 보고 정함).
+     파일은 assets/textin.js 가 이 브라우저 안에서 글만 꺼냄(한글 HWP · HWPX, 워드 DOCX, PDF, 텍스트). 붙여 넣은 글과 같은 정리 규칙(canon).
+     무료일 때는 파일을 올리거나 글을 붙여 넣거나 예시를 고르면 바로 검사(크레딧이 있을 때는 누를 때만, 크레딧이 빠지므로).
+     결과는 판정 · AI 검출 문장 · ③ 다듬기 안내를 먼저, 판정 근거와 자세한 분석은 펼쳐 보기로. 수치는 언제나 서버가 낸 실제 값.
+     다듬기를 누르면 이 글에 드는 크레딧을 보여 주고, 크레딧이 없으면 모자라지 않는 가장 작은 충전을 골라 둔 채 충전 창을 엶.
+     코드를 넣거나 결제하고 돌아오면 같은 글을 바로 휴머나이징. 다듬은 글은 올린 파일 형식(.docx · .hwpx)이나 새 워드 파일로 받음
    - 12.0 크레딧(서버 PASS 1.2): 1크레딧 = 10원 기준, 글자 수만큼 빠짐(AI 작성률 검사 100자당 2 · 최소 10, AI 휴머나이징 100자당 4 · 최소 20,
      600자 이하 도우미 · 짧은 다시 검사는 0). 단추에 이 글의 크레딧을 미리 보여 주고, 100크레딧 이상이면 한 번 묻고, 모자라면 같은 코드에 충전.
      충전은 지금 코드에 더하거나 새 코드로. 예전 이용권 코드는 그대로 씀(횟수로 셈)
@@ -18,9 +25,12 @@
   'use strict';
   var AM = window.AM || {}, $ = function (s, el) { return (el || document).querySelector(s); };
   var box = $('#hz'); if (!box || !AM.call) return;
-  var ta = $('#hzText'), out = $('#hzOut'), btnC = $('#hzCheck'), btnP = $('#hzPro'), passEl = $('#hzPass');
+  var ta = $('#hzText'), out = $('#hzOut'), btnC = $('#hzCheck'), btnP = $('#hzPro') || document.createElement('button'), passEl = $('#hzPass');
+  var inEl = $('#hzIn'), sumEl = $('#hzSum'), stepsEl = $('#hzSteps'), chipEl = $('#hzFileChip'), busyEl = $('#hzBusy'), exEl = $('#hzEx'), emptyEl = $('#hzEmpty'), fileIn = $('#hzFile');
+  var TI = window.AMTextIn || { canon: function (t) { return String(t || '').replace(/\r\n?/g, '\n').replace(/^\s+|\s+$/g, ''); } };
   var FREE_MAX = 6000, PAID_MAX = 50000, CHUNK = 6000, HUM_MAX = 6000, HELP_MAX = 600;
-  var S = { pass: '', ps: null, passMsg: '', proReady: true, info: null, busy: false, res: null, fx: null, edits: {}, sel: -1, side: 'ai', cache: {}, first: true, paid: null, variant: 0, toneUsed: '' };
+  var S = { pass: '', ps: null, passMsg: '', proReady: true, info: null, busy: false, res: null, fx: null, edits: {}, sel: -1, side: 'ai', cache: {}, first: true, paid: null, variant: 0, toneUsed: '', src: null, intent: '' };
+  function cur() { return TI.canon(ta.value); }   // 12.1 보내는 글은 늘 같은 규칙으로 정리(붙여 넣은 글 · 파일 글 · 예시 모두)
   var CAT = { 0: '말투', 1: '번역투', 2: '상투적 연결어', 3: '빈말 · 과장 수식', 4: '틀에 박힌 도입 · 마무리', 5: '대화창 복사 흔적', 6: '문장 리듬', 7: '딱딱한 어휘' };
   var ROOT = document.body.getAttribute('data-root') || '/';
   var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -43,7 +53,7 @@
   function sset(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { /* 저장 없이 */ } }
   function ssget(k) { try { return JSON.parse(sessionStorage.getItem(k) || 'null'); } catch (e) { return null; } }
   function ssset(k, v) { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 저장 없이 */ } }
-  function tone() { return ($('#hzTone') || {}).value || 'auto'; }
+  function tone() { return 'auto'; }   // 12.1 말투는 늘 자동(올린 글을 보고 서버가 정함, 정한 말투는 결과에 표시)
   function toneFor() { var t = tone(); return t === 'auto' && S.toneUsed ? S.toneUsed : t; }   // 문장 도우미는 글 전체에서 정한 말투로
   function withDesc(p) {   // 12.0 설명: 기본 + 더 받는 크레딧 · 3,000자 글 검사와 휴머나이징 몇 번
     if (!p || !p.cr) return p;
@@ -53,6 +63,7 @@
   function prodList() { var L = (S.info && S.info.products) || [], C = L.filter(function (p) { return p.cr && !p.legacy && !p.biz; }); return C.length ? C : PRODS; }   // 서버가 크레딧 상품을 주지 않으면(예전 서버) 기본 칸
   function prod(id) { var L = prodList(); for (var i = 0; i < L.length; i++) if (L[i].id === id) return withDesc(L[i]); return null; }
   function prods() { return prodList().map(withDesc); }
+  function isCrId(id) { return /^(c\d+|topup|new)$/.test(id || '') || !!prod(id); }   // 12.1 개인 크레딧 충전만 여기서(기업 상품은 order.js)
   /* 12.0 크레딧 셈(서버와 같은 식). 600자 이하 검사는 0, 휴머나이징은 길이와 상관없이 최소 20 */
   function costT() { return (S.info && S.info.credit && S.info.credit.cost) || CR0; }
   function costOf(kind, len) { var c = costT()[kind]; if (!c || !c.per) return 0; return Math.max(c.min, Math.ceil(len / c.per) * c.cr); }
@@ -62,7 +73,7 @@
   function humCost(parts) { return parts.reduce(function (a, p) { return a + costOf('pro', p.length); }, 0); }
   function ymd(s) { var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || ''); return m ? m[1] + '.' + m[2] + '.' + m[3] : ''; }
   function lowHtml(name, len, need, freeLbl) {   // 크레딧이 모자랄 때
-    return '<div class="hz7-err"><b>크레딧이 모자라요</b><span>이 글(' + n2(len) + '자)의 ' + esc(name) + '에 ' + n2(need) + '크레딧이 들고, 남은 크레딧은 ' + n2(crLeft()) + '입니다. 같은 코드에 충전하면 바로 이어서 씁니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="topup">충전하기</button>' + (freeLbl ? '<button class="btn btn-g btn-s" type="button" data-again>' + esc(freeLbl) + '</button>' : '') + '</div></div>';
+    return '<div class="hz7-err"><b>크레딧이 모자라요</b><span>이 글(' + n2(len) + '자)의 ' + esc(name) + '에 ' + n2(need) + '크레딧이 들고, 남은 크레딧은 ' + n2(crLeft()) + '입니다. 같은 코드에 충전하면 이어서 씁니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="topup" data-need="' + need + '" data-len="' + len + '" data-what="' + esc(name) + '">충전하기</button>' + (freeLbl ? '<button class="btn btn-g btn-s" type="button" data-again>' + esc(freeLbl) + '</button>' : '') + '</div></div>';
   }
   function ask(name, len, need, go) {   // 100크레딧 이상이면 한 번 묻기
     S.prevOut = out.innerHTML; S.ask = go;
@@ -82,7 +93,7 @@
     stat('서버 응답이 늦어 한 번 더 보냈습니다');
   }
   function ico(name) {
-    var P = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', check: '<path d="M20 6 9 17l-5-5"/>', alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>', back: '<path d="M15 18l-6-6 6-6"/>', file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>', clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>' };
+    var P = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', check: '<path d="M20 6 9 17l-5-5"/>', alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>', back: '<path d="M15 18l-6-6 6-6"/>', file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>', clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>', pen: '<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>' };
     return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + (P[name] || '') + '</svg>';
   }
 
@@ -97,59 +108,122 @@
     human: HU
   };
   function count() {
-    var n = ta.value.length, lim;
-    if (isCr()) lim = '한 번에 5만 자 · 검사 100자당 ' + costT().unit.cr + '크레딧 · 휴머나이징 100자당 ' + costT().pro.cr + '크레딧';
-    else if (S.pass) lim = '이용권 한 번에 5만 자' + (n > CHUNK ? ' · 이번 검사는 이용권 ' + chunk(ta.value).parts.length + '회로 셉니다' : '');
-    else lim = '무료 맛보기 6,000자 · 크레딧은 한 번에 5만 자' + (n > FREE_MAX ? ' · 무료 맛보기는 앞 6,000자 안쪽만 검사합니다' : '');
+    var t = cur(), n = t.length, lim;
+    if (isCr()) lim = ' / 한 번에 5만 자';
+    else if (S.pass) lim = ' / 이용권 한 번에 5만 자';
+    else lim = n > FREE_MAX ? ' / 무료 검사는 앞 6,000자' : ' / 무료 6,000자';
     $('#hzCount').textContent = n2(n);
     $('#hzLimit').textContent = lim;
+    var has = !!ta.value.replace(/\s+/g, '');
+    if (emptyEl) emptyEl.hidden = has;
+    if (exEl) exEl.hidden = has;
+    box.classList.toggle('has-text', has);
+    if (S.res && !S.busy) box.classList.toggle('stale', t !== S.res.src && !(S.fx && S.fx.text === t));
     tags();
   }
-  function tags() {   // 12.0 단추 옆 표: 무료 · 이 글의 크레딧 · 이용권
-    var tc = $('#hzChkTag'), tp = $('#hzProTag'), t = ta.value.replace(/\r\n?/g, '\n');
+  function tags() {   // 12.1 단추: 무료면 'AI 작성률 무료 검사' 하나, 크레딧이면 검사 · 휴머나이징 둘(이 글에 드는 크레딧과 함께)
+    var tc = $('#hzChkTag'), tp = $('#hzProTag'), cl = $('#hzChkL'), t = cur();
+    var nt = $('#hzNote span'); if (nt) nt.textContent = S.pass ? '누를 때 크레딧이 빠집니다 · 글과 파일은 저장하지 않습니다' : '가입 없이 무료 · 글과 파일은 저장하지 않습니다';
+    var stale = box.classList.contains('stale');
     if (isCr()) {
       var P = t.replace(/\s+/g, '') ? chunk(t).parts : [];
-      if (tc) tc.textContent = P.length ? n2(chkCost(P)) + '크레딧' : '100자당 ' + costT().unit.cr;
-      if (tp) tp.textContent = P.length ? n2(humCost(P)) + '크레딧' : '100자당 ' + costT().pro.cr;
-    } else if (S.pass) { if (tc) tc.textContent = '이용권'; if (tp) tp.textContent = '이용권'; }
-    else { if (tc) tc.textContent = '무료'; if (tp) tp.textContent = S.proReady ? '첫 문단 무료' : '무료 미리 보기'; }
+      if (cl) cl.textContent = stale ? '다시 검사' : 'AI 작성률 검사';
+      if (tc) { tc.hidden = false; tc.textContent = P.length ? n2(chkCost(P)) + '크레딧' : '100자당 ' + costT().unit.cr + '크레딧'; }
+      if (tp) tp.textContent = P.length ? n2(humCost(P)) + '크레딧' : '100자당 ' + costT().pro.cr + '크레딧';
+      btnP.hidden = false;
+    } else if (S.pass) { if (cl) cl.textContent = stale ? '다시 검사' : 'AI 작성률 검사'; if (tc) { tc.hidden = false; tc.textContent = '이용권'; } if (tp) tp.textContent = '이용권'; btnP.hidden = false; }
+    else { if (cl) cl.textContent = stale ? '바뀐 글 다시 검사' : 'AI 작성률 무료 검사'; if (tc) tc.hidden = true; btnP.hidden = true; }
   }
-  ta.addEventListener('input', count);
+  ta.addEventListener('input', function () { count(); if (S.src && cur() !== S.src.text) S.src.edited = true; });
+
+  /* ---------- 12.1 진행 단계 · 넣은 글 접기 ---------- */
+  function setStep(n, all) {
+    if (!stepsEl) return;
+    [].forEach.call(stepsEl.querySelectorAll('[data-step]'), function (li) { var k = +li.getAttribute('data-step'); li.classList.toggle('done', k < n || !!all); li.classList.toggle('on', k === n && !all); if (k === n && !all) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current'); });
+  }
+  function fileLabel() { var s = S.src; return s && (!s.edited || srcLike(cur())) ? s.name + (s.applied || cur() !== s.text ? ' · 고친 글' : '') : '붙여 넣은 글'; }
+  function collapse(on) {   // 결과가 나오면 넣은 글은 한 줄로 접어 결과가 먼저 보이게
+    if (!sumEl || !inEl) return;
+    if (on) {
+      var s = S.src && (!S.src.edited || srcLike(cur())) ? S.src : null;
+      sumEl.innerHTML = '<span class="ic">' + ico('file') + '</span><span class="nm"><b>' + esc(fileLabel()) + '</b><small>' + (s ? esc(s.kindKo) + ' · ' : '') + n2(cur().length) + '자</small></span><span class="sp"></span><button type="button" class="k-btn k-btn-l k-btn-s" data-act="edit">글 고치기</button><button type="button" class="k-btn k-btn-l k-btn-s" data-act="new">새 글</button>';
+      sumEl.hidden = false; inEl.hidden = true; box.classList.add('folded');
+    } else { sumEl.hidden = true; inEl.hidden = false; box.classList.remove('folded'); }
+  }
+  box.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-act="edit"], [data-act="new"]'); if (!b || !box.contains(b)) return;
+    collapse(false);
+    if (b.getAttribute('data-act') === 'new') { ta.value = ''; S.src = null; renderChip(); out.innerHTML = ''; S.res = null; S.fx = null; box.classList.remove('has-out', 'stale'); setStep(1); count(); }
+    try { ta.focus({ preventScroll: true }); } catch (x) { ta.focus(); }
+    try { box.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' }); } catch (x2) { /* 그대로 */ }
+  });
+  function outShown() { box.classList.add('has-out'); try { window.dispatchEvent(new Event('am:hz-out')); } catch (e) { /* 예전 브라우저 */ } }
+
+  /* ---------- 12.1 바로 검사(무료일 때만): 파일을 올리거나, 글을 붙여 넣거나, 예시를 고르면 ---------- */
+  var autoT = 0;
+  function autoCheck(why) {
+    clearTimeout(autoT);
+    if (S.pass || S.busy) { count(); return; }   // 크레딧은 누를 때만 빠지게
+    var t = cur(); if (t.replace(/\s+/g, '').length < 60) return;
+    autoT = setTimeout(function () { if (!S.busy) check(); }, why === 'paste' ? 250 : 60);
+  }
+  ta.addEventListener('paste', function (e) {
+    var cd = e.clipboardData, f = cd && cd.files && cd.files[0];
+    if (f && !(cd.getData && cd.getData('text/plain'))) { e.preventDefault(); takeFile(f); return; }   // 파일을 붙여 넣으면 파일로
+    var before = ta.value, all = ta.selectionStart === 0 && ta.selectionEnd === ta.value.length;   // 빈 칸이거나 전부 골라 바꿔 붙여 넣는 것
+    setTimeout(function () { count(); if ((all || !before.replace(/\s+/g, '')) && ta.value.length >= 60) autoCheck('paste'); }, 0);   // 새 글을 붙여 넣을 때만(나눠 이어 붙이는 중에는 누를 때)
+  });
+
+  /* ---------- 12.1 파일: 고르기 · 끌어 놓기 · 붙여 넣기(이 브라우저 안에서 글만 꺼냄) ---------- */
+  function renderChip() {
+    if (!chipEl) return;
+    var s = S.src;
+    if (!s) { chipEl.hidden = true; chipEl.innerHTML = ''; return; }
+    chipEl.hidden = false;
+    chipEl.innerHTML = '<span class="ic">' + ico('file') + '</span><span class="nm"><b>' + esc(s.name) + '</b><small>' + esc(s.kindKo) + ' · ' + n2(s.chars) + '자 꺼냄' + (s.cut ? '(5만 자까지 넣음)' : '') + '</small></span><button type="button" class="x" data-act="unfile" aria-label="올린 파일 빼기">' + ico('x') + '</button>';
+  }
+  if (chipEl) chipEl.addEventListener('click', function (e) { if (e.target.closest('[data-act="unfile"]')) { S.src = null; ta.value = ''; renderChip(); count(); try { ta.focus(); } catch (x) { /* 그대로 */ } } });
+  function busy(on, label) { if (!busyEl) return; busyEl.hidden = !on; var t = $('#hzBusyT'); if (t && label) t.textContent = label; box.classList.toggle('reading', !!on); }
+  function takeFile(f) {
+    if (!f || S.busy) return;
+    if (!window.AMTextIn) { fail({ message: '파일을 여는 도구를 불러오지 못했어요. 새로 고침한 뒤 다시 올려 주세요.' }); return; }
+    collapse(false); busy(true, '“' + String(f.name || '파일').slice(0, 40) + '”에서 글을 꺼내는 중');
+    AMTextIn.read(f).then(function (r) {
+      busy(false);
+      var t = r.text, cutAt = 0;
+      if (t.length > PAID_MAX) { var k = t.lastIndexOf('\n\n', PAID_MAX); cutAt = k > PAID_MAX * 0.6 ? k : t.lastIndexOf(' ', PAID_MAX) > PAID_MAX * 0.9 ? t.lastIndexOf(' ', PAID_MAX) : PAID_MAX; }   // 문단 경계에서 자름
+      ta.value = cutAt ? t.slice(0, cutAt) : t;
+      S.src = { name: String(f.name || '파일').slice(0, 80), kind: r.kind, kindKo: r.kindKo, chars: t.length, cut: !!cutAt, cutAt: cutAt, file: f, text: cur(), hasDoc: !!r.doc, edited: false };
+      S.docName = S.src.name;
+      renderChip(); count();
+      stat('“' + S.src.name + '”에서 글 ' + n2(t.length) + '자를 꺼냈습니다');
+      if (r.kind === 'pdf') S.src.pdf = true;
+      if (S.pass) { out.innerHTML = '<div class="hz7-prog"><b>' + esc(S.src.name) + '에서 글 ' + n2(t.length) + '자를 꺼냈어요</b><p>‘AI 작성률 검사’나 ‘휴머나이징’을 누르세요. 누를 때 크레딧이 빠집니다.</p></div>'; return; }
+      autoCheck('file');
+    }).catch(function (e) {
+      busy(false);
+      var ours = e && typeof e.code === 'string' && /^(LOCKED|EMPTY|TYPE|BIG|GARBLED|LOAD)$/.test(e.code);
+      var m = ours ? e.message : '파일을 읽지 못했어요. 파일이 손상되지 않았는지 확인하거나, 다른 형식(.docx, .hwpx, .pdf)으로 저장해 다시 올려 주세요. 글을 복사해 붙여 넣어도 됩니다.';
+      out.innerHTML = '<div class="hz7-err"><b>' + (e && e.code === 'LOCKED' ? '열 수 없는 파일이에요' : '파일을 열지 못했어요') + '</b><span>' + esc(m) + '</span></div>'; stat(m);
+    });
+  }
+  if (fileIn) fileIn.addEventListener('change', function (e) { takeFile(e.target.files && e.target.files[0]); e.target.value = ''; });
+  var pickB = $('#hzPick'); if (pickB && fileIn) pickB.addEventListener('click', function () { fileIn.click(); });
   document.addEventListener('click', function (e) {
     var b = e.target.closest('[data-ex]');
-    if (b && EX[b.getAttribute('data-ex')]) { e.preventDefault(); ta.value = EX[b.getAttribute('data-ex')]; count(); box.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' }); ta.focus({ preventScroll: true }); return; }
-    var y = e.target.closest('[data-buy]'); if (y) { e.preventDefault(); openBuy(y.getAttribute('data-buy')); return; }
+    if (b && EX[b.getAttribute('data-ex')]) { e.preventDefault(); collapse(false); S.src = null; renderChip(); ta.value = EX[b.getAttribute('data-ex')]; count(); try { ta.focus({ preventScroll: true }); } catch (x) { ta.focus(); } autoCheck('example'); return; }
+    var y = e.target.closest('[data-buy]'); if (y && isCrId(y.getAttribute('data-buy'))) { e.preventDefault(); openBuy(y.getAttribute('data-buy'), null, y.hasAttribute('data-need') ? { need: +y.getAttribute('data-need'), len: +y.getAttribute('data-len') || 0, what: y.getAttribute('data-what') || '' } : null); return; }
     var ak = e.target.closest('[data-ask]'); if (ak) { var go = S.ask; S.ask = null; if (go) go(); return; }
     var an = e.target.closest('[data-ask-no]'); if (an) { S.ask = null; out.innerHTML = S.prevOut || ''; stat('취소했습니다'); return; }
-    var c = e.target.closest('[data-code]'); if (c) { e.preventDefault(); openCode(); return; }
+    var c = e.target.closest('[data-code]'); if (c) { e.preventDefault(); if (c.hasAttribute('data-intent')) S.intent = c.getAttribute('data-intent'); openCode(); return; }
   });
-  function jszip() {
-    if (window.JSZip) return Promise.resolve(window.JSZip);
-    return new Promise(function (ok, no) { var s = document.createElement('script'); s.src = ROOT + 'assets/vendor/jszip.min.js'; s.onload = function () { ok(window.JSZip); }; s.onerror = function () { no(new Error('파일을 여는 도구를 불러오지 못했습니다.')); }; document.head.appendChild(s); });
-  }
-  function xmlDec(s) { return s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&#(\d+);/g, function (m, d) { return String.fromCharCode(+d); }).replace(/&amp;/g, '&'); }
-  function paras(xml, endTag, tRe) {
-    return xml.split(endTag).map(function (p) { var t = ''; p.replace(tRe, function (m, x) { t += x != null ? x.replace(/<[^>]+>/g, '') : ' '; return m; }); return xmlDec(t).replace(/[ \t]+/g, ' ').trim(); }).filter(function (x) { return x; }).join('\n\n');
-  }
-  function readFile(f) {
-    var nm = String(f.name || '').toLowerCase();
-    if (f.size > 30 * 1024 * 1024) return Promise.reject(new Error('30MB보다 큰 파일은 열지 않습니다. 글을 복사해 붙여 넣어 주세요.'));
-    if (/\.(txt|md)$/.test(nm) || f.type === 'text/plain') return f.text();
-    if (/\.docx$/.test(nm)) return jszip().then(function (Z) { return Z.loadAsync(f); }).then(function (z) { var e = z.file('word/document.xml'); if (!e) throw new Error('Word 문서에서 본문을 찾지 못했습니다.'); return e.async('string'); }).then(function (x) { return paras(x, /<\/w:p>/, /<w:t(?:\s[^>]*)?>([^<]*)<\/w:t>|<w:tab\/>/g); });
-    if (/\.hwpx$/.test(nm)) return jszip().then(function (Z) { return Z.loadAsync(f); }).then(function (z) { var fs = z.file(/^Contents\/section\d+\.xml$/i).sort(function (a, b) { return a.name.localeCompare(b.name, 'en', { numeric: true }); }); if (!fs.length) throw new Error('한글 문서에서 본문을 찾지 못했습니다.'); return Promise.all(fs.map(function (x) { return x.async('string'); })); }).then(function (xs) { return xs.map(function (x) { return paras(x, /<\/hp:p>/, /<hp:t(?:\s[^>]*)?>([\s\S]*?)<\/hp:t>/g); }).join('\n\n'); });
-    if (/\.(hwp|pdf|doc)$/.test(nm)) return Promise.reject(new Error('.hwp, .pdf, .doc 파일은 아직 바로 열지 못합니다. 글을 복사해 붙여 넣거나 .docx나 .hwpx로 저장해 넣어 주세요.'));
-    return Promise.reject(new Error('Word(.docx), 한글(.hwpx), 텍스트(.txt) 파일을 넣어 주세요.'));
-  }
-  function takeFile(f) {
-    if (!f) return;
-    readFile(f).then(function (t) { t = String(t || '').replace(/\r\n?/g, '\n').trim(); if (!t) throw new Error('파일에서 글을 찾지 못했습니다.'); ta.value = t.slice(0, PAID_MAX); S.docName = String(f.name || '').slice(0, 80); count(); note('“' + f.name + '”에서 글 ' + n2(t.length) + '자를 꺼내 왔습니다' + (t.length > PAID_MAX ? '(5만 자까지만 넣었습니다)' : '') + '. 이제 검사하세요.'); })
-      .catch(function (e) { fail(e); });
-  }
-  $('#hzFile').addEventListener('change', function (e) { takeFile(e.target.files && e.target.files[0]); e.target.value = ''; });
   var drop = $('#hzDrop');
-  ['dragenter', 'dragover'].forEach(function (k) { drop.addEventListener(k, function (e) { if (e.dataTransfer && [].indexOf.call(e.dataTransfer.types || [], 'Files') >= 0) { e.preventDefault(); drop.classList.add('over'); } }); });
-  ['dragleave', 'drop'].forEach(function (k) { drop.addEventListener(k, function () { drop.classList.remove('over'); }); });
+  ['dragenter', 'dragover'].forEach(function (k) { (k === 'dragenter' ? document : drop).addEventListener(k, function (e) { if (e.dataTransfer && [].indexOf.call(e.dataTransfer.types || [], 'Files') >= 0) { if (inEl && inEl.hidden) collapse(false); e.preventDefault(); drop.classList.add('over'); } }); });
+  ['dragleave', 'drop'].forEach(function (k) { drop.addEventListener(k, function (e) { if (k === 'dragleave' && drop.contains(e.relatedTarget)) return; drop.classList.remove('over'); }); });
   drop.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) { e.preventDefault(); takeFile(e.dataTransfer.files[0]); } });
+  document.addEventListener('dragleave', function (e) { if (!e.relatedTarget) drop.classList.remove('over'); });
+  document.addEventListener('dragover', function (e) { if (e.dataTransfer && [].indexOf.call(e.dataTransfer.types || [], 'Files') >= 0 && !drop.contains(e.target)) e.preventDefault(); });   // 칸 밖에 떨어뜨려도 브라우저가 파일을 열지 않게
+  document.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length && !drop.contains(e.target)) { e.preventDefault(); drop.classList.remove('over'); takeFile(e.dataTransfer.files[0]); } });
 
   /* ---------- 크레딧 코드(예전 이용권 코드도 같은 칸) ---------- */
   function norm(c) { return String(c || '').toUpperCase().replace(/[^0-9A-Z]/g, ''); }
@@ -166,8 +240,8 @@
       var p = S.ps, when = p.started ? (p.daily ? md(p.end).replace(/ \d\d:\d\d$/, '') + '까지 · 오늘 ' : md(p.end) + '까지 · ') : (p.daily ? '처음 사용한 날부터 · 하루 ' : '처음 검사한 때부터 24시간 · ');
       h = '<span class="chip on">' + ico('check') + esc(p.name) + '</span><span>' + when + '남은 검사 <b>' + n2(p.left) + '</b>회' + (p.pro ? ', 휴머나이징 <b>' + n2(p.proLeft) + '</b>회' : '') + '</span><span class="sp"></span><button type="button" class="hz7-link" data-code>코드 바꾸기</button>';
     } else if (S.pass) h = '<span class="chip">코드 확인 중</span><span>' + esc(S.pass) + '</span>';
-    else h = '<span class="chip off">무료 맛보기</span><span>' + (S.passMsg ? esc(S.passMsg) : '앞 6,000자 AI 작성률, 판정과 근거, 가장 뚜렷한 문장 2개까지 무료') + '</span><span class="sp"></span><button type="button" class="hz7-link" data-code>크레딧 코드 넣기</button><button type="button" class="hz7-link" data-buy="c10">크레딧 충전</button>';
-    passEl.innerHTML = h; count(); if (typeof proBtn === 'function') proBtn();
+    else h = (S.passMsg ? '<span class="msg">' + esc(S.passMsg) + '</span>' : '') + '<span class="sp"></span><button type="button" class="hz7-link" data-code>크레딧 코드 넣기</button>';
+    passEl.innerHTML = h; passEl.classList.toggle('free', !S.pass); count(); if (typeof proBtn === 'function') proBtn();
   }
   function peek() {
     if (!S.pass) return renderPass();
@@ -352,13 +426,19 @@
     out.innerHTML = '<div class="hz7-err"><b>' + (code === 'PASS_NEED' ? '크레딧이 필요해요' : code === 'PASS_USED' && isCr() ? '크레딧이 모자라요' : slow ? (e.name === 'TypeError' ? '연결하지 못했어요' : '응답이 늦어요') : '처리하지 못했어요') + '</b><span>' + esc(m) + '</span>' + (acts ? '<div class="row">' + acts + '</div>' : '') + '</div>'; stat(m);
     S.retry = retry || null; S.redo = redo || null;
   }
-  function need(t) { if (!String(t).replace(/\s+/g, '')) { ta.focus(); out.innerHTML = '<div class="hz7-err">검사할 글을 먼저 넣어 주세요. 위의 예시 단추로 바로 해 볼 수도 있습니다.</div>'; return false; } return true; }
-  function toOut() { if (S.first) { S.first = false; } try { var r = out.getBoundingClientRect(); if (r.top < 0 || r.top > window.innerHeight * .6) out.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' }); } catch (e) { /* 그대로 */ } }
+  function need(t) { if (!String(t).replace(/\s+/g, '')) { collapse(false); try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); } out.innerHTML = '<div class="hz7-err">검사할 글을 먼저 넣어 주세요. 글을 붙여 넣거나 파일을 올리면 바로 검사합니다.</div>'; return false; } return true; }
+  function toOut() {   // 12.1 결과가 나오면 진행 단계부터 화면 위쪽에(접힌 글 · 판정이 한눈에)
+    try {
+      var tgt = stepsEl || out, r = tgt.getBoundingClientRect();
+      if (r.top < 60 || r.top > window.innerHeight * .35) tgt.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' });
+    } catch (e) { /* 그대로 */ }
+    S.first = false;
+  }
 
   /* ---------- 검사 ---------- */
   function check(text, opt) {
     opt = opt || {};
-    var t = String(text != null ? text : ta.value).replace(/\r\n?/g, '\n');
+    var t = text != null ? TI.canon(text) : cur();
     if (!need(t) || S.busy) return Promise.resolve(null);
     var full = !!S.pass && !opt.free;
     if (full && t.length > PAID_MAX) { out.innerHTML = '<div class="hz7-err">한 번에 5만 자까지 검사합니다. 나눠서 넣어 주세요.</div>'; return Promise.resolve(null); }
@@ -381,7 +461,7 @@
       return merge(rs, isFull, t);
     }).then(function (M) {
       M.src = t; M.C = C; if (!M.full && C0.parts.length > 1) { M.cut = true; M.cutAt = C.parts[0].length; }
-      S.res = M; S.edits = {}; S.sel = -1; S.side = 'ai'; S.fx = null; renderRes(); toOut(); return M;
+      S.res = M; S.edits = {}; S.sel = -1; S.side = 'ai'; S.fx = null; box.classList.remove('stale'); renderRes(); collapse(true); setStep(2); outShown(); toOut(); return M;
     }).catch(function (e) { fail(e, function (free) { check(t, { free: free }); }, function () { check(t, opt); }); return null; })
       .then(function (M) { setBusy(false); return M; });
   }
@@ -410,7 +490,7 @@
         (sm ? '' : '<div class="tk" aria-hidden="true"><span>0</span><span>' + J.SHORT + '자부터 판단</span></div>') + '</div>';
     }
     return '<div class="hz9-g ' + k + (sm ? ' sm' : '') + '" role="img" aria-label="AI 작성률 ' + v + '퍼센트' + (band ? ', ' + esc(headOf(band)) : '') + '">' +
-      '<p class="gl">AI 작성률</p><b class="gv">' + v + '<small>%</small></b>' +
+      '<p class="gl">AI 작성률(추정)</p><b class="gv">' + v + '<small>%</small></b>' +
       '<div class="mt" aria-hidden="true"><i class="z s' + (z === 'safe' ? ' on' : '') + '"></i><i class="z r' + (z === 'risk' ? ' on' : '') + '"></i><i class="z u' + (z === 'unfit' ? ' on' : '') + '"></i><em style="left:' + pos(v) + '%"></em></div>' +
       (sm ? '' : '<div class="zl" aria-hidden="true"><span class="s' + (z === 'safe' ? ' on' : '') + '">안전<small>0~19</small></span><span class="r' + (z === 'risk' ? ' on' : '') + '">고위험<small>20~39</small></span><span class="u' + (z === 'unfit' ? ' on' : '') + '">부적합<small>40~100</small></span></div>') + '</div>';
   }
@@ -438,7 +518,7 @@
   function statsHtml(M) {
     var pct = function (a, b) { return b ? Math.round(a / b * 100) : 0; }, n = nAi(M), segN = M.segN || 0;
     var cell = function (lb, a, b, unit, p) { return '<div' + (a ? ' class="on"' : '') + '><dt>' + lb + '</dt><dd><b>' + n2(a) + '</b><span>/ ' + n2(b) + unit + '</span><em>' + p + '%</em></dd><dd class="hz9-bar" aria-hidden="true"><i style="width:' + p + '%"></i></dd></div>'; };
-    return '<dl class="hz9-stats">' + cell('AI 검출 글자', M.aiChars, M.chars, '자', M.rate) + cell('AI 검출 문장', n, M.n, '문장', pct(n, M.n)) + cell('AI 검출 구간', M.segAi, segN, '구간', pct(M.segAi, segN)) + '</dl>';
+    return '<dl class="hz9-stats">' + cell('AI 검출 글자(공백 제외)', M.aiChars, M.chars, '자', M.rate) + cell('AI 검출 문장', n, M.n, '문장', pct(n, M.n)) + cell('AI 검출 구간', M.segAi, segN, '구간', pct(M.segAi, segN)) + '</dl>';
   }
   function headHtml(M) {   // 11.0 보고서 머리: 판정 알약과 검사 정보 → 판정 글 · 근거 | 작성률 막대 → 수치 → 추정값 안내
     var b = M.band;
@@ -533,7 +613,7 @@
     }
     if (!M.segAi || !segN) return '';
     return '<section class="hz9-sec hz9-tiles lk"><div class="hz9-sec-h"><h3>구간별 검출 현황</h3><p>' + segN + '구간 가운데 <b>' + M.segAi + '구간</b> 검출</p></div>' + mapHtml(M, true) +
-      '<div class="hz9-lockrow">' + ico('lock') + '<span>어느 구간이 몇 % 검출됐는지는 크레딧으로 열립니다</span><button class="btn btn-p btn-s" type="button" data-buy="c10">전체 보기</button></div></section>';
+      '<div class="hz9-lockrow">' + ico('lock') + '<span>어느 구간이 몇 % 검출됐는지는 전체 검사에서 열립니다</span></div></section>';
   }
 
   /* ---------- 결과 그리기: 본문(빨간 형광펜 하나) · 옆 목록 ---------- */
@@ -604,28 +684,86 @@
   }
   function renderRes(foc) {
     var M = S.res; if (!M) return;
-    var lockDoc = !M.full && nAi(M) > M.shown, first = !M._seen, note = M.note || 'AI 작성률과 판정은 판별 모델과 정해진 판정 기준으로 계산한 추정값이며 증명으로 쓰지 않습니다.';
+    if (!M.full) { renderFree(); return; }   // 12.1 무료 맛보기는 간단한 화면으로
+    var first = !M._seen, note = M.note || 'AI 작성률과 판정은 판별 모델과 정해진 판정 기준으로 계산한 추정값이며 증명으로 쓰지 않습니다.';
     M._seen = true;
-    out.innerHTML = '<div class="hz7-res hz9' + (M.full ? ' hz7-full' : '') + '">' + paidBar() + headHtml(M) + notesHtml(M) + anaHtml(M) + ctaHtml(M) + tilesHtml(M) +
+    out.innerHTML = '<div class="hz7-res hz9 hz7-full">' + paidBar() + headHtml(M) + notesHtml(M) + nextHtml(M) + anaHtml(M) + tilesHtml(M) +
       '<section class="hz9-docsec"><div class="hz9-sec-h"><h3>문장별 검출 결과</h3>' + legendHtml() + '</div>' + legendNote(M) + editsBar() +
-      '<div class="hz7-body"><div class="hz7-docw' + (lockDoc ? ' lkd' : '') + '"><div class="hz7-doc" id="hzDoc">' + docHtml(M) + '</div>' + (lockDoc ? lockHtml(M) : '') + '</div>' +
+      '<div class="hz7-body"><div class="hz7-docw"><div class="hz7-doc" id="hzDoc">' + docHtml(M) + '</div></div>' +
       '<aside class="hz7-side" id="hzSide" aria-label="검출 문장과 AI 표현">' + sideHtml(M) + '</aside></div></section>' + actsHtml(M) +
       '<p class="hz7-fineprint">' + esc(note) + (/단정하지|판단하지/.test(note) ? '' : ' 결과만으로 다른 사람을 판단하지 마세요.') + '</p></div>';
     if (first) stat('검사 끝. ' + headOf(M.band) + (M.band.key === 'short' ? '' : ', AI 작성률 ' + M.rate + '퍼센트'));
     focusOne(foc);
-    if (lockDoc) { var d0 = $('#hzDoc'), s0 = d0 && d0.querySelector('.hz-s.ai:not(.lk)'); if (s0) d0.scrollTop = Math.max(0, s0.offsetTop - d0.offsetTop - 48); }   // 맛보기: 보여 드린 문장이 먼저 보이게
+  }
+  /* 12.1 무료 결과: 판정 → AI로 보이는 문장 → ③ 다듬기 → (펼치면) 판정 근거와 자세한 분석. 수치는 서버가 낸 실제 값 그대로 */
+  function renderFree() {
+    var M = S.res, b = M.band, lockDoc = nAi(M) > M.shown, first = !M._seen, note = M.note || 'AI 작성률과 판정은 판별 모델과 정해진 판정 기준으로 계산한 추정값이며 증명으로 쓰지 않습니다.';
+    M._seen = true;
+    var head = '<section class="hz12-verdict ' + bandCls(b.key) + '" aria-label="검사 결과">' + gauge(M.rate, b, { chars: M.chars }) +
+      '<div class="t"><h2 class="hz9-hl">' + stIco(b.key) + '<span>' + esc(headOf(b)) + '</span></h2><p class="hz9-sub">' + esc(subLine(M)) + '</p></div></section>';
+    var doc = b.key === 'short' ? shortMsg() : '<section class="hz12-doc"><div class="hz9-sec-h"><h3>' + (nAi(M) ? 'AI로 보이는 문장' : '검사한 글') + '</h3>' + legendHtml() + '</div>' +
+      '<div class="hz7-docw' + (lockDoc ? ' lkd' : '') + '"><div class="hz7-doc" id="hzDoc" tabindex="0" role="region" aria-label="검사한 글">' + docHtml(M) + '</div>' + (lockDoc ? lockHtml(M) : '') + '</div></section>';
+    var more = b.key === 'short' ? '' : '<details class="hz12-more"><summary>판정 근거와 자세한 분석</summary><div class="in"><div class="meta">' + chip(b) + '<span>검사 번호 ' + esc(M.cn || '-') + '</span></div>' + whyHtml(b) + scaleFor(M) + statsHtml(M) + anaHtml(M) + tilesHtml(M) + fullHtml(M) +
+      '<p class="hz9-est">' + ico('info') + '<span>AI 작성률과 판정은 판별 모델로 계산한 추정값입니다. 증명으로 쓰지 말고, 결과만으로 글쓴이를 단정하지 마세요.</span></p></div></details>';
+    out.innerHTML = '<div class="hz7-res hz9 hz12-res">' + paidBar() + head + notesHtml(M) + doc + nextHtml(M) + more +
+      '<p class="hz7-fineprint">' + esc(note) + (/단정하지|판단하지/.test(note) ? '' : ' 결과만으로 다른 사람을 판단하지 마세요.') + '</p></div>';
+    if (first) stat('검사 끝. ' + headOf(b) + (b.key === 'short' ? '' : ', AI 작성률 ' + M.rate + '퍼센트'));
+    if (lockDoc) { var d0 = $('#hzDoc'), s0 = d0 && d0.querySelector('.hz-s.ai:not(.lk)'); if (s0) d0.scrollTop = Math.max(0, s0.offsetTop - d0.offsetTop - 48); }
+  }
+  function packFor(need) {   // 모자라지 않는 가장 작은 충전
+    var L = prods().slice().sort(function (a, b) { return a.cr - b.cr; });
+    for (var i = 0; i < L.length; i++) if (L[i].cr >= need) return L[i];
+    return L[L.length - 1] || PRODS[1];
+  }
+  function srcText() { return (S.res && S.res.src) || cur(); }
+  function freeTaste(t) {   // 12.1 무료 맛보기로 보낼 글: 첫 문단. 한 문단짜리 글은 글 전체가 무료가 되지 않게 앞 두세 문장(400자까지)
+    t = String(t || '');
+    var ps = t.split(/\n{2,}/), p0 = ps[0] || '';
+    if (ps.length > 1 && p0.length <= t.length * 0.5) return { text: t.slice(0, HUM_MAX), part: '첫 문단' };
+    var ss = p0.match(/[^.!?。…]+[.!?。…]+["'”’)\]]*\s*|[^.!?。…]+$/g) || [p0], o = '';
+    for (var i = 0; i < ss.length; i++) { if (o && (o + ss[i]).length > 400) break; o += ss[i]; if (o.length >= Math.min(400, p0.length * 0.4)) break; }
+    o = o.trim();
+    return o.length < p0.length ? { text: o, part: '앞부분' } : { text: t.slice(0, HUM_MAX), part: '첫 문단' };
+  }
+  function keepFile() { return !!(S.src && S.src.hasDoc && srcLike(cur())); }
+  function srcLike(t) {   // 이 글이 올린 파일에서 나온 글인지(고치거나 다듬었어도 문단을 맞출 만큼 비슷하면)
+    var s = S.src; if (!s || !t) return false;
+    if (t === s.text) return true;
+    if (S.sl && S.sl.s === s && S.sl.t === t) return S.sl.v;   // 같은 글이면 다시 세지 않음
+    var f = window.AMTextIn && AMTextIn.sim, v = !!(f && f(t, s.text) >= 0.6);
+    S.sl = { s: s, t: t, v: v }; return v;
+  }
+  /* 12.1 ③ 자연스럽게 다듬기: 이 글에 드는 크레딧과, 크레딧이 없으면 모자라지 않는 가장 작은 충전 */
+  function nextHtml(M) {
+    var k = M.band.key; if (k === 'short') return '';
+    var t = M.src || cur(), cost = humCost(chunk(t).parts), pk = packFor(cost), hot = k !== 'safe', n = nAi(M);
+    var li = ['말투는 원문에 맞춰 자동으로, 숫자와 이름, 인용은 그대로', '다듬기 전후 AI 작성률을 같은 기준으로 비교', keepFile() ? '올린 ' + S.src.kindKo + ' 파일 서식 그대로 받기' : '다듬은 글을 워드 파일로 받기'];
+    var title = hot ? 'AI 문장 패턴을 자연스럽게 다듬어 드려요' : '더 자연스럽게 다듬고 싶다면';
+    var sub = hot ? (n ? 'AI로 보이는 문장 ' + n2(n) + '개를 포함해 ' : '') + '글 전체의 AI 말버릇과 번역투를 사람 말투에 가깝게 다듬습니다.' : '눈에 띄는 AI 패턴은 적어요. 딱딱한 표현과 번역투를 사람 말투에 가깝게 더 다듬을 수 있습니다.';
+    var price;
+    if (isCr()) price = crLeft() >= cost ? '남은 ' + n2(crLeft()) + '크레딧에서 빠집니다.' : '남은 크레딧(' + n2(crLeft()) + ')이 모자라요. 같은 코드에 충전하면 이어서 다듬습니다.';
+    else if (S.pass) price = '이용권의 휴머나이징 횟수로 셉니다.';
+    else price = '<b>' + n2(pk.price) + '원</b> 충전(' + n2(pk.cr) + '크레딧)으로 이 글을 다듬을 수 있어요. 쓴 만큼만 빠집니다.';
+    return '<section class="hz12-next ' + bandCls(k) + (hot ? ' hot' : '') + '" aria-labelledby="hzNextT"><div class="l"><h3 id="hzNextT">' + esc(title) + '</h3><p class="sub">' + esc(sub) + '</p>' +
+      '<ul>' + li.map(function (x) { return '<li>' + ico('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></div>' +
+      '<div class="r"><button class="btn btn-p btn-l" type="button" data-act="humall">' + ico('pen') + '<span>글 전체 휴머나이징 · ' + n2(cost) + '크레딧</span></button><p class="price">' + price + '</p>' +
+      (S.pass ? '' : '<button class="btn btn-g" type="button" data-act="humfree">' + freeTaste(t).part + ' 무료로 먼저 보기</button><button type="button" class="hz7-link" data-code data-intent="hum">크레딧 코드가 있어요</button>') +
+      '<p class="fine">다른 검사기의 결과를 약속하지 않습니다. AI 사용을 밝혀야 하는 글이면 규정대로 밝히세요.</p></div></section>';
+  }
+  function fullHtml(M) {   // 무료: 모든 문장의 위치와 이유 · 구간별 분석 · 결과상세내역서는 크레딧으로(전체 검사)
+    if (M.full) return '';
+    var t = M.src || '', c = chkCost(chunk(t).parts.filter(function (p) { return p; }));
+    return '<div class="hz12-fullc">' + ico('lock') + '<p><b>모든 AI 검출 문장의 위치와 이유, 구간별 분석, 결과상세내역서(PDF)</b><span>' + (c ? '이 글 전체 검사는 ' + n2(c) + '크레딧입니다.' : '이 글은 600자 이하라 크레딧이 남아 있으면 전체 검사에서 빠지지 않습니다.') + ' 크레딧이 있으면 이 화면에서 바로 열립니다.</span></p><button class="btn btn-g btn-s" type="button" data-act="fullcheck">전체 검사 결과 보기</button></div>';
   }
   function focusOne(L) {   // 다시 그린 뒤 키보드 위치를 이어 줌
     [].concat(L || []).some(function (q) { var el = q && out.querySelector(q); if (!el) return false; try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } return true; });
   }
   function lockHtml(M) {
-    var tot = nAi(M), rest = Math.max(0, tot - M.shown), d1 = prod('c10') || PRODS[1];
-    return '<div class="hz7-lock"><span class="lk">' + ico('lock') + '</span><h3>나머지 AI 검출 문장 ' + rest + '개는 크레딧으로</h3><p>위치와 검출 이유, 구간별 분석, 문장 고쳐 쓰기 도우미, 결과상세내역서가 크레딧 코드를 넣으면 바로 열립니다.</p>' +
-      '<button class="btn btn-p" type="button" data-buy="c10">' + esc(d1.name) + ' 충전하고 전체 보기</button><button type="button" class="hz7-link" data-code>크레딧 코드가 있어요</button></div>';
+    var rest = Math.max(0, nAi(M) - M.shown);
+    return '<div class="hz7-lock"><span class="lk">' + ico('lock') + '</span><h3>AI로 보이는 문장이 ' + n2(rest) + '개 더 있어요</h3><p>아래 ‘글 전체 휴머나이징’으로 이 문장들까지 함께 다듬어 드립니다.</p></div>';
   }
-  function actsHtml(M) {
-    var s1 = prod('c3') || PRODS[0];
-    if (!M.full) return '<div class="hz7-acts">' + (M.band.key === 'short' ? '' : '<button class="btn btn-p" type="button" data-buy="c3">' + ico('file') + '<span>결과상세내역서 받기 · ' + n2(s1.price) + '원 충전부터</span></button>') + '<button class="btn btn-g" type="button" data-act="hum">휴머나이징 미리 보기</button><button class="btn btn-g" type="button" data-code>크레딧 코드 넣기</button></div>';
+  function actsHtml(M) {   // 크레딧 결과의 아래 단추(무료는 ③ 다듬기 칸에)
+    if (!M.full) return '';
     return '<div class="hz7-acts">' + (M.band.key === 'short' ? '' : '<button class="btn btn-p" type="button" data-act="report">' + ico('file') + '<span>결과상세내역서 저장(PDF)</span></button>') + '<button class="btn btn-g" type="button" data-act="hum">휴머나이징</button><button class="btn btn-g" type="button" data-act="recheck">다시 검사</button></div>';
   }
   function stamp(d) { d = d || new Date(); var p = function (x) { return ('0' + x).slice(-2); }; return d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()); }
@@ -682,11 +820,15 @@
     if (act === 'help') { helper(); return; }
     if (act === 'alts') { alts(); return; }
     if (act === 'report') { report(); return; }
+    if (act === 'humall') { startHum(); return; }
+    if (act === 'humfree') { setStep(3); pro(false, true); return; }
+    if (act === 'fullcheck') { fullCheck(); return; }
+    if (act === 'getfile') { getFile(b.getAttribute('data-kind')); return; }
     if (act === 'fix' || act === 'pro' || act === 'hum') { hum(); return; }
     if (act === 'proagain') { S.variant = (S.variant || 0) + 1; hum(true); return; }
     if (act === 'usefix' && S.fx) { useFix(); return; }
     if (act === 'copyfix' && S.fx) { if (AM.copy) AM.copy(S.fx.text, b); else if (navigator.clipboard) navigator.clipboard.writeText(S.fx.text); return; }
-    if (act === 'backres' && S.res) { S.fx = null; renderRes(); return; }
+    if (act === 'backres' && S.res) { S.fx = null; renderRes(); setStep(2); return; }
   });
   out.addEventListener('keydown', function (e) {
     var t = e.target; if (!t || !t.matches) return;
@@ -722,7 +864,7 @@
   /* ---------- 휴머나이징(기본 엔진 fix · 고급 엔진 pro, 화면에는 하나로) ---------- */
   function bandBefore(t) { return S.res && S.res.src === t && !S.res.cut && S.res.band ? S.res.band : null; }   // 같은 글을 먼저 검사했으면 그 판정
   function fix() {
-    var t = (Object.keys(S.edits).length && S.res ? buildText() : ta.value).replace(/\r\n?/g, '\n');
+    var t = Object.keys(S.edits).length && S.res ? buildText() : cur();
     if (!need(t) || S.busy) return;
     var full = !!S.pass;
     if (full && t.length > PAID_MAX) { out.innerHTML = '<div class="hz7-err">한 번에 5만 자까지 바꿉니다.</div>'; return; }
@@ -746,12 +888,13 @@
   }
   function pro(again, free) {
     if (!S.proReady) return;
-    var t = (Object.keys(S.edits).length && S.res ? buildText() : ta.value).replace(/\r\n?/g, '\n');
+    var t = Object.keys(S.edits).length && S.res ? buildText() : cur();
     if (!need(t) || S.busy) return;
     if (again !== true) S.variant = 0;
     if (!S.pass || free) {   // 무료 맛보기: 첫 문단만(크레딧이 모자랄 때도 고를 수 있음)
-      setBusy(true); prog('첫 문단을 사람 말투로 바꾸는 중', 0, 1);
-      call('am.humanize', { text: t.slice(0, HUM_MAX), tone: tone() }, 60000).then(function (r) { S.fx = { kind: 'proFree', src: r.src, text: r.text, total: t.length, shown: r.shown, changes: r.changes, samples: r.samples || [], tone: r.tone, toneNote: r.toneNote || '' }; renderProFree(); toOut(); })
+      var FT = freeTaste(t);
+      setBusy(true); prog(FT.part + '을 사람 말투로 다듬는 중', 0, 1);
+      call('am.humanize', { text: FT.text, tone: tone() }, 60000).then(function (r) { S.fx = { kind: 'proFree', part: FT.part, src: r.src, text: r.text, total: t.length, shown: r.shown, changes: r.changes, samples: r.samples || [], tone: r.tone, toneNote: r.toneNote || '' }; renderProFree(); toOut(); })
         .catch(function (e) { fail(e, null, function () { pro(); }); }).then(function () { setBusy(false); });
       return;
     }
@@ -771,6 +914,32 @@
         });
       }).catch(function (e) { fail(e, null, function () { pro(true); }); }).then(function () { setBusy(false); });
   }
+  /* 12.1 ③ 글 전체 휴머나이징: 크레딧이 있으면 바로, 없으면 이 글에 맞는 충전 창(코드를 넣거나 결제하고 오면 이어서) */
+  function startHum() {
+    var t = Object.keys(S.edits).length && S.res ? buildText() : cur();
+    if (!need(t) || S.busy) return;
+    setStep(3);
+    if (S.pass) { S.intent = ''; hum(); return; }
+    var cost = humCost(chunk(t).parts);
+    S.intent = 'hum'; ssset('am_hz_intent', { act: 'hum', at: Date.now() });
+    openBuy(packFor(cost).id, null, { need: cost, len: t.length, what: 'AI 휴머나이징' });
+  }
+  function fullCheck() {
+    var t = srcText();
+    if (!need(t) || S.busy) return;
+    if (S.pass) { S.intent = ''; check(t); return; }
+    var c = chkCost(chunk(t).parts);
+    S.intent = 'check'; ssset('am_hz_intent', { act: 'check', at: Date.now() });
+    openBuy(packFor(c + humCost(chunk(t).parts)).id, null, { need: c, len: t.length, what: 'AI 작성률 전체 검사' });
+  }
+  function resume() {   // 코드를 넣거나 결제하고 왔을 때: 하려던 일을 이어서
+    var act = S.intent || ((ssget('am_hz_intent') || {}).act) || '';
+    S.intent = ''; ssset('am_hz_intent', null);
+    if (!cur().replace(/\s+/g, '')) return false;
+    if (act === 'hum') { setStep(3); S.okHum = true; try { hum(); } finally { S.okHum = false; } return true; }   // 크레딧이 적힌 단추를 이미 눌렀으므로 다시 묻지 않음
+    if (act === 'check' || (S.res && !S.res.full)) { check(S.res ? S.res.src : cur(), { ok: true }); return true; }
+    return false;
+  }
   /* 11.0 휴머나이징 하나로: 서버 요청과 이용권 횟수 규칙은 그대로 두고 화면에서만 고름
      - 무료: am.humanize 첫 문단 맛보기
      - 이용권: 휴머나이징(고급) 횟수가 남으면 am.humanize, 다 썼으면 남은 검사 횟수로 am.style fix(기본 엔진)
@@ -780,7 +949,7 @@
     S.fallback = false;
     if (S.pass && !S.ps && S.psP) { S.psP.then(function () { hum(again); }); return; }   // 이용권 확인(am.pass)이 끝나기 전이면 남은 횟수를 받은 뒤 고름(첫 화면에서 넘어온 글 등)
     if (!S.pass) return S.proReady ? pro(again) : fix();   // 인간화 엔진이 꺼져 있으면(proReady false) 기본 엔진 무료 미리 보기
-    var t = (Object.keys(S.edits).length && S.res ? buildText() : ta.value).replace(/\r\n?/g, '\n');
+    var t = Object.keys(S.edits).length && S.res ? buildText() : cur();
     if (!need(t) || S.busy) return;
     if (isCr()) {   // 12.0 크레딧: 이 글의 휴머나이징 크레딧을 보고 모자라면 충전, 100 이상이면 한 번 묻기
       if (!S.proReady) return fix();
@@ -802,19 +971,23 @@
     }).join('') + '</ul>';
   }
   function unlockHtml(h3, p, btns) {
-    return '<section class="hz9-unlock"><span class="lk">' + ico('lock') + '</span><div class="l"><h3>' + esc(h3) + '</h3><p>' + esc(p) + '</p></div><div class="r">' + btns + '<button type="button" class="hz7-link" data-code>크레딧 코드가 있어요</button></div></section>';
+    return '<section class="hz9-unlock"><span class="lk">' + ico('lock') + '</span><div class="l"><h3>' + esc(h3) + '</h3><p>' + esc(p) + '</p></div><div class="r">' + btns + '<button type="button" class="hz7-link" data-code data-intent="hum">크레딧 코드가 있어요</button></div></section>';
   }
   function renderProFree() {
-    var F = S.fx, ops = clump(diff(F.src, F.text)), s1 = prod('c3') || PRODS[0], d1 = prod('c10') || PRODS[1], rest = Math.max(0, F.total - F.shown), allT = (ta.value || '').replace(/\r\n?/g, '\n'), needA = humCost(allT.replace(/\s+/g, '') ? chunk(allT).parts : []);
+    var F = S.fx, ops = clump(diff(F.src, F.text)), rest = Math.max(0, F.total - F.shown), allT = cur(), needA = humCost(allT.replace(/\s+/g, '') ? chunk(allT).parts : []);
     var right = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '+' ? '<ins>' + esc(o[1]) + '</ins>' : ''; }).join('');   // 12.1 무료 맛보기는 바꾼 글만(지운 말 · 바꾼 이유는 크레딧 결과에서)
-    var TN = { plain: '한다체로', polite: '해요체로', formal: '습니다체로', keep: '말투는 그대로' }[F.tone] || '';
-    stat(rest ? '첫 문단을 사람 말투로 바꿨습니다' : '사람 말투로 바꿨습니다');
-    out.innerHTML = '<div class="hz7-res hz9"><section class="hz9-ph"><h2>' + (rest ? '첫 문단을 사람 말투로 바꿨습니다' : '사람 말투로 바꿨습니다') + '</h2><ul class="hz9-tagl"><li class="on">휴머나이징 무료 맛보기</li><li>바꾼 곳 <b>' + n2(F.changes) + '</b></li>' + (TN ? '<li>' + TN + '</li>' : '') + '<li>생성 AI 없이 AIMarker 인간화 엔진</li></ul></section>' +
-      '<div class="hz9-one"><p class="lb">사람 말투로 바꾼 ' + (rest ? '첫 문단' : '글') + '</p><div class="hz7-text">' + right + '</div></div>' +
+    var TN = { plain: '한다체로', polite: '해요체로', formal: '습니다체로', keep: '말투는 원문 그대로' }[F.tone] || '';
+    var PT = F.part || '첫 문단', h2 = !F.changes ? PT + '에서는 바꿀 AI 말버릇을 찾지 못했어요' : rest ? PT + '을 사람 말투에 가깝게 다듬었어요' : '사람 말투에 가깝게 다듬었어요';
+    stat(h2); setStep(3); collapse(true); outShown();
+    out.innerHTML = '<div class="hz7-res hz9"><section class="hz9-ph"><h2>' + esc(h2) + '</h2><ul class="hz9-tagl"><li class="on">휴머나이징 무료 맛보기</li><li>바꾼 곳 <b>' + n2(F.changes) + '</b></li>' + (TN ? '<li>말투 자동 · ' + TN + '</li>' : '') + '<li>생성 AI 없이 AIMarker 인간화 엔진</li></ul></section>' +
+      '<div class="hz9-one"><p class="lb">' + (F.changes ? '다듬은 ' : '살펴본 ') + (rest ? PT : '글') + '</p><div class="hz7-text">' + right + '</div></div>' +
       (F.toneNote ? '<p class="hz7-fineprint">' + esc(F.toneNote) + '</p>' : '') +
       (F.changes ? '<section class="hz9-sec"><div class="hz9-sec-h"><h3>바꾼 곳 ' + n2(F.changes) + '곳</h3><p>숫자, 고유명사, 인용은 그대로 둡니다</p></div>' + catChips(F.samples) + '</section>' : '') +
-      unlockHtml((rest ? '나머지 ' + n2(rest) + '자를 포함한 ' : '') + '글 전체 휴머나이징은 크레딧으로', '글 전체와 바꾼 이유, 다른 버전, 바꾸기 전후 AI 작성률, 숫자와 인용을 지켰는지 확인까지 열립니다.' + (needA ? ' 이 글(' + n2(allT.length) + '자)은 ' + n2(needA) + '크레딧입니다.' : ''),
-        '<button class="btn btn-p" type="button" data-buy="' + (needA > s1.cr ? 'c10' : 'c3') + '">' + esc((needA > s1.cr ? d1 : s1).name) + ' 충전 · ' + n2((needA > s1.cr ? d1 : s1).price) + '원</button><button class="btn btn-g" type="button" data-buy="c30">' + esc((prod('c30') || PRODS[2]).name) + ' · ' + n2((prod('c30') || PRODS[2]).price) + '원</button>') + '</div>';
+      unlockHtml(rest ? (F.changes ? '나머지 ' + n2(rest) + '자도 이렇게 다듬어 드려요' : '나머지 ' + n2(rest) + '자까지 글 전체를 다듬어 드려요') : '바꾼 이유와 다른 버전까지 보기',
+        '글 전체 휴머나이징으로 바꾼 이유와 다른 버전, 다듬기 전후 AI 작성률, 숫자와 인용을 지켰는지 확인, 다듬은 파일 받기까지 열립니다.' + (needA ? ' 이 글(' + n2(allT.length) + '자)은 ' + n2(needA) + '크레딧입니다.' : ''),
+        '<button class="btn btn-p" type="button" data-act="humall">' + ico('pen') + '<span>글 전체 휴머나이징 · ' + n2(needA) + '크레딧</span></button>') +
+      (S.res ? '<div class="hz7-acts"><button class="btn btn-g" type="button" data-act="backres">검사 결과로 돌아가기</button></div>' : '') + '</div>';
+    toOut();
   }
   btnP.addEventListener('click', function () { hum(); });
   function tokens(s) { return String(s).match(/\s+|[^\s]+/g) || []; }
@@ -861,30 +1034,58 @@
       (band ? '<p class="hz9-hl xs">' + stIco(band.key) + '<span>' + esc(headOf(band)) + '</span></p>' + chip(band) : '<p class="hz9-mute">AI 작성률</p>') +
       '<i class="hz9-bar" aria-hidden="true"><i style="width:' + Math.max(0, Math.min(100, rate)) + '%"></i></i></div>';
   }
+  /* 12.1 다듬은 글을 파일로: 올린 .docx · .hwpx 는 바뀐 문단만 갈아 끼워 같은 형식으로, 그 밖은 새 워드 파일 · 텍스트 */
+  function fileBar(F) {
+    if (!F || !F.text || !window.AMTextIn) return '';
+    var same = !!(S.src && S.src.hasDoc && srcLike(F.src)), k = same ? S.src.kind : 'docx';
+    var main = same ? (k === 'hwpx' ? '한글 파일로 받기(.hwpx)' : '워드 파일로 받기(.docx)') : '워드 파일로 받기(.docx)';
+    var note = same ? '올린 “' + S.src.name + '”의 서식, 표, 그림, 각주는 그대로 두고 바뀐 문단의 글만 바꿨습니다.' + (S.src.cut ? ' 앞 ' + n2(S.src.cutAt) + '자까지 다듬었고, 뒤쪽은 원래 글 그대로입니다.' : '') :
+      S.src && (S.src.kind === 'hwp' || S.src.kind === 'pdf') && srcLike(F.src) ? S.src.kindKo + ' 파일은 같은 형식으로 다시 만들 수 없어 워드 파일로 드립니다(한글에서도 열립니다).' :
+      S.src && S.src.hasDoc ? '글이 많이 바뀌어 올린 파일과 문단을 맞출 수 없어 새 워드 파일로 드립니다.' : '';
+    return '<div class="hz12-files">' + ico('download') + '<div class="t"><b>다듬은 글 받기</b>' + (note ? '<span>' + esc(note) + '</span>' : '') + '</div><div class="b"><button class="btn btn-p btn-s" type="button" data-act="getfile" data-kind="' + k + '">' + esc(main) + '</button><button class="btn btn-g btn-s" type="button" data-act="getfile" data-kind="txt">텍스트(.txt)</button></div></div>';
+  }
+  function baseName() { var n = (S.src && (!S.src.edited || srcLike(cur())) && S.src.name) || 'AIMarker'; return n.replace(/\.[^.]+$/, '').slice(0, 60) || 'AIMarker'; }
+  function getFile(kind) {
+    var F = S.fx; if (!F || !F.text || !window.AMTextIn) return;
+    var name = baseName() + '_휴머나이징';
+    if (kind === 'txt') { AMTextIn.save(new Blob([F.text.replace(/\n/g, '\r\n')], { type: 'text/plain;charset=utf-8' }), name + '.txt'); stat('텍스트 파일을 내려받았습니다'); return; }
+    var same = !!(S.src && S.src.hasDoc && srcLike(F.src)) && (kind === 'hwpx' || kind === 'docx');
+    var p = same ? AMTextIn.read(S.src.file).then(function (src) { return AMTextIn.exportSame(src, F.text, { cutAt: S.src.cut ? S.src.cutAt : 0 }); }) : Promise.resolve(null);   // 원본을 새로 읽어 그 위에(여러 번 받아도 같은 결과)
+    var tell = function (m) { var t0 = out.querySelector('.hz12-files .t'); if (!t0) return; var o = t0.querySelector('.more'); if (!o) { o = document.createElement('span'); o.className = 'more'; t0.appendChild(o); } o.textContent = m; };
+    p.then(function (r) {
+      if (r) { if (r.kept) tell('각주나 링크, 인용 필드의 글이 바뀐 문단 ' + n2(r.kept) + '개는 원래 글 그대로 두었어요. 그 문단은 화면의 바꾼 글을 보고 직접 고쳐 주세요.'); return r; }
+      if (same) tell('올린 파일과 문단을 맞추지 못해 새 워드 파일로 드렸어요.');
+      return AMTextIn.newDocx(F.text, baseName()).then(function (b) { return { blob: b, ext: 'docx' }; });
+    })
+      .then(function (r) { AMTextIn.save(r.blob, name + '.' + r.ext); stat((r.ext === 'hwpx' ? '한글' : '워드') + ' 파일을 내려받았습니다'); })
+      .catch(function (e) { stat('파일을 만들지 못했습니다'); var m = out.querySelector('.hz12-files .t'); if (m) m.insertAdjacentHTML('beforeend', '<span class="bad">' + esc((e && e.message) || '파일을 만들지 못했어요. 텍스트로 받거나 복사해 쓰세요.') + '</span>'); });
+  }
   function renderFix() {
+    setStep(3, true); collapse(true); outShown();
     var F = S.fx, A = F.after, ops = clump(diff(F.src, F.text)), changes = hunks(ops);
     var clean = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '+' ? (o[1].trim() ? '<mark>' + esc(o[1]) + '</mark>' : esc(o[1])) : ''; }).join('');
     var dv = ops.map(function (o) { return o[0] === '=' ? esc(o[1]) : o[0] === '+' ? '<ins>' + esc(o[1]) + '</ins>' : '<del>' + esc(o[1]) + '</del>'; }).join('');
-    var pro = F.kind === 'pro', lbl = '바꾼 글', btnL = lbl + ' 적용하고 결과 보기', tabs = [['text', lbl], ['diff', '바뀐 곳']];
+    var pro = F.kind === 'pro', lbl = '바꾼 글', btnL = lbl + ' 검사 결과 보기', tabs = [['text', lbl], ['diff', '바뀐 곳']];
     if (F.applied.length) tabs.push(['why', '바꾼 이유 ' + F.applied.length]);
     if (!pro && F.left.length) tabs.push(['left', '직접 손볼 곳 ' + F.left.length]);
     var d = A.rate - F.beforeRate, TN = { plain: '한다체', polite: '해요체', formal: '습니다체' }[F.tone] || '', ab = A.band;
     var h2 = d < 0 ? 'AI 작성률이 ' + (-d) + '%p 내려갔습니다' : d > 0 ? 'AI 작성률이 ' + d + '%p 올라갔습니다' : changes ? 'AI 작성률은 그대로입니다' : '바꿀 곳이 거의 없었습니다';
     var rs = ab ? (ab.why || []).map(whyMain).join(', ') : '';
     var sub = ab ? (ab.key === 'safe' ? lbl + '은 AI 검출 안 됨(안전)입니다. 눈에 띄는 AI 작성 패턴이 적습니다.' : ab.key === 'short' ? '' : lbl + '은 ' + headOf(ab) + '(' + ab.ko + ')입니다.' + (rs ? ' 남은 근거: ' + rs + '.' : '')) : '';
-    var tip = ab && ab.key === 'unfit' ? (pro ? '아직 AI 패턴이 남아 있습니다. 보고서나 과제라면 말투를 한다체로 바꿔 보거나, “' + btnL + '”를 누른 뒤 검출 문장에 내 경험이나 생각을 더해 고쳐 쓰세요.' : '글의 짜임과 흐름에 AI 패턴이 남아 있으면 판정이 바로 바뀌지 않습니다. 말투를 바꿔 다시 휴머나이징하거나, 검출 문장을 눌러 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰세요.')
+    var tip = ab && ab.key === 'unfit' ? (pro ? '아직 AI 패턴이 남아 있습니다. “' + btnL + '”를 누른 뒤 검출 문장에 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰세요.' : '글의 짜임과 흐름에 AI 패턴이 남아 있으면 판정이 바로 바뀌지 않습니다. 검출 문장을 눌러 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰세요.')
       : ab && ab.key === 'risk' ? '남은 검출 문장은 “' + btnL + '”를 누른 뒤 확인하고, 눌러서 직접 고쳐 쓸 수 있습니다.' : '';
-    var tags = '<li class="on">휴머나이징</li>' + (pro && TN ? '<li>' + TN + '</li>' : '') + (F.variant ? '<li>버전 ' + (F.variant + 1) + '</li>' : '') + '<li>바꾼 곳 <b>' + (F.applied.length || changes) + '</b></li>';
+    var tags = '<li class="on">휴머나이징</li>' + (pro ? '<li>말투 자동 · ' + (TN || '원문 그대로') + '</li>' : '') + (F.variant ? '<li>버전 ' + (F.variant + 1) + '</li>' : '') + '<li>바꾼 곳 <b>' + changes + '</b></li>';
     var f = F.facts, facts = '<div class="hz7-facts2' + (f.missing.length ? ' bad' : '') + '">' + ico(f.missing.length ? 'alert' : 'check') + '<span>' + (f.missing.length ? '원문의 숫자와 인용 가운데 ' + lbl + '에서 찾지 못한 것: ' + esc(f.missing.join(', ')) + '. 꼭 대조해 주세요.' : f.total ? '원문의 숫자, 인용, 고유명사 ' + f.total + '개를 그대로 지켰습니다.' : '바꾸면 안 되는 숫자나 인용이 없는 글입니다.') + '</span></div>';
     var arrow = '<span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg>' + (d ? '<b class="' + (d < 0 ? 'dn' : 'up') + '">' + (d < 0 ? '−' : '+') + Math.abs(d) + '%p</b>' : '') + '</span>';
-    out.innerHTML = '<div class="hz7-res hz9"><section class="hz9-cmp ' + (ab ? bandCls(ab.key) : 'is-n') + '"><div class="hz9-cmp-h"><ul class="hz9-tagl">' + tags + '</ul><h2>' + h2 + '</h2>' + (sub ? '<p>' + esc(sub) + '</p>' : '') + '</div>' +
+    out.innerHTML = '<div class="hz7-res hz9">' + paidBar() + '<section class="hz9-cmp ' + (ab ? bandCls(ab.key) : 'is-n') + '"><div class="hz9-cmp-h"><ul class="hz9-tagl">' + tags + '</ul><h2>' + h2 + '</h2>' + (sub ? '<p>' + esc(sub) + '</p>' : '') + '</div>' +
       '<div class="hz9-ba">' + cmpSide('바꾸기 전', F.beforeRate, F.beforeBand || null, 'from') + arrow + cmpSide('바꾼 뒤', A.rate, ab || null, 'to') + '</div>' +
       (tip ? '<div class="hz9-tip">' + ico('info') + '<span>' + esc(tip) + '</span></div>' : '') + '</section>' +
       '<div class="hz7-vt" role="tablist">' + tabs.map(function (t, k) { return '<button type="button" role="tab" data-fv="' + t[0] + '" aria-selected="' + (k ? 'false' : 'true') + '">' + esc(t[1]) + '</button>'; }).join('') + '</div>' +
-      '<div data-fp="text"><div class="hz7-text">' + clean + '</div></div><div data-fp="diff" hidden><div class="hz7-text">' + dv + '</div></div>' +
+      '<div data-fp="text"><div class="hz7-text" tabindex="0" role="region" aria-label="바꾼 글">' + clean + '</div></div><div data-fp="diff" hidden><div class="hz7-text" tabindex="0" role="region" aria-label="바뀐 곳">' + dv + '</div></div>' +
       (F.applied.length ? '<div data-fp="why" hidden>' + chgList(F.applied) + '</div>' : '') + (!pro && F.left.length ? '<div data-fp="left" hidden>' + chgList(F.left.map(function (a) { return { t: a.t || '', why: a.why, catKo: a.catKo }; })) + '</div>' : '') +
       facts + (!pro && F.fallback ? '<p class="hz7-fineprint">' + (F.fallback === 'off' ? '지금은 말투까지 바꾸는 엔진을 쓸 수 없어 남은 검사 횟수로 기본 엔진(표현 고치기)으로 바꿨습니다. 말투와 문장 흐름까지 바꾸려면 잠시 뒤 다시 휴머나이징해 주세요.' : '휴머나이징 횟수를 다 써서 남은 검사 횟수로 기본 엔진(표현 고치기)으로 바꿨습니다. 말투와 문장 흐름까지 바꾸려면 휴머나이징 횟수가 필요합니다.') + '</p>' : '') + (changes === 0 ? '<p class="hz7-fineprint">AI 말버릇으로 볼 만한 곳이 거의 없어 원문을 그대로 두었습니다.</p>' : '') + (F.toneNote ? '<p class="hz7-fineprint">' + esc(F.toneNote) + '</p>' : F.toneMiss ? '<p class="hz7-fineprint">말투를 바꾸지 못한 문장 ' + n2(F.toneMiss) + '개는 원래 말투로 두었습니다(인용, 물음, 뜻이 갈리는 끝맺음). 바뀐 곳 탭에서 확인해 주세요.</p>' : '') +
-      '<div class="hz7-acts"><button class="btn btn-p" type="button" data-act="usefix">' + btnL + '</button><button class="btn btn-g" type="button" data-act="copyfix">' + lbl + ' 복사</button>' + (pro ? '<button class="btn btn-g" type="button" data-act="proagain">다른 버전으로' + (isCr() ? ' · ' + n2(humCost(chunk(F.src).parts)) + '크레딧' : '(휴머나이징 1회)') + '</button>' : '') + (S.res ? '<button class="btn btn-g" type="button" data-act="backres">검사 결과로 돌아가기</button>' : '') + '</div>' +
+      fileBar(F) +
+      '<div class="hz7-acts"><button class="btn btn-g" type="button" data-act="usefix">' + btnL + '</button><button class="btn btn-g" type="button" data-act="copyfix">' + lbl + ' 복사</button>' + (pro ? '<button class="btn btn-g" type="button" data-act="proagain">다른 버전으로' + (isCr() ? ' · ' + n2(humCost(chunk(F.src).parts)) + '크레딧' : '(휴머나이징 1회)') + '</button>' : '') + (S.res ? '<button class="btn btn-g" type="button" data-act="backres">검사 결과로 돌아가기</button>' : '') + '</div>' +
       '<p class="hz7-fineprint">“' + btnL + '”는 ' + lbl + '의 판정 결과를 그대로 보여 주므로 ' + (isCr() ? '크레딧이 더 빠지지 않습니다' : '이용권 횟수를 더 쓰지 않습니다') + '. AI 작성률과 판정은 추정값이며, 다른 검사기의 결과를 약속하지 않습니다.</p></div>';
     stat(h2 + '. ' + (sub || ''));
   }
@@ -894,7 +1095,7 @@
     out.querySelectorAll('[data-fv]').forEach(function (b) { b.setAttribute('aria-selected', b === t ? 'true' : 'false'); });
     out.querySelectorAll('[data-fp]').forEach(function (p) { p.hidden = p.getAttribute('data-fp') !== v; });
   });
-  function useFix() { var F = S.fx; ta.value = F.text; count(); S.res = F.after; S.res.at = new Date(); S.edits = {}; S.sel = -1; S.fx = null; renderRes(); toOut(); }
+  function useFix() { var F = S.fx; ta.value = F.text; if (S.src) S.src.applied = true; count(); S.res = F.after; S.res.at = new Date(); S.edits = {}; S.sel = -1; S.fx = null; renderRes(); toOut(); }
 
   /* ---------- 결과상세내역서(인쇄 · PDF 저장, 결제 뒤에만) ---------- */
   function report() {
@@ -931,9 +1132,10 @@
   function dlgOpen(d) { if (!d) return; if (typeof d.showModal === 'function') { if (!d.open) d.showModal(); } else d.setAttribute('open', ''); }
   function dlgClose(d) { if (d && d.open) { try { d.close(); } catch (e) { d.removeAttribute('open'); } } }
   var buyDlg = $('#hzBuy'), buyBody = $('#hzBuyBody'), buyTpl = buyBody ? buyBody.innerHTML : '', t0 = 0;
-  function prodsHtml(sel) {
+  function prodsHtml(sel, noBest) {
     return prods().map(function (p) {
-      return '<label' + (p.best ? ' class="best"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span><b>' + n2(p.cr) + '크레딧' + (p.best ? '<i>추천</i>' : '') + '</b><em>' + n2(p.price) + '원</em><small>' + esc(p.desc) + '</small></span></label>';
+      var best = p.best && !noBest;
+      return '<label' + (best ? ' class="best"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span><b>' + n2(p.cr) + '크레딧' + (best ? '<i>추천</i>' : '') + '</b><em>' + n2(p.price) + '원</em><small>' + esc(p.desc) + '</small></span></label>';
     }).join('');
   }
   function shopLink(pid) {   // 12.1 공식 결제처 성균관컨설팅 결제 페이지(서버 AM_BUY_LINKS 또는 사이트 SHOP_IDX 에 상품 번호가 있을 때)
@@ -943,20 +1145,31 @@
   }
   function topupOn() { var f = $('#hzBuyForm'), r = f && f.querySelector('input[name="to"]:checked'); return !!(r && r.value === 'this' && isCr()); }
   function buyBtnLabel() { var f = $('#hzBuyForm'); if (!f) return; var id = (f.querySelector('input[name="product"]:checked') || {}).value || 'c10', p = prod(id) || PRODS[1], b = f.querySelector('button[type="submit"]'), tu = topupOn(); var sh = !payReady() && shopLink(id); if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : '<span>' + n2(p.price) + '원 ' + (sh ? '주문하고 결제하러 가기' : '주문하기') + '</span>'; var n = $('#hzBuyNote'); if (n) n.textContent = payReady() ? (tu ? '카드나 간편결제로 바로 결제합니다. 승인되면 지금 코드에 ' + n2(p.cr) + '크레딧이 바로 더해집니다.' : '카드나 간편결제로 바로 결제합니다. 승인되면 이 화면에서 바로 크레딧이 열리고, 코드는 메일로도 보내 드립니다.') : sh ? '주문 번호를 받은 뒤 공식 결제처 성균관컨설팅 결제 페이지에서 회원가입 없이 결제합니다. 결제가 확인되면 ' + (tu ? '지금 코드에 ' + n2(p.cr) + '크레딧을 더해' : '크레딧 코드를 메일로 보내') + ' 드립니다.' : (tu ? '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 지금 코드에 ' + n2(p.cr) + '크레딧을 더해 드립니다.' : '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 크레딧 코드를 메일로 보내 드립니다.'); var ml = f.querySelector('label[for="hzBuyMail"]'); if (ml) ml.innerHTML = (tu ? '영수증을 받을 이메일' : '크레딧 코드, 영수증을 받을 이메일') + ' <em>필수</em>'; }
-  function openBuy(pid, why) {
+  function openBuy(pid, why, opt) {
     if (!buyDlg) return;
+    opt = opt || {};
     var wantTop = pid === 'topup' || (isCr() && pid !== 'new');
-    if (!prod(pid)) pid = 'c10';
+    if (!prod(pid)) pid = opt.need ? packFor(Math.max(0, opt.need - (wantTop ? crLeft() : 0))).id : 'c10';
     buyBody.innerHTML = buyTpl;
-    var fs = buyBody.querySelector('.hz7-prod'); if (fs) fs.innerHTML = '<legend class="sr">충전할 크레딧</legend>' + prodsHtml(pid);
+    var fs = buyBody.querySelector('.hz7-prod'); if (fs) fs.innerHTML = '<legend class="sr">충전할 크레딧</legend>' + prodsHtml(pid, !!opt.need);
     var tw = buyBody.querySelector('.hz7-to');
     if (tw) { if (isCr()) { tw.hidden = false; tw.innerHTML = '<legend class="sr">어디에 충전할까요</legend><label><input type="radio" name="to" value="this"' + (wantTop ? ' checked' : '') + '><span><b>지금 코드에 충전</b><small>' + esc(S.pass.replace(/^(.{4}).*(.{4})$/, '$1-····-····-$2')) + ' · 남은 ' + n2(crLeft()) + '크레딧</small></span></label><label><input type="radio" name="to" value="new"' + (wantTop ? '' : ' checked') + '><span><b>새 코드로 받기</b><small>다른 사람에게 줄 때</small></span></label>'; } else { tw.hidden = true; tw.innerHTML = ''; } }
     var m = sget('am_buy_mail'); if (m) { var mi = $('#hzBuyMail'); if (mi) mi.value = m; }
     buyBtnLabel();
     if (why) say(buyBody.querySelector('.msg'), why, 'ok');
+    var nd = $('#hzBuyNeed');
+    if (nd && opt.need) {   // 12.1 이 글에 드는 크레딧과, 고른 충전으로 다듬을 수 있는지
+      var pk = prod(pid) || PRODS[1];
+      var chk = S.intent === 'check', doW = chk ? '전체 검사를 해' : '다듬어';
+      nd.innerHTML = '이 글(' + n2(opt.len || 0) + '자)의 ' + esc(opt.what || 'AI 휴머나이징') + '에 <b>' + n2(opt.need) + '크레딧</b>이 들어요. ' +
+        (wantTop && isCr() ? '지금 남은 크레딧은 ' + n2(crLeft()) + '이에요.' : esc(n2(pk.cr) + '크레딧(' + n2(pk.price) + '원)으로 ' + (chk ? '이 글을 전체 검사할 수 있어요.' : '이 글을 다듬을 수 있어요.'))) +
+        (!S.intent ? '' : payReady() ? ' 결제하면 이 화면에서 바로 이어서 ' + doW + ' 드립니다.' : ' 결제가 확인되면 크레딧 코드를 메일로 보내 드려요. 이 창을 열어 두고 코드를 넣으면 이어서 ' + doW + ' 드립니다.');
+      nd.hidden = false;
+    }
     t0 = Date.now(); dlgOpen(buyDlg);
     infoP.then(buyBtnLabel);
-    setTimeout(function () { var i = $('#hzBuyMail'); if (i && !i.value) i.focus(); }, 60);
+    var touch = window.matchMedia && matchMedia('(hover: none), (pointer: coarse)').matches;
+    if (!touch) setTimeout(function () { var i = $('#hzBuyMail'); if (i && !i.value) i.focus(); }, 60);
   }
   document.addEventListener('change', function (e) { if (e.target && (e.target.name === 'product' || e.target.name === 'to') && e.target.closest('#hzBuyForm')) buyBtnLabel(); });
   function tossSdk() {
@@ -966,7 +1179,7 @@
   function payUrls() { var base = location.origin + location.pathname; return { successUrl: base + '?pay=ok', failUrl: base + '?pay=fail' }; }
   function startPay(r, mail, msg, btn) {
     var p = r.pay, mode = S.info.pay.mode, U = payUrls();
-    ssset('am_hz_pay', { text: String(ta.value || '').slice(0, PAID_MAX), tone: tone(), doc: S.docName || '', oid: p.payOrderId, id: r.id, prod: r.product, topup: !!r.topup, at: Date.now() });
+    ssset('am_hz_pay', { text: cur().slice(0, PAID_MAX), tone: tone(), doc: S.docName || '', act: S.intent || '', oid: p.payOrderId, id: r.id, prod: r.product, topup: !!r.topup, at: Date.now() });
     sset('am_buy_mail', mail);
     say(msg, '결제 창을 여는 중…', 'ok');
     return tossSdk().then(function (TP) {
@@ -998,11 +1211,11 @@
         if (!r || !r.ok) throw r || {};
         if (r.pay && payReady()) return startPay(r, mail, msg, btn);
         sset('am_buy_mail', mail);
-        var link = r.link || shopLink(pid), when = r.topup ? '지금 코드에 크레딧을 더해 드립니다.' : '같은 메일로 크레딧 코드를 보내 드립니다.';
-        var guide = link ? '아래 단추를 누르면 공식 결제처 성균관컨설팅 결제 페이지가 새 창으로 열립니다. 회원가입 없이 결제하고, 주문자 이메일은 ' + mail + ' 로 적어 주세요. 결제가 확인되면 영업일 하루 안에 ' + when : (r.payGuide || ('담당자가 주문을 확인하고 남겨 주신 이메일로 성균관컨설팅 결제 방법을 안내해 드립니다. 결제가 확인되면 ' + when + ' 메일이 오지 않으면 스팸함을 확인하거나 contact@skkc.co.kr로 주문 번호를 보내 주세요.'));
+        var link = r.link || shopLink(pid), when = r.topup ? '지금 코드에 크레딧을 더해 드립니다.' : mail + ' 로 크레딧 코드를 보내 드립니다.';
+        var guide = link ? '아래 단추를 누르면 공식 결제처 성균관컨설팅 결제 페이지가 새 창으로 열립니다. 회원가입 없이 결제하고, 주문자 이메일은 ' + mail + ' 로 적어 주세요. 결제가 확인되면 영업일 하루 안에 ' + (r.topup ? when : '같은 메일로 크레딧 코드를 보내 드립니다.') : (r.payGuide || ('담당자가 주문을 확인하고 ' + mail + ' 로 성균관컨설팅 결제 방법을 안내해 드립니다. 결제가 확인되면 ' + (r.topup ? when : '같은 메일로 크레딧 코드를 보내 드립니다.') + ' 메일이 오지 않으면 스팸함을 확인하거나 contact@skkc.co.kr로 주문 번호를 보내 주세요.'));
         buyBody.innerHTML = '<h2>주문이 접수되었습니다</h2><div class="hz7-done"><p class="no">주문 번호<b>' + esc(r.id) + '</b></p><p>' + esc(r.name) + (r.topup ? ' 충전' : '') + ' · ' + n2(r.price) + '원(부가세 포함)</p><div class="guide">' + esc(guide) + '</div>' +
           (link ? '<a class="btn btn-p btn-l" href="' + esc(link) + '" target="_blank" rel="noopener">성균관컨설팅에서 결제하기</a>' : '') +
-          (r.topup ? '<p class="hz7-dlg-n">충전되면 ' + esc(mail) + ' 로 알려 드립니다. 코드는 그대로 쓰면 됩니다.</p>' : '<p class="hz7-dlg-n">코드는 ' + esc(mail) + ' 로 보내 드립니다. 메일의 단추를 누르면 코드가 들어간 채로 이 페이지가 열립니다.</p><button class="btn btn-g" type="button" data-code>코드를 받았어요 · 코드 넣기</button>') + '</div>';
+          (r.topup ? '<p class="hz7-dlg-n">충전되면 메일로 알려 드립니다. 코드는 그대로 쓰면 됩니다.</p>' : '<p class="hz7-dlg-n">이 창을 열어 두면 코드를 받은 뒤 ‘코드 넣기’로 바로 이어서 할 수 있어요. 창을 닫았다면 메일의 단추로 이 페이지를 열고 글을 다시 넣어 주세요.</p><button class="btn btn-g" type="button" data-code>코드를 받았어요 · 코드 넣기</button>') + '</div>';
       }).catch(function (e2) { btn.disabled = false; say(msg, (e2 && e2.message) || '주문을 보내지 못했습니다. 잠시 뒤 다시 시도해 주세요.'); });
       return;
     }
@@ -1014,7 +1227,7 @@
       call('am.pass', { pass: fmtCode(c) }, 20000).then(function (r) {
         setPass(c); S.ps = r.pass; S.passMsg = ''; renderPass(); S.cache = {};
         say(m2, r.pass && r.pass.credit ? '크레딧 코드를 넣었습니다. 남은 ' + n2(r.pass.cr) + '크레딧' : '코드를 넣었습니다.', 'ok'); setTimeout(function () { dlgClose($('#hzCode')); }, 500);
-        if (S.res && !S.res.full) check(S.res.src);
+        resume();   // 12.1 하려던 일(휴머나이징 · 전체 검사)을 바로 이어서
       }).catch(function (e3) { say(m2, (e3 && e3.message) || '코드를 확인하지 못했습니다.'); }).then(function () { b2.disabled = false; });
     }
   });
@@ -1035,6 +1248,8 @@
         S.paid = { topup: true, name: r.name, added: r.added, left: r.left, receipt: r.receipt }; S.cache = {}; ssset('am_hz_pay', null);
         if (!S.pass) { out.innerHTML = paidBar() + '<div class="hz7-prog"><b>충전한 코드를 넣어 주세요</b><p>이 브라우저에 코드가 없어요. 메일로 받은 코드를 넣으면 이어서 씁니다. <button type="button" class="hz7-link" data-code>코드 넣기</button></p></div>'; return; }
         return call('am.pass', { pass: S.pass }, 20000).then(function (p) { S.ps = p.pass; renderPass(); }).catch(function () { renderPass(); }).then(function () {
+          if (d && d.act) S.intent = d.act;
+          if (resume()) return;
           if (String(ta.value || '').replace(/\s+/g, '')) { out.innerHTML = paidBar() + '<div class="hz7-prog"><b>충전한 크레딧으로 이어서 하세요</b><p>AI 작성률 검사나 AI 휴머나이징을 누르면 남은 크레딧에서 빠집니다.</p></div>'; return; }
           out.innerHTML = paidBar();
         });
@@ -1043,7 +1258,9 @@
       setPass(r.code); S.paid = { name: r.name, code: r.code, mailed: r.mailed, to: r.to, receipt: r.receipt }; S.cache = {};
       ssset('am_hz_pay', null);
       return call('am.pass', { pass: S.pass }, 20000).then(function (p) { S.ps = p.pass; renderPass(); }).catch(function () { renderPass(); }).then(function () {
-        if (String(ta.value || '').replace(/\s+/g, '')) return check(ta.value);
+        if (d && d.act) S.intent = d.act;
+        if (resume()) return;
+        if (String(ta.value || '').replace(/\s+/g, '')) return check(cur());
         out.innerHTML = paidBar() + '<div class="hz7-prog"><b>크레딧이 준비되었습니다</b><p>검사할 글을 넣고 AI 작성률 검사를 누르면 전체 결과와 결과상세내역서가 열립니다.</p></div>';
       });
     }).catch(function (e) {

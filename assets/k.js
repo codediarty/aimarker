@@ -142,65 +142,35 @@
     fromHash(); window.addEventListener('hashchange', fromHash);
   })();
 
-  /* ---------- 12.0 첫 화면: AI 휴머나이징(입력창 · 자동 예시 · 바뀐 곳 보여 주기) ----------
-     예시: 화면에 들어오면 한 번. AI 초안이 써지고 → AI 말버릇에 물결 밑줄 → 한 곳씩 지운 말 · 넣은 말로 바뀌며 이유를 한 줄로 → AI 작성률(추정) 전 · 뒤.
-     무대 크기는 처음부터 끝 모양으로 잡아 두어 아래 내용이 밀리지 않게. 움직임 줄이기면 결과만 */
+  /* 12.1 [data-focus="칸 id"]: 그 칸으로 내려가 바로 입력(첫 화면 끝 권유 등) */
+  $$('[data-focus]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var t = document.getElementById(a.getAttribute('data-focus')); if (!t) return;
+      e.preventDefault(); if (t.offsetParent === null) { var ed = document.querySelector('#hzSum [data-act="edit"]'); if (ed) ed.click(); }
+      t.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
+      setTimeout(function () { try { t.focus({ preventScroll: true }); } catch (x) { t.focus(); } }, RM ? 0 : 450);
+    });
+  });
+
+  /* ---------- 12.1 예시 재생(AI 초안 → AI 검출 문장 → 문장마다 다듬기 → AI 작성률 전 · 뒤) ----------
+     입력과 검사는 humanize.js(첫 화면과 /humanize/ 가 같은 도구). 여기서는 아래 '이렇게 찾고 다듬습니다' 예시만 돌림.
+     화면에 들어오면 한 번. 무대 크기는 끝 모양으로 미리 잡아 아래 내용이 밀리지 않게. 움직임 줄이기면 결과만 */
   (function () {
-    var ta = $('#huText');
-    if (!ta) return;
-    var cnt = $('#huCnt'), tone = $('#huTone'), stage = $('#huStage'), st = $('#huSt'), paper = $('#huPaper'), meter = $('#huMeter'), why = $('#huWhy'), foot = $('#huFoot'), live = $('#huLive'), replay = $('#huReplay');
-    var bRun = $('#huRun'), bChk = $('#huCheck');
+    var stage = $('#huStage');
+    if (!stage) return;
+    var st = $('#huSt'), paper = $('#huPaper'), meter = $('#huMeter'), why = $('#huWhy'), foot = $('#huFoot'), live = $('#huLive'), replay = $('#huReplay');
     var MF = $('.hu-m.from', meter), MT = $('.hu-m.to', meter), FOOT0 = foot.innerHTML;
-    var EX = {
-      report: '현대 사회에서 인공지능은 다양한 분야에서 핵심적인 요소로 사용되고 있다. 이러한 기술은 업무 효율을 높이는 데 있어서 긍정적인 영향을 미치고 있다. 또한, 인공지능을 효과적으로 활용하기 위해서는 데이터에 대한 이해가 필수적이다. 뿐만 아니라, 개인정보 보호와 같은 윤리적 문제를 판단하는 능력도 함께 길러야 한다. 결론적으로, 인공지능 교육은 이제 모든 학생이 거쳐야 할 과정이라고 할 수 있다.',
-      thesis: '본 연구는 대학생의 생성형 AI 활용 수준이 학업 자기효능감과 학업 성취에 미치는 영향을 분석하는 것을 목적으로 한다. 이를 위해 수도권 소재 4년제 대학 재학생 312명을 대상으로 설문 조사를 실시하였으며, 수집된 자료는 구조방정식 모형을 통해 분석하였다.\n\n연구 결과, 생성형 AI 활용 수준은 학업 자기효능감에 유의미한 정적 영향을 미치는 것으로 나타났다. 또한, 학업 자기효능감은 생성형 AI 활용과 학업 성취 간의 관계를 부분 매개하는 것으로 확인되었다. 이러한 결과는 생성형 AI가 학습 과정에 있어서 중요한 역할을 할 수 있음을 시사한다.\n\n본 연구는 생성형 AI 활용에 관한 실증적 근거를 제공하였다는 점에서 의의가 있다. 향후 연구에서는 다양한 전공과 학년을 고려한 추가적인 분석이 필요할 것으로 판단된다.',
-      essay: '저는 대학 시절 봉사 동아리 활동을 통해 협업의 중요성을 배웠습니다. 동아리 활동에 있어서 저는 기획을 맡았습니다. 기획 과정에서 다양한 의견이 충돌하였습니다. 저는 팀원들과 대화를 통해 갈등을 해결하였고, 이를 통해 소통 능력을 기를 수 있었습니다. 이러한 경험은 귀사에서도 큰 도움이 될 것입니다.',
-      blog: '물론입니다! 아래는 성수동 카페 방문 후기입니다.\n\n**분위기**: 카페는 다양한 좌석을 제공하고 있습니다. 또한, 조용한 분위기를 가지고 있습니다. 결론적으로, 공부하기에 좋은 장소라고 할 수 있습니다.'
-    };
-    var touched = false, played = false, T = [];   // T: 진행 중인 예시 타이머(내 글을 돌리거나 다시 보기면 멈춤)
+    var played = false, T = [];
     function stop() { T.forEach(clearTimeout); T = []; }
     function say(k, t) { st.innerHTML = (k === 'spin' ? '<span class="ds-spin" aria-hidden="true"></span>' : '<span class="dot' + (k ? ' ' + k : '') + '"></span>') + '<span>' + esc(t) + '</span>'; }
-    function later(fn, ms) { var id = setTimeout(function () { T = T.filter(function (x) { return x !== id; }); fn(); }, ms); T.push(id); }   // T: 아직 남은 타이머만
-    var pick = $('#huPick'), clr = $('#huClr');
-    function count() { if (cnt) cnt.textContent = ta.value.length.toLocaleString('ko-KR') + ' / 6,000자'; var has = ta.value.length > 0; if (pick) pick.hidden = has; if (clr) clr.hidden = !has; }
-    if (clr) clr.addEventListener('click', function () { ta.value = ''; count(); try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); } });
-    function focusTa(scroll) {
-      if (scroll && window.innerWidth < 900) ta.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
-      setTimeout(function () { try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); } }, scroll && !RM ? 320 : 0);
+    function later(fn, ms) { var id = setTimeout(function () { T = T.filter(function (x) { return x !== id; }); fn(); }, ms); T.push(id); }
+    function focusTool() {   // '내 글로 해 보기': 위 검사 칸으로(결과가 나와 칸이 접혀 있으면 펼침)
+      var t = document.getElementById('hzText'); if (!t) { location.href = ROOT + 'humanize/'; return; }
+      var inp = document.getElementById('hzIn'), ed = document.querySelector('#hzSum [data-act="edit"]');
+      if (inp && inp.hidden && ed) ed.click();
+      t.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
+      setTimeout(function () { try { t.focus({ preventScroll: true }); } catch (e) { t.focus(); } }, RM ? 0 : 420);
     }
-    function use(k, scroll) {
-      ta.value = EX[k] || ''; count(); touched = true; if (!played) still();
-      if (scroll) ta.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
-      setTimeout(function () { try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); } }, scroll && !RM ? 420 : 0);
-    }
-    ta.addEventListener('input', function () { count(); touched = true; if (!played) still(); });
-    count();
-    $$('[data-ex]').forEach(function (b) { b.addEventListener('click', function () { use(b.getAttribute('data-ex')); }); });
-    $$('[data-use]').forEach(function (b) { b.addEventListener('click', function () { use(b.getAttribute('data-use'), true); }); });
-    $$('[data-focus]').forEach(function (a) {
-      a.addEventListener('click', function (e) {
-        var t = document.getElementById(a.getAttribute('data-focus')); if (!t) return;
-        e.preventDefault(); t.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
-        setTimeout(function () { try { t.focus({ preventScroll: true }); } catch (x) { t.focus(); } }, RM ? 0 : 450);
-      });
-    });
-    function cid() { var c = ''; try { c = localStorage.getItem('am_cid') || ''; if (!c) { c = 'w' + Math.random().toString(36).slice(2, 12); localStorage.setItem('am_cid', c); } } catch (e) { c = 'w' + Math.random().toString(36).slice(2, 12); } return c; }
-    function handoff(act) {
-      var t = ta.value.trim();
-      if (t.replace(/\s+/g, '').length < 20) { hint(); return; }
-      try { sessionStorage.setItem('am_hz_in', JSON.stringify({ text: t.slice(0, 50000), act: act, tone: tone ? tone.value : 'auto' })); } catch (e) { /* 저장 없이 */ }
-      location.href = ROOT + 'humanize/#hz';
-    }
-    function hint() {
-      stop(); touched = true; played = true;
-      paper.style.minHeight = '';
-      say('warn', '글을 20자 이상 넣어 주세요');
-      paper.innerHTML = '<p class="hu-empty">입력창에 글을 붙여 넣거나 <b>예시</b> 단추를 눌러 보세요. 넣은 글은 처리할 때만 보내고 저장하지 않습니다.</p>';
-      meter.hidden = true; why.innerHTML = ''; foot.innerHTML = ''; replay.hidden = !DEMO;
-      if (window.innerWidth < 900) focusTa(true); else { try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); } }
-      ta.classList.add('hu-need'); setTimeout(function () { ta.classList.remove('hu-need'); }, 1200);
-    }
-
     /* 낱말 단위로 바뀐 곳(뺀 말 · 넣은 말) */
     function diffOps(a, b) {
       var tk = function (x) { return x.match(/\s+|[^\s]+/g) || []; }, A = tk(a), B = tk(b), n = A.length, m = B.length, ops = [], i, j;
@@ -352,60 +322,16 @@
     }
     replay.addEventListener('click', function () { demo(); });
     window.addEventListener('resize', function () { if (!T.length) paper.style.minHeight = ''; });
-    foot.addEventListener('click', function (e) {
-      var b = e.target.closest('[data-hu]'); if (!b) return;
-      var k = b.getAttribute('data-hu');
-      if (k === 'mine') focusTa(true); else handoff(k);
-    });
     if (DEMO) {
       if (!('IntersectionObserver' in window)) demo();
       else {
-        var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); if (touched) { if (!played) still(); } else later(function () { if (!played) demo(); }, 400); } }); }, { threshold: 0.35 });
+        var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); later(function () { if (!played) demo(); }, 400); } }); }, { threshold: 0.35 });
         io.observe(stage);
       }
     }
 
-    /* 내 글: 첫 문단 무료 맛보기(예시와 같이 문장 단위로. 바꾼 이유는 글 전체 휴머나이징에서) */
-    bChk.addEventListener('click', function () { handoff('check'); });
-    bRun.addEventListener('click', function () {
-      var t = ta.value.trim();
-      if (t.replace(/\s+/g, '').length < 20) { hint(); return; }
-      if (!window.AM || !AM.call) return;
-      stop(); touched = true; played = true;
-      bRun.disabled = true; replay.hidden = true; meter.hidden = true; why.innerHTML = ''; foot.innerHTML = ''; paper.style.minHeight = '';
-      stage.classList.remove('is-demo'); stage.classList.add('is-user');
-      say('spin', '첫 문단을 사람 말투로 바꾸는 중');
-      paper.innerHTML = '<p class="hu-doc wait">' + esc(t.split(/\n\s*\n/)[0].slice(0, 520)) + '</p>';
-      if (window.innerWidth < 900) stage.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' });
-      var hq = { text: t.slice(0, 6000), tone: tone ? tone.value : 'auto', cid: cid() };
-      (AM.callRetry ? AM.callRetry('am.humanize', hq, 60000, function () { say('spin', '서버 응답이 늦어 한 번 더 보냈어요. 조금만 기다려 주세요'); }) : AM.call('am.humanize', hq, 60000)).then(function (r) {
-        if (!r || !r.ok) throw r || {};
-        var src = String(r.src || ''), out = String(r.text || ''), same = out.trim() === src.trim();
-        var P = sbuild(pairs(src, out)), n = r.changes || 0;
-        var cs = {}; (r.samples || []).forEach(function (x) { var c = CAT[x.cat]; if (c) cs[c] = 1; });
-        var end = function () {
-          say('ok', same ? '바꿀 곳이 거의 없었어요' : '첫 문단 휴머나이징 · 바꾼 곳 ' + n + '곳');
-          if (same) why.innerHTML = '<p class="k-small">이 문단은 이미 사람 말투에 가까워요. AI 작성률 검사로 문장마다 확인해 보세요.</p>';
-          else why.innerHTML = catsHtml(n, Object.keys(cs).map(function (k) { return [k, 0]; }), (r.toneNote ? r.toneNote + ' ' : '') + '바꾼 이유와 다른 버전, 바꾸기 전후 AI 작성률은 글 전체 휴머나이징에서 보여 드려요.');
-          paper.style.minHeight = '';
-          var rest = Math.max(0, (r.total || t.length) - (r.shown || src.length));
-          foot.innerHTML = '<button class="k-btn k-btn-p k-btn-s" type="button" data-hu="pro">글 전체 휴머나이징</button><button class="k-btn k-btn-l k-btn-s" type="button" data-hu="check">AI 작성률 보기</button>' +
-            '<span class="k-small">' + (rest > 0 ? '나머지 ' + rest.toLocaleString('ko-KR') + '자와 다른 버전은 글 전체 휴머나이징에서' : '숫자, 이름, 인용은 그대로 두었어요') + '</span>';
-          live.textContent = same ? '이 문단은 바꿀 곳이 거의 없었습니다.' : '첫 문단에서 ' + n + '곳을 바꿨습니다.';
-        };
-        if (RM || same) { sfinish(P); end(); return; }
-        shold(P);
-        srewrite(P, 300, function (k, all) { say('run', '사람 말투로 다듬는 중 · 문장 ' + k + '/' + all); }, function () { later(end, 160); });
-      }).catch(function (e) {
-        var slow = e && (e.name === 'AbortError' || e.name === 'TypeError');
-        say('bad', '지금은 바꾸지 못했어요');
-        paper.style.minHeight = '';
-        paper.innerHTML = '<div class="ds-alert err">' + ICO_ALERT + '<div>' + esc(slow ? (e.name === 'TypeError' ? '서버에 연결하지 못했어요. 잠시 뒤 다시 시도해 주세요. 넣은 글은 그대로 있습니다.' : '서버 응답이 늦어 결과를 받지 못했어요. 잠시 뒤 다시 시도해 주세요. 넣은 글은 그대로 있습니다.') : (e && e.message) || '지금은 휴머나이징을 할 수 없어요. 잠시 뒤 다시 시도해 주세요.') + '</div></div>';
-        foot.innerHTML = '<button class="k-btn k-btn-l k-btn-s" type="button" id="huRetry">다시 시도</button>';
-        var rb = $('#huRetry'); if (rb) rb.addEventListener('click', function () { bRun.click(); });
-      }).then(function () { bRun.disabled = false; });
-    });
-    var ICO_ALERT = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>';
+    foot.addEventListener('click', function (e) { if (e.target.closest('[data-hu]')) focusTool(); });
+    window.addEventListener('am:hz-out', function () { stop(); });   // 검사 결과가 나오면 예시는 멈춤
   })();
 })();
 /* 휴대폰 공유하기로 이미지 받기(웹 앱 공유 대상): 공유받은 요청만 맡는 작은 서비스 워커를 둡니다 */
