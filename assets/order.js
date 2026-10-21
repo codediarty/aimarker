@@ -1,4 +1,5 @@
-/* AIMarker 결제 시트(10.0): [data-buy="상품"] 단추 → 금액 확인 → 공식 결제처 성균관컨설팅 결제 페이지로(상품 번호가 없으면 결제 링크 받기 요청)
+/* AIMarker 결제 시트(10.0, 12.0 기업 크레딧): [data-buy="상품"] 단추 → 금액 확인 → 공식 결제처 성균관컨설팅 결제 페이지로(상품 번호가 없으면 결제 링크 받기 요청)
+   12.0: 결제 방법에 '기업 크레딧'(1크레딧 = 10원, 부가세 별도 상품 금액 기준). 코드 전체는 받지 않고 끝 4자리만 받아 담당자가 확인 뒤 뺌.
    상품 · 요금은 assets/products.js(빌드에서 만듦). 카드 번호 같은 결제 정보는 이 사이트에서 받지 않습니다. */
 (function () {
   'use strict';
@@ -26,7 +27,7 @@
     var it = AMP.items[id];
     if (!it) return false;
     last = from || null;
-    var hasY = !!it.y, monthly = it.per === '월';
+    var hasY = !!it.y, monthly = it.per === '월', isCredit = it.group === '기업 크레딧';
     per = hasY && per === 'y' ? 'y' : 'm';
     var t0 = Date.now();
     box = document.createElement('div');
@@ -43,7 +44,9 @@
       '<label><span>회사 · 이름<em>선택</em></span><input type="text" name="org" maxlength="60" autocomplete="organization" placeholder="세금계산서를 받을 곳"></label></div>' +
       '<div class="k-buy-pay" role="radiogroup" aria-label="결제 방법">' +
       '<label class="on"><input type="radio" name="pay" value="card" checked><span><b>카드 · 간편결제</b><small class="cardnote">성균관컨설팅 결제 페이지에서 회원가입 없이 결제합니다.</small></span></label>' +
-      '<label><input type="radio" name="pay" value="bank"><span><b>계좌이체 · 세금계산서</b><small>견적서와 입금 안내를 메일로 보내 드립니다.</small></span></label></div>' +
+      '<label><input type="radio" name="pay" value="bank"><span><b>계좌이체 · 세금계산서</b><small>견적서와 입금 안내를 메일로 보내 드립니다.</small></span></label>' +
+      (isCredit ? '' : '<label><input type="radio" name="pay" value="credit"><span><b>기업 크레딧</b><small class="crnote">충전해 둔 기업 크레딧에서 뺍니다.</small></span></label>') + '</div>' +
+      (isCredit ? '' : '<div class="k-buy-f k-buy-cr" hidden><label><span>크레딧 코드 끝 4자리<em>필수</em></span><input type="text" name="crtail" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="예: 8PLW"></label></div>') +
       '<div class="k-buy-flow" aria-hidden="true"><b>AIMarker</b>' + '→' + '<b class="sk">성균관컨설팅</b><span>공식 결제처 · 카드 명세서에 성균관컨설팅으로 표시</span></div>' +
       '<label class="k-buy-ok"><input type="checkbox" name="agree"><span>주문 처리와 시작 안내를 위해 이메일, 사이트 주소, 회사 이름을 받는 데 동의합니다(<a href="' + root + 'privacy/" target="_blank" rel="noopener">개인정보처리방침</a>). 결제 정보는 이 사이트에서 받지 않습니다.</span></label>' +
       '<button class="k-btn k-btn-p k-buy-go" type="submit">결제 페이지로</button>' +
@@ -62,9 +65,13 @@
     function paint() {
       var c = cur(), pay = (f.querySelector('input[name=pay]:checked') || {}).value;
       sum.innerHTML = '<div><span>상품 금액' + (/별도/.test(it.vat) ? '(부가세 별도)' : '') + '</span><b>' + won(c.base) + '</b></div>' +
+        (pay === 'credit' ? '<div class="tot"><span>빠지는 크레딧</span><b>' + Math.round(c.base / 10).toLocaleString('ko-KR') + '크레딧</b></div>' :
         (c.vat ? '<div><span>부가세</span><b>' + won(c.vat) + '</b></div>' : '') +
-        '<div class="tot"><span>결제 금액</span><b>' + won(c.total) + '</b></div>';
-      go.textContent = pay === 'bank' ? '견적서 받기' : c.idx ? '성균관컨설팅 결제 페이지로' : '결제 링크 받기';
+        '<div class="tot"><span>결제 금액</span><b>' + won(c.total) + '</b></div>');
+      go.textContent = pay === 'credit' ? '크레딧으로 주문하기' : pay === 'bank' ? '견적서 받기' : c.idx ? '성균관컨설팅 결제 페이지로' : '결제 링크 받기';
+      var crw = f.querySelector('.k-buy-cr'); if (crw) crw.hidden = pay !== 'credit';
+      var crn = f.querySelector('.crnote'); if (crn) crn.textContent = '충전해 둔 기업 크레딧에서 ' + Math.round(c.base / 10).toLocaleString('ko-KR') + '크레딧(상품 금액 ' + won(c.base) + ', 1크레딧 10원)을 뺍니다.';
+      var flow = f.querySelector('.k-buy-flow'); if (flow) flow.hidden = pay === 'credit';
       var cn = f.querySelector('.cardnote'); if (cn) cn.textContent = c.idx ? '성균관컨설팅 결제 페이지에서 회원가입 없이 바로 결제합니다.' : '성균관컨설팅 결제 링크를 메일로 보내 드립니다. 회원가입 없이 결제합니다.';
       Array.prototype.forEach.call(f.querySelectorAll('.k-buy-per label, .k-buy-pay label'), function (l) { var i = l.querySelector('input'); l.classList.toggle('on', !!(i && i.checked)); });
     }
@@ -79,9 +86,12 @@
       var c = cur(), pay = (f.querySelector('input[name=pay]:checked') || {}).value, email = f.email.value.trim(), site = f.site.value.trim(), org = f.org.value.trim();
       function say(cls, html) { msg.className = 'k-buy-msg on ' + cls; msg.innerHTML = html; }
       if (!EMAIL_RE.test(email)) { say('err', '이메일을 확인해 주세요. 시작 안내와 영수증을 보내 드립니다.'); f.email.focus(); return; }
+      var tail = f.crtail ? String(f.crtail.value || '').trim().toUpperCase() : '';
+      if (pay === 'credit' && !/^[A-Z0-9]{4}$/.test(tail)) { say('err', '크레딧 코드의 끝 4자리(영문 대문자와 숫자)를 적어 주세요. 코드 전체는 적지 않습니다.'); if (f.crtail) f.crtail.focus(); return; }
       if (!f.agree.checked) { say('err', '개인정보 수집 · 이용에 동의해 주세요.'); return; }
       go.disabled = true; var old = go.textContent; go.textContent = '처리하는 중…';
-      var memo = '[주문] ' + c.label + ' · 결제 금액 ' + won(c.total) + (c.vat ? '(부가세 포함)' : '') + ' · ' + (pay === 'bank' ? '계좌이체 · 세금계산서' : c.idx ? '카드(성균관컨설팅 결제 페이지로 이동)' : '카드 결제 링크 요청') + ' · 상품 코드 ' + c.sku;
+      var crN = Math.round(c.base / 10);
+      var memo = '[주문] ' + c.label + ' · ' + (pay === 'credit' ? '기업 크레딧 ' + crN.toLocaleString('ko-KR') + '크레딧(상품 금액 ' + won(c.base) + ', 코드 끝 ' + tail + ')' : '결제 금액 ' + won(c.total) + (c.vat ? '(부가세 포함)' : '') + ' · ' + (pay === 'bank' ? '계좌이체 · 세금계산서' : c.idx ? '카드(성균관컨설팅 결제 페이지로 이동)' : '카드 결제 링크 요청')) + ' · 상품 코드 ' + c.sku;
       var lead = AM.call ? AM.call('am.lead', { kind: 'biz', plan: c.label, name: '', org: org || site || (email.split('@')[1] || '') || '개인 주문', contact: email, site: site, memo: memo, hp: '', ms: Date.now() - t0, src: (location.pathname + location.search).slice(0, 80) + ' 결제 시트' }, 15000) : Promise.reject(new Error('no AM'));
       if (pay === 'card' && c.idx) {
         var moved = false, url = String(AMP.shop).replace('%s', encodeURIComponent(c.idx));
@@ -92,11 +102,11 @@
       }
       lead.then(function (r) {
         if (!r || !r.ok) throw new Error((r && r.message) || 'fail');
-        say('ok', '주문 요청을 받았습니다' + (r.id ? '(접수번호 ' + esc(r.id) + ')' : '') + '. 영업일 하루 안에 <b>' + esc(email) + '</b>로 ' + (pay === 'bank' ? '견적서와 입금 안내를' : '성균관컨설팅 결제 링크(카드 · 간편결제)를') + ' 보내 드립니다.');
+        say('ok', pay === 'credit' ? '주문 요청을 받았습니다' + (r.id ? '(접수번호 ' + esc(r.id) + ')' : '') + '. 영업일 하루 안에 크레딧을 확인하고 ' + crN.toLocaleString('ko-KR') + '크레딧을 뺀 뒤 <b>' + esc(email) + '</b>로 시작 안내를 보내 드립니다. 크레딧이 모자라면 먼저 알려 드립니다.' : '주문 요청을 받았습니다' + (r.id ? '(접수번호 ' + esc(r.id) + ')' : '') + '. 영업일 하루 안에 <b>' + esc(email) + '</b>로 ' + (pay === 'bank' ? '견적서와 입금 안내를' : '성균관컨설팅 결제 링크(카드 · 간편결제)를') + ' 보내 드립니다.');
         go.textContent = '요청 완료';
         if (window.gtag) try { window.gtag('event', 'begin_checkout', { items: [{ item_id: c.sku, item_name: c.label, price: c.total }] }); } catch (eG) { /* 무시 */ }
       }).catch(function () {
-        var body = ['상품: ' + c.label, '결제 금액: ' + won(c.total), '결제 방법: ' + (pay === 'bank' ? '계좌이체 · 세금계산서' : '카드 결제 링크'), '이메일: ' + email, '사이트: ' + site, '회사 · 이름: ' + org].join('\n');
+        var body = ['상품: ' + c.label, pay === 'credit' ? '기업 크레딧: ' + crN.toLocaleString('ko-KR') + '크레딧(코드 끝 ' + tail + ')' : '결제 금액: ' + won(c.total), '결제 방법: ' + (pay === 'credit' ? '기업 크레딧' : pay === 'bank' ? '계좌이체 · 세금계산서' : '카드 결제 링크'), '이메일: ' + email, '사이트: ' + site, '회사 · 이름: ' + org].join('\n');
         say('err', '지금 연결이 원활하지 않아요. <a href="mailto:contact@skkc.co.kr?subject=' + encodeURIComponent('[AIMarker 주문] ' + c.label) + '&body=' + encodeURIComponent(body) + '">메일로 주문하기</a>를 누르면 같은 내용이 전달됩니다.');
         go.disabled = false; go.textContent = old;
       });

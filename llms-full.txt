@@ -158,21 +158,21 @@ AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 
 
 {"action":"am.detect","key":"amk_…","text":"…"} → rate(AI 작성률 0~100: AI 검출 문장의 글자 수 ÷ 전체 글자 수, 빈칸 뺌) · band{key: unfit · risk · safe · short, ko: 부적합 · 고위험 · 안전 · 판단 보류, label, why[](판정 근거)} · crit(AMJ-1.0) · lv{hi · mid · low}(등급별 문장 수) · aiN · aiChars · segN · segAi(검출 구간 수) · segs[]{no · s · e(문장 번호) · c · a · share · ai · feat[]} · chat(AI 대화창 흔적 수) · feat[]{cat · name · segs · share · n · tags[] · why}(AI 문체 특성) · cats[] · opinion[](종합 분석 의견) · opDetail[](먼저 고칠 문장 · 구간 위치) · level · levelKo · short · verse · n · chars · sentences[]{t, p 판별 확률 0~100, g 등급(3 높음 · 2 중간 · 1 낮음 · 0 없음), ai, nl, para} · cn(검사 번호 D-XXXXX-XXXXX) · model · note. 한 번에 6,000자. sentences:false 로 문장별을 뺄 수 있습니다.
 - 판정 기준 AMJ-1.0(AIMarker 판정 기준 1.0): AI 검출 문장은 판별 확률(AI 점수) 65 이상인 문장, 또는 65 미만이어도 앞뒤 문맥까지 본 구간 판정에서 AI로 든 문장입니다. 화면에는 한 가지 표시(AI 검출, 빨간 형광펜)로 나타내고, 응답의 lv{hi · mid · low}는 점수 구간별 문장 수(85 이상 · 65 이상 · 구간 판정)입니다. 구간은 문단(빈 줄, 없으면 줄 바꿈. 30자 미만은 다음 문단과 합치고 1,000자를 넘으면 문장 경계에서 나눔), 구간 글자의 20% 이상이 AI 검출 문장이면 검출 구간. 부적합 = 작성률 40% 이상 · 검출 구간이 전체의 절반 이상(2구간 이상일 때) · AI 대화창 흔적(줄 첫머리 굵게 표시 · 제목 기호 · 글 맨 앞 AI 답변 첫마디) 1곳 이상, 고위험 = 작성률 20% 이상 · 검출 구간 1곳 이상 · AI 점수 65 이상 문장 1개 이상, 그 밖에 안전, 60자 미만은 판단 보류. 결과 화면은 판정을 쉬운 말로도 보여 줍니다(부적합 = AI 검출됨 · 고위험 = AI 일부 검출 · 안전 = AI 검출 안 됨).
-- 무료 맛보기와 전체: 무료 키(하루 300회)로 부르면 full:false 입니다. 작성률 · 판정 · 판정 근거 · 수치 · 종합 의견은 전체와 같은 값이고, 문장은 가장 뚜렷한 2개만 등급을 보여 줍니다(locked · shown, 나머지 문장은 {t · nl · para · lock:1}). segs · opDetail 은 빠지고 개수(segLock · opDetailN)만, 문체 특성의 걸린 표현(tags)은 맨 위 하나만 옵니다. 개인 이용권 코드 "pass":"K7Q4-F9XD-2MTA-8PLW" 를 함께 보내거나 유료 키(하루 한도 1,000회 이상, 비즈니스 요금제는 1만 회)면 full:true 로 모두 받고, 이용권은 1회를 씁니다(600자 이하는 세지 않음, 남은 상태는 pass). 이용권은 https://aimarker.kr/humanize/#price 에서 삽니다.
+- 무료 맛보기와 전체: 무료 키(하루 300회)로 부르면 full:false 입니다. 작성률 · 판정 · 판정 근거 · 수치 · 종합 의견은 전체와 같은 값이고, 문장은 가장 뚜렷한 2개만 등급을 보여 줍니다(locked · shown, 나머지 문장은 {t · nl · para · lock:1}). segs · opDetail 은 빠지고 개수(segLock · opDetailN)만, 문체 특성의 걸린 표현(tags)은 맨 위 하나만 옵니다. 크레딧 코드 "pass":"K7Q4-F9XD-2MTA-8PLW" 를 함께 보내거나 유료 키(하루 한도 1,000회 이상, 비즈니스 요금제는 1만 회)면 full:true 로 모두 받고, 크레딧이 글자 수만큼 빠집니다(100자당 2크레딧, 최소 10, 600자 이하는 빠지지 않음, 남은 크레딧은 pass.cr). 크레딧은 https://aimarker.kr/humanize/#price 에서 충전합니다.
 - 결정적 모델과 정해진 기준입니다. 같은 글은 언제, 몇 번을 보내도 같은 값 · 같은 판정입니다(줄바꿈 종류 · 겹친 빈칸 같은 붙여넣기 차이는 무시).
 - 추정일 뿐 증명이 아닙니다. 보고서체 · 공문체처럼 사람 글이 높게, 사람이 많이 고친 AI 글이 낮게 나올 수 있습니다. 결과만으로 다른 사람을 판단하는 데 쓰지 마세요. 마크 발급 근거로 쓰지 않습니다.
 
 ### am.style · 문체 점검과 기본 휴머나이징(표현 고치기 · 말투)
 
-{"action":"am.style","key":"amk_…","text":"…","mode":"check|fix","tone":"keep|formal|polite"} → before{score · level · cats[](번역투 · 상투적 연결어 · 빈말 · 과장 수식 · 틀에 박힌 도입 · 마무리 · 대화창 복사 흔적 · 단조로운 리듬)} · paragraphs[]{score · signals[]} · ai(am.detect 와 같은 AI 작성 추정). fix 면 text(바꾼 글) · applied[](바꾼 곳과 이유) · left[](직접 손볼 곳) · after · aiAfter · facts{total · kept · missing}(원문의 숫자 · 인용 · 고유명사가 그대로인지). 인용 · 주소 · 숫자는 바꾸지 않습니다. 무료 키는 맛보기(신호 2개 samples · 고칠 곳 3곳 fixSamples · 바꿀 곳 수 changes, ai 는 am.detect 맛보기와 같음)이고, pass(이용권 코드, 검사 횟수에서 셈)나 유료 키면 바꾼 글 전체를 받습니다.
+{"action":"am.style","key":"amk_…","text":"…","mode":"check|fix","tone":"keep|formal|polite"} → before{score · level · cats[](번역투 · 상투적 연결어 · 빈말 · 과장 수식 · 틀에 박힌 도입 · 마무리 · 대화창 복사 흔적 · 단조로운 리듬)} · paragraphs[]{score · signals[]} · ai(am.detect 와 같은 AI 작성 추정). fix 면 text(바꾼 글) · applied[](바꾼 곳과 이유) · left[](직접 손볼 곳) · after · aiAfter · facts{total · kept · missing}(원문의 숫자 · 인용 · 고유명사가 그대로인지). 인용 · 주소 · 숫자는 바꾸지 않습니다. 무료 키는 맛보기(신호 2개 samples · 고칠 곳 3곳 fixSamples · 바꿀 곳 수 changes, ai 는 am.detect 맛보기와 같음)이고, pass(크레딧 코드, AI 작성률 검사와 같은 기준으로 빠짐)나 유료 키면 바꾼 글 전체를 받습니다.
 
-### am.humanize · 휴머나이징(이용권 휴머나이징 횟수, 준비되면)
+### am.humanize · 휴머나이징(크레딧 100자당 4, 최소 20)
 
-{"action":"am.humanize","key":"amk_…","pass":"K7Q4-F9XD-2MTA-8PLW","text":"…","tone":"keep"} → text · facts · before · after · ai · aiAfter. AIMarker 인간화 엔진(HUM)이 생성 AI 없이 서버 안에서 다시 쓰고, 숫자 · 인용을 지켰는지 확인합니다. 이용권(휴머나이징 횟수 1회)이나 유료 키가 없으면 code PASS_NEED. {"probe":true} 로 켜졌는지 확인합니다(꺼져 있으면 code NOT_READY).
+{"action":"am.humanize","key":"amk_…","pass":"K7Q4-F9XD-2MTA-8PLW","text":"…","tone":"keep"} → text · facts · before · after · ai · aiAfter. AIMarker 인간화 엔진(HUM)이 생성 AI 없이 서버 안에서 다시 쓰고, 숫자 · 인용을 지켰는지 확인합니다. 크레딧 코드나 유료 키가 없으면 첫 문단만 맛보기, 크레딧이 모자라면 code PASS_USED(need · left). {"probe":true} 로 켜졌는지 확인합니다(꺼져 있으면 code NOT_READY).
 
-### am.passinfo · am.pass · 개인 이용권(누구나)
+### am.passinfo · am.pass · 크레딧(누구나)
 
-{"action":"am.passinfo"} → products[]{id(d1 · m1) · name · price · desc} · proReady(휴머나이징 엔진 켜짐) · free{max · show}. {"action":"am.pass","pass":"…"} → pass{name · started · start · end · left · proLeft}(기간을 시작하지 않고 상태만). 코드는 서버에 해시로만 남습니다.
+{"action":"am.passinfo"} → products[]{id(c3 · c10 · c30 · c50) · name · price · cr · base · desc} · biz[](기업 크레딧) · credit{won(1크레딧 원) · days(유효기간) · cost{unit · pro · help}(100자당 크레딧 · 최소) · refundDays · refundFee} · proReady(휴머나이징 엔진 켜짐) · free{max · show}. {"action":"am.pass","pass":"…"} → pass{credit · cr(남은 크레딧) · total · used · end(유효기간)}(예전 이용권 코드는 left · proLeft · start · end). 크레딧이 빠진 응답에는 pass.spent(이번에 빠진 크레딧)가 함께 옵니다. 코드는 서버에 해시로만 남습니다.
 
 ### am.markalt · 표시본 해시 등록(20건, 마크마다 관리 키)
 
@@ -215,14 +215,14 @@ am.stamp {"h":"<SHA-256>","k":"report","n":12} → {"id":"LG…","at":"<서버 �
 
 ## 6. 오류
 
-ok:false 와 code: KEY(API 키 · 관리 키 오류) · QUOTA(오늘 한도 초과) · BUSY(잠시 뒤 다시) · HASH(해시 형식 · 해시 없음) · ID · NOT_FOUND · EMPTY · BAD_LABEL · CONFLICT · CONFIRM · DECLARE(일괄 발급에서 근거 없음) · REVOKED(철회된 마크는 바꿀 수 없음) · TEXT · TOO_LONG · KIND · URL · FETCH · PASS(이용권 코드가 맞지 않거나 중지됨) · PASS_END(이용권 기간 끝) · PASS_USED(이용권 횟수를 다 씀) · PASS_NEED(이용권이 필요한 기능) · FREE_DAY(무료 맛보기 오늘 횟수 끝) · NOT_READY
+ok:false 와 code: KEY(API 키 · 관리 키 오류) · QUOTA(오늘 한도 초과) · BUSY(잠시 뒤 다시) · HASH(해시 형식 · 해시 없음) · ID · NOT_FOUND · EMPTY · BAD_LABEL · CONFLICT · CONFIRM · DECLARE(일괄 발급에서 근거 없음) · REVOKED(철회된 마크는 바꿀 수 없음) · TEXT · TOO_LONG · KIND · URL · FETCH · PASS(크레딧 코드가 맞지 않거나 중지됨) · PASS_END(유효기간 끝) · PASS_USED(크레딧이 모자람, need · left) · PASS_NEED(크레딧이 필요한 기능) · FREE_DAY(무료 맛보기 오늘 횟수 끝) · NOT_READY
 
 ## 7. MCP 서버 2.3
 
 - 실행: AIMARKER_KEY=amk_… npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz (Node.js 18+, 의존성 없음, stdio, 출처 판독기 내장. sharp 가 있으면 지각 해시도 만듦)
 - 파일 하나: https://aimarker.kr/mcp/aimarker-mcp.mjs → node aimarker-mcp.mjs
 - Claude Desktop · Cursor · Gemini CLI: {"mcpServers":{"aimarker":{"command":"npx","args":["-y","https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz"],"env":{"AIMARKER_KEY":"amk_…"}}}}
-- 개인 이용권(2.3, 선택): env 에 "AIMARKER_PASS":"K7Q4-F9XD-2MTA-8PLW" 를 넣거나 aimarker_detect_text 에 pass 를 주면 문장별 · 구간별 전체를 받습니다. 없으면 무료 맛보기(판정 · 수치는 같은 값, 문장 위치는 2개만)입니다. 2.4 부터 판정(안전 · 고위험 · 부적합)과 판정 근거 · 문체 특성 · 종합 의견을 함께 보여 줍니다.
+- 크레딧 코드(2.3, 선택): env 에 "AIMARKER_PASS":"K7Q4-F9XD-2MTA-8PLW" 를 넣거나 aimarker_detect_text 에 pass 를 주면 문장별 · 구간별 전체를 받습니다. 없으면 무료 맛보기(판정 · 수치는 같은 값, 문장 위치는 2개만)입니다. 2.4 부터 판정(안전 · 고위험 · 부적합)과 판정 근거 · 문체 특성 · 종합 의견을 함께 보여 줍니다.
 - Claude Code: claude mcp add aimarker -e AIMARKER_KEY=amk_… -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz
 - 핵심 도구: aimarker_analyze_file · aimarker_analyze_text · aimarker_analyze_folder(폴더째 20건씩 확인 · 리포트 HTML · CSV 저장 · declared_csv 로 지금 표시와 비교) · aimarker_mark(write_copy 로 표시본 저장 · 등록) · aimarker_mark_batch · aimarker_mark_info · aimarker_verify_mark · aimarker_find_marks · aimarker_edit_mark · aimarker_anchor(save_dir 로 원장 글 · .ots 저장)
 - GEO · 글 도구(2.2 · 2.3): aimarker_geo_check(주소 하나로 AI 검색 준비 점수 · 고칠 코드 · AI 상품 피드) · aimarker_detect_text(AI 작성 추정률 · AI 패턴이 몰린 문장, 추정이며 판정 아님, 글은 저장하지 않음, 2.3부터 pass)
@@ -241,7 +241,7 @@ ok:false 와 code: KEY(API 키 · 관리 키 오류) · QUOTA(오늘 한도 초�
   new AIMarker({ key }) → analyzeFile(bytes, { name }) · analyzeText(text) · mark({ bytes, name } | { text } | { features, pack }, { label, tools, title, issuer, confirm }) · markBatch(items) · analyzeBatch(items, 20건까지) · analyzeFiles(paths | [{ bytes, name }], { concurrency, onProgress })(20건씩 나눠 확인, report.build 에 바로 넣는 목록) · markInfo(id) · lookup({ sha256, dhash }) · markEdit(id, key, { label, title, issuer, alt, revoke }) · pubkey() · anchor({ date | id })
   정적: AIMarker.features(bytes) · textFeatures(text) · dhash(w, h, rgba) · verifyMark(jws, keys?) · embedMark(bytes, mark) · badgeHtml(mark) · sha256(x)
   리포트: import { report } → report.build(entries, { org }) · report.html(R) · report.csv(R) · report.summaryText(R) · report.parseDeclared(csv)
-  GEO · 글(1.2 · 1.3): geo(url) · detect(text, { sentences, pass })(pass 는 1.3, 개인 이용권 코드)
+  GEO · 글(1.2 · 1.3): geo(url) · detect(text, { sentences, pass })(pass 는 1.3, 크레딧 코드)
   부가: check · auto · batch · label · scan · share · status · stamp · verify · AIMarker.applyFixes(text, findings)
 - Python 3.8+(표준 라이브러리만): https://aimarker.kr/sdk/aimarker.py
   AIMarker(key) → geo(url) · detect(text, sentences=True, pass_code=None)(1.2 · 1.3) · analyze_text · mark_text · analyze_file · mark_file(파일 판독은 Node.js 로) · analyze_features · analyze_batch(items) · analyze_files(paths) · mark_features · mark_batch · mark_info · lookup · find_marks · mark_edit · pubkey · anchor · AIMarker.verify_mark(jws, keys=None)(Ed25519 직접 확인) · 부가: check · auto · batch · label · scan · status · stamp · verify · apply_fixes
@@ -278,7 +278,7 @@ ok:false 와 code: KEY(API 키 · 관리 키 오류) · QUOTA(오늘 한도 초�
 - API 사용량: 발급 건당 50원 · 확인 건당 10원부터 · 대량 처리: 견적 · 성과형(AI 검색 유입 · 전환 증가분에 따라 정산, 파일럿 제안)
 - 결제: 공식 결제처 성균관컨설팅(카드 · 간편결제 · 계좌이체 · 세금계산서). 결제 정보는 aimarker.kr 에서 받지 않음
 - 무료 API 키: 하루 300회(am.detect · am.style 은 무료 맛보기). 유료 키(하루 한도 1,000회 이상, AI 표시 자동화 비즈니스는 1만 회)는 문장별 전체
-- 개인(부가세 포함): AI 작성률 무료 맛보기 0원(앞 6,000자 · 작성률 · 판정 · 판정 근거 · 수치는 실제 값 · 가장 뚜렷한 문장 2개) · 1건 이용권 1,900원(글 한 편, 검사 3회, 휴머나이징 1회, 결과상세내역서, 24시간) · 24시간 이용권 2,900원(검사 40회, 6,000자마다 1회, 한 번에 5만 자, 문장별 색 · 구간별 분석 · 고쳐 쓰기 도우미 · 결과상세내역서, 휴머나이징 10회) · 30일 이용권 9,900원 · 90일 이용권 19,900원(하루 검사 40회 · 휴머나이징 하루 20회). 기간은 처음 쓴 때부터. 카드 · 간편결제로 바로 결제하면 코드 입력 없이 바로 열림. 사용 전이면 구매 후 7일 안에 환불
+- 개인(부가세 포함): AI 작성률 무료 맛보기 0원(앞 6,000자 · 작성률 · 판정 · 판정 근거 · 수치는 실제 값 · 가장 뚜렷한 문장 2개 · 휴머나이징 첫 문단) · 크레딧(1크레딧 10원, 쓴 만큼 빠짐: AI 작성률 검사 100자당 2 · 최소 10, AI 휴머나이징 100자당 4 · 최소 20, 600자 이하 문장 도우미 0) 3,000원 300 · 10,000원 1,100 · 30,000원 3,500 · 50,000원 6,000, 유효기간 5년, 같은 코드에 충전. 7일 안에는 쓰고 남은 유료 크레딧을 그대로, 그 뒤에는 10%를 빼고 환불. 결제는 공식 결제처 성균관컨설팅. 기업 크레딧(부가세 별도 · 세금계산서) 10만 원 12,000 · 30만 원 39,000 · 100만 원 140,000, 요금제 · 세팅 · 옵션 결제에도 사용
 - 계속 무료: 빠른 지문 마크(붙여넣기 · 폴더 연결 · 휴대폰 공유하기) · AI 사용 확인 · 자동 마킹(한 번에 50개) · 마크 발급 · 전자서명 · 마크 확인 · 일괄 리포트 200개 · AI 활용 증빙서 · AI 검색 노출 진단(주소 하나씩) · AI 표시 자동화(사이트 1개)
 - 개인 AI 검색 브랜딩 월 19,900~49,900원(파일럿 준비 중) · 크리에이터 거래 중개료 10~15%(거래가 생길 때만)
 - 세는 방법: 같은 파일에 같은 표시를 다시 요청하면 새로 세지 않음. 마크 확인 · 공개키 · 원장 확인 · 표시 변경 · 철회 · 표시본 등록은 세지 않음.
@@ -291,7 +291,7 @@ ok:false 와 code: KEY(API 키 · 관리 키 오류) · QUOTA(오늘 한도 초�
 - AI 검색 노출 진단(GEO)은 공개된 페이지만 읽고, 결과는 6시간 동안 캐시합니다.
 - 마크에는 표시 · 근거 · 엔진이 만든 근거 문장 · 해시만 남고, 고객이 쓴 글은 담지 않습니다(제목 · 발급자 이름은 발급자가 넣은 경우만).
 - 마크 서명 키는 서버 안에서 만들어 서버에만 둡니다. 공개키만 공개합니다.
-- 관리 키 · API 키 · 이용권 코드는 해시로만 저장합니다. 이용권은 사용 횟수만 세고 글과 잇지 않습니다.
+- 관리 키 · API 키 · 크레딧 코드는 해시로만 저장합니다. 크레딧은 빠진 수만 세고 글과 잇지 않습니다.
 - 판정 규칙 · 생성 도구 지문 · 신뢰 목록 판단 · GEO 점수 규칙 · 문체 규칙 · AI 작성 추정 가중치는 서버에만 있습니다.
 
 운영: 성균관컨설팅 · AI 표시 문구 기준: 한국AI윤리위원회 · 문의 contact@skkc.co.kr

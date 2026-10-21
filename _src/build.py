@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261021b"
+VER = "20261021c"
 TODAY = "2026-10-20"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -34,6 +34,8 @@ SHOP_IDX = {
     "label-standard-m": "", "label-standard-y": "", "label-business-m": "", "label-business-y": "",
     "geo-lite": "", "geo-standard": "", "geo-pro": "", "geocare-care-m": "", "geocare-grow-m": "",
     "service-starter-m": "", "bundle-trust": "",
+    # 12.1 크레딧(개인 c3 · c10 · c30 · c50 은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로
+    "c3": "", "c10": "", "c30": "", "c50": "", "credit-b10": "", "credit-b30": "", "credit-b100": "",
 }
 CATALOG = {
     "label": {"name": "AI 표시 자동화", "vat": "부가세 별도", "tiers": [
@@ -71,6 +73,16 @@ CATALOG = {
          "feat": ["관리의 모든 것", "AI가 인용하기 좋은 글 매달 2편", "자주 묻는 질문 · 상품 피드 갱신", "경쟁사 추적과 분기 전략 회의"]},
     ]},
 }
+CATALOG["credit"] = {"name": "기업 크레딧", "vat": "부가세 별도, 충전", "tiers": [
+    {"id": "credit-b10", "name": "12,000크레딧", "full": "기업 크레딧 12,000", "who": "팀 하나 · 수업 한 반", "price": "100,000원", "per": "충전", "m": 100000, "note": "10,000크레딧 + 2,000크레딧 더", "cta": "충전하기",
+     "feat": ["AI 작성률 검사 · AI 휴머나이징을 한 코드로 함께", "API · MCP 요청에도 같은 코드(pass)", "AIMarker 요금제 · 세팅 · 옵션 결제에도", "세금계산서, 유효기간 5년"]},
+    {"id": "credit-b30", "name": "39,000크레딧", "full": "기업 크레딧 39,000", "who": "여러 팀 · 학과", "price": "300,000원", "per": "충전", "m": 300000, "best": "추천", "note": "30,000크레딧 + 9,000크레딧 더", "cta": "충전하기",
+     "feat": ["12,000크레딧의 모든 것", "쓴 내역 정리(요청 시)", "부서 · 반별로 코드 나누기(요청 시)", "세금계산서, 유효기간 5년"]},
+    {"id": "credit-b100", "name": "140,000크레딧", "full": "기업 크레딧 140,000", "who": "기관 전체 · 대학", "price": "1,000,000원", "per": "충전", "m": 1000000, "note": "100,000크레딧 + 40,000크레딧 더", "cta": "충전하기",
+     "feat": ["39,000크레딧의 모든 것", "담당자 안내와 사용 가이드", "기관 계약서", "세금계산서, 유효기간 5년"]},
+    {"id": "credit-ent", "name": "맞춤", "who": "더 많이 · 정기 충전", "price": "견적", "note": "기관 계약 · 연간 충전", "per": "", "cta": "견적 받기", "href": "contact/?plan=credit-ent&type=enterprise",
+     "feat": ["필요한 만큼 맞춰 충전", "정기 충전 · 연간 계약", "전용 API 한도", "계약서 · 세금계산서"]},
+]}
 BUNDLES = [{"id": "bundle-trust", "name": "AI 신뢰 올인원", "who": "소규모 · 중견 기업", "was": "980,000원", "price": "790,000원", "m": 790000,
             "feat": ["AI 검색 노출 최적화 스탠다드(1회)", "AI 표시 자동화 비즈니스 12개월", "AI 활용 고지문 · 사내 표시 가이드"]}]
 
@@ -107,35 +119,56 @@ def tiers_html(key, root, pick=None):
     return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">%s. 결제는 공식 결제처 성균관컨설팅에서 카드, 간편결제, 계좌이체로 합니다.</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"])
 
 
-# 개인 이용권(AI 작성률 검사 · 휴머나이징). 글 검사, 요금, 개인용 페이지가 같은 칸을 씀(값은 서버 PASS_.PRODUCTS 와 같게)
-PASSES = [
-    {"id": "s1", "name": "1건 이용권", "who": "글 한 편, 처음 사용한 때부터 24시간", "price": "1,900원", "sub": "",
-     "feat": ["검사 3회(6,000자마다 1회)", "휴머나이징 1회(6,000자)", "모든 AI 검출 문장과 이유, 구간별 분석", "결과상세내역서(PDF)"]},
-    {"id": "d1", "name": "24시간 이용권", "tag": "제출 직전에", "who": "처음 사용한 때부터 24시간", "price": "2,900원", "sub": "한 번에 5만 자, 논문도 한 번에",
-     "feat": ["검사 40회", "휴머나이징 10회, 다른 버전 보기", "문장 고쳐 쓰기 도우미", "결과상세내역서(PDF)"]},
-    {"id": "m1", "name": "30일 이용권", "who": "처음 사용한 날부터 30일", "price": "9,900원", "sub": "하루 약 330원",
-     "feat": ["하루 검사 40회", "휴머나이징 하루 20회", "24시간 이용권의 모든 기능", "레포트와 자기소개서를 자주 쓰는 달에"]},
-    {"id": "q1", "name": "90일 이용권", "who": "처음 사용한 날부터 90일", "price": "19,900원", "sub": "하루 약 220원",
-     "feat": ["하루 검사 40회", "휴머나이징 하루 20회", "30일 이용권의 모든 기능", "한 학기, 논문 쓰는 기간 내내"]},
+# 12.0 크레딧(AI 작성률 검사 · AI 휴머나이징). 글 검사, 요금, 개인용 페이지가 같은 칸을 씀(값은 서버 PASS_.PRODUCTS · PASS_.CR 와 같게)
+CREDIT_COST = {"unit": (100, 2, 10), "pro": (100, 4, 20)}   # (글자 수 단위, 크레딧, 최소). 600자 이하 검사 · 도우미는 0
+CREDITS = [
+    {"id": "c3", "cr": 300, "base": 300, "price": 3000, "who": "한 편 검사하고 고칠 때"},
+    {"id": "c10", "cr": 1100, "base": 1000, "price": 10000, "who": "레포트 여러 편"},
+    {"id": "c30", "cr": 3500, "base": 3000, "price": 30000, "who": "한 학기 내내", "tag": "추천"},
+    {"id": "c50", "cr": 6000, "base": 5000, "price": 50000, "who": "논문 · 졸업 시즌"},
 ]
 
 
-def passes_html(mode, root):
-    """mode 'buy': 글 검사 페이지(그 자리에서 결제 창), 'link': 다른 페이지(글 검사 페이지의 결제 창으로)."""
+def credit_cost(kind, n):
+    per, cr, mn = CREDIT_COST[kind]
+    return max(mn, -(-n // per) * cr)
+
+
+def credits_html(mode, root):
+    """크레딧 충전 칸 네 개. mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
+    cyc = credit_cost("unit", 3000) + credit_cost("pro", 3000)
+    feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "유효기간 5년, 모자라면 같은 코드에 충전"]
     out = []
-    for t in PASSES:
-        feats = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in t["feat"])
-        tag = (' <span class="k-tag mk">%s</span>' % t["tag"]) if t.get("tag") else ""
+    for t in CREDITS:
+        tag = (' <em class="k-best">%s</em>' % t["tag"]) if t.get("tag") else ""
         kind = "k-btn-p" if t.get("tag") else "k-btn-l"
-        label = "%s 구매" % t["name"]
+        label = "%s원 충전" % format(t["price"], ",")
         if mode == "buy":
             btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], label)
         else:
             btn = '<a class="k-btn %s" href="%shumanize/#buy-%s">%s</a>' % (kind, root, t["id"], label)
-        sub = '<p class="yr">%s</p>' % (t["sub"] or '<span aria-hidden="true">&nbsp;</span>')
-        out.append('<article class="k-plan%s"><div class="hd"><h3>%s%s</h3><p class="who">%s</p></div><p class="pr"><b>%s</b></p>%s%s<ul>%s</ul></article>'
-                   % (" best" if t.get("tag") else "", t["name"], tag, t["who"], t["price"], sub, btn, feats))
-    return '<div class="k-plans ds-plans c4">%s</div>' % "".join(out)
+        more = ("%s크레딧 + %s크레딧 더" % (format(t["base"], ","), format(t["cr"] - t["base"], ","))) if t["cr"] > t["base"] else "%s원 = %s크레딧" % (format(t["price"], ","), format(t["cr"], ","))
+        k = t["cr"] // cyc
+        out.append('<article class="k-plan cr%s" id="cr-%s"><div class="hd"><h3>%s크레딧%s</h3><p class="who">%s</p></div><p class="pr"><b>%s원</b></p><p class="yr">%s</p>%s<ul><li class="cyc">%s<span>3,000자 글 검사와 휴머나이징 약 %d번</span></li></ul></article>'
+                   % (" best" if t.get("tag") else "", t["id"], format(t["cr"], ","), tag, t["who"], format(t["price"], ","), more, btn, ico("pen"), k))
+    allf = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in feat)
+    return ('<div class="k-plans ds-plans c4 cr-plans">%s</div>'
+            '<div class="cr-all"><b>어느 크레딧이든 똑같이 열립니다</b><ul>%s</ul></div>') % ("".join(out), allf)
+
+
+def credit_cost_html():
+    u, pr = CREDIT_COST["unit"], CREDIT_COST["pro"]
+    rows = [
+        ("AI 작성률 검사", "모든 문장의 색과 이유, 구간별 분석, 결과상세내역서", "%d자당 %d크레딧, 최소 %d크레딧" % u, credit_cost("unit", 3000)),
+        ("AI 휴머나이징", "글 전체, 바꾼 이유, 다른 버전, 바꾸기 전후 AI 작성률", "%d자당 %d크레딧, 최소 %d크레딧" % pr, credit_cost("pro", 3000)),
+        ("문장 도우미 · 짧은 다시 검사", "600자 이하 문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "빠지지 않음(크레딧이 남아 있을 때)", 0),
+        ("무료 맛보기", "앞 6,000자 AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "코드 없이 무료", 0),
+    ]
+    tr = "".join('<tr><th scope="row">%s<small>%s</small></th><td data-h="빠지는 크레딧">%s</td><td data-h="3,000자 글이면">%s</td></tr>'
+                 % (a, b, c, ("%s크레딧(%s원)" % (format(d, ","), format(d * 10, ","))) if d else "0크레딧") for a, b, c, d in rows)
+    return ('<table class="k-table cr-cost"><thead><tr><th scope="col">하는 일</th><th scope="col">빠지는 크레딧</th><th scope="col">3,000자 글이면</th></tr></thead><tbody>%s</tbody></table>'
+            '<p class="k-small cr-note">1크레딧은 10원으로 셉니다. 글자 수만큼 빠지고, 처리하지 못한 요청은 빠지지 않습니다. 크레딧은 발급 또는 마지막 충전부터 5년 동안 사용할 수 있고, 모자라면 같은 코드에 충전합니다. '
+            '충전한 날부터 7일 안에는 쓰고 남은 유료 크레딧을 그대로, 그 뒤에는 10%%를 빼고 환불해 드립니다(<a href="{{root}}terms/#pass">이용약관 제7조의3</a>).</p>') % tr
 
 
 def products_js():
@@ -213,6 +246,8 @@ ICONS = {
     "db": '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>',
     "server": '<rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/>',
     "key": '<path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>',
+    "card": '<rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/>',
+    "receipt": '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/>',
     "bars": '<line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/>',
     "dash": '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
     "scanx": '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-1.9-1.9"/>',
@@ -317,7 +352,7 @@ def header(root, key):
     # 12.0 주 단추는 보는 사람에 맞춤: 기업 페이지는 AI 표시 무료 설치, 그 밖(첫 화면 · 개인 · 안내)은 AI 휴머나이징
     biz = key in PRODUCT_PAGE_KEYS
     if key == "humanize":
-        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#plan">이용권 보기</a>' % root)
+        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#price">크레딧 충전</a>' % root)
     elif biz:
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 설치</a>' % root)
     else:
@@ -406,7 +441,8 @@ def page(meta, body):
     body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
     body = body.replace("{{root}}", root).replace("{{ver}}", VER).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge()).replace("{{kaiec_lg}}", kaiec_badge(lg=True)).replace("{{kaiec_dk}}", kaiec_badge(dark=True))
     body = re.sub(r"\{\{tiers:([a-z]+)(?::([a-z]+))?\}\}", lambda m: tiers_html(m.group(1), root, m.group(2)), body)
-    body = re.sub(r"\{\{passes:(buy|link)\}\}", lambda m: passes_html(m.group(1), root), body)
+    body = re.sub(r"\{\{(?:passes|credits):(buy|link)\}\}", lambda m: credits_html(m.group(1), root), body)
+    body = body.replace("{{credit_cost}}", credit_cost_html().replace("{{root}}", root))
     # 11.0: 확인 도구 세 쪽(/v/ · /m/ · /verify/)을 잇는 같은 탭 줄
     body = re.sub(r"\{\{checknav:([a-z]+)\}\}", lambda m: '<nav class="ds-segnav" aria-label="확인 도구">' + "".join(
         '<a href="%s%s"%s>%s</a>' % (root, h, ' aria-current="page"' if k == m.group(1) else '', t)
@@ -511,8 +547,8 @@ FC_TOOLS = [
      {"kind": {"type": "string", "enum": ["image", "video", "person", "text", "sponsor"]}, "level": {"type": "string", "enum": ["gen", "edit"], "description": "gen: AI로 만듦 · edit: AI로 고침"}}, ["kind"]),
     ("aimarker_geo_check", "am.geo", "사이트 · 상품 쪽 주소 하나로 AI 검색 준비 점수(0~100: AI 크롤러 접근 · 구조화 데이터 · 본문 · 메타 · 질문과 답 · 이미지 · 신뢰)와 붙여 넣을 고칠 코드(JSON-LD · llms.txt · robots.txt · 메타 · FAQ)를 받습니다. 상품 쪽이면 AI 상품 피드 한 줄도 줍니다.",
      {"url": {"type": "string", "description": "사이트 · 상품 쪽 주소"}}, ["url"]),
-    ("aimarker_detect_text", "am.detect", "글의 AI 작성률(0~100)과 판정(band: 안전 · 고위험 · 부적합, AIMarker 판정 기준 1.0) · 판정 근거(band.why) · 구간별 검출 · AI 문체 특성 · 종합 의견과 AI 패턴이 몰린 문장을 받습니다. 같은 글은 언제나 같은 값 · 같은 판정입니다. 추정일 뿐 증명이 아니므로 결과만으로 사람을 판단하지 마세요. 글은 서버로 보내지만 저장하지 않습니다. 6,000자까지. 무료 키는 맛보기(판정 · 수치는 같은 값, 문장 위치는 가장 뚜렷한 2개만)이고, 이용권 코드(pass)나 유료 키면 모든 문장 · 구간을 받습니다.",
-     {"text": {"type": "string", "description": "확인할 글(6,000자까지)"}, "pass": {"type": "string", "description": "개인 이용권 코드(선택). 한 번 부를 때 1회를 씀(600자 이하는 세지 않음)"}}, ["text"]),
+    ("aimarker_detect_text", "am.detect", "글의 AI 작성률(0~100)과 판정(band: 안전 · 고위험 · 부적합, AIMarker 판정 기준 1.0) · 판정 근거(band.why) · 구간별 검출 · AI 문체 특성 · 종합 의견과 AI 패턴이 몰린 문장을 받습니다. 같은 글은 언제나 같은 값 · 같은 판정입니다. 추정일 뿐 증명이 아니므로 결과만으로 사람을 판단하지 마세요. 글은 서버로 보내지만 저장하지 않습니다. 6,000자까지. 무료 키는 맛보기(판정 · 수치는 같은 값, 문장 위치는 가장 뚜렷한 2개만)이고, 크레딧 코드(pass)나 유료 키면 모든 문장 · 구간을 받습니다.",
+     {"text": {"type": "string", "description": "확인할 글(6,000자까지)"}, "pass": {"type": "string", "description": "크레딧 코드(선택). 글자 수만큼 크레딧이 빠짐: 100자당 2크레딧(최소 10), 600자 이하는 0. 코드가 없으면 맛보기"}}, ["text"]),
     ("aimarker_stamp", "am.stamp", "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려주고, 하루치 원장은 다음 날 공개 앵커로 묶입니다.",
      {"content": {"type": "string", "description": "기록할 내용(실행 코드가 해시로 바꿈)"}, "k": {"type": "string", "enum": ["report", "version", "approval"], "description": "기록 종류"}, "n": {"type": "integer", "description": "보고서에 든 소재 수(선택)"}}, ["content"]),
     ("aimarker_verify", "am.verify", "원장 번호(id, LG로 시작)나 내용(content, 실행 코드가 해시로 바꿈)으로 증거 원장 기록을 확인합니다.",

@@ -26,7 +26,7 @@
    "post": {
     "operationId": "aimarker",
     "summary": "action 으로 고르는 AIMarker 요청",
-    "description": "핵심: am.analyze(AI 사용 확인) · am.geo(GEO 진단 · AI 상품 피드) · am.detect(AI 작성 추정률) · am.style(문체 점검 · 기본 휴머나이징) · am.humanize(휴머나이징, 이용권) · am.markalt(표시본 해시 등록) · am.analyzebatch(20건 일괄 확인, 발급 안 함) · am.mark(마크 발급) · am.markbatch(20개 일괄) · am.markinfo(마크 정보, 누구나) · am.lookup(같은 · 비슷한 파일의 마크, 누구나) · am.markedit(관리 키로 변경 · 철회) · am.pubkey(서명 공개키, 누구나) · am.anchor(공개 앵커, 누구나)\n부가 기능: am.check(문구 검수) · am.auto(자동 수정) · am.batch(20건 검수) · am.label(표시 문구) · am.scan(사이트 진단) · am.share(광고주 승인 링크) · am.status(승인 상태) · am.stamp(원장 기록) · am.verify(원장 확인)",
+    "description": "핵심: am.analyze(AI 사용 확인) · am.geo(GEO 진단 · AI 상품 피드) · am.detect(AI 작성 추정률) · am.style(문체 점검 · 기본 휴머나이징) · am.humanize(휴머나이징, 크레딧) · am.markalt(표시본 해시 등록) · am.analyzebatch(20건 일괄 확인, 발급 안 함) · am.mark(마크 발급) · am.markbatch(20개 일괄) · am.markinfo(마크 정보, 누구나) · am.lookup(같은 · 비슷한 파일의 마크, 누구나) · am.markedit(관리 키로 변경 · 철회) · am.pubkey(서명 공개키, 누구나) · am.anchor(공개 앵커, 누구나)\n부가 기능: am.check(문구 검수) · am.auto(자동 수정) · am.batch(20건 검수) · am.label(표시 문구) · am.scan(사이트 진단) · am.share(광고주 승인 링크) · am.status(승인 상태) · am.stamp(원장 기록) · am.verify(원장 확인)",
     "requestBody": {
      "required": true,
      "content": {
@@ -2361,7 +2361,7 @@
    "StyleRequest": {
     "type": "object",
     "title": "am.style",
-    "description": "AI식 문체 점검(check) · 기본 휴머나이징(fix: 표현 고치기) · 말투 바꾸기(tone). AI 작성 추정률(ai, 다듬은 뒤 aiAfter)도 함께. 글은 저장하지 않음. 한 번에 6,000자. 무료 키는 맛보기(신호 2개 · 다듬을 곳 3곳 미리 보기 · 바꿀 곳 수), 이용권 코드(pass)나 유료 키면 다듬은 글 전체",
+    "description": "AI식 문체 점검(check) · 기본 휴머나이징(fix: 표현 고치기) · 말투 바꾸기(tone). AI 작성 추정률(ai, 다듬은 뒤 aiAfter)도 함께. 글은 저장하지 않음. 한 번에 6,000자. 무료 키는 맛보기(신호 2개 · 다듬을 곳 3곳 미리 보기 · 바꿀 곳 수), 크레딧 코드(pass, 글자 수만큼 빠짐)나 유료 키면 다듬은 글 전체",
     "properties": {
      "action": {
       "type": "string",
@@ -2397,7 +2397,7 @@
      "pass": {
       "type": "string",
       "maxLength": 24,
-      "description": "개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 · 구간별 전체 · 한 번에 1회 차감(600자 이하는 차감 없음). 없고 무료 키면 맛보기(같은 판정 · 같은 값, 문장 위치는 가장 뚜렷한 2개만)"
+      "description": "크레딧 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 · 구간별 전체 · 글자 수만큼 크레딧이 빠짐(100자당 2, 최소 10. 600자 이하는 빠지지 않음). 없고 무료 키면 맛보기(같은 판정 · 같은 값, 문장 위치는 가장 뚜렷한 2개만)"
      }
     },
     "required": [
@@ -2409,7 +2409,7 @@
    "HumanizeRequest": {
     "type": "object",
     "title": "am.humanize",
-    "description": "휴머나이징(이용권 휴머나이징 횟수, 준비되면): AIMarker 인간화 엔진(HUM)이 생성 AI 없이 서버 안에서 다시 쓰고 숫자 · 인용 · 고유명사가 그대로인지 확인. probe:true 로 켜졌는지만 확인(꺼져 있으면 NOT_READY)",
+    "description": "휴머나이징(크레딧 100자당 4, 최소 20): AIMarker 인간화 엔진(HUM)이 생성 AI 없이 서버 안에서 다시 쓰고 숫자 · 인용 · 고유명사가 그대로인지 확인. probe:true 로 켜졌는지만 확인(꺼져 있으면 NOT_READY)",
     "properties": {
      "action": {
       "type": "string",
@@ -2438,7 +2438,7 @@
      "pass": {
       "type": "string",
       "maxLength": 24,
-      "description": "개인 이용권 코드(휴머나이징 횟수 1회 차감). 이용권이나 유료 키가 없으면 code PASS_NEED"
+      "description": "크레딧 코드(100자당 4크레딧, 최소 20이 빠짐). 크레딧 코드나 유료 키가 없으면 첫 문단만 맛보기, 크레딧이 모자라면 code PASS_USED(need · left)"
      }
     },
     "required": [
@@ -2449,7 +2449,7 @@
    "DetectRequest": {
     "type": "object",
     "title": "am.detect",
-    "description": "AI 작성률과 판정: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 문장의 글자 비율(rate, 0~100), 판정 기준 AMJ-1.0(AIMarker 판정 기준 1.0)으로 정한 판정(band: 안전 · 고위험 · 부적합 · 판단 보류)과 판정 근거(band.why), 문장 등급(g: 3 높음 · 2 중간 · 1 낮음), 구간(문단)별 검출(segs), AI 문체 특성(feat), 종합 분석 의견(opinion). 결정적 모델 · 정해진 기준이라 같은 글은 언제나 같은 값 · 같은 판정. 추정일 뿐 증명이 아님. 글은 저장하지 않음. 한 번에 6,000자. 무료 키는 맛보기(판정 · 수치 · 의견은 같은 값, 문장 위치는 가장 뚜렷한 2개만 · segs · opDetail 은 빼고 개수만 · 특성 예시는 맨 위 1개만), 이용권 코드(pass)나 유료 키(하루 한도 1,000 이상)면 모두",
+    "description": "AI 작성률과 판정: 글 가운데 AI가 쓴 글과 비슷한 패턴을 보이는 문장의 글자 비율(rate, 0~100), 판정 기준 AMJ-1.0(AIMarker 판정 기준 1.0)으로 정한 판정(band: 안전 · 고위험 · 부적합 · 판단 보류)과 판정 근거(band.why), 문장 등급(g: 3 높음 · 2 중간 · 1 낮음), 구간(문단)별 검출(segs), AI 문체 특성(feat), 종합 분석 의견(opinion). 결정적 모델 · 정해진 기준이라 같은 글은 언제나 같은 값 · 같은 판정. 추정일 뿐 증명이 아님. 글은 저장하지 않음. 한 번에 6,000자. 무료 키는 맛보기(판정 · 수치 · 의견은 같은 값, 문장 위치는 가장 뚜렷한 2개만 · segs · opDetail 은 빼고 개수만 · 특성 예시는 맨 위 1개만), 크레딧 코드(pass, 100자당 2크레딧)나 유료 키(하루 한도 1,000 이상)면 모두",
     "properties": {
      "action": {
       "type": "string",
@@ -2472,7 +2472,7 @@
      "pass": {
       "type": "string",
       "maxLength": 24,
-      "description": "개인 이용권 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 · 구간별 전체 · 한 번에 1회 차감(600자 이하는 차감 없음). 없고 무료 키면 맛보기(같은 판정 · 같은 값, 문장 위치는 가장 뚜렷한 2개만)"
+      "description": "크레딧 코드(선택, 예: K7Q4-F9XD-2MTA-8PLW). 있으면 문장별 · 구간별 전체 · 글자 수만큼 크레딧이 빠짐(100자당 2, 최소 10. 600자 이하는 빠지지 않음). 없고 무료 키면 맛보기(같은 판정 · 같은 값, 문장 위치는 가장 뚜렷한 2개만)"
      }
     },
     "required": [
@@ -2589,7 +2589,7 @@
      },
      "full": {
       "type": "boolean",
-      "description": "true 면 모든 문장(이용권 · 유료 키), false 면 무료 맛보기"
+      "description": "true 면 모든 문장(크레딧 · 유료 키), false 면 무료 맛보기"
      },
      "locked": {
       "type": "boolean",
@@ -2613,7 +2613,7 @@
      },
      "pass": {
       "type": "object",
-      "description": "이용권을 썼을 때 남은 상태",
+      "description": "크레딧 코드를 썼을 때 남은 상태(cr: 남은 크레딧, spent: 이번에 빠진 크레딧)",
       "properties": {
        "name": {
         "type": "string"

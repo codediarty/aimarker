@@ -6,7 +6,7 @@
         <tr><th>경쟁사 비교 리포트<small>AI 검색 노출 최적화</small></th><td>경쟁사 3곳까지 AI 검색 준비 점수, 영역별 차이, 따라잡을 순서를 한 권으로. 무료 진단의 '경쟁사와 나란히'를 넓힌 것입니다</td><td class="pr">19만 원<small>1회</small></td></tr>
         <tr><th>상품 피드 매일 갱신<small>AI 커머스 엔진</small></th><td>가격, 재고가 바뀌면 다음 날 AI 상품 피드에 반영합니다(AI 검색 성장 관리에는 들어 있습니다)</td><td class="pr">월 4.9만 원</td></tr>
         <tr><th>광고 문구 검수<small>AI 컴플라이언스</small></th><td>상세페이지, 배너, SNS 문구 월 50건의 위험 후보, 근거, 바꿀 말과 광고주 승인 링크(법률 자문은 아닙니다)</td><td class="pr">월 9.9만 원</td></tr>
-        <tr><th>팀 이용권<small>AI 작성률 검사, 휴머나이징</small></th><td>직원마다 30일 이용권 코드 1개(하루 검사 40회, 휴머나이징 하루 20회). 외주, 납품 원고의 AI 작성률 점검과 상세페이지, 블로그 원고 휴머나이징을 세금계산서 한 장으로</td><td class="pr">1명 월 8,000원<small>5명부터</small></td></tr>
+        <tr><th>기업 크레딧<small>AI 작성률 검사, 휴머나이징</small></th><td>팀이 한 크레딧 코드로 외주, 납품 원고의 AI 작성률 점검과 상세페이지, 블로그 원고 휴머나이징을 하고, API 요청과 요금제, 옵션 결제에도 씁니다. 세금계산서로 충전하고 유효기간은 5년입니다(<a href="{{root}}pricing/#credit">기업 크레딧</a>)</td><td class="pr">10만 원부터<small>12,000크레딧</small></td></tr>
       </tbody>
     </table>
     <details class="ds-more">

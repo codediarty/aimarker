@@ -152,7 +152,7 @@
     var bRun = $('#huRun'), bChk = $('#huCheck');
     var MF = $('.hu-m.from', meter), MT = $('.hu-m.to', meter), FOOT0 = foot.innerHTML;
     var EX = {
-      report: '현대 사회에서 소셜 미디어는 청소년의 정체성 형성에 중요한 역할을 하고 있다. 또한, 다양한 플랫폼을 통해 청소년들은 자신을 표현하고 타인과 소통하는 새로운 방식을 경험하고 있다. 이러한 변화는 긍정적인 측면과 부정적인 측면을 동시에 가지고 있다.\n\n첫째, 소셜 미디어는 청소년에게 다양한 정보와 관점을 접할 수 있는 기회를 제공한다. 둘째, 또래와의 관계를 유지하고 확장하는 데 있어서 효과적인 도구로 작용한다. 그러나 과도한 사용은 비교 심리와 불안감을 유발할 수 있다는 점에서 주의가 필요하다.\n\n결론적으로, 소셜 미디어의 영향은 사용 방식에 따라 크게 달라진다고 할 수 있다. 따라서 청소년의 건강한 미디어 이용 습관을 형성하기 위한 교육적 노력이 무엇보다 중요하다.',
+      report: '현대 사회에서 인공지능은 다양한 분야에서 핵심적인 요소로 사용되고 있다. 이러한 기술은 업무 효율을 높이는 데 있어서 긍정적인 영향을 미치고 있다. 또한, 인공지능을 효과적으로 활용하기 위해서는 데이터에 대한 이해가 필수적이다. 뿐만 아니라, 개인정보 보호와 같은 윤리적 문제를 판단하는 능력도 함께 길러야 한다. 결론적으로, 인공지능 교육은 이제 모든 학생이 거쳐야 할 과정이라고 할 수 있다.',
       thesis: '본 연구는 대학생의 생성형 AI 활용 수준이 학업 자기효능감과 학업 성취에 미치는 영향을 분석하는 것을 목적으로 한다. 이를 위해 수도권 소재 4년제 대학 재학생 312명을 대상으로 설문 조사를 실시하였으며, 수집된 자료는 구조방정식 모형을 통해 분석하였다.\n\n연구 결과, 생성형 AI 활용 수준은 학업 자기효능감에 유의미한 정적 영향을 미치는 것으로 나타났다. 또한, 학업 자기효능감은 생성형 AI 활용과 학업 성취 간의 관계를 부분 매개하는 것으로 확인되었다. 이러한 결과는 생성형 AI가 학습 과정에 있어서 중요한 역할을 할 수 있음을 시사한다.\n\n본 연구는 생성형 AI 활용에 관한 실증적 근거를 제공하였다는 점에서 의의가 있다. 향후 연구에서는 다양한 전공과 학년을 고려한 추가적인 분석이 필요할 것으로 판단된다.',
       essay: '저는 대학 시절 봉사 동아리 활동을 통해 협업의 중요성을 배웠습니다. 동아리 활동에 있어서 저는 기획을 맡았습니다. 기획 과정에서 다양한 의견이 충돌하였습니다. 저는 팀원들과 대화를 통해 갈등을 해결하였고, 이를 통해 소통 능력을 기를 수 있었습니다. 이러한 경험은 귀사에서도 큰 도움이 될 것입니다.',
       blog: '물론입니다! 아래는 성수동 카페 방문 후기입니다.\n\n**분위기**: 카페는 다양한 좌석을 제공하고 있습니다. 또한, 조용한 분위기를 가지고 있습니다. 결론적으로, 공부하기에 좋은 장소라고 할 수 있습니다.'
@@ -160,7 +160,7 @@
     var touched = false, played = false, T = [];   // T: 진행 중인 예시 타이머(내 글을 돌리거나 다시 보기면 멈춤)
     function stop() { T.forEach(clearTimeout); T = []; }
     function say(k, t) { st.innerHTML = (k === 'spin' ? '<span class="ds-spin" aria-hidden="true"></span>' : '<span class="dot' + (k ? ' ' + k : '') + '"></span>') + '<span>' + esc(t) + '</span>'; }
-    function later(fn, ms) { T.push(setTimeout(fn, ms)); }
+    function later(fn, ms) { var id = setTimeout(function () { T = T.filter(function (x) { return x !== id; }); fn(); }, ms); T.push(id); }   // T: 아직 남은 타이머만
     var pick = $('#huPick'), clr = $('#huClr');
     function count() { if (cnt) cnt.textContent = ta.value.length.toLocaleString('ko-KR') + ' / 6,000자'; var has = ta.value.length > 0; if (pick) pick.hidden = has; if (clr) clr.hidden = !has; }
     if (clr) clr.addEventListener('click', function () { ta.value = ''; count(); try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); } });
@@ -218,60 +218,67 @@
       });
       flush(); return R;
     }
-    /* 예시는 바꾼 곳 목록(원래 말 → 바꾼 말)대로 정확히 나눔 */
-    function pairOps(src, list) {
-      var ops = [], at = 0;
-      list.forEach(function (w) { var i = src.indexOf(w[0], at); if (i < 0) return; if (i > at) ops.push(['=', src.slice(at, i)]); ops.push(['-', w[0], w]); ops.push(['+', w[1]]); at = i + w[0].length; });
-      if (at < src.length) ops.push(['=', src.slice(at)]);
-      return ops;
+    /* 12.1: 문장 단위로 다시 써지는 모습만 보여 줌. 어느 말을 왜 바꿨는지(규칙과 이유)는 크레딧으로 여는 결과 화면에서만
+       (사용자 2026.10.21: '조금조금씩 수정하는 걸 보여 주면 팁으로 여기고 직접 고쳐서 결제를 안 할 것 같다') */
+    var CAT = { 0: '말투', 1: '번역투', 2: '상투적 연결어', 3: '빈말 · 과장 수식', 4: '틀에 박힌 도입 · 마무리', 5: '대화창 복사 흔적', 6: '문장 리듬', 7: '딱딱한 어휘' };
+    var ICO_LOCK = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+    function sents(t) { return String(t || '').replace(/([.!?])\s+/g, '$1\u0001').split('\u0001').map(function (x) { return x.trim(); }).filter(Boolean); }   // 뒤쪽 보기(?<=)는 옛 사파리에서 파일 전체가 멈춰 쓰지 않음
+    function pairs(a, b) { var A = sents(a), B = sents(b); if (A.length && A.length === B.length) return A.map(function (x, i) { return [x, B[i]]; }); return [[String(a || '').trim(), String(b || '').trim()]]; }
+    function sentHtml(a, b) {   // 바뀐 문장: 새로 들어간 말에만 밑줄(지운 말은 보여 주지 않음). 쉼표만 빠진 말은 밑줄 없이, 끝 문장 부호는 밑줄 밖으로
+      if (a === b) return esc(b);
+      var ops = diffOps(a, b), bare = function (x) { return String(x || '').replace(/[\s,.!?·]+/g, ''); };
+      return ops.map(function (o, i) {
+        if (o[0] === '=') return esc(o[1]);
+        if (o[0] === '-') return '';
+        var pv = ops[i - 1];
+        if (pv && pv[0] === '-' && bare(pv[1]) === bare(o[1])) return esc(o[1]);
+        var m = /^(\s*)([\s\S]*?)([\s.,!?]*)$/.exec(o[1]);
+        return m[2] ? esc(m[1]) + '<mark class="hu-c">' + esc(m[2]) + '</mark>' + esc(m[3]) : esc(o[1]);
+      }).join('');
     }
-    /* 종이 위에 원문을 그리고(바꾼 말은 숨겨 둠), 바뀌는 곳 목록을 돌려줌 */
-    function build(ops) {
-      var nodes = [], changes = [];
+    function sbuild(list) {   // 종이에 원문 문장을 그림
       paper.innerHTML = '';
       var p = document.createElement('p'); p.className = 'hu-doc'; paper.appendChild(p);
-      ops.forEach(function (o) {
-        var el, last = changes[changes.length - 1];
-        if (o[0] === '+') { el = document.createElement('ins'); el.textContent = o[1]; el.hidden = true; if (last && !last.ins && last.pos === nodes.length - 1) last.ins = el; else changes.push({ del: null, ins: el, pos: nodes.length }); }
-        else if (o[0] === '-') { el = document.createElement('span'); el.className = 'hu-d'; el.setAttribute('data-t', o[1]); changes.push({ del: el, ins: null, pos: nodes.length, w: o[2] || null }); }
-        else { el = document.createElement('span'); el.setAttribute('data-t', o[1]); }
-        p.appendChild(el); nodes.push(el);
+      var S = list.map(function (pr, i) {
+        if (i) p.appendChild(document.createTextNode(' '));
+        var el = document.createElement('span'); el.className = 'hu-s'; el.textContent = pr[0]; p.appendChild(el);
+        return { el: el, a: pr[0], b: pr[1] };
       });
-      return { p: p, orig: nodes.filter(function (n) { return n.tagName !== 'INS'; }), changes: changes };
+      return { p: p, S: S };
     }
-    function fill(P) { P.orig.forEach(function (n) { n.textContent = n.getAttribute('data-t'); }); }
-    function finish(P) { fill(P); P.changes.forEach(function (c) { if (c.del) { c.del.classList.remove('f'); c.del.classList.add('x'); } if (c.ins) { c.ins.hidden = false; c.ins.classList.add('in'); c.ins.classList.remove('now'); } }); }
-    function reset(P) { P.changes.forEach(function (c) { if (c.del) c.del.classList.remove('f', 'x'); if (c.ins) { c.ins.hidden = true; c.ins.classList.remove('in', 'now'); } }); }
-    function hold(P) { finish(P); paper.style.minHeight = paper.offsetHeight + 'px'; reset(P); }   // 끝 모양의 높이를 미리 잡아 둠
-    function typeIn(P, done) {
-      var all = P.orig.map(function (n) { return n.getAttribute('data-t'); }), total = all.join('').length, k = 0;
-      P.orig.forEach(function (n) { n.textContent = ''; });
+    function sshow(x) { x.el.className = 'hu-s ok' + (x.a === x.b ? ' same' : ''); x.el.innerHTML = sentHtml(x.a, x.b); }
+    function sfinish(P) { P.S.forEach(sshow); }
+    function shold(P) { paper.style.minHeight = ''; sfinish(P); var h1 = paper.offsetHeight; P.S.forEach(function (x) { x.el.className = 'hu-s'; x.el.textContent = x.a; }); paper.style.minHeight = Math.max(h1, paper.offsetHeight) + 'px'; }   // 원문과 끝 모양 가운데 큰 높이를 미리 잡아 둠(도는 동안 아래 내용이 움직이지 않게)
+    function stype(P, done) {
+      var all = P.S.map(function (x) { return x.a; }), total = all.join('').length, k = 0;
+      P.S.forEach(function (x) { x.el.textContent = ''; });
       P.p.classList.add('typing');
       var step = Math.max(3, Math.ceil(total / 64));   // 약 1.4초에 다 씀
       (function tick() {
         var left = step;
-        while (left > 0 && k < P.orig.length) {
-          var full = all[k], cur = P.orig[k].textContent.length, take = Math.min(left, full.length - cur);
-          P.orig[k].textContent = full.slice(0, cur + take); left -= take;
-          if (P.orig[k].textContent.length >= full.length) k++;
+        while (left > 0 && k < P.S.length) {
+          var full = all[k], cur = P.S[k].el.textContent.length, take = Math.min(left, full.length - cur);
+          P.S[k].el.textContent = full.slice(0, cur + take); left -= take;
+          if (P.S[k].el.textContent.length >= full.length) k++;
         }
-        if (k < P.orig.length) later(tick, 22); else { P.p.classList.remove('typing'); done(); }
+        if (k < P.S.length) later(tick, 22); else { P.p.classList.remove('typing'); done(); }
       })();
     }
-    function mark(P, gap, done) {
+    function sflag(P, idx, gap, done) {   // 판정 기준으로 AI 검출 문장 표시
       var i = 0;
-      (function next() { if (i >= P.changes.length) return done(); var c = P.changes[i++]; if (c.del) c.del.classList.add('f'); later(next, gap); })();
+      (function next() { if (i >= idx.length) return done(); var x = P.S[idx[i++]]; if (x) x.el.classList.add('ai'); later(next, gap); })();
     }
-    function swap(P, gap, each, done) {
+    function srewrite(P, gap, each, done) {   // 한 문장씩: 살짝 흐려졌다가 다듬은 문장으로
       var i = 0;
       (function next() {
-        if (i >= P.changes.length) return done();
-        var c = P.changes[i++], prev = P.changes[i - 2];
-        if (prev && prev.ins) prev.ins.classList.remove('now');
-        if (c.del) { c.del.classList.remove('f'); c.del.classList.add('x'); }
-        if (c.ins) later(function () { c.ins.hidden = false; c.ins.classList.add('in'); if (each) c.ins.classList.add('now'); }, Math.round(gap * 0.4));
-        if (each) each(c);
-        later(next, gap);
+        if (i >= P.S.length) return done();
+        var x = P.S[i++], n = i;
+        if (each) each(n, P.S.length);
+        x.el.classList.add('now');
+        later(function () {
+          x.el.classList.add('out');
+          later(function () { sshow(x); x.el.classList.add('in'); later(next, Math.round(gap * 0.45)); }, 170);
+        }, Math.round(gap * 0.4));
       })();
     }
     function band(r) { return r >= 40 ? 'bad' : r >= 20 ? 'mid' : 'ok'; }
@@ -294,55 +301,57 @@
       num(v, a, rate, 700);
       later(function () { box.className = 'hu-m ' + side + ' ' + band(rate); bn.textContent = label || ''; }, 420);
     }
-    function tickHtml(w) { return '<p class="hu-tick"><span class="hu-fx"><del>' + esc(w[0]) + '</del><ins>' + esc(w[1]) + '</ins></span><span class="wy">' + esc(w[2] || '') + '</span></p>'; }
-    function whyHtml(list, more, open) {
-      return '<details class="hu-whyd"' + (open ? ' open' : '') + '><summary>바꾼 곳과 이유 <b>' + list.length + '</b></summary><ol>' + list.map(function (w) { return '<li><span class="hu-fx"><del>' + esc(w[0]) + '</del><ins>' + esc(w[1]) + '</ins></span><span class="wy">' + esc(w[2] || '') + '</span></li>'; }).join('') + '</ol>' + (more ? '<p class="k-small">' + esc(more) + '</p>' : '') + '</details>';
+    function catsHtml(n, cats, note) {   // 바꾼 곳 수와 갈래만(무엇을 무엇으로 바꿨는지는 결과 화면에서). 갈래는 셋까지, 나머지는 '그 밖'
+      var top = cats.slice(0, 3), more = cats.slice(3).reduce(function (a, c) { return a + (c[1] || 1); }, 0);
+      return '<div class="hu-cats"><b>바꾼 곳 ' + n + '곳</b>' + top.map(function (c) { return '<span>' + esc(c[0]) + (c[1] ? ' <em>' + c[1] + '</em>' : '') + '</span>'; }).join('') + (more ? '<span>그 밖 <em>' + more + '</em></span>' : '') + '</div>' +
+        '<p class="hu-lockn">' + ICO_LOCK + '<span>' + esc(note || '바꾼 이유와 다른 버전은 글 전체 휴머나이징 결과에서 보여 드려요.') + '</span></p>';
     }
 
     /* 자동 예시 */
     var DEMO = null;
     try { DEMO = JSON.parse(($('#huDemo') || {}).textContent || 'null'); } catch (e) { DEMO = null; }
+    if (DEMO && !DEMO.sents) DEMO = null;   // 예전 모양의 예시 데이터는 쓰지 않음
     function demoEnd(P) {
-      say('ok', '휴머나이징 완료 · 바꾼 곳 ' + DEMO.why.length + '곳');
+      say('ok', '휴머나이징 완료 · 바꾼 곳 ' + DEMO.n + '곳');
       setM(MT, DEMO.after.rate, DEMO.after.band, DEMO.before.rate);
-      why.innerHTML = whyHtml(DEMO.why);
-      replay.hidden = false; paper.style.minHeight = '';
-      if (P) P.changes.forEach(function (c) { if (c.ins) c.ins.classList.remove('now'); });
-      live.textContent = '예시: ' + DEMO.label.replace(/^예시 · /, '') + '. ' + DEMO.why.map(function (w) { return w[0] + '을 ' + w[1] + '로'; }).join(', ') + ' 바꿨습니다. AI 작성률(추정)은 ' + DEMO.before.rate + '%에서 ' + DEMO.after.rate + '%가 되었습니다.';
+      why.innerHTML = catsHtml(DEMO.n, DEMO.cats);
+      replay.hidden = false;   // 높이는 잡아 둔 채로(끝나는 순간 아래 내용이 올라붙지 않게). 화면 크기가 바뀌면 풂
+      P.S.forEach(function (x) { x.el.classList.remove('now', 'in'); });
+      live.textContent = '예시: ' + DEMO.label.replace(/^예시 · /, '') + '. 문장 ' + P.S.length + '개를 다듬어 ' + DEMO.n + '곳을 바꿨습니다. AI 작성률(추정)은 ' + DEMO.before.rate + '%에서 ' + DEMO.after.rate + '%가 되었습니다.';
     }
     function demoBase() {
       stop(); played = true;
       replay.hidden = true; meter.hidden = false; why.innerHTML = ''; foot.innerHTML = FOOT0;
       stage.classList.remove('is-user'); stage.classList.add('is-demo');
       setM(MF, null); setM(MT, null);
-      var P = build(pairOps(DEMO.src, DEMO.why));
-      hold(P); return P;
+      var P = sbuild(DEMO.sents);
+      shold(P); return P;
     }
     function still() {   // 움직이지 않는 예시(끝 모양)
       if (!DEMO) return;
-      var P = demoBase(); finish(P);
+      var P = demoBase(); sfinish(P);
       st.innerHTML = '';
       var keep = RM; RM = true; setM(MF, DEMO.before.rate, DEMO.before.band); demoEnd(P); RM = keep;
     }
     function demo() {
       if (!DEMO) return;
       if (RM) { still(); return; }
-      var P = demoBase();
+      var P = demoBase(), ai = DEMO.ai || P.S.map(function (x, i) { return i; });
       say('', 'AI 초안 · ' + DEMO.label.replace(/^예시 · /, ''));
-      typeIn(P, function () {
+      stype(P, function () {
         later(function () {
-          say('warn', 'AI 말버릇 ' + DEMO.why.length + '곳을 찾았어요');
           setM(MF, DEMO.before.rate, DEMO.before.band, 0);
-          mark(P, 150, function () {
+          say('warn', 'AI 검출 문장 ' + ai.length + '개 · 판정 ' + DEMO.before.band);
+          sflag(P, ai, 140, function () {
             later(function () {
-              say('run', '사람 말투로 바꾸는 중');
-              swap(P, 860, function (c) { if (c.w) why.innerHTML = tickHtml(c.w); }, function () { later(function () { demoEnd(P); }, 300); });
-            }, 700);
+              srewrite(P, 760, function (n, all) { say('run', '사람 말투로 다듬는 중 · 문장 ' + n + '/' + all); }, function () { later(function () { demoEnd(P); }, 260); });
+            }, 650);
           });
         }, 420);
       });
     }
     replay.addEventListener('click', function () { demo(); });
+    window.addEventListener('resize', function () { if (!T.length) paper.style.minHeight = ''; });
     foot.addEventListener('click', function (e) {
       var b = e.target.closest('[data-hu]'); if (!b) return;
       var k = b.getAttribute('data-hu');
@@ -356,7 +365,7 @@
       }
     }
 
-    /* 내 글: 첫 문단 무료 맛보기(같은 방식으로 바뀐 곳을 보여 줌) */
+    /* 내 글: 첫 문단 무료 맛보기(예시와 같이 문장 단위로. 바꾼 이유는 글 전체 휴머나이징에서) */
     bChk.addEventListener('click', function () { handoff('check'); });
     bRun.addEventListener('click', function () {
       var t = ta.value.trim();
@@ -372,23 +381,21 @@
       (AM.callRetry ? AM.callRetry('am.humanize', hq, 60000, function () { say('spin', '서버 응답이 늦어 한 번 더 보냈어요. 조금만 기다려 주세요'); }) : AM.call('am.humanize', hq, 60000)).then(function (r) {
         if (!r || !r.ok) throw r || {};
         var src = String(r.src || ''), out = String(r.text || ''), same = out.trim() === src.trim();
-        var P = build(diffOps(src, out)), n = r.changes || P.changes.length;
+        var P = sbuild(pairs(src, out)), n = r.changes || 0;
+        var cs = {}; (r.samples || []).forEach(function (x) { var c = CAT[x.cat]; if (c) cs[c] = 1; });
         var end = function () {
           say('ok', same ? '바꿀 곳이 거의 없었어요' : '첫 문단 휴머나이징 · 바꾼 곳 ' + n + '곳');
-          var list = (r.samples || []).map(function (x) { return [x.from || '', x.to || '', x.why || '']; }).filter(function (x) { return x[0] || x[1]; });
-          var more = (n > list.length ? '바꾼 곳 ' + n + '곳 가운데 ' + list.length + '곳의 이유입니다. ' : '') + (r.toneNote ? r.toneNote : '');
-          if (list.length) why.innerHTML = whyHtml(list, more, true);
-          else if (same) why.innerHTML = '<p class="k-small">이 문단은 이미 사람 말투에 가까워요. AI 작성률 검사로 문장마다 확인해 보세요.</p>';
+          if (same) why.innerHTML = '<p class="k-small">이 문단은 이미 사람 말투에 가까워요. AI 작성률 검사로 문장마다 확인해 보세요.</p>';
+          else why.innerHTML = catsHtml(n, Object.keys(cs).map(function (k) { return [k, 0]; }), (r.toneNote ? r.toneNote + ' ' : '') + '바꾼 이유와 다른 버전, 바꾸기 전후 AI 작성률은 글 전체 휴머나이징에서 보여 드려요.');
           paper.style.minHeight = '';
           var rest = Math.max(0, (r.total || t.length) - (r.shown || src.length));
           foot.innerHTML = '<button class="k-btn k-btn-p k-btn-s" type="button" data-hu="pro">글 전체 휴머나이징</button><button class="k-btn k-btn-l k-btn-s" type="button" data-hu="check">AI 작성률 보기</button>' +
             '<span class="k-small">' + (rest > 0 ? '나머지 ' + rest.toLocaleString('ko-KR') + '자와 다른 버전은 글 전체 휴머나이징에서' : '숫자, 이름, 인용은 그대로 두었어요') + '</span>';
           live.textContent = same ? '이 문단은 바꿀 곳이 거의 없었습니다.' : '첫 문단에서 ' + n + '곳을 바꿨습니다.';
         };
-        if (RM) { finish(P); end(); return; }
-        hold(P); fill(P);
-        say('warn', 'AI 말버릇 ' + P.changes.length + '곳');
-        mark(P, 90, function () { later(function () { swap(P, 300, null, function () { later(end, 200); }); }, 300); });
+        if (RM || same) { sfinish(P); end(); return; }
+        shold(P);
+        srewrite(P, 300, function (k, all) { say('run', '사람 말투로 다듬는 중 · 문장 ' + k + '/' + all); }, function () { later(end, 160); });
       }).catch(function (e) {
         var slow = e && (e.name === 'AbortError' || e.name === 'TypeError');
         say('bad', '지금은 바꾸지 못했어요');

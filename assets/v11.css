@@ -1519,3 +1519,100 @@ a.k-bcard, .au-tri article, .why6 article, .mods6 article, .b-box .b-stage, .b-n
   .bz-live .k-live-body { height: 400px; }
   .bz-two { grid-template-columns: 1fr; }
 }
+
+/* ================= 24. 12.0 크레딧(개인 · 기업): 단추 옆 크레딧, 한 번 묻기, 충전 창, 충전 칸, 단가 표 =================
+   1크레딧 = 10원 기준. 값은 서버 PASS 1.2 와 build.py CREDITS · CREDIT_COST 가 같게 */
+.btn-p .hz7-pill { background: rgba(0, 0, 0, .22); color: #fff; }
+.hz7-act .hz7-pill { margin-left: 2px; font-variant-numeric: tabular-nums; }
+.hz7-link.em { padding: 2px 8px; border-radius: var(--r1); background: var(--ds-blue-50); }
+.hz7-ask { display: grid; gap: 10px; padding: 14px 16px; border: 1px solid #B9D3FE; border-radius: var(--r3); background: var(--ds-blue-50); color: var(--ds-ink-2); font-size: 14px; line-height: 1.6; }
+.hz7-ask b { font-size: 15px; font-weight: 650; color: var(--ds-ink); }
+.hz7-ask .row { display: flex; flex-wrap: wrap; gap: 8px; }
+.hz7-to { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0 0 12px; padding: 0; border: 0; }
+.hz7-to[hidden] { display: none; }
+.hz7-to label { position: relative; display: block; cursor: pointer; }
+.hz7-to input { position: absolute; opacity: 0; }
+.hz7-to span { display: grid; gap: 2px; height: 100%; padding: 10px 12px; border: 1px solid var(--ds-line-2); border-radius: var(--r2); background: #fff; }
+.hz7-to b { font-size: 14px; font-weight: 650; color: var(--ds-ink); }
+.hz7-to small { font-size: 12px; color: var(--ds-slate); font-variant-numeric: tabular-nums; }
+.hz7-to input:checked + span { border-color: var(--ds-blue-600); background: var(--ds-blue-50); box-shadow: inset 0 0 0 1px var(--ds-blue-600); }
+.hz7-to input:focus-visible + span { outline: 2px solid var(--ds-blue-600); outline-offset: 2px; }
+body .hz7-dlg .hz7-prod label input:checked + span { border-color: var(--ds-blue-600); background: var(--ds-blue-50); box-shadow: inset 0 0 0 1px var(--ds-blue-600); }
+.hz7-prod label.best span { border-color: #B9D3FE; }
+.hz7-prod b i { background: var(--ds-blue-50); color: var(--ds-blue-700); }
+/* 요금 칸 머리(.hd)가 예전 사이트 머리(am.css .hd, sticky)를 물려받지 않게 */
+.k-plan > .hd { position: static; z-index: auto; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom: 0; transition: none; }
+.cr-plans .k-plan .hd h3 { font-variant-numeric: tabular-nums; }
+.cr-plans .k-plan li.cyc { color: var(--ds-ink-2); font-weight: 600; }
+.cr-plans .k-plan li.cyc .ico { color: var(--ds-blue-600); }
+.cr-plans .k-plan ul { margin-top: 20px; padding-top: 16px; }
+/* 어느 칸이든 같은 기능: 칸마다 되풀이하지 않고 아래 한 줄로 */
+.cr-all { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 28px; margin-top: 12px; padding: 16px 24px; border: 1px solid var(--ds-line); border-radius: var(--r3); background: #fff; }
+.cr-all > b { font-size: 14px; font-weight: 650; color: var(--ds-ink); }
+.cr-all ul { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 0; padding: 0; list-style: none; }
+.cr-all li { display: flex; align-items: baseline; gap: 6px; font-size: 14px; line-height: 1.5; color: var(--ds-ink-2); }
+.cr-all li .ico { flex: none; width: 15px; height: 15px; color: var(--ds-blue-600); transform: translateY(2px); }
+.cr-h { margin-top: var(--s8); }
+.cr-cost { margin-top: var(--s4); }
+.cr-cost th small { display: block; margin-top: 2px; font-size: 12.5px; font-weight: 400; color: var(--ds-mist); }
+.cr-cost tbody th { width: 38%; }
+.cr-cost td { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.cr-note { margin-top: 12px; }
+/* 휴대폰: 충전 칸은 옆으로 넘기지 않고 한눈에 견주는 목록으로(값은 단추에) */
+@media (max-width: 760px) {
+  .ds-plans.cr-plans, .ds-plans.c4.cr-plans { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); grid-auto-columns: auto; gap: 8px; margin: 16px 0 0; padding: 0; overflow: visible; scroll-snap-type: none; }
+  .ds-plans.cr-plans > .k-plan { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "hd btn" "yr btn" "ul ul"; column-gap: 12px; align-items: center; padding: 14px 16px; }
+  .cr-plans .k-plan .hd { grid-area: hd; }
+  .cr-plans .k-plan .hd h3 { font-size: 16px; }
+  .cr-plans .k-plan .who { margin-top: 2px; font-size: 13px; }
+  .cr-plans .k-plan .pr { display: none; }
+  .cr-plans .k-plan .yr { grid-area: yr; margin-top: 2px; font-size: 12.5px; }
+  .ds-plans.cr-plans .k-plan > .k-btn { grid-area: btn; width: auto; min-width: 118px; margin: 0; padding: 0 14px; }
+  .ds-plans.cr-plans > .k-plan ul { grid-area: ul; margin-top: 10px; padding-top: 10px; }
+  .cr-plans .k-plan li.cyc { font-size: 13px; }
+  .cr-all { display: grid; gap: 8px; padding: 14px 16px; }
+  .cr-all ul { display: grid; gap: 6px; }
+  .cr-all li { font-size: 13.5px; }
+  .cr-cost tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; }
+  .cr-cost tr > th { grid-column: 1 / -1; }
+  .cr-cost td { white-space: normal; }
+  .cr-cost td:last-child { text-align: right; }
+}
+@media (max-width: 560px) {
+  .hz7-to { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* 요금 첫 화면 고르기: 기업 칸 넷(기업 크레딧 더함) + 개인 하나 */
+.ds-pick.ds-pick-4 { grid-template-columns: minmax(0, 4fr) minmax(0, 1fr); }
+.ds-pick-4 .ds-pick-g.b .ds-pick-c { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1080px) { .ds-pick.ds-pick-4 { grid-template-columns: minmax(0, 1fr); } .ds-pick-4 .ds-pick-g.c .ds-pick-c { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .ds-pick-4 .ds-pick-g.b .ds-pick-c { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ds-pick-4 .ds-pick-g.c .ds-pick-c { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .ds-pick-4 .ds-pick-g.b .ds-pick-c, .ds-pick-4 .ds-pick-g.c .ds-pick-c { grid-template-columns: minmax(0, 1fr); } }
+.cr-uses { margin-top: var(--s6); }
+
+/* ================= 25. 12.1 휴머나이징 예시: 문장 단위로 다시 쓰기(바꾼 이유 목록은 결과 화면에서만) ================= */
+.hu-doc .hu-s { padding: 1px 0; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-color .25s var(--ease), box-shadow .25s var(--ease), opacity .17s var(--ease); }
+.hu-doc .hu-s.ai { background: var(--ds-red-bg); box-shadow: inset 0 -1.5px 0 rgba(180, 35, 40, .32); }
+.hu-doc .hu-s.now { background: var(--ds-amber-bg); box-shadow: inset 0 -1.5px 0 var(--ds-amber); }
+.hu-doc .hu-s.out { opacity: .18; }
+.hu-doc .hu-s.ok { background: none; box-shadow: none; opacity: 1; }
+.hu-doc .hu-s.in { animation: ds-fade .32s var(--ease) both; }
+.hu-doc mark.hu-c { padding: 0 1px; border-radius: 2px; background: var(--ds-blue-50); box-shadow: inset 0 -2px 0 var(--ds-blue-600); color: var(--ds-ink); }
+.hu-cats { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 2px 0 0; animation: ds-fade .24s var(--ease) both; }
+.hu-cats b { margin-right: 4px; font-size: 13px; font-weight: 650; color: var(--ds-ink); }
+.hu-cats span { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--ds-sunken); font-size: 12.5px; color: var(--ds-ink-2); white-space: nowrap; }
+.hu-cats em { font-style: normal; font-weight: 650; color: var(--ds-blue-700); font-variant-numeric: tabular-nums; }
+.hu-lockn { display: flex; align-items: flex-start; gap: 6px; margin: 8px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--ds-slate); }
+.hu-lockn .ico { flex: none; width: 14px; height: 14px; margin-top: 2px; color: var(--ds-mist); }
+@media (prefers-reduced-motion: reduce) { .hu-doc .hu-s, .hu-cats, .hu-doc .hu-s.in { transition: none; animation: none; } }
+/* 12.1 휴머나이징 페이지 무료 맛보기: 바꾼 글 하나 + 갈래 칩(바꾼 이유는 크레딧 결과에서) */
+.hz9-one { display: grid; gap: 10px; padding: 18px 24px 22px; border: 1px solid var(--ds-line); border-radius: 12px; background: linear-gradient(180deg, var(--ds-blue-50), #fff 60%); }
+.hz9-one .lb { margin: 0; font-size: 12.5px; font-weight: 650; color: var(--ds-ink); }
+.hz9-one .hz7-text { max-height: none; padding: 0; border: 0; border-radius: 0; background: none; }
+.hz9-cchips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.hz9-cchips span { display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 11px; border-radius: 999px; background: var(--ds-sunken); font-size: 13px; color: var(--ds-ink-2); }
+.hz9-cchips span.lk { background: none; padding: 0 2px; font-size: 12.5px; color: var(--ds-slate); }
+.hz9-cchips .ico { width: 13px; height: 13px; color: var(--ds-mist); }
+@media (max-width: 560px) { .hz9-one { padding: 14px 16px 18px; } }
+.hu-stage.is-demo .hu-why { min-height: 64px; }
+@media (max-width: 560px) { .hu-stage.is-demo .hu-why { min-height: 110px; } }

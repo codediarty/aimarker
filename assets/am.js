@@ -16,7 +16,7 @@
       .finally(function () { if (t) clearTimeout(t); });
   };
   /* 응답이 없을 때 한 번 더 보내기(2026.10.20): 서버가 요청을 받고도 시작하지 못해 응답 없이 멈추는 일이 있어
-     앞부분 시간 안에 답이 없으면 같은 요청을 한 번만 다시 보냄. 결제 · 이용권 차감 요청에는 쓰지 않음(두 번 처리될 수 있어서) */
+     앞부분 시간 안에 답이 없으면 같은 요청을 한 번만 다시 보냄. 결제 · 크레딧 차감 요청에는 쓰지 않음(두 번 처리될 수 있어서) */
   AM.callRetry = function (action, data, timeoutMs, onRetry) {
     var total = timeoutMs || 60000, first = Math.min(30000, Math.round(total / 2));
     return AM.call(action, data, first).catch(function (e) {

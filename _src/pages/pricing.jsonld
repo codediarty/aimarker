@@ -171,62 +171,107 @@
   },
   {
    "@type": "Offer",
-   "name": "AI 작성률 검사 1건 이용권",
+   "name": "AI 작성률 검사 · 휴머나이징 크레딧 300",
    "category": "개인",
-   "description": "글 한 편, 처음 사용한 때부터 24시간, 검사 3회, 휴머나이징 1회, 결과상세내역서",
-   "price": 1900,
+   "description": "300크레딧 · 쓴 만큼 빠짐(AI 작성률 검사 100자당 2크레딧, AI 휴머나이징 100자당 4크레딧) · 유효기간 5년",
+   "price": 3000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#personal",
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
-    "price": 1900,
+    "price": 3000,
     "priceCurrency": "KRW",
     "valueAddedTaxIncluded": true
    }
   },
   {
    "@type": "Offer",
-   "name": "AI 작성률 검사 24시간 이용권",
+   "name": "AI 작성률 검사 · 휴머나이징 크레딧 1,100",
    "category": "개인",
-   "description": "검사 40회, 휴머나이징 10회, 한 번에 5만 자",
-   "price": 2900,
+   "description": "1,000크레딧 + 100크레딧 더 · 쓴 만큼 빠짐(AI 작성률 검사 100자당 2크레딧, AI 휴머나이징 100자당 4크레딧) · 유효기간 5년",
+   "price": 10000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#personal",
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
-    "price": 2900,
+    "price": 10000,
     "priceCurrency": "KRW",
     "valueAddedTaxIncluded": true
    }
   },
   {
    "@type": "Offer",
-   "name": "AI 작성률 검사 30일 이용권",
+   "name": "AI 작성률 검사 · 휴머나이징 크레딧 3,500",
    "category": "개인",
-   "description": "하루 검사 40회, 휴머나이징 하루 20회",
-   "price": 9900,
+   "description": "3,000크레딧 + 500크레딧 더 · 쓴 만큼 빠짐(AI 작성률 검사 100자당 2크레딧, AI 휴머나이징 100자당 4크레딧) · 유효기간 5년",
+   "price": 30000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#personal",
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
-    "price": 9900,
+    "price": 30000,
     "priceCurrency": "KRW",
     "valueAddedTaxIncluded": true
    }
   },
   {
    "@type": "Offer",
-   "name": "AI 작성률 검사 90일 이용권",
+   "name": "AI 작성률 검사 · 휴머나이징 크레딧 6,000",
    "category": "개인",
-   "description": "하루 검사 40회, 휴머나이징 하루 20회",
-   "price": 19900,
+   "description": "5,000크레딧 + 1,000크레딧 더 · 쓴 만큼 빠짐(AI 작성률 검사 100자당 2크레딧, AI 휴머나이징 100자당 4크레딧) · 유효기간 5년",
+   "price": 50000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#personal",
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
-    "price": 19900,
+    "price": 50000,
     "priceCurrency": "KRW",
     "valueAddedTaxIncluded": true
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "기업 크레딧 12,000",
+   "category": "기업",
+   "description": "10,000크레딧 + 2,000크레딧 더 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
+   "price": 100000,
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#credit",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": 100000,
+    "priceCurrency": "KRW",
+    "valueAddedTaxIncluded": false
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "기업 크레딧 39,000",
+   "category": "기업",
+   "description": "30,000크레딧 + 9,000크레딧 더 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
+   "price": 300000,
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#credit",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": 300000,
+    "priceCurrency": "KRW",
+    "valueAddedTaxIncluded": false
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "기업 크레딧 140,000",
+   "category": "기업",
+   "description": "100,000크레딧 + 40,000크레딧 더 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
+   "price": 1000000,
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#credit",
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": 1000000,
+    "priceCurrency": "KRW",
+    "valueAddedTaxIncluded": false
    }
   }
  ]
