@@ -2,17 +2,17 @@
 path: v/
 key: v
 v9: 1
-title: AI 표시 확인 · 이 지문 마크는 무엇을 근거로 붙었나요 | AIMarker
-ogtitle: AIMarker AI 표시 확인
-desc: 사이트에서 본 AIMarker 지문 마크가 무엇을 근거로 붙었는지, 파일 속 출처 기록을 이 브라우저에서 다시 읽어 확인하고, 그 사이트가 AIMarker 등록 사이트인지 살펴봅니다.
+title: 사이트 AI 마크 확인 · 이 AI 마크는 무엇을 근거로 붙었나요 | AIMarker
+ogtitle: AIMarker 사이트 AI 마크 확인
+desc: 사이트에서 본 AIMarker AI 마크가 무엇을 근거로 붙었는지, 파일 속 출처 기록을 이 브라우저에서 다시 읽어 확인하고, 그 사이트가 AIMarker 등록 사이트인지 살펴봅니다.
 scripts: lib/aim-extract.js, assets/v.js
 selflabel: footer
 -->
 <section class="k-apphead" aria-labelledby="h1">
   <div class="k-wrap">
-    <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}label/">AI 표시 자동화</a>{{ico:chev}}<span>표시 확인</span></p>
+    <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}label/">AI 마킹</a>{{ico:chev}}<span>사이트 AI 마크 확인</span></p>
     {{checknav:v}}
-    <h1 class="k-h1 sm" id="h1">이 지문 마크는 무엇을 근거로 붙었을까요</h1>
+    <h1 class="k-h1 sm" id="h1">이 AI 마크는 무엇을 근거로 붙었을까요</h1>
     <p class="k-lead">사이트가 알려 준 근거를 보여 주고, 파일을 읽을 수 있으면 이 브라우저에서 출처 기록을 다시 확인합니다. 파일은 AIMarker 서버로 보내지 않습니다.</p>
   </div>
 </section>
@@ -20,7 +20,7 @@ selflabel: footer
 <section class="k-sec k-0" style="padding-top:8px">
   <div class="k-wrap">
     <div id="vOut"></div>
-    <form class="k-url" id="vForm" style="margin-top:22px;max-width:760px" role="search" aria-label="표시 확인">
+    <form class="k-url" id="vForm" style="margin-top:22px;max-width:760px" role="search" aria-label="사이트 AI 마크 확인">
       <label class="k-sr" for="vUrl">이미지 주소 또는 사이트 주소</label>
       <input id="vUrl" type="text" inputmode="url" spellcheck="false" maxlength="2000" placeholder="이미지 주소나 사이트 주소(예: myshop.co.kr)를 넣어 보세요">
       <button class="k-btn k-btn-p" type="submit">확인하기</button>

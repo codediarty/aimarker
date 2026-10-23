@@ -23,7 +23,7 @@
         var mism = id && s.id && String(id).toUpperCase() !== String(s.id).toUpperCase();
         return '<div><span>사이트</span><span><span class="k-vstate ' + (mism ? 'warn' : 'ok') + '">' + (mism ? '등록 번호가 다릅니다' : 'AIMarker 등록 사이트') + '</span><br><b>' + esc(h) + '</b> · ' + esc(s.org || '') + (s.id ? ' · ' + esc(s.id) : '') + '<br><small class="k-small">' + esc(s.plan || '') + (s.since ? ' · ' + esc(s.since) + '부터' : '') + (s.policy ? ' · <a href="' + esc(s.policy) + '" target="_blank" rel="noopener">AI 활용 정책</a>' : '') + '</small></span></div>';
       }
-      return '<div><span>사이트</span><span><span class="k-vstate no">등록되지 않은 사이트</span><br><b>' + esc(h || '알 수 없음') + '</b><br><small class="k-small">사이트 운영자가 AIMarker 자동 표시를 스스로 설정한 것입니다(자기 선언). 등록 사이트는 AIMarker가 운영 책임자를 확인한 곳입니다.</small></span></div>';
+      return '<div><span>사이트</span><span><span class="k-vstate no">등록되지 않은 사이트</span><br><b>' + esc(h || '알 수 없음') + '</b><br><small class="k-small">사이트 운영자가 AIMarker AI 마킹을 스스로 설정한 것입니다(자기 선언). 등록 사이트는 AIMarker가 운영 책임자를 확인한 곳입니다.</small></span></div>';
     });
   }
   function bars(g) { return '<span class="k-gbar g' + g + '" aria-hidden="true"><i></i><i></i><i></i></span>'; }
@@ -52,7 +52,7 @@
     var img = /^https?:\/\//i.test(u) ? '<img src="' + esc(u) + '" alt="표시된 이미지" referrerpolicy="no-referrer" onerror="this.outerHTML=\'<p class=none>이미지를 불러오지 못했습니다</p>\'">' : '<p class="none">이미지 주소가 없습니다</p>';
     var fb = 'mailto:contact@skkc.co.kr?subject=' + encodeURIComponent('[AIMarker] 표시 확인 요청') + '&body=' + encodeURIComponent('표시가 잘못된 것 같습니다.\n\n이미지: ' + u + '\n사이트: ' + s + '\n표시: ' + (KIND[k] || '') + '\n근거: ' + (B ? B[0] : '') + '\n\n내용: ');
     out.innerHTML = '<div class="k-vcard"><div class="k-vph">' + img + '</div><div class="bd">' +
-      '<div class="ttl"><span class="f"><img src="' + root + 'assets/brand/aimarker-symbol.svg" alt="" width="22" height="25"></span><span><b>' + (k ? esc(KIND[k]) : 'AIMarker 표시') + '</b><small>' + (k ? esc(KIND_L[k]) : '사이트에서 본 지문 마크의 근거입니다.') + '</small></span></div>' +
+      '<div class="ttl"><span class="f"><img src="' + root + 'assets/brand/aimarker-symbol.svg" alt="" width="22" height="25"></span><span><b>' + (k ? esc(KIND[k]) : 'AIMarker 표시') + '</b><small>' + (k ? esc(KIND_L[k]) : '사이트에서 본 AI 마크의 근거입니다.') + '</small></span></div>' +
       '<div class="k-vrows">' +
       (B ? '<div><span>근거</span><span><b>' + esc(B[0]) + '</b> ' + bars(B[1]) + '</span></div>' : '') +
       (t ? '<div><span>도구</span><span>' + esc(t) + '</span></div>' : '') +

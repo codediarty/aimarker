@@ -1,5 +1,5 @@
-/*! AIMarker 지문 마크 넣기(브라우저) 1.0 · https://aimarker.kr/lib/aimarker-stamp.js
- * 이미지에 보이는 지문 마크와 파일 속 출처 기록(IPTC 디지털 출처 유형, XMP)을 넣은 새 파일을 이 브라우저 안에서 만듭니다.
+/*! AIMarker AI 마크 넣기(브라우저) 1.0 · https://aimarker.kr/lib/aimarker-stamp.js
+ * 이미지에 보이는 AI 마크와 파일 속 출처 기록(IPTC 디지털 출처 유형, XMP)을 넣은 새 파일을 이 브라우저 안에서 만듭니다.
  * 파일을 밖으로 보내지 않습니다. 파일 속 기록을 넣으려면 https://aimarker.kr/lib/aim-extract.js 를 먼저 불러오세요.
  *
  *   const r = await AIMarkerStamp.stamp(file, { kind: 'gen', pos: 'br', size: 'm', theme: 'dark', by: '우리 회사', tool: 'Midjourney' });
@@ -17,22 +17,23 @@
   var MAXPX = 8192;
 
   function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
-  function chip(ctx, x, y, s, bg) {
+  function chip(ctx, x, y, s, bg, ring) {   // 13.0 AI 마크: 흰 원 안의 지문(사이트에 붙는 마크와 같은 모양)
     ctx.save();
-    rr(ctx, x, y, s, s, s * 0.27); ctx.fillStyle = bg || '#FFFFFF'; ctx.fill();
+    rr(ctx, x, y, s, s, s / 2); ctx.fillStyle = bg || '#FFFFFF'; ctx.fill();
+    if (ring) { ctx.lineWidth = Math.max(1, s * 0.08); ctx.strokeStyle = ring; rr(ctx, x - s * 0.04, y - s * 0.04, s * 1.08, s * 1.08, s * 0.54); ctx.stroke(); }
     var fh = s * 0.66, fw = fh * 0.8749;
     ctx.translate(x + (s - fw) / 2, y + (s - fh) / 2); ctx.scale(fw / 87.49, fh / 100);
     var g = ctx.createLinearGradient(0, 100, 87.49, 0);
     g.addColorStop(0, '#0030C4'); g.addColorStop(0.45, '#0858F0'); g.addColorStop(0.8, '#0E8BFB'); g.addColorStop(1, '#33C8FF');
     ctx.fillStyle = g; ctx.fill(new Path2D(FP)); ctx.restore();
   }
-  /* 캔버스(W×H)에 지문 마크를 그림. 돌려줌: 그린 상자 { x, y, w, h } */
+  /* 캔버스(W×H)에 AI 마크를 그림. 돌려줌: 그린 상자 { x, y, w, h } */
   function draw(ctx, W, H, o) {
     o = o || {};
     var kind = LABEL[o.kind] ? o.kind : 'gen', label = o.text || LABEL[kind];
     var k = o.size === 's' ? 0.042 : o.size === 'l' ? 0.078 : 0.056;
     var h = Math.round(Math.max(24, Math.min(180, Math.min(W, H) * k)));
-    var m = Math.round(h * 0.42), cs = h * 0.74, pad = h * 0.13, gap = h * 0.24, end = h * 0.36;
+    var m = Math.round(h * 0.42), cs = h * 0.76, pad = h * 0.12, gap = h * 0.24, end = h * 0.46;
     ctx.save();
     ctx.font = '800 ' + Math.round(h * 0.42) + 'px ' + FONT; var tw = ctx.measureText(label).width;
     ctx.font = '750 ' + Math.round(h * 0.29) + 'px ' + FONT; var aw = ctx.measureText('AI').width, bw = aw + ctx.measureText('Marker').width;
@@ -43,10 +44,12 @@
     var x = pos.charAt(1) === 'r' ? W - m - w : m, y = pos.charAt(0) === 'b' ? H - m - h : m;
     var dark = o.theme !== 'light';
     ctx.shadowColor = 'rgba(0,0,0,.30)'; ctx.shadowBlur = h * 0.38; ctx.shadowOffsetY = h * 0.06;
-    rr(ctx, x, y, w, h, h * 0.3); ctx.fillStyle = dark ? 'rgba(8,20,47,.84)' : 'rgba(255,255,255,.94)'; ctx.fill();
+    var bgG = ctx.createLinearGradient(0, y, 0, y + h);
+    if (dark) { bgG.addColorStop(0, 'rgba(26,48,104,.9)'); bgG.addColorStop(1, 'rgba(8,20,47,.92)'); } else { bgG.addColorStop(0, 'rgba(255,255,255,.96)'); bgG.addColorStop(1, 'rgba(242,246,252,.94)'); }
+    rr(ctx, x, y, w, h, h / 2); ctx.fillStyle = bgG; ctx.fill();
     ctx.shadowColor = 'transparent';
     ctx.lineWidth = Math.max(1, h * 0.03); ctx.strokeStyle = dark ? 'rgba(255,255,255,.22)' : 'rgba(14,31,71,.16)'; ctx.stroke();
-    chip(ctx, x + pad, y + (h - cs) / 2, cs, dark ? '#FFFFFF' : '#EEF4FF');
+    chip(ctx, x + pad, y + (h - cs) / 2, cs, dark ? '#FFFFFF' : '#EEF4FF', dark ? 'rgba(125,184,255,.35)' : 'rgba(11,99,246,.16)');
     if (tw) {
       ctx.textBaseline = 'middle'; ctx.fillStyle = dark ? '#FFFFFF' : '#0E1F47';
       ctx.font = '800 ' + Math.round(h * 0.42) + 'px ' + FONT; ctx.fillText(label, x + pad + cs + gap, y + h / 2 + h * 0.02);
@@ -106,7 +109,7 @@
             var u = new Uint8Array(out), X = root.AIMExtract;
             if (o.meta !== false && X && X.buildXmp && X.embedXmp) {
               try {
-                u = X.embedXmp(u, X.buildXmp({ dst: DST[kind], aiSystem: o.tool || '', title: o.title || '', desc: DESC[kind] + ' (AIMarker 지문 마크)', credit: (o.by ? o.by + ' · ' : '') + 'AIMarker', label: { gen: 'ai_generated', edit: 'ai_edited', assist: 'ai_assisted', virtual: 'ai_generated' }[kind], basis: 'declared', url: 'https://aimarker.kr/v/' }));
+                u = X.embedXmp(u, X.buildXmp({ dst: DST[kind], aiSystem: o.tool || '', title: o.title || '', desc: DESC[kind] + ' (AIMarker AI 마크)', credit: (o.by ? o.by + ' · ' : '') + 'AIMarker', label: { gen: 'ai_generated', edit: 'ai_edited', assist: 'ai_assisted', virtual: 'ai_generated' }[kind], basis: 'declared', url: 'https://aimarker.kr/v/' }));
               } catch (e) { /* 기록을 못 넣어도 보이는 마크는 그대로 */ }
             }
             return { blob: new Blob([u], { type: mime }), name: outName(file.name, mime), width: W, height: H, type: mime };

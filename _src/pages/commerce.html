@@ -1,7 +1,7 @@
 <!--
 path: commerce/
 key: commerce
-title: AI 커머스 엔진 | AI 상품 피드, 상품 구조화 데이터, 상품 이미지 AI 표시 | AIMarker
+title: AI 커머스 엔진 | AI 상품 피드, 상품 구조화 데이터, 상품 이미지 AI 마킹 | AIMarker
 ogtitle: AI 쇼핑 답변에 우리 상품이 빠지지 않게 · AIMarker AI 커머스 엔진
 desc: 고객은 AI에게 상품을 추천받습니다. 상품 주소만 넣으면 AI 상품 피드(CSV, JSON)와 구조화 데이터를 만들고, AI로 만든 상세 이미지에는 근거에 맞는 표시를, 상세페이지 문구에는 위험 후보 검수를 붙입니다. 피드 만들기는 무료, AI 검색 노출 최적화 프로 149만 원(1회, 부가세 별도).
 scripts: assets/geo.js
@@ -116,7 +116,7 @@ selflabel: footer
       </article>
       <article class="k-prod r">
         <div class="k-prod-t">
-          <p class="k-prod-k">{{ico:badge}}상품 이미지 AI 표시<span class="k-tag">자동 마킹 무료</span></p>
+          <p class="k-prod-k">{{ico:badge}}상품 이미지 AI 마킹<span class="k-tag">무료로 시작</span></p>
           <h3 class="k-h3">AI로 만든 상세 이미지, 근거대로 표시를</h3>
           <p class="k-p">모델 컷, 배경 합성, 연출 컷을 AI로 만들었다면 파일 속 기록으로 확인하고, 근거에 맞는 표시만 붙입니다. 이미지 위 표시, 파일 속 정보, 대체 텍스트를 한 번에 넣어 검색과 AI가 이미지도 정확히 읽게 합니다.</p>
           <ul class="k-facts">
@@ -124,7 +124,7 @@ selflabel: footer
             <li>{{ico:check}}<span><b>표시</b>: 이미지 위, 파일 속(IPTC, XMP), 대체 텍스트</span></li>
             <li>{{ico:check}}<span><b>증빙</b>: 표시마다 전자서명 마크와 원장 기록</span></li>
           </ul>
-          <div class="k-acts"><a class="k-btn k-btn-l" href="{{root}}mark/">자동 마킹 해 보기</a><a class="k-a" href="{{root}}compliance/">표시와 기록 자세히</a></div>
+          <div class="k-acts"><a class="k-btn k-btn-l" href="{{root}}mark/">파일 AI 마킹 해 보기</a><a class="k-a" href="{{root}}compliance/">표시와 기록 자세히</a></div>
         </div>
         <div class="k-screen" aria-hidden="true">
           <div class="k-screen-bar"><i></i><i></i><i></i><span>상품 이미지 일괄 표시</span><em class="k-ex">예시</em></div>
@@ -191,12 +191,12 @@ selflabel: footer
     <div class="k-head-row">
       <div class="k-head">
         <h2 class="k-h2" id="pcTitle">쇼핑몰은 프로 패키지 한 번으로</h2>
-        <p class="k-lead">AI 검색 노출 최적화 프로에 상품 구조화 데이터, AI 쇼핑 상품 피드, 상품 이미지 지문 마크 2,000건이 들어 있습니다. 상품이 자주 바뀌면 AI 검색 성장 관리로 피드를 매달 갱신합니다. 부가세 별도입니다.</p>
+        <p class="k-lead">AI 검색 노출 최적화 프로에 상품 구조화 데이터, AI 쇼핑 상품 피드, 상품 이미지 AI 마크 2,000건이 들어 있습니다. 상품이 자주 바뀌면 AI 검색 성장 관리로 피드를 매달 갱신합니다. 부가세 별도입니다.</p>
       </div>
       <a class="k-btn k-btn-l" href="{{root}}pricing/#geo">전체 요금</a>
     </div>
     {{tiers:geo:pro}}
-    <p class="k-small" style="margin-top:14px">상품 피드 매일 갱신(월 4.9만 원), 상품 추가(500개마다 39만 원), 쇼핑몰과 채널 추가 연결(한 곳마다 29만 원) 같은 옵션은 <a href="{{root}}pricing/#addons">추가 옵션</a>에 있습니다. 상세페이지 AI 이미지에 지문 마크를 자동으로 붙이려면 <a href="{{root}}label/">AI 표시 자동화</a>(무료부터)를 함께 쓰세요.</p>
+    <p class="k-small" style="margin-top:14px">상품 피드 매일 갱신(월 4.9만 원), 상품 추가(500개마다 39만 원), 쇼핑몰과 채널 추가 연결(한 곳마다 29만 원) 같은 옵션은 <a href="{{root}}pricing/#addons">추가 옵션</a>에 있습니다. 상세페이지 AI 이미지에 AI 마크를 자동으로 붙이려면 <a href="{{root}}label/">AI 마킹</a>(무료부터)을 함께 쓰세요.</p>
   </div>
 </section>
 
@@ -204,7 +204,7 @@ selflabel: footer
   <div class="k-wrap">
     <div class="k-head"><h2 class="k-h2" id="fqTitle">AI 커머스 엔진, 이것이 궁금합니다</h2></div>
     <div class="k-faq">
-      <details><summary>스마트스토어, 오픈마켓 상품도 되나요?</summary><p>외부에서 페이지를 읽지 못하게 막아 둔 곳은 피드를 만들지 못할 수 있습니다. 이때는 자체몰(카페24, 아임웹, 고도몰 등) 상품 페이지를 넣거나, 상품 이미지 자동 마킹(대체 텍스트, AI 표시)부터 사용하세요.</p></details>
+      <details><summary>스마트스토어, 오픈마켓 상품도 되나요?</summary><p>외부에서 페이지를 읽지 못하게 막아 둔 곳은 피드를 만들지 못할 수 있습니다. 이때는 자체몰(카페24, 아임웹, 고도몰 등) 상품 페이지를 넣거나, 상품 이미지 자동 마킹(대체 텍스트, AI 마크)부터 사용하세요.</p></details>
       <details><summary>만든 피드는 어디에 사용하나요?</summary><p>CSV는 쇼핑 광고, 판매자 센터처럼 상품 목록을 받는 곳에 올릴 때, JSON은 사이트 구조화 데이터, API 연동에 사용합니다. 항목 이름(id, title, description, link, image_link, price, availability, brand)은 Google 판매자 센터 상품 데이터와 같습니다. 올리기 전에 각 서비스의 필수 항목을 한 번 확인하세요.</p></details>
       <details><summary>상품이 수백 개면 어떻게 하나요?</summary><p>무료 도구는 한 번에 20개까지라 여러 번 나눠 만들 수 있습니다. 프로 패키지는 상품 500개까지 피드와 구조화 데이터를 한 번에 넣고, AI 검색 성장 관리를 켜면 상품이 바뀔 때 피드를 자동으로 갱신합니다.</p></details>
       <details><summary>상품 정보가 서버에 남나요?</summary><p>공개된 상품 페이지를 읽을 때만 사용하고, 결과는 같은 주소를 다시 물을 때를 위해 6시간만 서버 캐시에 둡니다. 페이지 내용을 따로 보관하지 않습니다.</p></details>
@@ -223,7 +223,7 @@ selflabel: footer
         <input id="cUrl2" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="상품 상세 페이지 주소" maxlength="300" required>
         <button class="k-btn k-btn-p" type="submit">피드 만들기</button>
       </form>
-      <div class="k-acts" style="margin-top:12px"><a class="k-btn k-btn-l" href="{{root}}contact/?type=commerce&amp;plan=geo-pro">도입 상담</a><a class="k-btn k-btn-l" href="{{root}}business/">기업용 한눈에</a></div>
+      <div class="k-acts" style="margin-top:12px"><button class="k-btn k-btn-l" type="button" data-buy="geo-pro">프로 세팅 결제하기</button><a class="k-btn k-btn-l" href="{{root}}business/">기업용 한눈에</a></div>
     </div>
   </div>
 </section>

@@ -18,6 +18,6 @@
           <div><dt>추천 상품</dt><dd id="cPlan">Agency</dd></div>
         </dl>
         <p class="co-note">예시 계산이며 실제 절감액을 보장하지 않습니다. 자동화율은 파일럿에서 실제 값으로 함께 잽니다. 부가세 별도.</p>
-        <a class="btn btn-w" href="{{root}}contact/">이 숫자로 도입 상담{{ico:arrow}}</a>
+        <a class="btn btn-w" href="{{root}}pricing/#rates">크레딧으로 바로 시작{{ico:arrow}}</a>
       </div>
     </div>

@@ -81,7 +81,7 @@
     ctx.shadowColor = 'transparent';
     ctx.lineWidth = Math.max(1, h * 0.03); ctx.strokeStyle = 'rgba(255,255,255,.16)'; ctx.stroke();
     // 반짝이 표
-    MK.fpChip(ctx, x + pad, y + (h - ic) / 2, ic);   // 10.0 지문 마크
+    MK.fpChip(ctx, x + pad, y + (h - ic) / 2, ic);   // 10.0 AI 마크
     var cx = x + pad + ic + gap;
     ctx.fillStyle = '#FFFFFF'; ctx.textBaseline = 'middle'; ctx.font = '800 ' + f + 'px ' + FONT; ctx.fillText(text, cx, y + h / 2 + h * 0.015);
     cx += ctx.measureText(text).width + gap;

@@ -1,5 +1,5 @@
 /* AIMarker 공유 받기(웹 앱 공유 대상) 1.0
-   휴대폰 공유하기 → AIMarker 로 받은 이미지를 잠시 맡아 두었다가 지문 마크 화면(/mark/)으로 넘깁니다.
+   휴대폰 공유하기 → AIMarker 로 받은 이미지를 잠시 맡아 두었다가 파일 AI 마킹 화면(/mark/)으로 넘깁니다.
    그 밖의 요청은 건드리지 않습니다. 이미지는 이 기기 안에만 있고 서버로 보내지 않습니다. */
 self.addEventListener('install', function (e) {
   self.skipWaiting();

@@ -45,7 +45,7 @@
       if (window.gtag) try { window.gtag('event', 'geo_diag', { score: r.score, kind: r.kind }); } catch (eG) { /* 무시 */ }
     }).catch(function (e) {
       var m = e && e.name === 'AbortError' ? '사이트 응답이 늦습니다. 잠시 뒤 다시 시도해 주세요.' : (e && (e.message || e.msg)) || '지금은 진단하지 못했어요. 잠시 뒤 다시 시도해 주세요.';
-      out.innerHTML = '<div class="gr6-err"><b>진단하지 못했어요</b><p>' + esc(m) + '</p><p class="gr6-err-act"><button type="button" class="k-btn k-btn-l k-btn-s" data-regeo>다시 진단하기</button><a class="k-a" href="' + AM.root + 'contact/?type=geo">세팅 상담</a></p></div>';
+      out.innerHTML = '<div class="gr6-err"><b>진단하지 못했어요</b><p>' + esc(m) + '</p><p class="gr6-err-act"><button type="button" class="k-btn k-btn-l k-btn-s" data-regeo>다시 진단하기</button><a class="k-a" href="' + AM.root + 'contact/?type=geo">문의하기</a></p></div>';
       var rb = out.querySelector('[data-regeo]'); if (rb) rb.addEventListener('click', function () { run(url); });
     }).then(function () { clearInterval(tick); busy = false; btn.disabled = false; });
   }
@@ -59,7 +59,7 @@
     var bad = 0; r.parts.forEach(function (p) { p.items.forEach(function (it) { if (it.ok !== 'ok') bad++; }); });
     var head = '<div class="gr6-top">' + ring(r.score, r.grade, true) +
       '<div><h2>AI 검색 준비 점수 ' + r.score + '점 · ' + esc(r.grade) + '</h2><p>' + esc(r.kindKo) + (r.site && r.site.name ? ' · ' + esc(r.site.name) : '') + ' · 고칠 거리 ' + bad + '개' + (r.blocked && r.blocked.search ? ' · AI 검색 크롤러 ' + r.blocked.search + '곳이 막혀 있음' : '') + '</p><p class="meta">' + esc(r.url) + (r.cached ? ' · 최근 결과(6시간 안)' : '') + '</p></div>' +
-      '<div class="act"><a class="btn btn-p" href="' + root + 'contact/?plan=' + (r.kind === 'product' ? 'shop' : 'basic') + '&site=' + encodeURIComponent(r.host) + '">' + (r.kind === 'product' ? '쇼핑몰 세팅으로 한 번에 고치기' : '1회 세팅으로 한 번에 고치기') + '</a><a class="btn btn-g btn-s" href="#compare" id="gCmp">경쟁사와 비교</a><button class="btn btn-g btn-s" type="button" id="gSave">결과 받기(JSON)</button></div></div>';
+      '<div class="act"><a class="btn btn-p" href="' + root + 'geo/#packages">' + (r.kind === 'product' ? '쇼핑몰 세팅으로 한 번에 고치기' : '1회 세팅으로 한 번에 고치기') + '</a><a class="btn btn-g btn-s" href="#compare" id="gCmp">경쟁사와 비교</a><button class="btn btn-g btn-s" type="button" id="gSave">결과 받기(JSON)</button></div></div>';
     var empty = 0; r.parts.forEach(function (p) { empty += Math.max(0, p.max - p.got); });   // 8.0 아직 비어 있는 점수(영역별 만점 - 받은 점수)
     if (empty > 0) head += '<div class="x-gain"><b>+' + empty + '점</b><p>아직 비어 있는 점수입니다. 세팅에서는 이 빈칸을 고칠 코드로 채우고, 같은 기준으로 다시 진단해 전후를 비교해 드립니다.</p></div>';
     var parts = '<div class="gr6-box"><h3>항목별 결과<small>점수는 준비 상태를 보는 지표입니다</small></h3>' + r.parts.map(function (p) {
@@ -97,7 +97,7 @@
   /* ---------- 경쟁사와 나란히(8.0): 같은 기준으로 진단해 표로, 가장 크게 벌어진 영역 ---------- */
   var cf = $('#cmpForm');
   if (cf) {
-    var co = $('#cmpOut'), cbusy = false, CP = ['구조화 데이터', '질문과 답', '신뢰 · AI 표시'], ALLP = ['AI 크롤러 접근', '구조화 데이터', '본문 가독성', '질문과 답', '신뢰 · AI 표시'];
+    var co = $('#cmpOut'), cbusy = false, CP = ['구조화 데이터', '질문과 답', '신뢰 · AI 표시'], ALLP = ['AI 크롤러 접근', '구조화 데이터', '본문 가독성', '질문과 답', '신뢰 · AI 표시'];   // 서버 am.geo 영역 이름과 같아야 함
     var pOf = function (r, n) { return (r.parts || []).filter(function (x) { return x.name === n; })[0] || null; };
     var pTxt = function (r, n) { var p = pOf(r, n); return p ? p.got + '/' + p.max : '-'; };
     var pRate = function (r, n) { var p = pOf(r, n); return p && p.max ? p.got / p.max : 0; };
@@ -126,7 +126,7 @@
             var w = ALLP.map(function (n) { return { n: n, d: pRate(top, n) - pRate(mine, n) }; }).sort(function (x, y) { return y.d - x.d; })[0];
             sum = '<p class="sum warn">' + esc(top.host) + '보다 ' + gap + '점 낮습니다.' + (w && w.d > 0 ? ' 가장 크게 벌어진 영역은 ‘' + esc(w.n) + '’입니다.' : '') + '</p>';
           } else sum = '<p class="sum">비교한 곳 가운데 가장 높습니다(' + mine.score + '점). 아직 비어 있는 점수를 채우면 차이를 더 벌릴 수 있습니다.</p>';
-          sum += '<div class="sum" style="display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line)"><a class="btn btn-p btn-s" href="' + root + 'contact/?plan=basic&site=' + encodeURIComponent(mine.host || '') + '&opt=' + encodeURIComponent('경쟁사 비교 리포트') + '">차이를 세팅으로 채우기</a><button class="btn btn-g btn-s" type="button" data-cmp-mine>우리 페이지 고칠 거리 보기</button></div>';
+          sum += '<div class="sum" style="display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line)"><a class="btn btn-p btn-s" href="' + root + 'geo/#packages">차이를 세팅으로 채우기</a><button class="btn btn-g btn-s" type="button" data-buy="addon-compare">경쟁사 비교 리포트 주문</button><button class="btn btn-g btn-s" type="button" data-cmp-mine>우리 페이지 고칠 거리 보기</button></div>';
         } else if (!mine) sum = '<p class="sum warn">우리 주소를 진단하지 못했습니다. 주소를 확인해 주세요.</p>';
         if (sum) co.insertAdjacentHTML('beforeend', sum);
         var mb = co.querySelector('[data-cmp-mine]');

@@ -21,7 +21,7 @@
     ['shopify', '쇼피파이', ['<b>온라인 스토어 → 테마 → 코드 편집</b>에서 theme.liquid를 엽니다.', '<code>&lt;/body&gt;</code> 바로 위에 붙여 넣고 저장합니다.']],
     ['wix', '윅스', ['<b>설정 → 사용자 지정 코드 → 코드 추가</b>를 누릅니다.', '적용 범위는 모든 페이지, 위치는 Body 끝(end)으로 정하고 붙여 넣습니다.']],
     ['other', '직접 만든 사이트', ['모든 페이지에 공통으로 들어가는 HTML의 <code>&lt;/body&gt;</code> 바로 위에 붙여 넣으세요.', 'React, Vue 같은 앱도 index.html에 한 번 넣으면 화면이 바뀔 때마다 알아서 다시 찾습니다.']],
-    ['nocode', '스마트스토어 · 블로그', ['코드를 넣을 수 없는 곳은 이미지 파일에 직접 지문 마크를 넣어 올리세요: <a href="' + root + 'mark/">생성물 자동 마킹</a>.', '상세 설명 첫머리에는 아래 문구를 붙이세요.<div class="k-scan-out" id="plainTxt" style="margin-top:8px"></div>']]
+    ['nocode', '스마트스토어 · 블로그', ['코드를 넣을 수 없는 곳은 이미지 파일에 직접 AI 마크를 넣어 올리세요: <a href="' + root + 'mark/">파일 AI 마킹</a>.', '상세 설명 첫머리에는 아래 문구를 붙이세요.<div class="k-scan-out" id="plainTxt" style="margin-top:8px"></div>']]
   ];
   var PLATFORM_TAB = { imweb: 'imweb', cafe24: 'cafe24', wordpress: 'wordpress', godo: 'godo', shopify: 'shopify', wix: 'wix', smartstore: 'nocode', naverblog: 'nocode', tistory: 'other', makeshop: 'makeshop', sixshop: 'sixshop', squarespace: 'other', webflow: 'other', framer: 'other', oopy: 'other', gnuboard: 'gnuboard' };
 
@@ -55,7 +55,7 @@
     return {
       name: val('#name'), use: Array.prototype.filter.call(useBox.querySelectorAll('input'), function (c) { return c.checked; }).map(function (c) { return c.value; }).join(','),
       level: val('#level'), review: $('#review').value, privacy: $('#privacy').checked, contact: val('#contact'), style: $('#style').value, side: $('#side').value, theme: $('#theme').value,
-      date: d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2), tag: radio('tag') || 'tag', pos: radio('pos') || 'tl', tt: $('#tagTheme').value,
+      date: d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2), tag: radio('tag') || 'tag', pos: radio('pos') || 'tl', tt: $('#tagTheme').value, motion: $('#tagMotion') ? $('#tagMotion').value : '',
       meta: $('#optMeta').checked ? ($('#optCdn').checked ? 'all' : '') : '0', alt: $('#optAlt').checked, ld: $('#optLd').checked,
       gen: val('#ruleGen'), edit: val('#ruleEdit'), text: val('#ruleText'), path: val('#rulePath'), site: val('#siteId').toUpperCase().replace(/[^A-Z0-9\-]/g, '')
     };
@@ -74,6 +74,7 @@
     if (c.tag !== 'tag') a.push('data-tag="' + c.tag + '"');
     if (c.pos !== 'tl') a.push('data-pos="' + c.pos + '"');
     if (c.tt === 'light') a.push('data-tag-theme="light"');
+    if (c.motion === '0') a.push('data-motion="0"');
     if (c.meta) a.push('data-meta="' + c.meta + '"');
     if (!c.alt) a.push('data-alt="0"');
     if (!c.ld) a.push('data-ld="0"');
@@ -95,7 +96,7 @@
   function frameQ(c) {
     var q = ['embed=1'];
     if (frVer) q.push('v=' + frVer);
-    if (c.tag !== 'tag') q.push('tag=' + c.tag); if (c.pos !== 'tl') q.push('pos=' + c.pos); if (c.tt === 'light') q.push('tt=light');
+    if (c.tag !== 'tag') q.push('tag=' + c.tag); if (c.pos !== 'tl') q.push('pos=' + c.pos); if (c.tt === 'light') q.push('tt=light'); if (c.motion === '0') q.push('motion=0');
     if (c.style !== 'badge') q.push('style=' + c.style); q.push('side=' + (c.side === 'right' ? 'right' : 'left')); if (c.theme === 'dark') q.push('theme=dark');
     return q.join('&');
   }
@@ -134,9 +135,9 @@
   });
   $('#mailCode').addEventListener('click', function () {
     var tab = tabs.querySelector('[aria-selected="true"]'), pane = panes.querySelector('.k-ppane.on');
-    var body = '안녕하세요. 우리 사이트에 AIMarker AI 표시(지문 마크)를 붙이려고 합니다.\n모든 페이지에 공통으로 들어가는 곳(</body> 바로 위)에 아래 한 줄을 넣어 주세요.\n\n' + $('#codeOut').textContent +
+    var body = '안녕하세요. 우리 사이트에 AIMarker AI 마크를 붙이려고 합니다.\n모든 페이지에 공통으로 들어가는 곳(</body> 바로 위)에 아래 한 줄을 넣어 주세요.\n\n' + $('#codeOut').textContent +
       '\n\n[' + (tab ? tab.textContent : '설치') + ' 기준 넣는 곳]\n' + (pane ? pane.innerText.trim() : '') + '\n\n넣은 뒤 주소 뒤에 ?aimarker=check 를 붙여 열면 무엇이 표시됐는지 확인할 수 있습니다.\n설치 마법사: https://aimarker.kr/site/';
-    location.href = 'mailto:?subject=' + encodeURIComponent('[요청] 사이트에 AIMarker AI 표시 코드 넣기') + '&body=' + encodeURIComponent(body);
+    location.href = 'mailto:?subject=' + encodeURIComponent('[요청] 사이트에 AIMarker AI 마킹 코드 넣기') + '&body=' + encodeURIComponent(body);
   });
 
   /* 주소로 자동 채우기(서버가 공개된 첫 화면만 읽음, 저장하지 않음) */
@@ -153,7 +154,7 @@
       if (!r || !r.ok) { showScan(esc((r && r.message) || '읽지 못했어요. 업종만 골라도 바로 만들 수 있어요.'), 'err'); return; }
       var lines = [];
       if (r.platform && r.platform.name) lines.push('<b>' + esc(r.platform.name) + '</b>(으)로 만든 사이트로 보여요. 설치 방법을 맞춰 두었습니다.');
-      if (r.labeled) lines.push('이미 AI 표시가 붙어 있어요. 새 코드로 바꿔 붙이면 됩니다.');
+      if (r.labeled) lines.push('이미 AI 마크가 붙어 있어요. 새 코드로 바꿔 붙이면 됩니다.');
       if (r.chat && r.chat.length) lines.push(r.chatAi ? 'AI 상담 창(' + r.chat.map(esc).join(', ') + ')이 보여 \'상담 챗봇\'을 켜 두었어요.' : '상담 창(' + r.chat.map(esc).join(', ') + ')이 있어요. AI가 답한다면 \'상담 챗봇\'도 켜 주세요.');
       if (r.images && r.images.checked) lines.push('이미지 ' + r.images.checked + '장을 확인했고 ' + (r.images.ai ? '<b>' + r.images.ai + '장에서 AI 생성 기록</b>을 찾았어요. 설치하면 자동으로 표시됩니다.' : 'AI 생성 기록은 없었어요(올릴 때 기록이 지워지는 경우가 많아요). 필요하면 위치 규칙을 더하세요.'));
       if (r.cues && r.cues.length) lines.push('페이지에서 \'' + r.cues.slice(0, 3).map(esc).join('\', \'') + '\' 같은 말을 찾았어요.');

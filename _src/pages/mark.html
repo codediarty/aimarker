@@ -1,26 +1,26 @@
 <!--
 path: mark/
 key: mark
-title: 생성물 자동 마킹 · AI로 만든 이미지 · 영상 · 문서에 지문 마크 | AIMarker
-ogtitle: AI로 만든 파일에, 지문 마크를 자동으로
-desc: 이미지를 붙여 넣거나 끌어 놓거나 폴더를 연결해 두면(휴대폰은 공유하기), 보이는 AIMarker 지문 마크와 파일 속 출처 기록(IPTC)이 자동으로 들어갑니다. 서명된 마크(마크 번호 · 확인 페이지)까지 받으려면 자동 마킹으로. 이미지 · 영상 · 문서 · ZIP, 광고 · 가상인물 표시와 검색용 정보까지. 파일은 서버로 보내지 않습니다.
+title: 파일 AI 마킹 · AI로 만든 이미지 · 영상 · 문서에 AI 마크 | AIMarker
+ogtitle: AI로 만든 파일에, AI 마크를 자동으로
+desc: 이미지를 붙여 넣거나 끌어 놓거나 폴더를 연결해 두면(휴대폰은 공유하기), 보이는 AIMarker AI 마크와 파일 속 출처 기록(IPTC)이 자동으로 들어갑니다. 서명된 마크(마크 번호 · 확인 페이지)까지 받으려면 자동 마킹으로. 이미지 · 영상 · 문서 · ZIP, 광고 · 가상인물 표시와 검색용 정보까지. 파일은 서버로 보내지 않습니다.
 scripts: lib/aim-extract.js, lib/aim-seo.js, lib/aimarker-stamp.js, assets/vendor/qrcode.min.js, assets/markkit.js, assets/automark.js, assets/quickmark.js
 styles: assets/mark.css, assets/automark.css
 selflabel: footer
 -->
 <section class="k-apphead" aria-labelledby="h1">
   <div class="k-wrap">
-    <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}label/">AI 표시 자동화</a>{{ico:chev}}<span>생성물 자동 마킹</span></p>
+    <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}label/">AI 마킹</a>{{ico:chev}}<span>파일 AI 마킹</span></p>
     <div class="k-apphead-row"><div>
-      <h1 class="k-h1 sm" id="h1">AI로 만든 파일에,<br>지문 마크를 자동으로</h1>
-      <p class="k-lead">SNS에 올릴 이미지, 광고 소재, 보고서 그림까지. 붙여 넣거나 끌어 놓으면 바로, PC에서 폴더를 연결해 두면 새 파일마다, 휴대폰에서는 공유하기 한 번으로 지문 마크와 파일 속 출처 기록이 들어갑니다. 서명된 마크가 필요하면 아래 자동 마킹으로 마크 번호와 확인 페이지까지 받으세요.</p>
+      <h1 class="k-h1 sm" id="h1">AI로 만든 파일에,<br>AI 마크를 자동으로</h1>
+      <p class="k-lead">SNS에 올릴 이미지, 광고 소재, 보고서 그림까지. 붙여 넣거나 끌어 놓으면 바로, PC에서 폴더를 연결해 두면 새 파일마다, 휴대폰에서는 공유하기 한 번으로 AI 마크와 파일 속 출처 기록이 들어갑니다. 서명된 마크가 필요하면 아래 자동 마킹으로 마크 번호와 확인 페이지까지 받으세요.</p>
     </div><ul class="k-apphead-facts"><li>{{ico:lock}}파일은 서버로 가지 않습니다</li><li>{{ico:folder}}폴더 연결로 새 파일도 자동</li><li>{{ico:fingerprint}}사이트에 붙는 마크와 같은 모양</li></ul></div>
   </div>
 </section>
 
 <section class="k-sec k-0 k-qm-sec" id="auto" aria-labelledby="qmTitle" style="padding-top:8px;padding-bottom:56px">
   <div class="k-wrap">
-    <div class="k-qm-top"><h2 class="k-h3" id="qmTitle">빠른 지문 마크</h2><p>이미지(JPG, PNG, WebP)를 넣으면 마크가 들어간 사본이 바로 만들어집니다. 원본은 그대로 둡니다.</p></div>
+    <div class="k-qm-top"><h2 class="k-h3" id="qmTitle">빠른 AI 마킹</h2><p>이미지(JPG, PNG, WebP)를 넣으면 마크가 들어간 사본이 바로 만들어집니다. 원본은 그대로 둡니다.</p></div>
     <div class="k-qm" id="qm">
       <div class="k-qm-in">
         <div class="k-qm-drop" id="qmDrop" tabindex="0" role="region" aria-label="이미지를 끌어 놓거나 붙여 넣는 곳">
@@ -35,7 +35,7 @@ selflabel: footer
       </div>
       <div class="k-qm-pv">
         <div class="k-qm-hd"><b>마크 모양</b><span>고르는 대로 예시와 결과가 함께 바뀝니다</span></div>
-        <canvas class="k-qm-prev" id="qmPrev" width="800" height="600" role="img" aria-label="지문 마크 예시"></canvas>
+        <canvas class="k-qm-prev" id="qmPrev" width="800" height="600" role="img" aria-label="AI 마크 예시"></canvas>
       </div>
       <div class="k-qm-set">
         <div class="k-wz-row"><span class="lb">표시</span><div class="k-chipset">
@@ -58,9 +58,9 @@ selflabel: footer
       <div><span class="ic">{{ico:monitor}}</span><b>PC: 폴더 연결</b><p>AI 도구가 이미지를 저장하는 폴더를 연결해 두면, 새 이미지가 들어올 때마다 'AIMarker 표시본' 폴더에 마크 사본을 만듭니다. 크롬, 엣지.</p></div>
       <div><span class="ic">{{ico:phone}}</span><b>휴대폰: 공유하기</b><p>AIMarker를 홈 화면에 추가하면, AI 앱이나 사진첩의 공유하기에서 AIMarker를 골라 바로 마크를 넣고 다시 공유합니다. 안드로이드.</p></div>
       <div><span class="ic">{{ico:code}}</span><b>AI 서비스: 만들 때 바로</b><p>이미지를 만들어 주는 서비스라면 <a href="{{root}}lib/aimarker-stamp.js">aimarker-stamp.js</a>나 <a href="{{root}}developers/">API</a>로 결과물이 나가는 순간 마크를 넣습니다.</p></div>
-      <div><span class="ic">{{ico:globe}}</span><b>웹사이트: 한 줄 설치</b><p>이미 사이트에 올린 AI 이미지는 <a href="{{root}}label/">AI 표시 자동화</a>가 찾아서 같은 지문 마크를 붙입니다.</p></div>
+      <div><span class="ic">{{ico:globe}}</span><b>웹사이트: 한 줄 설치</b><p>이미 사이트에 올린 AI 이미지는 <a href="{{root}}label/">AI 마킹</a>이 찾아서 같은 AI 마크를 붙입니다.</p></div>
     </div>
-    <p class="k-small" style="margin-top:14px">빠른 지문 마크는 사용자가 밝힌 대로 표시합니다(자기 선언). 파일 속 기록을 확인한 서명된 마크, 영상과 문서, 광고 표시가 필요하면 아래 자동 마킹을 쓰세요.</p>
+    <p class="k-small" style="margin-top:14px">빠른 AI 마킹은 사용자가 밝힌 대로 표시합니다(자기 선언). 파일 속 기록을 확인한 서명된 마크, 영상과 문서, 광고 표시가 필요하면 아래 자동 마킹을 쓰세요.</p>
   </div>
 </section>
 

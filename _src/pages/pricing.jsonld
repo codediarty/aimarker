@@ -2,7 +2,7 @@
  "@context": "https://schema.org",
  "@type": "Product",
  "name": "AIMarker",
- "description": "AI가 만든 이미지 · 영상 · 글에 지문 마크를 자동으로 붙이는 AI 표시 자동화, ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리 회사를 읽고 인용하도록 돕는 AI 검색 노출 최적화, 생성형 AI 서비스의 결과물 표시 의무 대응, 개인 AI 작성률 검사와 휴머나이징. 결제는 운영사 성균관컨설팅.",
+ "description": "AI가 만든 이미지 · 영상 · 글에 AI 마크를 자동으로 붙이는 AI 마킹, ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리 회사를 읽고 인용하도록 돕는 AI 검색 노출 최적화, 생성형 AI 서비스의 결과물 표시 의무 대응, 개인 AI 작성률 검사와 휴머나이징. 결제는 운영사 성균관컨설팅. 상담 없이 크레딧 하나로 모든 기능을 씁니다(1크레딧 10원, 충전 3,000원부터).",
  "brand": {
   "@type": "Brand",
   "name": "AIMarker"
@@ -11,9 +11,9 @@
  "offers": [
   {
    "@type": "Offer",
-   "name": "AI 표시 자동화 무료",
-   "category": "AI 표시 자동화",
-   "description": "개인 · 1인 사이트 · 코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글 자동 표시 · 지문 마크와 근거 창, AI 활용 안내 창 · 점검 모드: 무엇을 왜 표시했는지 한눈에 · 검색 · AI가 읽는 표시(구조화 데이터) 자동",
+   "name": "AI 마킹 무료",
+   "category": "AI 마킹",
+   "description": "개인 · 1인 사이트 · 코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글 자동 표시 · AI 마크와 근거 창, AI 활용 안내 창 · 점검 모드: 무엇을 왜 표시했는지 한눈에 · 검색 · AI가 읽는 표시(구조화 데이터) 자동",
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#label",
    "price": 0,
@@ -27,9 +27,9 @@
   },
   {
    "@type": "Offer",
-   "name": "AI 표시 자동화 스탠다드",
-   "category": "AI 표시 자동화",
-   "description": "1인 사업자 · 소상공인 · 무료의 모든 기능 · AIMarker 등록 사이트: 확인 페이지에 회사와 담당자 표시 · 안내 창에 문의처와 등록 확인 링크 · 매달 AI 표시 현황 메일 리포트",
+   "name": "AI 마킹 스탠다드",
+   "category": "AI 마킹",
+   "description": "1인 사업자 · 소상공인 · 무료의 모든 기능 · AIMarker 등록 사이트: 확인 페이지에 회사와 담당자 표시 · 안내 창에 문의처와 등록 확인 링크 · 매달 AI 마킹 현황 메일 리포트",
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#label",
    "price": 9900,
@@ -43,9 +43,9 @@
   },
   {
    "@type": "Offer",
-   "name": "AI 표시 자동화 비즈니스",
-   "category": "AI 표시 자동화",
-   "description": "소규모 · 중견 기업 · 스탠다드의 모든 기능, 사이트 3개 · 위치 규칙 설정 대행(상세페이지 · 배너 · 블로그) · 표시 누락 점검 매주, 새 AI 콘텐츠 알림 · AI 활용 고지문과 사내 AI 표시 가이드",
+   "name": "AI 마킹 비즈니스",
+   "category": "AI 마킹",
+   "description": "소규모 · 중견 기업 · 스탠다드의 모든 기능, 사이트 3개 · 위치 규칙 설정 대행(상세페이지 · 배너 · 블로그) · 표시 누락 점검 매주, 새 AI 콘텐츠 알림 · AI 활용 고지문과 사내 AI 마킹 가이드",
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#label",
    "price": 49000,
@@ -59,9 +59,9 @@
   },
   {
    "@type": "Offer",
-   "name": "AI 서비스 표시 의무 대응 스타터",
-   "category": "AI 서비스 표시 의무 대응",
-   "description": "생성형 AI 서비스를 막 시작한 곳 · 결과물마다 서명된 AIMarker 마크(월 1만 건) · 파일 속 출처 기록(IPTC · XMP)과 보이는 지문 마크 · 이용자 사전 고지 문구와 약관 문안 · 다운로드할 때 한 번 안내하는 창",
+   "name": "AI 서비스 마킹 스타터",
+   "category": "AI 서비스 마킹",
+   "description": "생성형 AI 서비스를 막 시작한 곳 · 결과물마다 서명된 AIMarker 마크(월 1만 건) · 파일 속 출처 기록(IPTC · XMP)과 보이는 AI 마크 · 이용자 사전 고지 문구와 약관 문안 · 다운로드할 때 한 번 안내하는 창",
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#service",
    "price": 99000,
@@ -157,7 +157,7 @@
    "@type": "Offer",
    "name": "AI 신뢰 올인원",
    "category": "묶음",
-   "description": "AI 검색 노출 최적화 스탠다드(1회) · AI 표시 자동화 비즈니스 12개월 · AI 활용 고지문 · 사내 표시 가이드",
+   "description": "AI 검색 노출 최적화 스탠다드(1회) · AI 마킹 비즈니스 12개월 · AI 활용 고지문 · 사내 AI 마킹 가이드",
    "price": 790000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#geo",
@@ -231,7 +231,7 @@
   },
   {
    "@type": "Offer",
-   "name": "기업 크레딧 12,000",
+   "name": "크레딧 12,000(팀 · 기관, 세금계산서)",
    "category": "기업",
    "description": "10,000크레딧 + 2,000크레딧 더 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
    "price": 100000,
@@ -246,7 +246,7 @@
   },
   {
    "@type": "Offer",
-   "name": "기업 크레딧 39,000",
+   "name": "크레딧 39,000(팀 · 기관, 세금계산서)",
    "category": "기업",
    "description": "30,000크레딧 + 9,000크레딧 더 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
    "price": 300000,
@@ -261,7 +261,7 @@
   },
   {
    "@type": "Offer",
-   "name": "기업 크레딧 140,000",
+   "name": "크레딧 140,000(팀 · 기관, 세금계산서)",
    "category": "기업",
    "description": "100,000크레딧 + 40,000크레딧 더 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
    "price": 1000000,

@@ -125,7 +125,7 @@
       if (!r || !r.ok) { showScan('<span>' + ((r && r.message) || '진단하지 못했어요. 업종을 고르면 바로 만들 수 있어요.') + '</span>', 'a'); return; }
       var lines = [];
       if (r.platform && r.platform.name) lines.push('<b>' + escH(r.platform.name) + '</b>(으)로 만든 사이트로 보여요. 설치 방법을 맞춰 두었습니다.');
-      if (r.labeled) lines.push('이미 AI 표시가 붙어 있어요. 새 코드로 바꿔 붙이면 됩니다.');
+      if (r.labeled) lines.push('이미 AI 마크가 붙어 있어요. 새 코드로 바꿔 붙이면 됩니다.');
       if (r.chat && r.chat.length) lines.push(r.chatAi ? 'AI 상담 창(' + r.chat.map(escH).join(', ') + ')이 보여 \'상담 챗봇\'을 켜 두었어요.' : '상담 창(' + r.chat.map(escH).join(', ') + ')이 있어요. AI가 답한다면 \'상담 챗봇\'도 켜 주세요.');
       if (r.images && r.images.checked) lines.push('이미지 ' + r.images.checked + '장을 확인했고 ' + (r.images.ai ? '<b>' + r.images.ai + '장에서 AI 생성 기록</b>을 찾았어요.' : 'AI 생성 기록은 없었어요(올릴 때 기록이 지워지는 경우가 많아요).') + (r.images.c2pa ? ' 출처 정보(C2PA)가 든 이미지도 ' + r.images.c2pa + '장 있어요.' : ''));
       if (r.cues && r.cues.length) lines.push('페이지에서 \'' + r.cues.slice(0, 3).map(escH).join('\', \'') + '\' 같은 말을 찾았어요.');

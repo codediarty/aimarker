@@ -136,7 +136,9 @@
       });
     });
     function fromHash() {
-      var id = { '#site': 'bp-geo', '#geo': 'bp-geo', '#file': 'bp-label', '#label': 'bp-label', '#mark': 'bp-mark', '#commerce': 'bp-commerce', '#compliance': 'bp-compliance' }[location.hash];
+      // 13.0: AI 마킹(사이트 · 파일)은 위 'AI 마킹' 구획으로
+      if (/^#(file|label|mark)$/.test(location.hash)) { var mk = document.getElementById('marking'); if (mk) mk.scrollIntoView(); return; }
+      var id = { '#site': 'bp-geo', '#geo': 'bp-geo', '#commerce': 'bp-commerce', '#compliance': 'bp-compliance' }[location.hash];
       if (id) { show(id); var bz = document.getElementById('biz'); if (bz) bz.scrollIntoView(); }
     }
     fromHash(); window.addEventListener('hashchange', fromHash);
@@ -332,6 +334,25 @@
 
     foot.addEventListener('click', function (e) { if (e.target.closest('[data-hu]')) focusTool(); });
     window.addEventListener('am:hz-out', function () { stop(); });   // 검사 결과가 나오면 예시는 멈춤
+  })();
+
+  /* 13.0 움직임 멈추기: 방문자가 AI 마크 근거 창 · 안내 창에서 멈추면(m.js, 이 브라우저에 기억) 이 사이트의 떠 있는 그림도 함께 멈춤 */
+  (function () {
+    function apply(on) { document.documentElement.classList.toggle('am-still', !on); }
+    try { apply(localStorage.getItem('aimarker-motion') !== 'off'); } catch (e) { /* 저장소를 못 쓰면 그대로 */ }
+    window.addEventListener('aimarker:motion', function (e) { apply(!!(e.detail && e.detail.on)); });
+  })();
+
+  /* 13.0 주소의 #위치: 글꼴이 늦게 들어와 줄이 바뀌면 다시 맞춤(그사이 방문자가 움직이지 않았을 때만) */
+  (function () {
+    var h = location.hash;
+    if (!h || h.length < 2 || !document.fonts || !document.fonts.ready) return;
+    var el = null;
+    try { el = document.getElementById(decodeURIComponent(h.slice(1))); } catch (e) { return; }
+    if (!el) return;
+    var moved = false;
+    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (ev) { window.addEventListener(ev, function () { moved = true; }, { passive: true, once: true }); });
+    document.fonts.ready.then(function () { setTimeout(function () { if (!moved && location.hash === h) el.scrollIntoView(); }, 60); });
   })();
 })();
 /* 휴대폰 공유하기로 이미지 받기(웹 앱 공유 대상): 공유받은 요청만 맡는 작은 서비스 워커를 둡니다 */

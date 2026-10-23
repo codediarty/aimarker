@@ -21,8 +21,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261021e"
-TODAY = "2026-10-20"
+VER = "20261023a"
+TODAY = "2026-10-23"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
@@ -38,20 +38,20 @@ SHOP_IDX = {
     "c3": "", "c10": "", "c30": "", "c50": "", "credit-b10": "", "credit-b30": "", "credit-b100": "",
 }
 CATALOG = {
-    "label": {"name": "AI 표시 자동화", "vat": "부가세 별도", "tiers": [
+    "label": {"name": "AI 마킹", "vat": "부가세 별도", "tiers": [
         {"id": "label-free", "name": "무료", "who": "개인 · 1인 사이트", "price": "0원", "note": "사이트 1개까지", "per": "", "cta": "무료로 시작", "href": "site/",
-         "feat": ["코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글 자동 표시", "지문 마크와 근거 창, AI 활용 안내 창", "점검 모드: 무엇을 왜 표시했는지 한눈에", "검색 · AI가 읽는 표시(구조화 데이터) 자동", "생성물 지문 마크와 서명 마크(웹 도구) 무료"]},
+         "feat": ["코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글에 AI 마크 자동 부착", "AI 마크와 근거 창, AI 활용 안내 창", "점검 모드: 무엇을 왜 표시했는지 한눈에", "검색 · AI가 읽는 표시(구조화 데이터) 자동", "파일 AI 마킹과 서명 마크(웹 도구) 무료"]},
         {"id": "label-standard", "name": "스탠다드", "who": "1인 사업자 · 소상공인", "price": "9,900원", "per": "월", "m": 9900, "y": 99000,
-         "feat": ["무료의 모든 기능", "AIMarker 등록 사이트: 확인 페이지에 회사와 담당자 표시", "안내 창에 문의처와 등록 확인 링크", "매달 AI 표시 현황 메일 리포트", "서명 마크에 회사 이름과 등록 사이트 표시", "설치 도움 1회(원격)"]},
+         "feat": ["무료의 모든 기능", "AIMarker 등록 사이트: 확인 페이지에 회사와 담당자 표시", "안내 창에 문의처와 등록 확인 링크", "매달 AI 마킹 현황 메일 리포트", "서명 마크에 회사 이름과 등록 사이트 표시", "설치 도움 1회(원격)"]},
         {"id": "label-business", "name": "비즈니스", "who": "소규모 · 중견 기업", "price": "49,000원", "per": "월", "m": 49000, "y": 490000, "best": "추천",
-         "feat": ["스탠다드의 모든 기능, 사이트 3개", "위치 규칙 설정 대행(상세페이지 · 배너 · 블로그)", "표시 누락 점검 매주, 새 AI 콘텐츠 알림", "AI 활용 고지문과 사내 AI 표시 가이드", "API로 서명 마크 대량 발급, 감사 기록과 분기 보고서", "API 키(하루 1만 회), 담당자 온라인 교육 1회"]},
+         "feat": ["스탠다드의 모든 기능, 사이트 3개", "위치 규칙 설정 대행(상세페이지 · 배너 · 블로그)", "표시 누락 점검 매주, 새 AI 콘텐츠 알림", "AI 활용 고지문과 사내 AI 마킹 가이드", "API로 서명 마크 대량 발급, 감사 기록과 분기 보고서", "API 키(하루 1만 회), 담당자 온라인 교육 1회"]},
         {"id": "label-enterprise", "name": "엔터프라이즈", "who": "대기업 · 공공기관 · 학교", "price": "견적", "note": "월 30만 원부터", "per": "", "cta": "견적 받기", "href": "contact/?plan=label-enterprise&type=enterprise",
          "feat": ["사이트 · 건수 제한 없음", "우리 브랜드로 표시(화이트 라벨)", "전용 규칙과 내부 시스템 연동(API · MCP · 대량 처리)", "보안 검토, 계약서 · 세금계산서, 서비스 수준 협약", "표시 정책 수립과 임직원 교육"]},
     ]},
-    "service": {"name": "AI 서비스 표시 의무 대응", "vat": "부가세 별도", "tiers": [
+    "service": {"name": "AI 서비스 마킹", "vat": "부가세 별도", "tiers": [
         {"id": "service-starter", "name": "스타터", "who": "생성형 AI 서비스를 막 시작한 곳", "price": "99,000원", "per": "월", "m": 99000,
-         "feat": ["결과물마다 서명된 AIMarker 마크(월 1만 건)", "파일 속 출처 기록(IPTC · XMP)과 보이는 지문 마크", "이용자 사전 고지 문구와 약관 문안", "다운로드할 때 한 번 안내하는 창", "이메일 지원"]},
-        {"id": "service-growth", "name": "그로스", "who": "이용자가 빠르게 느는 서비스", "price": "490,000원", "per": "월", "best": "추천", "cta": "도입 상담", "href": "contact/?plan=service-growth&type=ai",
+         "feat": ["결과물마다 서명된 AIMarker 마크(월 1만 건)", "파일 속 출처 기록(IPTC · XMP)과 보이는 AI 마크", "이용자 사전 고지 문구와 약관 문안", "다운로드할 때 한 번 안내하는 창", "이메일 지원"]},
+        {"id": "service-growth", "name": "그로스", "who": "이용자가 빠르게 느는 서비스", "price": "490,000원", "per": "월", "m": 490000, "best": "추천",
          "feat": ["서명된 마크 월 10만 건", "AI기본법 제31조 표시 정책 문서", "실제와 헷갈리는 결과물(딥페이크) 보이는 표시 규칙", "감사 기록과 분기 보고서", "기술 지원(영업일 당일 답변)"]},
         {"id": "service-enterprise", "name": "엔터프라이즈", "who": "대형 플랫폼 · 기관", "price": "견적", "note": "처리 건수와 설치 방식에 맞춰", "per": "", "cta": "견적 받기", "href": "contact/?plan=service-enterprise&type=ai",
          "feat": ["대량 처리와 전용 한도", "사내 설치형 판정 엔진 라이선스", "보안 검토와 서비스 수준 협약", "넘는 건수는 1,000건 단위로 정산"]},
@@ -62,7 +62,7 @@ CATALOG = {
         {"id": "geo-standard", "name": "스탠다드", "who": "소규모 기업, 페이지 30개까지", "price": "490,000원", "per": "1회", "m": 490000, "best": "추천",
          "feat": ["라이트의 모든 것", "AI가 인용하는 자주 묻는 질문 20개 작성 · 설치", "페이지별 제목 · 설명 · 요약 문장 다듬기", "경쟁사 1곳과 나란히 비교", "빙 웹마스터 등록, 브랜드 정보 한 줄로 맞추기", "첫 달 AI 답변 언급 리포트"]},
         {"id": "geo-pro", "name": "프로", "who": "쇼핑몰 · 중견 기업, 페이지 100개 · 상품 500개", "price": "1,490,000원", "per": "1회", "m": 1490000,
-         "feat": ["스탠다드의 모든 것", "상품 구조화 데이터와 AI 쇼핑 상품 피드", "가격 · 재고 · 리뷰 정보 구조화", "경쟁사 3곳 비교 리포트", "상품 이미지 AI 표시 2,000건", "원격 설치까지"]},
+         "feat": ["스탠다드의 모든 것", "상품 구조화 데이터와 AI 쇼핑 상품 피드", "가격 · 재고 · 리뷰 정보 구조화", "경쟁사 3곳 비교 리포트", "상품 이미지 AI 마킹 2,000건", "원격 설치까지"]},
         {"id": "geo-enterprise", "name": "엔터프라이즈", "who": "대기업 · 공공기관 · 학교, 여러 사이트", "price": "견적", "note": "390만 원부터", "per": "", "cta": "견적 받기", "href": "contact/?plan=geo-enterprise&type=enterprise",
          "feat": ["여러 사이트와 영문 페이지", "맞춤 콘텐츠 전략과 분기 리포트", "담당자 교육과 내부 가이드", "계약서 · 세금계산서"]},
     ]},
@@ -73,18 +73,31 @@ CATALOG = {
          "feat": ["관리의 모든 것", "AI가 인용하기 좋은 글 매달 2편", "자주 묻는 질문 · 상품 피드 갱신", "경쟁사 추적과 분기 전략 회의"]},
     ]},
 }
-CATALOG["credit"] = {"name": "기업 크레딧", "vat": "부가세 별도, 충전", "tiers": [
-    {"id": "credit-b10", "name": "12,000크레딧", "full": "기업 크레딧 12,000", "who": "팀 하나 · 수업 한 반", "price": "100,000원", "per": "충전", "m": 100000, "note": "10,000크레딧 + 2,000크레딧 더", "cta": "충전하기",
-     "feat": ["AI 작성률 검사 · AI 휴머나이징을 한 코드로 함께", "API · MCP 요청에도 같은 코드(pass)", "AIMarker 요금제 · 세팅 · 옵션 결제에도", "세금계산서, 유효기간 5년"]},
-    {"id": "credit-b30", "name": "39,000크레딧", "full": "기업 크레딧 39,000", "who": "여러 팀 · 학과", "price": "300,000원", "per": "충전", "m": 300000, "best": "추천", "note": "30,000크레딧 + 9,000크레딧 더", "cta": "충전하기",
+CATALOG["credit"] = {"name": "크레딧 충전", "vat": "부가세 별도, 세금계산서", "tiers": [
+    {"id": "credit-b10", "name": "12,000크레딧", "full": "크레딧 12,000(세금계산서)", "who": "팀 하나 · 수업 한 반", "price": "100,000원", "per": "충전", "m": 100000, "note": "10,000크레딧 + 2,000크레딧 더", "cta": "충전하기",
+     "feat": ["AI 작성률 검사 · AI 휴머나이징을 한 코드로 함께", "API · MCP 요청에도 같은 코드(pass)", "AI 마킹 · AI 검색 요금제와 옵션 결제에도", "세금계산서, 유효기간 5년"]},
+    {"id": "credit-b30", "name": "39,000크레딧", "full": "크레딧 39,000(세금계산서)", "who": "여러 팀 · 학과", "price": "300,000원", "per": "충전", "m": 300000, "best": "추천", "note": "30,000크레딧 + 9,000크레딧 더", "cta": "충전하기",
      "feat": ["12,000크레딧의 모든 것", "쓴 내역 정리(요청 시)", "부서 · 반별로 코드 나누기(요청 시)", "세금계산서, 유효기간 5년"]},
-    {"id": "credit-b100", "name": "140,000크레딧", "full": "기업 크레딧 140,000", "who": "기관 전체 · 대학", "price": "1,000,000원", "per": "충전", "m": 1000000, "note": "100,000크레딧 + 40,000크레딧 더", "cta": "충전하기",
+    {"id": "credit-b100", "name": "140,000크레딧", "full": "크레딧 140,000(세금계산서)", "who": "기관 전체 · 대학", "price": "1,000,000원", "per": "충전", "m": 1000000, "note": "100,000크레딧 + 40,000크레딧 더", "cta": "충전하기",
      "feat": ["39,000크레딧의 모든 것", "담당자 안내와 사용 가이드", "기관 계약서", "세금계산서, 유효기간 5년"]},
     {"id": "credit-ent", "name": "맞춤", "who": "더 많이 · 정기 충전", "price": "견적", "note": "기관 계약 · 연간 충전", "per": "", "cta": "견적 받기", "href": "contact/?plan=credit-ent&type=enterprise",
      "feat": ["필요한 만큼 맞춰 충전", "정기 충전 · 연간 계약", "전용 API 한도", "계약서 · 세금계산서"]},
 ]}
+# 13.0 추가 옵션도 결제 시트에서 바로 주문(카드 · 크레딧 · 계좌이체). 요금 칸으로는 쓰지 않음
+CATALOG["addon"] = {"name": "추가 옵션", "vat": "부가세 별도", "tiers": [
+    {"id": "addon-install", "name": "설치 대행", "full": "AI 마킹 설치 대행", "who": "코드 넣기가 어려운 사이트", "price": "99,000원", "per": "1회", "m": 99000,
+     "feat": ["우리 사이트에 코드 한 줄을 대신 넣기(원격, 사이트 1개)", "위치 규칙 정하기", "점검 모드로 확인까지"]},
+    {"id": "addon-compare", "name": "경쟁사 비교 리포트", "full": "AI 검색 경쟁사 비교 리포트", "who": "AI 검색 경쟁이 센 업종", "price": "190,000원", "per": "1회", "m": 190000,
+     "feat": ["경쟁사 3곳까지 AI 검색 준비 점수", "영역별 차이와 따라잡을 순서", "한 권의 리포트로"]},
+    {"id": "addon-check", "name": "광고 문구 검수", "full": "광고 문구 검수(월 50건)", "who": "상세페이지 · 배너 · SNS 문구를 자주 내는 곳", "price": "99,000원", "per": "월", "m": 99000,
+     "feat": ["월 50건의 위험 후보와 근거, 바꿀 말", "광고주 승인 링크", "법률 자문은 아닙니다"]},
+    {"id": "addon-guide", "name": "사내 AI 마킹 가이드", "full": "사내 AI 마킹 가이드", "who": "표시 기준을 정해야 하는 회사 · 기관", "price": "900,000원", "per": "1회", "m": 900000,
+     "feat": ["표시 문구, 위치, 검토 절차", "한국AI윤리위원회 표시 기준 바탕", "우리 회사 기준 문서"]},
+    {"id": "addon-edu", "name": "AI 마킹 실무 교육", "full": "AI 마킹 실무 교육(2시간)", "who": "담당자 교육이 필요한 곳", "price": "500,000원", "per": "1회", "m": 500000,
+     "feat": ["담당자 대상 2시간(온라인 또는 방문)", "AI기본법과 플랫폼 규칙", "우리 회사 사례로"]},
+]}
 BUNDLES = [{"id": "bundle-trust", "name": "AI 신뢰 올인원", "who": "소규모 · 중견 기업", "was": "980,000원", "price": "790,000원", "m": 790000,
-            "feat": ["AI 검색 노출 최적화 스탠다드(1회)", "AI 표시 자동화 비즈니스 12개월", "AI 활용 고지문 · 사내 표시 가이드"]}]
+            "feat": ["AI 검색 노출 최적화 스탠다드(1회)", "AI 마킹 비즈니스 12개월", "AI 활용 고지문 · 사내 AI 마킹 가이드"]}]
 
 
 def tiers_html(key, root, pick=None):
@@ -106,6 +119,10 @@ def tiers_html(key, root, pick=None):
             sub = '12개월 %s원(10개월 요금)' % format(t["y"], ",")
         else:
             sub = t.get("note", "")
+        # 13.0 크레딧 하나로: 상품 금액(부가세 별도) 1크레딧 10원
+        if t.get("m") and key != "credit":
+            crs = '%s%s크레딧' % ("월 " if t.get("per") == "월" else "", format(t["m"] // 10, ","))
+            sub = '<b class="crn">%s</b>%s' % (crs, (' · ' + sub) if sub else '')
         sub = '<p class="yr">%s</p>' % (sub or '<span aria-hidden="true">&nbsp;</span>')
         best = (' <em class="k-best">%s</em>' % t["best"]) if t.get("best") else ""
         kind = "k-btn-p" if t.get("best") else "k-btn-l"
@@ -116,7 +133,8 @@ def tiers_html(key, root, pick=None):
         out.append('<div class="k-plan%s" id="%s"><div class="hd"><h3>%s%s</h3><p class="who">%s</p></div><p class="pr"><b>%s</b>%s</p>%s%s<ul>%s</ul></div>'
                    % (" best" if t.get("best") else "", t["id"], t["name"], best, t["who"], t["price"], per, sub, btn, feats))
     n = len(c["tiers"])
-    return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">%s. 결제는 공식 결제처 성균관컨설팅에서 카드, 간편결제, 계좌이체로 합니다.</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"])
+    tail = '' if key == "credit" else ' 충전해 둔 크레딧으로도 냅니다(상품 금액 1크레딧 10원).'
+    return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">%s. 결제는 공식 결제처 성균관컨설팅에서 카드, 간편결제, 계좌이체로 합니다.%s</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"], tail)
 
 
 # 12.0 크레딧(AI 작성률 검사 · AI 휴머나이징). 글 검사, 요금, 개인용 페이지가 같은 칸을 씀(값은 서버 PASS_.PRODUCTS · PASS_.CR 와 같게)
@@ -169,6 +187,90 @@ def credit_cost_html():
     return ('<table class="k-table cr-cost"><thead><tr><th scope="col">하는 일</th><th scope="col">빠지는 크레딧</th><th scope="col">3,000자 글이면</th></tr></thead><tbody>%s</tbody></table>'
             '<p class="k-small cr-note">1크레딧은 10원으로 셉니다. 글자 수만큼 빠지고, 처리하지 못한 요청은 빠지지 않습니다. 크레딧은 발급 또는 마지막 충전부터 5년 동안 사용할 수 있고, 모자라면 같은 코드에 충전합니다. '
             '충전한 날부터 7일 안에는 쓰고 남은 유료 크레딧을 그대로, 그 뒤에는 10%%를 빼고 환불해 드립니다(<a href="{{root}}terms/#pass">이용약관 제7조의3</a>).</p>') % tr
+
+
+def credit_packs_html(root):
+    """13.0 크레딧 충전 칸: 누구나(부가세 포함, 그 자리 충전 창) + 팀 · 기관(부가세 별도, 세금계산서, 결제 시트)"""
+    cyc = credit_cost("unit", 3000) + credit_cost("pro", 3000)
+    out = ['<div class="cr13-packs-l"><b>개인 크레딧</b><span>누구나 · 부가세 포함 · 결제하면 크레딧 코드를 메일로</span></div><div class="cr13-packs">']
+    for t in CREDITS:
+        best = bool(t.get("tag"))
+        bonus = t["cr"] - t["base"]
+        out.append('<article class="cr13-pack%s" id="pk-%s">%s<h3>%s<small>크레딧</small></h3><p class="pr">%s원 <span>부가세 포함</span></p><p class="bn">%s</p><p class="who">%s · 3,000자 검사와 휴머나이징 약 %d번</p><a class="k-btn %s" href="%shumanize/#buy-%s">충전하기</a></article>'
+                   % (" best" if best else "", t["id"], ('<span class="tag">%s</span>' % t["tag"]) if best else "", format(t["cr"], ","), format(t["price"], ","),
+                      ("%s크레딧 더" % format(bonus, ",")) if bonus else "&nbsp;", t["who"], t["cr"] // cyc, "k-btn-p" if best else "k-btn-l", root, t["id"]))
+    out.append('</div><div class="cr13-packs-l"><b>기업 크레딧</b><span>팀 · 기관 · 학교 · 부가세 별도 · 세금계산서 · 한 코드를 팀이 함께</span></div><div class="cr13-packs">')
+    for t in CATALOG["credit"]["tiers"]:
+        if not t.get("m"):
+            out.append('<article class="cr13-pack" id="pk-ent"><h3>맞춤</h3><p class="pr">견적 <span>기관 계약 · 연간 충전</span></p><p class="bn">&nbsp;</p><p class="who">%s</p><a class="k-btn k-btn-l" href="%s%s">견적 받기</a></article>'
+                       % (t["who"], root, t["href"].replace("&", "&amp;")))
+            continue
+        cr = int(t["name"].replace(",", "").replace("크레딧", ""))
+        base = t["m"] // 10
+        best = bool(t.get("best"))
+        out.append('<article class="cr13-pack%s" id="pk-%s">%s<h3>%s<small>크레딧</small></h3><p class="pr">%s원 <span>부가세 별도</span></p><p class="bn">%s</p><p class="who">%s</p><button class="k-btn %s" type="button" data-buy="%s">충전하기</button></article>'
+                   % (" best" if best else "", t["id"], ('<span class="tag">%s</span>' % t["best"]) if best else "", format(cr, ","), format(t["m"], ","),
+                      ("%s크레딧 더" % format(cr - base, ",")) if cr > base else "&nbsp;", t["who"], "k-btn-p" if best else "k-btn-l", t["id"]))
+    out.append('</div>')
+    return "".join(out)
+
+
+def credit_rates_html(root):
+    """13.0 크레딧 가격표: 모든 기능을 같은 크레딧으로(상품 금액 1크레딧 10원, 기업 상품은 부가세 별도 금액 기준)"""
+    def tier(key, tid):
+        for t in CATALOG[key]["tiers"]:
+            if t["id"] == tid:
+                return t
+        raise KeyError(tid)
+    def crs(t):
+        n = format(t["m"] // 10, ",")
+        if t.get("per") == "월":
+            return '월 %s크레딧' % n, '%s원 / 월%s' % (format(t["m"], ","), (' · 12개월 %s크레딧' % format(t["y"] // 10, ",")) if t.get("y") else '')
+        return '%s크레딧' % n, '%s원%s' % (format(t["m"], ","), ' · 1회' if t.get("per") == "1회" else '')
+    def buy(tid, label="결제하기"):
+        return '<button class="k-btn k-btn-l k-btn-s" type="button" data-buy="%s">%s</button>' % (tid, label)
+    def link(h, label):
+        return '<a class="k-btn k-btn-l k-btn-s" href="%s%s">%s</a>' % (root, h, label)
+    rows = []
+    def grp(name):
+        rows.append('<tr class="grp"><th colspan="4" scope="colgroup">%s</th></tr>' % name)
+    def row(name, sub, what, cr, crsub, go, free=False):
+        rows.append('<tr><th scope="row">%s%s</th><td>%s</td><td class="cr%s">%s%s</td><td class="go">%s</td></tr>'
+                    % (name, ('<small>%s</small>' % sub) if sub else '', what, " free" if free else "", cr, ('<small>%s</small>' % crsub) if crsub else '', go))
+    u, pr = CREDIT_COST["unit"], CREDIT_COST["pro"]
+    grp("글 검사와 다듬기")
+    row("AI 작성률 검사", "레포트, 논문, 자기소개서, 원고", "모든 문장의 AI 검출과 이유, 구간별 분석, 결과상세내역서", "%d자당 %d크레딧" % (u[0], u[1]), "최소 %d · 3,000자 글이면 %d크레딧" % (u[2], credit_cost("unit", 3000)), link("humanize/", "검사하기"))
+    row("AI 휴머나이징", "글 전체를 자연스럽게", "바꾼 곳과 이유, 다른 버전, 바꾸기 전후 AI 작성률, 같은 형식 파일로 받기", "%d자당 %d크레딧" % (pr[0], pr[1]), "최소 %d · 3,000자 글이면 %d크레딧" % (pr[2], credit_cost("pro", 3000)), link("humanize/", "다듬기"))
+    row("문장 도우미, 짧은 다시 검사", "600자 이하", "문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "0크레딧", "크레딧이 남아 있을 때", "", True)
+    row("무료 맛보기", "가입 없이", "앞 6,000자 AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "무료", "", link("humanize/", "무료로 검사"), True)
+    grp("AI 마킹")
+    row("사이트 AI 마킹", "사이트 1개", "코드 한 줄로 자동 AI 마크, 근거 창, AI 활용 안내 창, 점검 모드", "무료", "", link("site/", "설치하기"), True)
+    t = tier("label", "label-standard"); a, b = crs(t)
+    row("AI 마킹 스탠다드", "1인 사업자, 소상공인", "등록 사이트 확인 페이지, 매달 리포트, 서명 마크에 회사 이름, 설치 도움 1회", a, b, buy("label-standard"))
+    t = tier("label", "label-business"); a, b = crs(t)
+    row("AI 마킹 비즈니스", "사이트 3개", "위치 규칙 설정 대행, 매주 누락 점검, 사내 가이드, API 대량 발급과 감사 기록", a, b, buy("label-business"))
+    row("파일 AI 마킹", "이미지, 영상, 문서", "보이는 AI 마크와 파일 속 기록, 서명 마크(웹 도구), 폴더 연결, 공유하기", "무료", "", link("mark/", "마크 넣기"), True)
+    row("API 마크 발급, 확인", "서비스와 AI 에이전트", "서명 마크 발급과 서버 확인(무료 키는 하루 300회)", "발급 건당 5크레딧", "확인 건당 1크레딧 · 마크 확인 페이지는 무료", link("developers/#key", "키 받기"))
+    t = tier("service", "service-starter"); a, b = crs(t)
+    row("AI 서비스 마킹 스타터", "생성형 AI 서비스", "결과물 서명 마크 월 1만 건, 사전 고지 문구, 내려받기 안내 창", a, b, buy("service-starter"))
+    t = tier("service", "service-growth"); a, b = crs(t)
+    row("AI 서비스 마킹 그로스", "이용자가 빠르게 느는 서비스", "월 10만 건, 제31조 표시 정책 문서, 감사 기록과 분기 보고서", a, b, buy("service-growth"))
+    grp("AI 검색 노출 최적화")
+    row("AI 검색 노출 진단", "주소 하나", "100점 진단, AI 크롤러 17종, 고칠 코드, 경쟁사와 나란히", "무료", "", link("geo/", "진단하기"), True)
+    for tid, nm in (("geo-lite", "라이트 세팅"), ("geo-standard", "스탠다드 세팅"), ("geo-pro", "프로 세팅")):
+        t = tier("geo", tid); a, b = crs(t)
+        row("AI 검색 " + nm, t["who"], ", ".join(t["feat"][:3]), a, b, buy(tid))
+    for tid in ("geocare-care", "geocare-grow"):
+        t = tier("geocare", tid); a, b = crs(t)
+        row(t["name"], t["who"], ", ".join(t["feat"][:2]), a, b, buy(tid))
+    bd = BUNDLES[0]
+    row(bd["name"], "함께 사면", " + ".join(bd["feat"]), "%s크레딧" % format(bd["m"] // 10, ","), "%s원 · 따로 사면 %s" % (format(bd["m"], ","), bd["was"]), buy(bd["id"]))
+    grp("추가 옵션")
+    for t in CATALOG["addon"]["tiers"]:
+        a, b = crs(t)
+        row(t["name"], t["who"], ", ".join(t["feat"]), a, b, buy(t["id"], "주문하기"))
+    return ('<table class="cr13-rates"><caption>기업 상품은 부가세 별도 금액을 1크레딧 10원으로 셉니다. 크레딧으로 내면 충전할 때 더 받은 크레딧만큼 덜 냅니다. 대량 처리, 기관 계약 같은 맞춤은 견적으로 합니다.</caption>'
+            '<thead><tr><th scope="col">기능</th><th scope="col">받는 것</th><th scope="col">크레딧</th><th scope="col"><span class="k-sr">바로 하기</span></th></tr></thead><tbody>%s</tbody></table>') % "".join(rows)
 
 
 def products_js():
@@ -295,34 +397,38 @@ def kaiec_badge(dark=False, lg=False):
 
 
 # 메뉴(9.0, 2026.10.18): 제품 · 기업용 · 기술 · 요금 · 회사. 펼침은 제품 하나, 휴대폰은 아래 탭(앱처럼)
-PRODUCTS = [("label/", "fingerprint", "AI 표시 자동화", "코드 한 줄로 사이트 속 AI 생성물에 지문 마크 자동 부착"),
-            ("mark/", "badge", "생성물 자동 마킹", "이미지 · 영상 · 문서에 지문 마크와 출처 기록"),
+PRODUCTS = [("label/", "fingerprint", "AI 마킹", "코드 한 줄로 사이트 속 AI 생성물에 AI 마크 자동 부착"),
+            ("mark/", "badge", "파일 AI 마킹", "이미지 · 영상 · 문서에 AI 마크와 출처 기록"),
             ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리를 찾고 추천하게"),
             ("humanize/", "pen", "AI 휴머나이징 · AI 작성률 검사", "레포트 · 논문 · 자기소개서의 AI 말버릇을 사람 말투로"),
             ("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 상품 피드"),
             ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 광고주 승인, 감사 기록"),
-            ("label/#service", "code", "AI 서비스 표시 의무 대응", "AI 서비스 결과물마다 표시를 자동으로(API · SDK · MCP)")]
+            ("label/#service", "code", "AI 서비스 마킹", "AI 서비스 결과물마다 AI 마크를 자동으로(API · SDK · MCP)")]
 # 12.0 메뉴: 개인(AI 휴머나이징)은 맨 앞 단독 메뉴, 기업용 제품은 펼침 하나로
-MENU_GROUPS = [("표시와 검색", [("label/", "fingerprint", "AI 표시 자동화", "코드 한 줄로 사이트 속 AI 생성물에 지문 마크"),
-                          ("mark/", "badge", "생성물 자동 마킹", "이미지 · 영상 · 문서에 지문 마크와 출처 기록"),
+MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코드 한 줄로 사이트 속 AI 생성물에 AI 마크"),
+                          ("mark/", "badge", "파일 AI 마킹", "이미지 · 영상 · 문서에 AI 마크와 출처 기록"),
                           ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 네이버 AI 브리핑이 우리를 찾게"),
-                          ("label/#service", "code", "AI 서비스 표시 의무 대응", "AI 서비스 결과물마다 자동 표시")]),
+                          ("label/#service", "code", "AI 서비스 마킹", "AI 서비스 결과물마다 자동 마킹")]),
                ("운영과 관리", [("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 피드"),
                             ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 승인, 감사 기록"),
-                            ("report/", "file", "일괄 확인 리포트", "여러 파일의 AI 표시 상태를 한 번에"),
+                            ("report/", "file", "일괄 확인 리포트", "여러 파일의 AI 마크 상태를 한 번에"),
                             ("m/", "search", "마크 확인", "받은 마크가 진짜인지 확인")]),
                ("시작하기", [("business/", "building", "기업용 한눈에", "필요한 일로 고르는 제품과 요금"),
-                          ("site/", "rocket", "설치 마법사", "AI 표시 자동화를 무료로 설치"),
+                          ("site/", "rocket", "설치 마법사", "AI 마킹을 무료로 설치"),
                           ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결"),
-                          ("contact/", "chat", "도입 상담", "견적, 파일럿, 세금계산서")])]
+                          ("pricing/#credits", "card", "크레딧 충전", "상담 없이, 크레딧 하나로 모든 기능")])]
 B2C_MENU = [("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 썼는지 정리")]
-NAV = [("humanize/", "AI 휴머나이징"), ("products", "기업용"), ("pricing/", "요금"), ("developers/", "개발자"), ("company/", "회사")]
+NAV = [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("products", "기업용"), ("pricing/", "요금"), ("developers/", "개발자"), ("company/", "회사")]
 PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
-NAV_KEY = {"humanize/": ["humanize", "personal", "proof"], "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
+NAV_KEY = {"humanize/": ["humanize", "personal", "proof"], "label/": ["label", "site", "v", "mark", "mcheck", "m"], "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
 B2C_KEYS = ["humanize", "personal", "proof"]
 TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "휴머나이징", ["humanize", "personal", "proof"]),
-        ("business/", "building", "기업용", ["business", "contact", "label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "app"]),
-        ("pricing/", "tag", "요금", ["pricing"])]
+        ("label/", "fingerprint", "AI 마킹", ["label", "site", "v", "mark", "mcheck", "m"]),
+        ("pricing/", "card", "크레딧", ["pricing"])]
+
+
+# 13.0 우리 사이트의 'AI 활용 안내' 단추: 소개 페이지는 넓은 화면에서 왼쪽 아래에 떠 있고, 입력 · 도구 화면은 가리지 않게 바닥글 안에 둠
+NOTICE_INLINE_KEYS = {"humanize", "mark", "mcheck", "m", "site", "check", "scan", "report", "proof", "v", "verify", "contact", "adminpass", "approve", "app", "404", "terms", "privacy"}
 
 
 def ico(name, cls="ico"):
@@ -341,35 +447,37 @@ def header(root, key):
     items = []
     for href, label in NAV:
         if href == "products":
-            cur = " cur" if key in PRODUCT_PAGE_KEYS else ""
+            cur = " cur" if key in PRODUCT_PAGE_KEYS and key not in NAV_KEY["label/"] else ""
             groups = "".join('<div class="grp"><span>%s</span>%s</div>' % (g, "".join('<a href="%s%s"><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ico(ic), t, d) for h, ic, t, d in links)) for g, links in MENU_GROUPS)
             items.append('<div class="k-dd%s"><button type="button" aria-haspopup="true" aria-expanded="false"><span>%s</span>%s</button>'
-                         '<div class="k-menu">%s<div class="k-menu-f"><span>AI 표시 자동화는 무료로 바로 설치할 수 있습니다</span><a href="%ssite/">설치 마법사 열기</a></div></div></div>'
+                         '<div class="k-menu">%s<div class="k-menu-f"><span>상담 없이 바로 시작합니다. AI 마킹은 사이트 1개 무료, 그다음은 크레딧 하나로</span><a href="%spricing/#credits">크레딧 충전</a></div></div></div>'
                          % (cur, label, ico("chev"), groups, root))
         else:
             on = key in NAV_KEY.get(href, [])
             items.append('<a href="%s%s"%s><span>%s</span></a>' % (root, href, ' aria-current="page"' if on else "", label))
-    # 12.0 주 단추는 보는 사람에 맞춤: 기업 페이지는 AI 표시 무료 설치, 그 밖(첫 화면 · 개인 · 안내)은 AI 휴머나이징
+    # 12.0 주 단추는 보는 사람에 맞춤: 기업 페이지는 AI 마킹 무료 시작, 그 밖(첫 화면 · 개인 · 안내)은 AI 휴머나이징. 13.0 옆 글자 링크는 '크레딧 충전'(도입 상담 대신)
     biz = key in PRODUCT_PAGE_KEYS
     if key == "humanize":
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#price">크레딧 충전</a>' % root)
     elif key == "home":   # 12.1 첫 화면은 바로 위 검사 칸으로
         cta = '<a class="k-btn k-btn-p k-btn-s" href="#top" data-focus="hzText">무료로 검사</a>'
     elif biz:
-        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 설치</a>' % root)
+        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 시작</a>' % root)
     else:
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/">무료로 시작</a>' % root)
+    # 13.0 주 단추 옆 글자 링크: 도입 상담 대신 '크레딧 충전'(글 검사 화면은 주 단추가 이미 충전이라 뺌)
+    side = '' if key == "humanize" else '<a class="k-hl opt cr13-hl" href="%spricing/#credits">크레딧 충전</a>' % root
     sheet = '<span class="grp">AI 글 검사와 휴머나이징</span>' + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, t, d in B2C_MENU)
     for g, links in MENU_GROUPS[:2]:
         sheet += '<span class="grp">%s</span>' % g + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, ic, t, d in links)
     sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%spricing/">요금과 결제</a><a href="%sdevelopers/">개발자</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a>' % (root, root, root, root, root)
-    sheet += '<div class="ds-sheet-cta"><a href="%scontact/">도입 상담</a><a class="p" href="%s">%s</a></div>' % (root, (root + "site/") if biz else (root + "humanize/"), "무료로 설치" if biz else "무료로 시작")
+    sheet += '<div class="ds-sheet-cta"><a href="%spricing/#credits">크레딧 충전</a><a class="p" href="%s">%s</a></div>' % (root, (root + "site/") if biz else (root + "humanize/"), "무료로 시작" if biz else "무료로 시작")
     return ('<a class="k-skip" href="#main">본문으로 건너뛰기</a>'
             '<header class="k-hd" id="hd"><div class="k-hd-in">%s<nav class="k-nav" aria-label="주 메뉴">%s</nav>'
-            '<div class="k-hd-r"><a class="k-hl opt" href="%scontact/">도입 상담</a>%s'
+            '<div class="k-hd-r">%s%s'
             '<button class="k-menu-btn" type="button" id="menuBtn" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mnav">%s</button></div></div></header>'
             '<nav class="k-sheet" id="mnav" aria-label="모바일 메뉴">%s</nav>'
-            % (brand(root), "".join(items), root, cta, ico("menu"), sheet))
+            % (brand(root), "".join(items), side, cta, ico("menu"), sheet))
 
 
 def tabbar(root, key):
@@ -391,16 +499,16 @@ def footer(root):
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
     biz.append('<span>결제 · 세금계산서는 운영사 성균관컨설팅이 처리합니다</span>')
-    cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 표시 자동화"), ("site/", "설치 마법사"), ("mark/", "생성물 자동 마킹"), ("geo/", "AI 검색 노출 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
-            ("고객별", [("personal/", "개인 · 학생"), ("proof/", "AI 활용 증빙서"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "도입 상담")]),
-            ("개발자", [("developers/", "API와 SDK"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("m.js", "자동 표시 스크립트(공개 코드)"), ("v/", "표시 확인"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
-            ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
+    cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("site/", "설치 마법사"), ("mark/", "파일 AI 마킹"), ("geo/", "AI 검색 노출 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
+            ("고객별", [("personal/", "개인 · 학생"), ("proof/", "AI 활용 증빙서"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "문의하기")]),
+            ("개발자", [("developers/", "API와 SDK"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("m.js", "AI 마킹 스크립트(공개 코드)"), ("v/", "사이트 AI 마크 확인"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
+            ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금과 크레딧"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b>%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
     std = ('<div class="k-ft-std"><span><b>표준</b>C2PA, IPTC, XMP, schema.org, llms.txt</span>'
            '<span><b>서명</b>Ed25519(JWS), <a href="%s.well-known/aimarker-keys.json">공개키</a></span>'
            '<span><b>원장</b>하루치를 OpenTimestamps에 고정, <a href="%sverify/">확인하기</a></span></div>' % (root, root))
     return ('<footer class="k-ft"><div class="k-wrap"><div class="k-ft-top"><div class="k-ft-brand">%s'
-            '<p>AIMarker는 AI가 만든 이미지, 영상, 글에 지문 마크를 붙여 누구나 알아볼 수 있게 하고, AI 검색이 우리 회사를 정확히 읽고 추천하도록 돕는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
+            '<p>AIMarker는 AI가 만든 이미지, 영상, 글에 AI 마크를 붙여 누구나 알아볼 수 있게 하고, AI 검색이 우리 회사를 정확히 읽고 추천하도록 돕는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
             '<div id="aimarker" class="ft-label"></div></div>'
             '<div class="k-ft-cols">%s</div></div>%s'
             '<div class="k-ft-biz">%s<br>'
@@ -445,10 +553,11 @@ def page(meta, body):
     body = re.sub(r"\{\{tiers:([a-z]+)(?::([a-z]+))?\}\}", lambda m: tiers_html(m.group(1), root, m.group(2)), body)
     body = re.sub(r"\{\{(?:passes|credits):(buy|link)\}\}", lambda m: credits_html(m.group(1), root), body)
     body = body.replace("{{credit_cost}}", credit_cost_html().replace("{{root}}", root))
+    body = body.replace("{{credit_packs}}", credit_packs_html(root)).replace("{{credit_rates}}", credit_rates_html(root))
     # 11.0: 확인 도구 세 쪽(/v/ · /m/ · /verify/)을 잇는 같은 탭 줄
     body = re.sub(r"\{\{checknav:([a-z]+)\}\}", lambda m: '<nav class="ds-segnav" aria-label="확인 도구">' + "".join(
         '<a href="%s%s"%s>%s</a>' % (root, h, ' aria-current="page"' if k == m.group(1) else '', t)
-        for k, h, t in (("v", "v/", "사이트 표시 확인"), ("m", "m/", "마크 번호, 파일 확인"), ("verify", "verify/", "원장 확인"))) + '</nav>', body)
+        for k, h, t in (("v", "v/", "사이트 AI 마크 확인"), ("m", "m/", "마크 번호, 파일 확인"), ("verify", "verify/", "원장 확인"))) + '</nav>', body)
     body = re.sub(r"\{\{ico:([a-z0-9]+)\}\}", lambda m: ico(m.group(1)), body)
     title = meta["title"]
     desc = meta.get("desc", "")
@@ -458,13 +567,16 @@ def page(meta, body):
     if sl == "preview":
         scripts = '<script src="%sm.js?v=%s" data-preview defer></script>' % (root, VER) + scripts
     elif sl != "none":
-        # 9.0: 휴대폰 아래 탭과 겹치지 않게 늘 바닥글 안에 둠(밝은 바닥글)
+        # 9.0: 휴대폰 아래 탭과 겹치지 않게 바닥글 안에 둠(밝은 바닥글).
+        # 13.0: 넓은 화면(900px 이상)에서는 우리 사이트에도 고객 사이트와 같은 'AI 활용 안내' 단추가 왼쪽 아래에 떠 있음(은은한 움직임)
         look = 'data-style="inline" data-theme="light"' if meta.get("layout") != "app" else 'data-side="right"'
-        scripts += ('<script src="%sm.js?v=%s" data-name="AIMarker" data-use="text" data-level="assist" data-review="all" '
+        scripts += ('<script src="%sm.js?v=%s" data-name="AIMarker" data-use="text image" data-level="assist" data-review="all" '
                     'data-privacy="1" data-auto="0" %s data-date="2026-10" defer></script>' % (root, VER, look))
+        if meta.get("layout") != "app" and meta.get("key", "") not in NOTICE_INLINE_KEYS:   # 바로 앞 m.js(지연 실행)가 읽기 전에, 본문 옆 여백이 단추보다 넓은 화면(1480px 이상)이면 떠 있는 단추로(도구 화면 · 좁은 화면은 바닥글 그대로)
+            scripts += ('<script>(function(s){try{if(s&&window.matchMedia&&matchMedia("(min-width:1480px)").matches){s.setAttribute("data-style","badge");s.setAttribute("data-side","left")}}catch(e){}})(document.currentScript&&document.currentScript.previousElementSibling)</script>')
     pre = "".join('<script src="%s"></script>' % s.strip() for s in meta.get("prescripts", "").split(",") if s.strip())
     pre += "".join('<link rel="stylesheet" href="%s%s?v=%s">' % (root, s.strip(), VER) for s in meta.get("styles", "").split(",") if s.strip())
-    pre += '<link rel="stylesheet" href="%sassets/v9.css?v=%s"><link rel="stylesheet" href="%sassets/v10.css?v=%s"><link rel="stylesheet" href="%sassets/v11.css?v=%s">' % (root, VER, root, VER, root, VER)
+    pre += '<link rel="stylesheet" href="%sassets/v9.css?v=%s"><link rel="stylesheet" href="%sassets/v10.css?v=%s"><link rel="stylesheet" href="%sassets/v11.css?v=%s"><link rel="stylesheet" href="%sassets/v13.css?v=%s">' % (root, VER, root, VER, root, VER, root, VER)
     if meta.get("manifest"):
         pre += ('<link rel="manifest" href="%sapp/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
                 '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' % root)
@@ -642,7 +754,7 @@ def build_ai_assets():
     old_m = open(os.path.join(ROOT, "m.js"), encoding="utf-8").read() if os.path.exists(os.path.join(ROOT, "m.js")) else ""
     if old_m != out:
         open(os.path.join(ROOT, "m.js"), "w", encoding="utf-8").write(out)
-    # 10.0 지문 마크 넣기(브라우저) 라이브러리
+    # 10.0 AI 마크 넣기(브라우저) 라이브러리
     st = open(os.path.join(HERE, "lib", "aimarker-stamp.src.js"), encoding="utf-8").read()
     assert "@@FP_SMALL@@" in st
     st = st.replace("@@FP_SMALL@@", fp_d)

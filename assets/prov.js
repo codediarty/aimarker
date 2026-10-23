@@ -108,7 +108,7 @@
     rr(ctx, x, y, w, h, rad); ctx.fillStyle = dark ? 'rgba(14, 31, 71,.78)' : 'rgba(255,255,255,.92)'; ctx.fill(); ctx.shadowColor = 'transparent';
     ctx.save(); rr(ctx, x + padX - icon * 0.08, y + (h - icon * 1.16) / 2, icon * 1.16, icon * 1.16, icon * 0.3); ctx.fillStyle = dark ? '#FFFFFF' : '#EEF4FF'; ctx.fill();
     var fh = icon * 0.78, fw = fh * 0.8749; ctx.translate(x + padX - icon * 0.08 + (icon * 1.16 - fw) / 2, y + (h - fh) / 2); ctx.scale(fw / 87.49, fh / 100);
-    var gg = ctx.createLinearGradient(0, 100, 87.49, 0); gg.addColorStop(0, '#0030C4'); gg.addColorStop(0.45, '#0858F0'); gg.addColorStop(0.8, '#0E8BFB'); gg.addColorStop(1, '#33C8FF'); ctx.fillStyle = gg; ctx.fill(new Path2D(FP)); ctx.restore();   // 10.0 지문 마크
+    var gg = ctx.createLinearGradient(0, 100, 87.49, 0); gg.addColorStop(0, '#0030C4'); gg.addColorStop(0.45, '#0858F0'); gg.addColorStop(0.8, '#0E8BFB'); gg.addColorStop(1, '#33C8FF'); ctx.fillStyle = gg; ctx.fill(new Path2D(FP)); ctx.restore();   // 10.0 AI 마크
     ctx.fillStyle = dark ? '#FFFFFF' : '#0E1F47'; ctx.textBaseline = 'middle'; ctx.font = '800 ' + f + 'px ' + FONT; ctx.fillText(text, x + padX + icon + gap, y + h / 2 + f * 0.04);
     ctx.restore();
   }

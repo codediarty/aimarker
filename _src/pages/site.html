@@ -2,15 +2,15 @@
 path: site/
 key: site
 v9: 1
-title: AI 표시 설치 마법사 · 모양만 고르면 코드 한 줄 | AIMarker
-ogtitle: AI 표시 설치 마법사 · 3분이면 사이트 전체에 지문 마크
+title: AI 마킹 설치 마법사 · 모양만 고르면 코드 한 줄 | AIMarker
+ogtitle: AI 마킹 설치 마법사 · 3분이면 사이트 전체에 AI 마크
 desc: 마크 모양, 위치, 자동 찾기 범위, AI 활용 안내 창을 고르면 붙일 코드 한 줄이 나옵니다. 예시 사이트에서 바로 미리 보고, 아임웹 · 카페24 · 워드프레스 · 고도몰 · 식스샵 · 윅스 · 구글 태그 매니저 설치 방법도 안내합니다. 무료.
 scripts: assets/install.js
 selflabel: footer
 -->
 <section class="k-apphead" aria-labelledby="h1">
   <div class="k-wrap">
-    <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}label/">AI 표시 자동화</a>{{ico:chev}}<span>설치 마법사</span></p>
+    <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}label/">AI 마킹</a>{{ico:chev}}<span>설치 마법사</span></p>
     <div class="k-apphead-row"><div>
       <h1 class="k-h1 sm" id="h1">모양만 고르면, 코드 한 줄이 나옵니다</h1>
       <p class="k-lead">왼쪽에서 고르는 대로 오른쪽 예시 사이트가 바로 바뀝니다. 다 고르면 코드를 복사해 사이트 공통 영역에 붙이세요. 무료이고 가입하지 않아도 됩니다.</p>
@@ -34,7 +34,7 @@ selflabel: footer
       </div>
 
       <div class="k-wz-card">
-        <h2><span class="n">2</span>지문 마크 모양</h2>
+        <h2><span class="n">2</span>AI 마크 모양</h2>
         <div class="k-wz-row"><span class="lb">모양</span>
           <div class="k-opts" role="radiogroup" aria-label="마크 모양" id="tagOpts">
             <label class="k-opt on"><input type="radio" name="tag" value="tag" checked><span class="vis"><span class="t"><span>AI 생성</span></span></span><b>기본</b><small>심볼과 글자</small></label>
@@ -47,6 +47,7 @@ selflabel: footer
             <label data-p="tl" class="on" title="왼쪽 위"><input type="radio" name="pos" value="tl" checked aria-label="왼쪽 위"></label><label data-p="tr" title="오른쪽 위"><input type="radio" name="pos" value="tr" aria-label="오른쪽 위"></label>
             <label data-p="bl" title="왼쪽 아래"><input type="radio" name="pos" value="bl" aria-label="왼쪽 아래"></label><label data-p="br" title="오른쪽 아래"><input type="radio" name="pos" value="br" aria-label="오른쪽 아래"></label></div></div>
           <div class="k-wz-row"><label class="lb" for="tagTheme">색</label><select id="tagTheme"><option value="dark">어두운 바탕(기본)</option><option value="light">밝은 바탕</option></select></div>
+          <div class="k-wz-row"><label class="lb" for="tagMotion">움직임</label><select id="tagMotion" aria-describedby="tagMotionH"><option value="">은은하게 떠 있게(기본)</option><option value="0">멈춤</option></select><small class="k-wz-hint" id="tagMotionH">방문자는 근거 창, 안내 창에서 움직임을 멈출 수 있습니다. 공공기관, 학교 사이트는 '멈춤'을 권합니다.</small></div>
         </div>
       </div>
 
@@ -99,7 +100,7 @@ selflabel: footer
       <div class="k-wz-code" id="codeBox">
         <div class="h"><span><b>붙일 코드 한 줄</b> · 모든 페이지 공통, &lt;/body&gt; 바로 위</span><button class="cp" type="button" id="copyBtn">{{ico:copy}}<span>복사</span></button></div>
         <pre id="codeOut"></pre>
-        <div class="k-wz-acts"><button type="button" id="mailCode">{{ico:mail}}담당자에게 메일로</button><a id="checkLink" href="#" target="_blank" rel="noopener" hidden>{{ico:eye}}내 사이트 점검 모드</a><a href="{{root}}contact/?type=install&amp;plan=install">{{ico:users}}설치 대행 맡기</a></div>
+        <div class="k-wz-acts"><button type="button" id="mailCode">{{ico:mail}}담당자에게 메일로</button><a id="checkLink" href="#" target="_blank" rel="noopener" hidden>{{ico:eye}}내 사이트 점검 모드</a><button type="button" data-buy="addon-install">{{ico:users}}설치 대행 맡기</button></div>
       </div>
       <div class="k-wz-card" id="install">
         <h2 style="font-size:16.5px">어디에 붙이나요</h2>
@@ -108,7 +109,7 @@ selflabel: footer
       </div>
       <div class="k-wz-card k-wz-up">
         <h2 style="font-size:16.5px">{{ico:badge}}등록 사이트로 올리기</h2>
-        <p>스탠다드(월 9,900원, 부가세 별도)부터 AIMarker 확인 페이지에 우리 회사가 등록 사이트로 나오고, 매달 AI 표시 현황 리포트를 받습니다.</p>
+        <p>스탠다드(월 9,900원, 부가세 별도)부터 AIMarker 확인 페이지에 우리 회사가 등록 사이트로 나오고, 매달 AI 마킹 현황 리포트를 받습니다.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="k-btn k-btn-p k-btn-s" type="button" data-buy="label-standard">스탠다드 결제하기</button><a class="k-btn k-btn-l k-btn-s" href="{{root}}label/#plans">요금제 비교</a></div>
       </div>
     </div>
@@ -121,9 +122,9 @@ selflabel: footer
     <div class="k-head"><h2 class="k-h2" id="h-faq">설치 전에 자주 묻는 질문</h2></div>
     <div class="k-faq">
       <details><summary>코드를 넣었는데 아무것도 안 보여요.</summary><p>공통 하단(바디 끝)에 넣었는지, 저장 뒤 캐시가 남아 있지 않은지 확인해 주세요. 주소 뒤에 ?aimarker=check 를 붙여 열면 점검 화면이 뜨고, 이미지마다 표시함, 기록 없음, 못 읽음 상태가 보입니다.</p></details>
-      <details><summary>기존 2.0 코드를 쓰고 있어요. 바꿔야 하나요?</summary><p>아니요. 같은 주소(aimarker.kr/m.js)라서 이미 붙인 코드도 3.0으로 바로 바뀌었습니다. 새 모양이나 위치 규칙을 쓰고 싶을 때만 새 코드로 바꾸면 됩니다.</p></details>
-      <details><summary>스마트스토어나 블로그처럼 코드를 넣을 수 없는 곳은요?</summary><p>그런 곳은 이미지 파일에 직접 지문 마크를 넣어 올리세요. 생성물 자동 마킹에서 파일을 넣거나 붙여 넣으면 보이는 마크와 파일 속 기록을 함께 넣어 드립니다.</p></details>
-      <details><summary>개인정보처리방침에 적어야 하나요?</summary><p>AIMarker 자동 표시는 방문자 정보, 쿠키, 방문 기록을 모으지 않고 파일을 외부로 보내지 않습니다. 그래서 자동 표시 때문에 새로 생기는 개인정보 처리는 없는 것이 보통입니다. 방문자가 'AIMarker에서 확인'을 누를 때만 그 이미지 주소가 확인 페이지로 전달됩니다. 사이트마다 사정이 다를 수 있으니 개인정보 담당자와 함께 확인해 주세요(법률 자문이 아닙니다).</p></details>
+      <details><summary>기존 2.0 코드를 쓰고 있어요. 바꿔야 하나요?</summary><p>아니요. 같은 주소(aimarker.kr/m.js)라서 이미 붙인 코드도 최신 판으로 바로 바뀝니다. 새 모양이나 위치 규칙을 쓰고 싶을 때만 새 코드로 바꾸면 됩니다.</p></details>
+      <details><summary>스마트스토어나 블로그처럼 코드를 넣을 수 없는 곳은요?</summary><p>그런 곳은 이미지 파일에 직접 AI 마크를 넣어 올리세요. 파일 AI 마킹에서 파일을 넣거나 붙여 넣으면 보이는 마크와 파일 속 기록을 함께 넣어 드립니다.</p></details>
+      <details><summary>개인정보처리방침에 적어야 하나요?</summary><p>AIMarker AI 마킹은 방문자 정보, 쿠키, 방문 기록을 모으지 않고 파일을 외부로 보내지 않습니다. 그래서 AI 마킹 때문에 새로 생기는 개인정보 처리는 없는 것이 보통입니다. 방문자가 'AIMarker에서 확인'을 누를 때만 그 이미지 주소가 확인 페이지로 전달됩니다. 사이트마다 사정이 다를 수 있으니 개인정보 담당자와 함께 확인해 주세요(법률 자문이 아닙니다).</p></details>
     </div>
   </div>
 </section>

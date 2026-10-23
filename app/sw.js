@@ -1,5 +1,5 @@
 /* AIMarker 작업 공간 서비스 워커: 네트워크 먼저, 안 되면 저장해 둔 화면(오프라인에서도 열림). 다른 주소(점검 서버)는 건드리지 않음 */
-var V = 'am-app-20261021e';
+var V = 'am-app-20261023a';
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k !== V; }).map(function (k) { return caches.delete(k); })); }).then(function () { return self.clients.claim(); }));

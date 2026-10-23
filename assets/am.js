@@ -94,14 +94,14 @@
       var btn = f.querySelector('button[type="submit"]'); if (btn) { btn.disabled = true; btn.setAttribute('data-t', btn.innerHTML); btn.innerHTML = '보내는 중…'; }
       AM.call('am.lead', d).then(function (r) {
         if (r && r.ok) {
-          show(f, 'ok', (kind === 'pilot' ? '도입 상담 신청이 접수되었습니다. 영업일 하루 안에 연락드려 30분 상담과 무료 GEO 진단 · 콘텐츠 100건 AI 사용 확인 리포트 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : kind === 'creator' ? '크리에이터 사전 등록이 접수되었습니다. 첫 의뢰 연결을 열 때 분야에 맞는 의뢰를 먼저 안내해 드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
+          show(f, 'ok', (kind === 'pilot' ? '문의가 접수되었습니다. 영업일 하루 안에 답하고, 원하시면 30분 통화와 무료 AI 검색 노출 진단 · 콘텐츠 100건 AI 사용 확인 리포트 일정을 잡겠습니다.' : kind === 'biz' ? '문의가 접수되었습니다. 담당자가 영업일 하루 안에 연락드립니다.' : kind === 'creator' ? '크리에이터 사전 등록이 접수되었습니다. 첫 의뢰 연결을 열 때 분야에 맞는 의뢰를 먼저 안내해 드립니다.' : '신청이 접수되었습니다. 열리면 먼저 알려 드립니다.') + (r.id ? ' <small>(접수번호 ' + r.id + ')</small>' : ''));
           f.reset(); t0 = Date.now();
           if (window.gtag) try { window.gtag('event', 'generate_lead', { method: kind }); } catch (eG) { /* 무시 */ }
         } else if (r && r.message && /^(CONTACT|ORG|NAME|SLOW|BUSY|MEMO)$/.test(r.code || '')) {
           show(f, 'err', r.message);
         } else { throw new Error(r && r.message || 'fail'); }
       }).catch(function () {
-        var subj = '[AIMarker] ' + (kind === 'pilot' ? '도입 상담 · 파일럿' : kind === 'biz' ? '도입 문의' : kind === 'creator' ? '크리에이터 사전 등록' : '신청') + (d.plan ? ' · ' + d.plan : '');
+        var subj = '[AIMarker] ' + (kind === 'pilot' ? '문의 · 맞춤 견적' : kind === 'biz' ? '도입 문의' : kind === 'creator' ? '크리에이터 사전 등록' : '신청') + (d.plan ? ' · ' + d.plan : '');
         var bodyTxt = ['이름: ' + d.name, '회사 · 기관: ' + d.org, '연락처: ' + d.contact, '사이트: ' + d.site, '요금제: ' + d.plan, '구분: ' + d.type, '내용: ' + d.memo].join('\n');
         show(f, 'err', '지금 연결이 원활하지 않아요. <a href="mailto:' + AM.MAIL + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(bodyTxt) + '">메일로 보내기</a>를 눌러 주시면 같은 내용이 전달됩니다.');
       }).finally(function () { if (btn) { btn.disabled = false; btn.innerHTML = btn.getAttribute('data-t'); } });
@@ -116,7 +116,7 @@
     if (sel) { sel.value = a.getAttribute('data-plan'); }
   });
 
-  /* 예전 문의 주소(솔루션 페이지 #ask)는 도입 상담 페이지로, 주소 뒤 조건은 그대로 */
+  /* 예전 문의 주소(솔루션 페이지 #ask)는 문의 페이지로, 주소 뒤 조건은 그대로 */
   if (document.body.getAttribute('data-page') === 'business' && location.hash === '#ask') {
     location.replace((document.body.getAttribute('data-root') || '../') + 'contact/' + location.search);
   }
@@ -124,7 +124,7 @@
   /* 주소로 넘어온 요금제 · 문의 종류 채우기: ?plan=pro · ?type=install */
   (function () {
     var q = new URLSearchParams(location.search);
-    var pq = String(q.get('plan') || '').toLowerCase(), plan = { 'label-standard': 'AI 표시 스탠다드', 'label-business': 'AI 표시 비즈니스', 'label-enterprise': 'AI 표시 엔터프라이즈', 'geo-lite': 'AI 검색 라이트', 'geo-standard': 'AI 검색 스탠다드', 'geo-pro': 'AI 검색 프로', 'geo-enterprise': 'AI 검색 엔터프라이즈', 'geocare-care': 'AI 검색 관리', 'geocare-grow': 'AI 검색 관리', 'bundle-trust': 'AI 신뢰 올인원', 'service-starter': 'AI 서비스 표시 의무 대응', 'service-growth': 'AI 서비스 표시 의무 대응', 'service-enterprise': 'AI 서비스 표시 의무 대응', install: '설치 대행', '기본 세팅': '기본 세팅', '쇼핑몰 세팅': '쇼핑몰 세팅', '브랜드 세팅': '브랜드 세팅', '자동 관리': '자동 관리', '성장 관리': '성장 관리', basic: 'AI 검색 스탠다드', setup: 'AI 검색 스탠다드', shop: 'AI 검색 프로', brand: 'AI 검색 엔터프라이즈', care: 'AI 검색 관리', grow: 'AI 검색 관리', starter: 'AI 표시 스탠다드', growth: 'AI 검색 프로', business: 'AI 표시 비즈니스', scale: 'AI 표시 엔터프라이즈', agency: 'AI 표시 엔터프라이즈', enterprise: 'AI 표시 엔터프라이즈', license: 'AI 표시 엔터프라이즈', private: 'AI 표시 엔터프라이즈', expert: 'AI 표시 엔터프라이즈', api: 'API', bulk: '대량 처리', ad: '광고 검수', addon: '광고 검수', pilot: '파일럿', free: '파일럿', pro: 'AI 검색 프로', biz: 'AI 표시 비즈니스', geo: 'AI 검색 스탠다드', commerce: 'AI 검색 프로', compliance: 'AI 표시 비즈니스', performance: '성과형' }[pq];
+    var pq = String(q.get('plan') || '').toLowerCase(), plan = { 'label-standard': 'AI 마킹 스탠다드', 'label-business': 'AI 마킹 비즈니스', 'label-enterprise': 'AI 마킹 엔터프라이즈', 'geo-lite': 'AI 검색 라이트', 'geo-standard': 'AI 검색 스탠다드', 'geo-pro': 'AI 검색 프로', 'geo-enterprise': 'AI 검색 엔터프라이즈', 'geocare-care': 'AI 검색 관리', 'geocare-grow': 'AI 검색 관리', 'bundle-trust': 'AI 신뢰 올인원', 'service-starter': 'AI 서비스 마킹', 'service-growth': 'AI 서비스 마킹', 'service-enterprise': 'AI 서비스 마킹', install: '설치 대행', '기본 세팅': '기본 세팅', '쇼핑몰 세팅': '쇼핑몰 세팅', '브랜드 세팅': '브랜드 세팅', '자동 관리': '자동 관리', '성장 관리': '성장 관리', basic: 'AI 검색 스탠다드', setup: 'AI 검색 스탠다드', shop: 'AI 검색 프로', brand: 'AI 검색 엔터프라이즈', care: 'AI 검색 관리', grow: 'AI 검색 관리', starter: 'AI 마킹 스탠다드', growth: 'AI 검색 프로', business: 'AI 마킹 비즈니스', scale: 'AI 마킹 엔터프라이즈', agency: 'AI 마킹 엔터프라이즈', enterprise: 'AI 마킹 엔터프라이즈', license: 'AI 마킹 엔터프라이즈', private: 'AI 마킹 엔터프라이즈', expert: 'AI 마킹 엔터프라이즈', api: 'API', bulk: '대량 처리', ad: '광고 검수', addon: '광고 검수', pilot: '파일럿', free: '파일럿', pro: 'AI 검색 프로', biz: 'AI 마킹 비즈니스', geo: 'AI 검색 스탠다드', commerce: 'AI 검색 프로', compliance: 'AI 마킹 비즈니스', performance: '성과형' }[pq];
     var type = { commerce: '쇼핑몰, 이커머스', shop: '쇼핑몰, 이커머스', media: '언론, 미디어', news: '언론, 미디어', agency: '광고대행사, 브랜드', brand: '광고대행사, 브랜드', api: '플랫폼, AI 서비스', platform: '플랫폼, AI 서비스', ai: '플랫폼, AI 서비스', enterprise: '공공, 교육, 기관', public: '공공, 교육, 기관', univ: '공공, 교육, 기관', org: '공공, 교육, 기관', edu: '공공, 교육, 기관', invest: '투자, 제휴', partner: '투자, 제휴', ad: '투자, 제휴', install: '기타', creator: '기타' }[q.get('type') || ''];
     if (plan) { var ps = document.querySelector('form[data-lead] [name="plan"]'); if (ps) { if (ps.tagName === 'SELECT') ps.value = plan; else { var pr = document.querySelector('form[data-lead] input[name="plan"][value="' + plan + '"]'); if (pr) pr.checked = true; else ps.value = plan; } } }
     try {   // 일괄 확인 리포트에서 '이 결과로 상담 신청'을 누르면 요약을 내용 칸에(같은 창에서만, 서버로는 신청할 때만 감)
@@ -251,7 +251,7 @@
         var name = r.siteName ? esc(String(r.siteName).slice(0, 40)) : esc(host);
         var meter = '<div class="res2-meter ' + lv + '">' + [1, 2, 3, 4].map(function (k) { return '<span class="' + (k <= L[1] ? 'on' : '') + '"></span>'; }).join('') + '</div><div class="lbls"><span>단서 적음</span><span>단서 있음</span><span>가능성 높음</span><span>확인됨</span></div>';
         var head = '<div class="res2-h"><div style="min-width:0"><b>' + name + '</b><small>' + esc(host) + '</small></div><span class="lvl2 ' + lv + '"><i></i>' + L[0] + '</span></div>';
-        var foot = '<a class="btn btn-p" href="' + root + 'app/">소재째로 점검하기(무료)</a><a class="btn btn-g" href="' + root + 'site/?url=' + encodeURIComponent(url) + '">AI 표시 · 자동 태그 붙이기</a>';
+        var foot = '<a class="btn btn-p" href="' + root + 'app/">소재째로 점검하기(무료)</a><a class="btn btn-g" href="' + root + 'site/?url=' + encodeURIComponent(url) + '">AI 마킹 · 자동 태그 붙이기</a>';
         show('<div class="res2">' + head + meter + bar + '<ul>' + items.map(function (it) { return '<li class="' + it[0] + '">' + I[it[0] === 'warn' ? 'warn' : it[0] === 'ok' ? 'ok' : 'info'] + '<span>' + it[1] + '</span></li>'; }).join('') + '</ul>' +
           '<p class="why">보수적으로 판단해요. 파일 기록이 지워진 이미지는 \'없음\'이 아니라 \'확인 불가\'로 세고, 광고 표현은 위험 후보일 뿐 위반 판단이 아니에요. 공개된 첫 화면만 읽었습니다.</p><div class="res2-f">' + foot + '</div></div>');
         if (window.gtag) try { window.gtag('event', 'scan', { result: lv }); } catch (eG) { /* 무시 */ }

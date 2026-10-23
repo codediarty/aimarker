@@ -1,5 +1,5 @@
-/*! AIMarker 자동 표시 3.0 · https://aimarker.kr/label/
- * 코드 한 줄이면 사이트 속 AI 생성물(이미지 · 영상 · 배경 · 글)에 AIMarker 지문 마크가 자동으로 붙습니다.
+/*! AIMarker AI 마킹 3.1 · https://aimarker.kr/label/
+ * 코드 한 줄이면 사이트 속 AI 생성물(이미지 · 영상 · 배경 · 글)에 AIMarker AI 마크가 자동으로 붙습니다.
  *
  *   <script src="https://aimarker.kr/m.js" data-name="회사 이름" async></script>
  *
@@ -9,7 +9,7 @@
  *   3) 파일 속 기록  C2PA 출처 기록 · IPTC 디지털 출처 유형 · XMP 제작 도구 · PNG 생성 정보(같은 주소이거나 CORS 를 허용한 파일)
  *   4) 도구 흔적     파일 이름(DALL·E, ChatGPT Image, Gemini_Generated_Image …) · 대체 글 · 캡션('AI 생성', 'AI로 만든' …)
  *
- * 모양  data-tag="tag(기본)|mini|bar|none" · data-pos="tl|tr|bl|br" · data-tag-theme="dark|light"
+ * 모양  data-tag="tag(기본)|mini|bar|none" · data-pos="tl|tr|bl|br" · data-tag-theme="dark|light" · data-motion="0"(떠 있는 움직임 끔. 방문자는 근거 창 · 안내 창에서 멈출 수 있고 이 브라우저에 기억)
  * 안내  data-style="badge(기본)|line|inline|none" · data-side · data-theme · data-use · data-level · data-review · data-privacy · data-contact · data-date (2.0 그대로)
  * 기타  data-auto="0"(자동 찾기 끔) · data-meta="0" · data-alt="0" · data-ld="0"(검색용 구조화 정보 끔) · data-min="96" · data-z · data-site(등록 번호) · data-lang="en"
  * 점검  주소 뒤에 ?aimarker=check 를 붙이면 운영자용 점검 모드(무엇을 왜 표시했는지, 못 읽은 파일은 무엇인지)가 열립니다.
@@ -20,7 +20,7 @@
   'use strict';
   var W = window, D = document;
   if (W.AIMarker && W.AIMarker.v3) return;
-  var VERSION = '3.0.0', HOME = 'https://aimarker.kr', NOW = Date.now();
+  var VERSION = '3.1.0', HOME = 'https://aimarker.kr', NOW = Date.now();
   var FP = '@@FP_SMALL@@';
   var FP_VB = '0 0 87.49 100';
   var FONT = '"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif';
@@ -41,28 +41,32 @@
       genL: '생성형 AI로 만든 콘텐츠입니다.', editL: '생성형 AI로 편집하거나 합성한 콘텐츠입니다.', assistL: '생성형 AI의 도움을 받아 만든 콘텐츠입니다.',
       virtualL: 'AI로 만든 가상인물이 나옵니다. 실제 사람이 아닙니다.', textL: '생성형 AI의 도움을 받아 쓴 글입니다.',
       img: '이미지', video: '영상', bg: '이미지', block: '글', frame: '영상',
-      basis: '근거', tool: '도구', who: '표시', when: '확인',
+      basis: '근거', tool: '도구', who: '붙인 곳', when: '확인',
       b_owner: '사이트 운영자가 표시', b_rule: '운영자가 정한 위치 규칙', b_c2pa: '파일 속 출처 기록(C2PA)', b_iptc: '파일 속 출처 기록(IPTC)', b_gen: '파일 속 생성 정보', b_name: '파일 이름, 설명의 AI 도구 흔적',
       g3: '기록', g2: '규칙', g1: '흔적',
       verify: 'AIMarker에서 확인', notice: '이 사이트의 AI 활용 안내',
-      foot: '이 표시는 사이트 운영자가 AIMarker로 설정했습니다. 콘텐츠의 적법성을 보증하지 않습니다.',
-      std: '표시 문구 기준 한국AI윤리위원회', nocert: '이 표시는 심사나 보증이 아닙니다',
-      close: '닫기', open: '안내 보기', here: '이 페이지에서 표시한 것', go: '위치 보기',
-      browser: '이 브라우저에서 확인'
+      foot: '이 마크는 사이트 운영자가 AIMarker로 설정했습니다. 콘텐츠의 적법성을 보증하지 않습니다.',
+      std: '표시 문구 기준 한국AI윤리위원회', nocert: '이 안내와 AI 마크는 심사나 보증이 아닙니다',
+      close: '닫기', open: '안내 보기', here: '이 페이지의 AI 마크', go: '위치 보기',
+      browser: '이 브라우저에서 확인',
+      mk: 'AI 마크', ariaGo: 'AIMarker AI 마크 근거 보기', cardL: 'AI 마크 근거', brand: 'AIMarker AI 마킹',
+      mOff: 'AI 마크 움직임 멈추기', mOn: 'AI 마크 움직임 다시 켜기'
     },
     en: {
       gen: 'AI generated', edit: 'AI edited', assist: 'AI assisted', virtual: 'Virtual human', text: 'AI-assisted text',
       genL: 'Created with generative AI.', editL: 'Edited or composited with generative AI.', assistL: 'Made with help from generative AI.',
       virtualL: 'Features an AI-generated virtual person, not a real one.', textL: 'Written with help from generative AI.',
       img: 'image', video: 'video', bg: 'image', block: 'text', frame: 'video',
-      basis: 'Basis', tool: 'Tool', who: 'Label', when: 'Checked',
+      basis: 'Basis', tool: 'Tool', who: 'By', when: 'Checked',
       b_owner: 'Labeled by the site owner', b_rule: 'Site owner rule', b_c2pa: 'Content Credentials (C2PA) in file', b_iptc: 'IPTC digital source type in file', b_gen: 'Generator data in file', b_name: 'AI tool traces in file name or caption',
       g3: 'record', g2: 'rule', g1: 'trace',
       verify: 'Check on AIMarker', notice: 'How this site uses AI',
       foot: 'This label was set up by the site owner with AIMarker. It does not certify the content.',
-      std: 'Label wording: Korea AI Ethics Committee', nocert: 'This label is not a certification',
+      std: 'Label wording: Korea AI Ethics Committee', nocert: 'This notice and the AI labels are not a certification',
       close: 'Close', open: 'Details', here: 'Labeled on this page', go: 'Show',
-      browser: 'checked in this browser'
+      browser: 'checked in this browser',
+      mk: 'AI label', ariaGo: 'see AIMarker label details', cardL: 'AI label details', brand: 'AIMarker AI labeling',
+      mOff: 'Stop label motion', mOn: 'Resume label motion'
     }
   };
   function t(k) { return (T[LANG] && T[LANG][k]) || T.ko[k] || k; }
@@ -118,11 +122,13 @@
     return ':host{all:initial}*{box-sizing:border-box}' +
       '.k{font-family:' + FONT + ';color:' + C.fg + ';-webkit-font-smoothing:antialiased;letter-spacing:-.01em;line-height:1.5;word-break:keep-all}' +
       '.k svg{flex:0 0 auto}' +
-      '.badge{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 8px 0 7px;border-radius:12px;border:1px solid ' + C.line + ';background:' + C.bg + ';color:' + C.fg + ';font-family:inherit;font-weight:760;font-size:13px;line-height:1;cursor:pointer;box-shadow:0 8px 24px rgba(9,20,47,.16);transition:transform .15s ease,box-shadow .15s ease}' +
-      '.badge:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(9,20,47,.22)}' +
-      '.inl .badge{box-shadow:none}.inl .badge:hover{transform:none;box-shadow:none;border-color:' + C.acc + '}' +
-      '.badge .ic{width:26px;height:26px;border-radius:8px;background:' + C.chip + ';display:inline-flex;align-items:center;justify-content:center}.badge .ic svg{width:15px;height:17px}' +
-      '.badge .n{min-width:22px;height:22px;padding:0 6px;border-radius:7px;background:' + C.acc + ';color:#fff;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}.badge .n[hidden]{display:none}' +
+      '.badge{position:relative;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 7px 0 5px;border-radius:999px;border:1px solid ' + C.line + ';background:' + C.bg + ';color:' + C.fg + ';font-family:inherit;font-weight:720;font-size:13px;letter-spacing:-.01em;line-height:1;cursor:pointer;box-shadow:0 1px 2px rgba(9,20,47,.06),0 12px 28px -10px rgba(9,20,47,.28);transition:box-shadow .18s ease,border-color .18s ease}' +
+      '.badge.fl{animation:amf 6s ease-in-out infinite}@keyframes amf{0%,100%{translate:0 0}50%{translate:0 -3px}}' +
+      '.badge:hover{box-shadow:0 1px 2px rgba(9,20,47,.06),0 16px 34px -12px rgba(9,20,47,.34)}' +
+      '.inl .badge{box-shadow:none}.inl .badge:hover{box-shadow:none;border-color:' + C.acc + '}' +
+      '.badge .ic{position:relative;width:30px;height:30px;border-radius:50%;background:' + C.chip + ';display:inline-flex;align-items:center;justify-content:center}.badge .ic svg{width:15px;height:17px}' +
+      '.badge.fl .ic::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(11,99,246,.36);opacity:0;animation:amp 6s ease-out infinite;pointer-events:none}@keyframes amp{0%,55%{opacity:0;transform:scale(1)}62%{opacity:1}100%{opacity:0;transform:scale(1.5)}}' +
+      '.badge .n{min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:' + C.acc + ';color:#fff;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}.badge .n[hidden]{display:none}' +
       '.badge .lb{padding-right:4px}' +
       '.badge:focus-visible,.lnk:focus-visible,.line button:focus-visible,.it:focus-visible{outline:2px solid ' + C.acc + ';outline-offset:2px}' +
       '.line{display:flex;justify-content:center;padding:12px 16px;font-size:12.5px;color:' + C.sub + '}' +
@@ -145,9 +151,11 @@
       '.lnk{display:flex;align-items:center;gap:8px;margin-top:7px;color:' + C.fg + ';text-decoration:none;font-size:12px;line-height:1.35}.lnk svg{width:20px;height:23px}' +
       '.lnk b{display:block;font-weight:850;letter-spacing:.01em}.lnk b .ai{color:' + C.acc + '}.lnk em{display:block;font-style:normal;font-weight:700;color:' + C.acc + '}.lnk:hover em{text-decoration:underline}' +
       '.std{display:block;margin-top:6px;font-size:10.5px;color:' + C.sub + ';opacity:.9}' +
+      '.mo{display:block;margin-top:7px;padding:2px 0;border:0;background:none;color:' + C.acc + ';font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:2px}.mo:focus-visible{outline:2px solid ' + C.acc + ';outline-offset:2px;border-radius:4px}' +
       '.x{position:absolute;top:10px;right:10px;width:28px;height:28px;border:0;border-radius:8px;background:' + C.chip + ';color:' + C.sub + ';cursor:pointer;font:700 16px/28px sans-serif;padding:0}' +
       '.wrap{position:relative;display:inline-block}' +
-      '@media (max-width:560px){.badge{height:34px;font-size:12px}.badge .ic{width:24px;height:24px}.pop{bottom:44px}}';
+      '@media (max-width:560px){.badge{height:36px;font-size:12px}.badge .ic{width:26px;height:26px}.pop{bottom:46px}}' +
+      '@media (prefers-reduced-motion:reduce){.badge.fl,.badge.fl .ic::after{animation:none}}';
   }
 
   function build(raw, mountEl) {
@@ -167,7 +175,7 @@
     var reg = c.site ? '<a class="lnk" href="' + HOME + '/v/?s=' + encodeURIComponent(location.hostname) + '&id=' + encodeURIComponent(c.site) + '" target="_blank" rel="noopener" style="margin-top:4px"><span><em>AIMarker 등록 사이트인지 확인 →</em></span></a>' : '';
     var pop = '<div class="pop" role="dialog" aria-label="AI 활용 안내"><button class="x" type="button" aria-label="' + t('close') + '">×</button><h4>' + fp('h') + 'AI 활용 안내</h4><p class="who">' + who + '</p>' + lv + '<ul>' + items + '</ul>' +
       '<div class="here" hidden><b>' + t('here') + '</b><div class="list"></div></div>' + ct +
-      '<div class="ft">이 안내는 사이트 운영자가 직접 작성했습니다.' + reg + '<a class="lnk" href="' + HOME + '/label/?utm_source=label&utm_medium=referral" target="_blank" rel="noopener">' + fp('l') + '<span><b><span class="ai">AI</span>Marker</b><em>AI 표시 자동화 · 무료로 시작하기 →</em></span></a><span class="std">' + t('std') + '. ' + t('nocert') + '</span></div></div>';
+      '<div class="ft">이 안내는 사이트 운영자가 직접 작성했습니다.' + reg + '<a class="lnk" href="' + HOME + '/label/?utm_source=label&utm_medium=referral" target="_blank" rel="noopener">' + fp('l') + '<span><b><span class="ai">AI</span>Marker</b><em>AI 마킹 · 무료로 시작하기 →</em></span></a><span class="std">' + t('std') + '. ' + t('nocert') + '</span>' + (CFG.motion && !mountEl ? '<button class="mo" type="button" data-mo>' + t(moving() ? 'mOff' : 'mOn') + '</button>' : '') + '</div></div>';
     var host = D.createElement('div');
     host.setAttribute('data-aimarker', '1');
     var style = c.style, box = null;
@@ -180,7 +188,7 @@
     var root = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
     var trigger = style === 'line'
       ? '<div class="line"><button type="button" aria-expanded="false">' + fp('m') + '<span>' + (c.name ? esc(c.name) + josa(c.name) : '이 사이트는') + ' 일부 콘텐츠에 AI를 활용합니다 · <b>' + t('open') + '</b></span></button></div>'
-      : '<button class="badge" type="button" aria-expanded="false"><span class="ic">' + fp('b') + '</span><span class="lb">AI 활용 안내</span><span class="n" hidden></span></button>';
+      : '<button class="badge' + (!box && !mountEl && moving() ? ' fl' : '') + '" type="button" aria-expanded="false"><span class="ic">' + fp('b') + '</span><span class="lb">AI 활용 안내</span><span class="n" hidden></span></button>';
     root.innerHTML = '<style>' + noticeCss(C, c.side) + '</style><div class="k' + (box ? ' inl' : '') + '"><div class="wrap">' + pop + trigger + '</div></div>';
     var p = root.querySelector('.pop'), tr = root.querySelector('.badge, .line button');
     if (style === 'line') { var wr = root.querySelector('.wrap'); wr.style.display = 'block'; p.style.left = '50%'; p.style.right = 'auto'; p.style.transform = 'translateX(-50%)'; p.style.bottom = '48px'; }
@@ -210,41 +218,59 @@
       if (!cnt) return;
       var n = ITEMS.filter(function (x) { return x.kind; }).length;
       cnt.hidden = !n; cnt.textContent = n > 99 ? '99+' : String(n);
-      tr.setAttribute('aria-label', 'AI 활용 안내' + (n ? ', 이 페이지 AI 표시 ' + n + '건' : ''));
+      tr.setAttribute('aria-label', 'AI 활용 안내' + (n ? ', 이 페이지 AI 마크 ' + n + '건' : ''));
       if (p.classList.contains('on')) fillHere();
     }
     host.__open = setOpen;
     if (mountEl) mountEl.appendChild(host);
     else if (box) box.appendChild(host);
     else (D.body || D.documentElement).appendChild(host);
-    var api = { host: host, open: setOpen, update: update };
+    var mo = root.querySelector('[data-mo]');
+    if (mo) mo.addEventListener('click', function (e) { e.stopPropagation(); setMotion(!moving()); });
+    function motionUi(on) { var bd = root.querySelector('.badge'); if (bd && !box && !mountEl) bd.classList.toggle('fl', on); if (mo) mo.textContent = t(on ? 'mOff' : 'mOn'); }
+    var api = { host: host, open: setOpen, update: update, motion: motionUi };
     if (!mountEl) NOTICE = api;
     return host;
   }
 
-  /* ---------- 지문 마크 태그 ---------- */
-  var CFG = { tag: 'tag', pos: 'tl', light: false, z: 3, min: 96, meta: true, alt: true, ld: true, auto: true, rules: {}, site: '', name: '' };
+  /* ---------- AI 마크 태그 ---------- */
+  var CFG = { tag: 'tag', pos: 'tl', light: false, motion: true, z: 3, min: 96, meta: true, alt: true, ld: true, auto: true, rules: {}, site: '', name: '' };
   var ITEMS = [];          // { el, type: img|video|bg|block|frame, kind, basis, tool, why, host, thumb, src, ... }
+  /* 13.0 움직임: 사이트가 켜 두었고(data-motion) 방문자가 멈추지 않았을 때만. 방문자 설정은 이 브라우저에 기억(웹 접근성: 움직이는 콘텐츠 멈추기) */
+  var MKEY = 'aimarker-motion';
+  function moving() { return CFG.motion && store(MKEY) !== 'off'; }
+  function setMotion(on) {
+    store(MKEY, on ? 'on' : 'off');
+    ITEMS.forEach(function (x) { var el = x.host && x.host.__r && x.host.__r.querySelector('.t'); if (el) el.classList.toggle('fl', on); });
+    if (NOTICE && NOTICE.motion) NOTICE.motion(on);
+    if (CARD && CARD.mo) CARD.mo.textContent = t(on ? 'mOff' : 'mOn');
+    try { W.dispatchEvent(new CustomEvent('aimarker:motion', { detail: { on: on } })); } catch (e) { /* 오래된 브라우저 */ }
+  }
   var BY = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   function itemOf(el) { if (BY) return BY.get(el); for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].el === el) return ITEMS[i]; return null; }
   function labelOf(x) { return x.type === 'block' ? t('text') : t(x.kind); }
   function docOrder(a, b) { if (a.el === b.el) return 0; return a.el.compareDocumentPosition(b.el) & 4 ? -1 : 1; }
 
+  /* 13.0 AI 마크(2026.10.23): 둥근 알약 · 유리 같은 남색 바탕 · 흰 원 안의 지문, 은은하게 떠 있는 움직임(data-motion="0" 이면 멈춤, 움직임 줄이기 설정 존중) */
   var TAG_CSS = ':host{all:initial}*{box-sizing:border-box}' +
-    '.t{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px 0 3px;border-radius:9px;border:1px solid rgba(255,255,255,.24);background:rgba(8,20,47,.78);-webkit-backdrop-filter:blur(8px) saturate(150%);backdrop-filter:blur(8px) saturate(150%);color:#fff;font:760 12px/1 ' + FONT + ';letter-spacing:-.01em;white-space:nowrap;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.24);transition:background .15s ease,transform .15s ease,padding .2s ease;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}' +
-    '.t:hover{background:rgba(8,20,47,.92)}.t:active{transform:scale(.97)}.t:focus-visible{outline:2px solid #33C8FF;outline-offset:2px}' +
-    '.f{width:20px;height:20px;border-radius:6px;background:#fff;display:inline-flex;align-items:center;justify-content:center;flex:0 0 20px}.f svg{width:12.5px;height:14.3px}' +
+    '.t{position:relative;display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px 0 3px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:linear-gradient(180deg,rgba(26,48,104,.86),rgba(8,20,47,.9));-webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);color:#fff;font:700 12.5px/1 ' + FONT + ';letter-spacing:-.01em;white-space:nowrap;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 10px 24px -8px rgba(8,20,47,.55),0 2px 6px rgba(8,20,47,.2);transition:background .18s ease,box-shadow .18s ease,padding .22s ease;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}' +
+    '.t.fl{animation:amf var(--d,5.6s) ease-in-out var(--dl,0s) infinite}' +
+    '@keyframes amf{0%,100%{translate:0 0}50%{translate:0 -3px}}' +
+    '.t:hover{background:linear-gradient(180deg,rgba(32,60,128,.94),rgba(8,20,47,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 14px 30px -10px rgba(8,20,47,.6),0 2px 6px rgba(8,20,47,.22)}.t:active{scale:.97}.t:focus-visible{outline:2px solid #33C8FF;outline-offset:3px}' +
+    '.f{position:relative;width:22px;height:22px;border-radius:50%;background:#fff;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;box-shadow:0 0 0 2px rgba(125,184,255,.3)}.f svg{width:12.5px;height:14.3px}' +
+    '.t.fl .f::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid rgba(51,200,255,.5);opacity:0;animation:amp var(--d,5.6s) ease-out var(--dl,0s) infinite;pointer-events:none}' +
+    '@keyframes amp{0%,55%{opacity:0;transform:scale(1)}62%{opacity:1}100%{opacity:0;transform:scale(1.45)}}' +
     '.l{display:inline-block}' +
-    '.t.light{background:rgba(255,255,255,.9);color:#0E1F47;border-color:rgba(14,31,71,.16);box-shadow:0 3px 12px rgba(9,20,47,.16)}.t.light:hover{background:#fff}.t.light .f{background:#EEF4FF}' +
-    '.t.mini{padding:0 3px;gap:0}.t.mini .l{max-width:0;overflow:hidden;opacity:0;transition:max-width .22s ease,opacity .18s ease,margin .22s ease}' +
-    '.t.mini:hover,.t.mini:focus-visible{padding:0 10px 0 3px}.t.mini:hover .l,.t.mini:focus-visible .l{max-width:120px;opacity:1;margin-left:6px}' +
-    '.t.blk{height:24px;font-size:11.5px;border-radius:8px}.t.blk .f{width:18px;height:18px}' +
-    '.bar{display:flex;align-items:center;gap:7px;width:100%;height:28px;padding:0 10px 0 4px;border:0;border-radius:0;background:linear-gradient(0deg,rgba(8,20,47,.86),rgba(8,20,47,.62));color:#fff;font:700 12px/1 ' + FONT + ';letter-spacing:-.01em;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden}' +
-    '.bar .f{width:20px;height:20px}.bar .s{margin-left:auto;font-weight:650;font-size:11px;opacity:.78}.bar .s b{color:#7DB8FF;font-weight:800}' +
-    '.flash{animation:fl 1.1s ease 2}@keyframes fl{0%,100%{box-shadow:0 3px 12px rgba(0,0,0,.24)}50%{box-shadow:0 0 0 6px rgba(51,200,255,.55)}}' +
+    '.t.light{background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(242,246,252,.92));color:#0E1F47;border-color:rgba(14,31,71,.14);box-shadow:inset 0 1px 0 #fff,0 10px 24px -10px rgba(9,20,47,.34),0 2px 6px rgba(9,20,47,.1)}.t.light:hover{background:#fff}.t.light .f{background:#EEF4FF;box-shadow:0 0 0 2px rgba(11,99,246,.14)}' +
+    '.t.mini{padding:0 3px;gap:0}.t.mini .l{max-width:0;overflow:hidden;opacity:0;transition:max-width .24s ease,opacity .18s ease,margin .24s ease}' +
+    '.t.mini:hover,.t.mini:focus-visible{padding:0 12px 0 3px}.t.mini:hover .l,.t.mini:focus-visible .l{max-width:120px;opacity:1;margin-left:7px}' +
+    '.t.blk{height:24px;gap:6px;padding:0 10px 0 2px;font-size:11.5px}.t.blk .f{width:19px;height:19px;flex-basis:19px}.t.blk .f svg{width:11px;height:12.6px}' +
+    '.bar{display:flex;align-items:center;gap:8px;width:100%;height:30px;padding:0 10px 0 4px;border:0;border-radius:0;background:linear-gradient(0deg,rgba(8,20,47,.9),rgba(8,20,47,.6));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font:700 12px/1 ' + FONT + ';letter-spacing:-.01em;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden}' +
+    '.bar .f{width:21px;height:21px;flex-basis:21px}.bar .s{margin-left:auto;font-weight:650;font-size:11px;opacity:.8}.bar .s b{color:#7DB8FF;font-weight:800}' +
+    '.flash{animation:fl 1.1s ease 2}@keyframes fl{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 10px 24px -8px rgba(8,20,47,.55)}50%{box-shadow:0 0 0 6px rgba(51,200,255,.55)}}' +
     '.ck{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:7px;background:rgba(255,255,255,.92);color:#586179;border:1px dashed #9AA5BC;font:700 11px/1 ' + FONT + ';white-space:nowrap}' +
     '.ck.cors{color:#B54708;border-color:#F3B26B}.ck.no{color:#586179}.ck.skip{color:#858C9D}' +
-    '@media (prefers-reduced-motion:reduce){.t,.t.mini .l{transition:none}.flash{animation:none}}';
+    '@media (prefers-reduced-motion:reduce){.t,.t.mini .l{transition:none}.t.fl,.t.fl .f::after,.flash{animation:none}}';
 
   function hostFor(x) {
     var h = D.createElement('am-tag');
@@ -277,11 +303,12 @@
       el.innerHTML = '<span class="f">' + fp() + '</span><span>' + esc(lab) + '</span><span class="s"><b>AI</b>Marker</span>';
     } else {
       el = D.createElement('button'); el.type = 'button';
-      el.className = 't' + (CFG.light ? ' light' : '') + (style === 'mini' ? ' mini' : '') + (x.type === 'block' ? ' blk' : '');
+      el.className = 't' + (CFG.light ? ' light' : '') + (style === 'mini' ? ' mini' : '') + (x.type === 'block' ? ' blk' : '') + (moving() ? ' fl' : '');
       el.innerHTML = '<span class="f">' + fp() + '</span><span class="l">' + esc(lab) + '</span>';
+      if (CFG.motion) { if (x.ph == null) x.ph = (Math.random() * 5.2).toFixed(2); el.style.setProperty('--dl', '-' + x.ph + 's'); el.style.setProperty('--d', (5.2 + (+x.ph % 1.4)).toFixed(2) + 's'); }
     }
     var tw = t(x.type === 'block' ? 'block' : x.type === 'video' || x.type === 'frame' ? 'video' : 'img');
-    el.setAttribute('aria-label', (lab.slice(-tw.length) === tw ? lab : lab + ' ' + tw) + ', AIMarker 표시 근거 보기');
+    el.setAttribute('aria-label', (lab.slice(-tw.length) === tw ? lab : lab + ' ' + tw) + ', ' + t('ariaGo'));
     el.title = lab + ' · ' + t('b_' + x.basis);
     el.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); openCard(x, el); });
     el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') e.stopPropagation(); });
@@ -365,14 +392,14 @@
     '.c{position:fixed;z-index:2147483001;width:332px;max-width:calc(100vw - 20px);background:#fff;color:#0E1F47;border-radius:18px;box-shadow:0 26px 64px rgba(8,20,47,.30),0 0 0 1px rgba(14,31,71,.08);font-family:' + FONT + ';letter-spacing:-.01em;line-height:1.5;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow:hidden;animation:in .16s ease}' +
     '.c.sheet{left:0;right:0;bottom:0;top:auto!important;width:auto;max-width:none;border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom)}' +
     '@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}' +
-    '.hd{display:flex;gap:11px;align-items:center;padding:16px 46px 12px 16px}.ic{width:40px;height:40px;border-radius:12px;background:#F1F6FF;display:flex;align-items:center;justify-content:center;flex:0 0 40px}.ic svg{width:21px;height:24px}' +
+    '.hd{display:flex;gap:12px;align-items:center;padding:16px 46px 12px 16px}.ic{width:42px;height:42px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#FFFFFF,#E6EEFF 70%);box-shadow:inset 0 0 0 1px rgba(11,99,246,.14),0 6px 16px -8px rgba(11,99,246,.5);display:flex;align-items:center;justify-content:center;flex:0 0 42px}.ic svg{width:21px;height:24px}' +
     '.hd b{display:block;font-size:16px;font-weight:820;line-height:1.3}.hd small{display:block;font-size:12.5px;color:#586179;margin-top:2px}' +
-    '.k{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;background:#0E1F47;color:#fff;font-size:11.5px;font-weight:800;margin-right:6px;vertical-align:1px}.k.edit{background:#0A4FCB}.k.assist{background:#0B63F6}.k.virtual{background:#5B3BD6}' +
+    '.k{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:#0E1F47;color:#fff;font-size:11.5px;font-weight:800;margin-right:6px;vertical-align:1px}.k.edit{background:#0A4FCB}.k.assist{background:#0B63F6}.k.virtual{background:#5B3BD6}' +
     '.rows{padding:0 16px 6px}.row{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:8px 0;border-top:1px solid #EEF1F6;font-size:12.8px;align-items:start}.row>span{color:#858C9D;font-weight:650}.row b{font-weight:720}' +
     '.g{display:inline-flex;align-items:flex-end;gap:2px;height:12px;margin-left:6px;vertical-align:-1px}.g i{display:block;width:4px;border-radius:2px;background:#DCE3EE}.g i:nth-child(1){height:6px}.g i:nth-child(2){height:9px}.g i:nth-child(3){height:12px}.g.g1 i:nth-child(-n+1),.g.g2 i:nth-child(-n+2),.g.g3 i{background:#0B63F6}' +
     '.act{display:flex;gap:6px;padding:8px 16px 14px}.act a,.act button{flex:1;display:inline-flex;align-items:center;justify-content:center;height:38px;border-radius:10px;font:720 12.8px/1 ' + FONT + ';text-decoration:none;cursor:pointer;white-space:nowrap}' +
-    '.act .p{background:#0E1F47;color:#fff;border:1px solid #0E1F47}.act .p:hover{background:#08142F}.act .s{background:#fff;color:#0E1F47;border:1px solid #D0D6E0}.act .s:hover{border-color:#0E1F47}' +
-    '.ft{display:flex;align-items:center;gap:7px;padding:10px 16px;background:#F6F8FB;border-top:1px solid #EEF1F6;font-size:11px;color:#858C9D;line-height:1.45}.ft svg{width:13px;height:15px;flex:0 0 13px}.ft b{color:#0E1F47;font-weight:850}.ft b i{font-style:normal;color:#0B63F6}' +
+    '.act .p{background:#0B63F6;color:#fff;border:1px solid #0B63F6}.act .p:hover{background:#0952D6;border-color:#0952D6}.act .s{background:#fff;color:#0E1F47;border:1px solid #D0D6E0}.act .s:hover{border-color:#0E1F47}' +
+    '.ft{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:10px 16px;background:#F6F8FB;border-top:1px solid #EEF1F6;font-size:11px;color:#858C9D;line-height:1.45}.ft>span{flex:1 1 0;min-width:0}.ft .mo{flex:0 0 calc(100% - 20px);margin:0 0 0 20px;padding:2px 0;border:0;background:none;color:#0B63F6;font:700 11px/1.4 ' + FONT + ';text-align:left;cursor:pointer;text-decoration:underline;text-underline-offset:2px}.ft svg{width:13px;height:15px;flex:0 0 13px}.ft b{color:#0E1F47;font-weight:850}.ft b i{font-style:normal;color:#0B63F6}' +
     '.x{position:absolute;top:12px;right:12px;width:30px;height:30px;border:0;border-radius:9px;background:#F1F4F9;color:#586179;cursor:pointer;font:700 17px/30px sans-serif;padding:0}.x:hover{background:#E6EBF3}' +
     'a:focus-visible,button:focus-visible{outline:2px solid #0B63F6;outline-offset:2px}' +
     '@media (prefers-reduced-motion:reduce){.c{animation:none}}';
@@ -389,17 +416,17 @@
     var site = CFG.name ? esc(CFG.name) : esc(location.hostname.replace(/^www\./, ''));
     var vq = '?u=' + encodeURIComponent(x.src || '') + '&k=' + x.kind + '&b=' + x.basis + (x.tool ? '&t=' + encodeURIComponent(x.tool) : '') + '&s=' + encodeURIComponent(location.hostname) + (CFG.site ? '&id=' + encodeURIComponent(CFG.site) : '');
     r.innerHTML = '<style>' + CARD_CSS + '</style><div class="bk' + (sheet ? ' sheet' : '') + '"></div>' +
-      '<div class="c' + (sheet ? ' sheet' : '') + '" role="dialog" aria-modal="false" aria-label="' + esc(lab) + ' 표시 근거">' +
+      '<div class="c' + (sheet ? ' sheet' : '') + '" role="dialog" aria-modal="false" aria-label="' + esc(lab) + ' ' + t('cardL') + '">' +
       '<button class="x" type="button" aria-label="' + t('close') + '">×</button>' +
       '<div class="hd"><span class="ic">' + fp() + '</span><span><b><span class="k ' + x.kind + '">' + esc(lab) + '</span>' + esc(what) + '</b><small>' + esc(lead) + '</small></span></div>' +
       '<div class="rows">' +
       '<div class="row"><span>' + t('basis') + '</span><span><b>' + esc(t('b_' + x.basis)) + '</b><span class="g g' + g + '" aria-hidden="true"><i></i><i></i><i></i></span>' + (x.why ? '<br><small style="color:#586179">' + esc(x.why) + '</small>' : '') + '</span></div>' +
       (x.tool ? '<div class="row"><span>' + t('tool') + '</span><span>' + esc(x.tool) + '</span></div>' : '') +
-      '<div class="row"><span>' + t('who') + '</span><span>' + site + ' · AIMarker 자동 표시</span></div>' +
+      '<div class="row"><span>' + t('who') + '</span><span>' + site + ' (AIMarker)</span></div>' +
       '<div class="row"><span>' + t('when') + '</span><span>' + ymd() + ' · ' + t('browser') + '</span></div>' +
       '</div>' +
       '<div class="act"><a class="p" href="' + HOME + '/v/' + vq + '" target="_blank" rel="noopener">' + t('verify') + '</a>' + (NOTICE ? '<button class="s" type="button" data-n>' + t('notice') + '</button>' : '') + '</div>' +
-      '<div class="ft">' + fp('', false) + '<span><b><i>AI</i>Marker</b> 지문 마크 · ' + t('foot') + '</span></div></div>';
+      '<div class="ft">' + fp('', false) + '<span><b><i>AI</i>Marker</b> ' + t('mk') + ' · ' + t('foot') + '</span>' + (CFG.motion ? '<button class="mo" type="button" data-mo>' + t(moving() ? 'mOff' : 'mOn') + '</button>' : '') + '</div></div>';
     (D.body || D.documentElement).appendChild(host);
     var c = r.querySelector('.c');
     if (!sheet) {
@@ -413,7 +440,9 @@
     var nb = r.querySelector('[data-n]');
     if (nb) nb.addEventListener('click', function () { closeCard(); if (NOTICE) setTimeout(function () { NOTICE.open(true); }, 0); });
     c.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeCard(); });
-    CARD = { host: host, from: from };
+    var mb = r.querySelector('[data-mo]');
+    if (mb) mb.addEventListener('click', function () { setMotion(!moving()); });
+    CARD = { host: host, from: from, mo: mb };
     try { r.querySelector('.x').focus({ preventScroll: true }); } catch (e) { /* 무시 */ }
   }
   D.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeCard(); });
@@ -692,7 +721,7 @@
     if (!its.length) { if (old) old.remove(); return; }
     var g = its.map(function (x) {
       return { '@type': x.type === 'video' ? 'VideoObject' : 'ImageObject', contentUrl: x.src, digitalSourceType: 'https://cv.iptc.org/newscodes/digitalsourcetype/' + DST[x.kind],
-        description: labelOf(x) + ' (' + t('b_' + x.basis) + ', AIMarker 자동 표시)' };
+        description: labelOf(x) + ' (' + t('b_' + x.basis) + ', ' + t('brand') + ')' };
     });
     var s = old || D.createElement('script');
     s.type = 'application/ld+json'; s.id = 'aimarker-ld';
@@ -749,6 +778,7 @@
     var tg = a('tag'); CFG.tag = ({ tag: 1, mini: 1, bar: 1, none: 1 })[tg] ? tg : 'tag';
     var ps = a('pos'); CFG.pos = ({ tl: 1, tr: 1, bl: 1, br: 1 })[ps] ? ps : 'tl';
     CFG.light = a('tag-theme') === 'light';
+    CFG.motion = !/^(0|off|none)$/i.test(a('motion'));
     CFG.z = Math.max(1, Math.min(2147480000, parseInt(a('z'), 10) || 3));
     CFG.min = Math.max(40, Math.min(600, parseInt(a('min'), 10) || 96));
     CFG.meta = a('meta') === '0' ? false : a('meta') === 'all' ? 'all' : 'same'; CFG.alt = a('alt') !== '0'; CFG.ld = a('ld') !== '0'; CFG.auto = a('auto') !== '0';

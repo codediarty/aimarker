@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>봄결 리빙 · AIMarker 예시 사이트</title>
 <meta name="robots" content="noindex">
-<meta name="description" content="AIMarker 자동 표시를 보여 주려고 만든 가상의 쇼핑몰입니다. 글과 이미지는 생성형 AI(Claude)로 만들었습니다.">
+<meta name="description" content="AIMarker AI 마킹을 보여 주려고 만든 가상의 쇼핑몰입니다. 글과 이미지는 생성형 AI(Claude)로 만들었습니다.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
@@ -40,7 +40,7 @@
   .prod .ph { position: relative; border-radius: 16px; overflow: hidden; background: #EFE7DC; }
   .prod img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; transition: transform .4s ease; }
   .prod:hover img { transform: scale(1.03); }
-  .prod .sale { position: absolute; right: 10px; top: 10px; height: 24px; padding: 0 9px; border-radius: 7px; background: var(--terra); color: #fff; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; }
+  .prod .sale { position: absolute; right: 10px; top: 10px; height: 24px; padding: 0 9px; border-radius: 7px; background: #A65A3E; color: #fff; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; }
   .prod b { display: block; margin-top: 12px; font-size: 15px; font-weight: 700; }
   .prod span { display: block; margin-top: 4px; font-size: 13.5px; color: var(--sub); }
   .prod em { font-style: normal; font-weight: 800; color: var(--ink); }
@@ -57,7 +57,7 @@
 </style>
 </head>
 <body>
-<div class="note"><span><b>AIMarker 예시 사이트</b> · '봄결 리빙'은 설명을 위해 만든 가상의 쇼핑몰이며, 글과 이미지는 모두 생성형 AI(Claude)로 만들었습니다.</span> <a href="../label/" target="_top">AI 표시 자동화 보기</a></div>
+<div class="note"><span><b>AIMarker 예시 사이트</b> · '봄결 리빙'은 설명을 위해 만든 가상의 쇼핑몰이며, 글과 이미지는 모두 생성형 AI(Claude)로 만들었습니다.</span> <a href="../label/" target="_top">AI 마킹 보기</a></div>
 <header class="top"><div class="wrap bar">
   <a class="logo" href="./"><i></i>봄결 리빙</a>
   <nav class="menu" aria-label="쇼핑몰 메뉴"><a href="#new">신상품</a><a href="#new">리빙</a><a href="#new">침구</a><a href="#new">향</a><a href="#mag">매거진</a></nav>
@@ -91,7 +91,7 @@
 </main>
 
 <footer class="bot"><div class="wrap">
-  <b>봄결 리빙</b> · AIMarker 자동 표시를 보여 주려고 만든 가상의 쇼핑몰입니다. 실제로 판매하지 않습니다.<br>
+  <b>봄결 리빙</b> · AIMarker AI 마킹을 보여 주려고 만든 가상의 쇼핑몰입니다. 실제로 판매하지 않습니다.<br>
   이 페이지의 이미지는 생성형 AI(Claude)가 그렸고, 일부 파일에는 그 사실을 적은 출처 기록(IPTC 디지털 출처 유형)이 들어 있습니다.
 </div></footer>
 
@@ -104,7 +104,7 @@
     var s = document.createElement('script');
     s.src = '../m.js' + (q.get('v') && /^[\w.-]{1,20}$/.test(q.get('v')) ? '?v=' + q.get('v') : '');
     var attrs = { name: '봄결 리빙', use: 'image,text', review: 'all', date: '2026-10', 'ai-gen': '.magazine' };
-    var map = { tag: 'tag', pos: 'pos', tt: 'tag-theme', style: 'style', side: 'side', theme: 'theme', check: 'check', lang: 'lang' };
+    var map = { tag: 'tag', pos: 'pos', tt: 'tag-theme', motion: 'motion', style: 'style', side: 'side', theme: 'theme', check: 'check', lang: 'lang' };
     if (q.get('embed') === '1') attrs.side = 'right';   // 작은 창에서는 안내 단추가 첫 화면 단추를 가리지 않게 오른쪽에(주소 값이 있으면 그 값)
     Object.keys(map).forEach(function (k) { var v = q.get(k); if (v && /^[a-z0-9-]{1,12}$/.test(v)) attrs[map[k]] = v; });
     Object.keys(attrs).forEach(function (k) { s.setAttribute('data-' + k, attrs[k]); });

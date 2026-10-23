@@ -1,4 +1,4 @@
-/* AIMarker 빠른 지문 마크(/mark/ #auto): 붙여넣기 · 이미지 고르기 · 폴더 연결(새 파일 자동) · 휴대폰 공유하기로 받기.
+/* AIMarker 빠른 AI 마킹(/mark/ #auto): 붙여넣기 · 이미지 고르기 · 폴더 연결(새 파일 자동) · 휴대폰 공유하기로 받기.
    모두 이 브라우저 안에서만 처리하고 서버로 보내지 않습니다. */
 (function () {
   'use strict';
@@ -49,7 +49,7 @@
     var it = { src: src, folder: !!folder, el: document.createElement('figure') };
     var d = it.el;
     d.className = 'k-qm-item';
-    d.innerHTML = '<img alt="지문 마크를 넣은 이미지"><figcaption><b></b><span class="meta"></span><span class="acts"><a class="k-btn k-btn-p k-btn-s" download>내려받기</a>' +
+    d.innerHTML = '<img alt="AI 마크를 넣은 이미지"><figcaption><b></b><span class="meta"></span><span class="acts"><a class="k-btn k-btn-p k-btn-s" download>내려받기</a>' +
       (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write && !touch ? '<button class="k-btn k-btn-l k-btn-s" type="button" data-cp>복사</button>' : '') +
       (navigator.canShare ? '<button class="k-btn k-btn-l k-btn-s" type="button" data-sh>공유</button>' : '') + '</span></figcaption>';
     setItem(it, r);
@@ -86,7 +86,7 @@
       });
     });
     return queue.then(function () {
-      if (n) say(n + '개에 지문 마크를 넣었어요. 위에서 모양을 바꾸면 결과도 바로 바뀝니다. 파일은 이 브라우저 밖으로 나가지 않았습니다.');
+      if (n) say(n + '개에 AI 마크를 넣었어요. 위에서 모양을 바꾸면 결과도 바로 바뀝니다. 파일은 이 브라우저 밖으로 나가지 않았습니다.');
       if (n && window.innerWidth <= 920 && firstIt) res.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return n;
     });

@@ -186,7 +186,7 @@
   }
   function extra(it) {
     if (it.state === 'err') return it.retry ? '<div class="au-act"><button type="button" class="btn btn-g btn-s" data-act="retry">다시 확인</button></div>' : '';
-    if (it.state === 'confirm') return '<div class="au-act"><button type="button" class="btn btn-p btn-s" data-act="confirm">' + (it.label === 'no_ai' ? 'AI 미사용이 맞아요' : '그대로 박기') + '</button>' + (it.related ? '<a class="btn btn-g btn-s" href="' + esc(MK.markUrl(it.related)) + '" target="_blank" rel="noopener">관련 마크 보기</a>' : '') + (it.label === 'no_ai' ? '<button type="button" class="btn btn-g btn-s" data-act="toai">AI 표시로 바꾸기</button>' : '') + '</div>';
+    if (it.state === 'confirm') return '<div class="au-act"><button type="button" class="btn btn-p btn-s" data-act="confirm">' + (it.label === 'no_ai' ? 'AI 미사용이 맞아요' : '그대로 박기') + '</button>' + (it.related ? '<a class="btn btn-g btn-s" href="' + esc(MK.markUrl(it.related)) + '" target="_blank" rel="noopener">관련 마크 보기</a>' : '') + (it.label === 'no_ai' ? '<button type="button" class="btn btn-g btn-s" data-act="toai">AI 마크로 바꾸기</button>' : '') + '</div>';
     if (it.state === 'conflict') return '<div class="au-act"><button type="button" class="btn btn-p btn-s" data-act="reissue">고른 표시로 다시 박기</button></div>';
     if (it.state === 'done' && it.out) {
       var where = it.out.kind === 'embed' ? (IMG[it.fmt] ? (it.out.vis ? '화면 마크 · 파일 속 정보' : '파일 속 정보') : '문서 속성' + (it.out.notice ? ' · 표시 문장' : '')) : '기록 파일(.xmp) · 마크 카드';

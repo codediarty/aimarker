@@ -1,7 +1,7 @@
 {
   "name": "AIMarker",
   "short_name": "AIMarker",
-  "description": "AI로 만든 이미지와 글에 지문 마크를 자동으로. AI 표시 자동화, 지문 마크 넣기, AI 검색 노출 진단, 글 검사를 한곳에서. 파일과 글은 저장하지 않습니다.",
+  "description": "AI로 만든 이미지와 글에 AI 마크를 자동으로. AI 마킹, AI 마크 넣기, AI 검색 노출 진단, 글 검사를 한곳에서. 파일과 글은 저장하지 않습니다.",
   "id": "/",
   "start_url": "/?src=app",
   "scope": "/",
@@ -31,13 +31,13 @@
   ],
   "shortcuts": [
     {
-      "name": "빠른 지문 마크",
-      "short_name": "지문 마크",
+      "name": "빠른 AI 마킹",
+      "short_name": "AI 마크",
       "url": "/mark/?src=app#auto"
     },
     {
-      "name": "AI 표시 자동화",
-      "short_name": "AI 표시",
+      "name": "AI 마킹",
+      "short_name": "AI 마킹",
       "url": "/label/?src=app"
     },
     {

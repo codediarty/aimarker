@@ -44,7 +44,7 @@
   }
   function stChip(st) { return '<span class="st3 ' + st + '"><i></i>' + ST[st] + '</span>'; }
   function scChip(it) { if (!it.check) return '<span class="sc na">-</span>'; var s = it.check.score; return '<span class="sc ' + (s >= 50 ? 'hi' : s >= 20 ? 'mid' : 'ok') + '">' + s + '</span>'; }
-  var EVN = { create: '소재 만듦', check: '자동 점검', fix: '수정 문구 적용', internal: '내부 확인', share: '승인 링크 보냄', approved: '광고주 승인', changes: '수정 요청 받음', publish: '게시 완료', image: '이미지 추가', label: 'AI 표시 넣음' };
+  var EVN = { create: '소재 만듦', check: '자동 점검', fix: '수정 문구 적용', internal: '내부 확인', share: '승인 링크 보냄', approved: '광고주 승인', changes: '수정 요청 받음', publish: '게시 완료', image: '이미지 추가', label: 'AI 마크 넣음' };
   function addEvent(it, k, note, extra) {
     var ev = { at: Date.now(), k: k, by: S.me || '', note: note || '' };
     if (extra) for (var x in extra) ev[x] = extra[x];
@@ -308,7 +308,7 @@
       if (/^이미지 소재$|^새 소재$/.test(it.title)) it.title = ok[0].name.replace(/\.[a-z0-9]+$/i, '').slice(0, 40);
       autoFlags(it); save(); if (CUR === it) { paintFiles(it); paintFlagsAuto(it); $('#title').value = it.title; }
       var ai = ok.filter(function (f) { return f.det.level === 'confirmed' || f.det.level === 'likely'; }).length;
-      toast(ai ? 'AI로 만든 흔적이 있는 이미지 ' + ai + '장을 찾았어요. AI 표시를 넣어 내려받을 수 있어요.' : '이미지 ' + ok.length + '장을 살폈어요. 기록이 없는 이미지는 확인 불가로 둡니다.');
+      toast(ai ? 'AI로 만든 흔적이 있는 이미지 ' + ai + '장을 찾았어요. AI 마크를 넣어 내려받을 수 있어요.' : '이미지 ' + ok.length + '장을 살폈어요. 기록이 없는 이미지는 확인 불가로 둡니다.');
       if (it.copy) runCheck(it); else paintResult(it);
     });
   }
@@ -319,7 +319,7 @@
       var L = P.LEVEL[f.det.level], can = !!MEM[f.id];
       return '<div class="fcard" data-fid="' + f.id + '">' + (f.thumb ? '<img src="' + f.thumb + '" alt="">' : '') + '<button class="x3" type="button" data-del="' + f.id + '" aria-label="빼기">×</button>' +
         '<div class="fb3"><b title="' + esc(f.name) + '">' + esc(f.name) + '</b><span class="pv ' + L.c + '">' + L.t + '</span></div>' +
-        '<button class="lb" type="button" data-label="' + f.id + '"' + (can ? '' : ' title="원본을 다시 올리면 표시를 넣을 수 있어요"') + '>' + (can ? 'AI 표시 넣어 내려받기' : '원본 다시 올리기') + '</button></div>';
+        '<button class="lb" type="button" data-label="' + f.id + '"' + (can ? '' : ' title="원본을 다시 올리면 표시를 넣을 수 있어요"') + '>' + (can ? 'AI 마크 넣어 내려받기' : '원본 다시 올리기') + '</button></div>';
     }).join('');
     box.onclick = function (e) {
       var d = e.target.closest('[data-del]');
@@ -518,7 +518,7 @@
       '<div class="field"><label for="dind">기본 업종 규칙 팩</label><select class="sel" id="dind">' + Object.keys(U.IND).map(function (k) { return '<option value="' + k + '"' + (k === S.ind ? ' selected' : '') + '>' + esc(U.IND[k]) + '</option>'; }).join('') + '</select></div></div>' +
       '<div class="row mt16"><button class="btn btn-p" type="button" id="ssave">저장</button></div></div>' +
       '<div class="ac"><h2>데이터</h2><p class="note mt8">소재 ' + S.items.length + '개 · 원장 기록 ' + S.reports.length + '개</p><div class="row mt12"><button class="btn btn-g" type="button" id="exp">' + ico(I.dl) + '전체 내보내기(JSON)</button><label class="btn btn-g">' + ico(I.upload) + '가져오기<input type="file" id="imp" accept="application/json" hidden></label><button class="btn btn-t" type="button" id="wipe">' + ico(I.trash) + '모두 지우기</button></div></div>' +
-      '<div class="ac"><h2>자동화 · 연동</h2><p class="note mt8">사내 시스템 · 콘텐츠 관리 도구 · 구글 시트 · n8n · Make에서 같은 엔진을 API로 부를 수 있습니다.</p><div class="row mt12"><a class="btn btn-g" href="' + AM.root + 'developers/">개발자 API · 무료 키 받기</a><a class="btn btn-t" href="' + AM.root + 'contact/">팀으로 쓰기(도입 상담)</a></div></div>';
+      '<div class="ac"><h2>자동화 · 연동</h2><p class="note mt8">사내 시스템 · 콘텐츠 관리 도구 · 구글 시트 · n8n · Make에서 같은 엔진을 API로 부를 수 있습니다.</p><div class="row mt12"><a class="btn btn-g" href="' + AM.root + 'developers/">개발자 API · 무료 키 받기</a><a class="btn btn-t" href="' + AM.root + 'pricing/#credits">팀으로 쓰기(크레딧 충전)</a></div></div>';
     $('#ssave').addEventListener('click', function () { S.name = $('#wsn').value.trim().slice(0, 40) || '내 작업 공간'; S.me = $('#me').value.trim().slice(0, 30); S.ind = $('#dind').value; save(); paintSide(); toast('저장했어요.'); });
     $('#exp').addEventListener('click', function () { P.save(new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' }), 'aimarker-workspace-' + ymd(Date.now()).replace(/-/g, '') + '.json'); });
     $('#imp').addEventListener('change', function (e) {

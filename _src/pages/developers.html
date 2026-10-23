@@ -264,7 +264,7 @@ while (res.output.some((o) =&gt; o.type === 'function_call')) {
       </tbody></table></div>
     <div class="cols3">
       <div class="col-it"><b>표시, 근거</b><p>label: ai_generated, ai_edited, ai_assisted, no_ai. basis: verified(서명 검증), record(파일 기록), declared(발급자 신고). 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지, 표시본에 AI 마크가 있으면 CONFIRM.</p></div>
-      <div class="col-it"><b>인증, 한도</b><p>본문에 "key": "amk_…"를 넣습니다. 무료 키는 하루 300회(일괄 요청은 항목 수만큼 셉니다). 마크 확인, 찾기, 공개키, 앵커는 키 없이, 마크 관리는 관리 키만으로 쓸 수 있습니다. 한도를 늘리려면 <a href="{{root}}contact/?plan=api">상담</a>을 신청하세요.</p></div>
+      <div class="col-it"><b>인증, 한도</b><p>본문에 "key": "amk_…"를 넣습니다. 무료 키는 하루 300회(일괄 요청은 항목 수만큼 셉니다). 마크 확인, 찾기, 공개키, 앵커는 키 없이, 마크 관리는 관리 키만으로 쓸 수 있습니다. 더 쓰려면 요청에 크레딧 코드(pass)를 함께 보내 쓴 만큼 냅니다(<a href="{{root}}pricing/#rates">크레딧 가격표</a>). 전용 한도가 필요하면 <a href="{{root}}contact/?plan=api">문의</a>해 주세요.</p></div>
       <div class="col-it"><b>오류</b><p>오류가 나면 ok:false와 code를 돌려줍니다. code: KEY, QUOTA, BUSY, HASH, CONFLICT(allowed, reasons), CONFIRM(related), DECLARE, REVOKED, NOT_FOUND. 전체 설명은 <a class="nw" href="{{root}}llms-full.txt">llms-full.txt</a>에 있습니다.</p></div>
     </div>
     <div class="dev-batch" id="batch">

@@ -1,4 +1,4 @@
-/* AIMarker AI 표시 자동화(/label/ · 첫 화면): 예시 사이트 켜고 끄기 · 마크 모양 · 점검 모드 */
+/* AIMarker AI 마킹(/label/ · 첫 화면): 예시 사이트 켜고 끄기 · 마크 모양 · 점검 모드 */
 (function () {
   'use strict';
   var fr = document.getElementById('liveFrame'), on = document.getElementById('liveOn');

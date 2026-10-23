@@ -55,7 +55,7 @@ selflabel: footer
       <article class="mod4"><header><span class="mod4-ic">{{ico:key}}</span><div><h3>서명 재검증</h3><small>클라이언트를 믿지 않음</small></div></header><p>기기에서 보낸 판독 결과를 그대로 믿지 않고, 서버가 서명, 클레임, 단정 해시를 처음부터 다시 계산합니다. ECDSA(<span class="nw">P-256</span>, <span class="nw">P-384</span>, <span class="nw">P-521</span>), <span class="nw">RSA-PSS</span>, Ed25519까지 7가지 서명 방식을 직접 구현했습니다.</p></article>
       <article class="mod4"><header><span class="mod4-ic">{{ico:shield}}</span><div><h3>인증서 사슬, 신뢰 목록</h3><small>누가 서명했는지</small></div></header><p>서명 인증서 사슬을 C2PA 공식 신뢰 목록, 임시 신뢰 목록과 대조하고, 용도(EKU), 기간, 타임스탬프까지 확인합니다. 목록은 7일마다 자동으로 갱신합니다.</p></article>
       <article class="mod4"><header><span class="mod4-ic">{{ico:fingerprint}}</span><div><h3>도구 지문, 서명자 분류</h3><small>무엇으로 만들었는지</small></div></header><p>생성 도구, 편집기, 카메라, 플랫폼을 구분하는 지문 DB로 AI 생성, 편집, 합성, 보정, 촬영 원본을 가려냅니다. 이름만 일치하는 약한 단서로는 판정을 좁히지 않습니다.</p></article>
-      <article class="mod4"><header><span class="mod4-ic">{{ico:scale}}</span><div><h3>충돌 규칙, 오염 막기</h3><small>틀린 표시를 막는 규칙</small></div></header><p>AI 흔적이 하나라도 있으면 'AI 미사용' 표시를 막고, 신뢰할 수 있는 촬영 원본 서명이 있으면 AI 표시를 막습니다. 다른 사람이 등록한 표시본 해시나 비슷한 이미지의 마크는 참고로만 사용해, 남의 등록 기록이 내 표시를 가로막지 못하게 했습니다.</p></article>
+      <article class="mod4"><header><span class="mod4-ic">{{ico:scale}}</span><div><h3>충돌 규칙, 오염 막기</h3><small>틀린 표시를 막는 규칙</small></div></header><p>AI 흔적이 하나라도 있으면 'AI 미사용' 표시를 막고, 신뢰할 수 있는 촬영 원본 서명이 있으면 AI 마크를 막습니다. 다른 사람이 등록한 표시본 해시나 비슷한 이미지의 마크는 참고로만 사용해, 남의 등록 기록이 내 표시를 가로막지 못하게 했습니다.</p></article>
     </div>
   </div>
 </section>
