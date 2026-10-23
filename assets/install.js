@@ -10,7 +10,7 @@
     ['media', '미디어 · 블로그 · 크리에이터', ['text', 'image', 'video'], 'all'], ['it', 'IT · AI 서비스', ['text', 'chat', 'recommend', 'analysis'], 'all'], ['etc', '기타', ['text'], 'all']
   ];
   var PLAT = [
-    ['imweb', '아임웹', ['관리자 화면 <b>환경 설정 → SEO 및 고급 설정 → 코드 삽입</b>으로 갑니다.', '<b>바디(Body) 코드</b> 칸 맨 아래에 붙여 넣고 저장합니다.', '사이트를 새로 고침해 화면 아래 \'AI 활용 안내\' 배지가 보이면 끝입니다.']],
+    ['imweb', '아임웹', ['관리자 화면 <b>환경 설정 → SEO 및 고급 설정 → 코드 삽입</b>으로 갑니다.', '<b>바디(Body) 코드</b> 칸 맨 아래에 붙여 넣고 저장합니다.', '사이트를 새로 고침해 화면 아래 \'AI 마킹\' 배지가 보이면 끝입니다.']],
     ['cafe24', '카페24', ['쇼핑몰 관리자 <b>디자인 → 디자인 편집</b>에서 공통 레이아웃(layout.html)을 엽니다.', '<code>&lt;/body&gt;</code> 바로 위에 붙여 넣고 저장합니다.', '모바일 디자인을 따로 쓰면 모바일 레이아웃에도 한 번 더 넣습니다.']],
     ['wordpress', '워드프레스', ['코드 삽입 플러그인(예: WPCode)의 <b>Footer</b> 칸에 붙여 넣는 방법이 가장 안전합니다.', '테마를 직접 고친다면 footer.php의 <code>&lt;/body&gt;</code> 바로 위에 넣습니다.']],
     ['godo', '고도몰', ['<b>디자인 → 디자인 편집</b>에서 하단 공통 영역(footer)을 엽니다.', '맨 아래에 붙여 넣고 저장합니다. 모바일 스킨에도 한 번 더 넣습니다.']],
@@ -90,7 +90,7 @@
   function plainText(c) {
     var parts = (c.use || 'text').split(',').map(function (k) { return USE_TXT[k]; }).filter(Boolean);
     var rv = c.review === 'all' ? ' AI 결과물은 담당자가 확인한 뒤 게시합니다.' : c.review === 'important' ? ' 중요한 안내는 담당자가 직접 확인합니다.' : '';
-    return '[' + (c.name ? c.name + '의 ' : '') + 'AI 활용 안내] ' + parts.join(' ') + rv + ' (AIMarker 표시 기준)';
+    return '[' + (c.name ? c.name + '의 ' : '') + 'AI 마킹 안내] ' + parts.join(' ') + rv + ' (AIMarker 표시 기준)';
   }
   var fr = $('#prevFrame'), frBase = fr.getAttribute('src').split('?')[0], frVer = (fr.getAttribute('src').match(/[?&]v=([\w.-]+)/) || [])[1] || '', frT = 0, lastQ = '';
   function frameQ(c) {

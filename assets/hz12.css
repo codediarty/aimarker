@@ -155,7 +155,7 @@
 .hz12-files .t .more { color: var(--ds-ink-2); font-weight: 600; }
 .hz12-files .b { display: flex; gap: 8px; flex-wrap: wrap; }
 
-/* 충전 창: 이 글에 드는 크레딧 */
+/* 충전 창: 이 글에 드는 토큰 */
 .hz12-need { margin: -4px 0 14px; padding: 10px 12px; border-radius: 10px; background: var(--ds-blue-50); font-size: 14px; line-height: 1.6; color: var(--ds-ink-2); word-break: keep-all; }
 .hz12-need[hidden] { display: none; }
 .hz12-need b { color: var(--ds-blue-700); }

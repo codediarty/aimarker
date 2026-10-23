@@ -39,22 +39,22 @@
 <dialog class="hz7-dlg" id="hzBuy" aria-labelledby="hzBuyT">
   <form method="dialog" class="hz7-dlg-x"><button type="submit" aria-label="닫기">{{ico:x}}</button></form>
   <div class="hz7-dlg-b" id="hzBuyBody">
-    <h2 id="hzBuyT">크레딧 충전</h2>
+    <h2 id="hzBuyT">토큰 충전</h2>
     <p class="hz12-need" id="hzBuyNeed" hidden></p>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>
-      <fieldset class="hz7-prod"><legend class="sr">충전할 크레딧</legend>
-        <label><input type="radio" name="product" value="c3"><span><b>300크레딧</b><em>3,000원</em><small>300크레딧 · 3,000자 글 검사와 휴머나이징 약 1번</small></span></label>
-        <label><input type="radio" name="product" value="c10" checked><span><b>1,100크레딧</b><em>10,000원</em><small>1,000크레딧 + 100크레딧 더 · 3,000자 글 검사와 휴머나이징 약 6번</small></span></label>
-        <label class="best"><input type="radio" name="product" value="c30"><span><b>3,500크레딧<i>추천</i></b><em>30,000원</em><small>3,000크레딧 + 500크레딧 더 · 3,000자 글 검사와 휴머나이징 약 19번</small></span></label>
-        <label><input type="radio" name="product" value="c50"><span><b>6,000크레딧</b><em>50,000원</em><small>5,000크레딧 + 1,000크레딧 더 · 3,000자 글 검사와 휴머나이징 약 33번</small></span></label>
+      <fieldset class="hz7-prod"><legend class="sr">충전할 토큰</legend>
+        <label><input type="radio" name="product" value="c3"><span><b>300토큰</b><em>3,000원</em><small>300토큰 · 3,000자 글 검사와 휴머나이징 약 1번</small></span></label>
+        <label><input type="radio" name="product" value="c10" checked><span><b>1,100토큰</b><em>10,000원</em><small>1,000토큰 + 100토큰 더 · 3,000자 글 검사와 휴머나이징 약 6번</small></span></label>
+        <label class="best"><input type="radio" name="product" value="c30"><span><b>3,500토큰<i>추천</i></b><em>30,000원</em><small>3,000토큰 + 500토큰 더 · 3,000자 글 검사와 휴머나이징 약 19번</small></span></label>
+        <label><input type="radio" name="product" value="c50"><span><b>6,000토큰</b><em>50,000원</em><small>5,000토큰 + 1,000토큰 더 · 3,000자 글 검사와 휴머나이징 약 33번</small></span></label>
       </fieldset>
-      <div class="field"><label for="hzBuyMail">크레딧 코드, 영수증을 받을 이메일 <em>필수</em></label><input class="inp" id="hzBuyMail" name="contact" type="email" inputmode="email" autocomplete="email" maxlength="80" required placeholder="name@example.com"></div>
-      <label class="consent"><input type="checkbox" name="agree"><span>충전한 날부터 7일 안에는 그 충전분의 유료 크레딧 가운데 쓰고 남은 만큼을 그대로, 그 뒤에는 남은 유료 크레딧 금액에서 10%를 뺀 금액을 환불한다는 것(더 받은 크레딧은 환불 대상이 아님, 유효기간 5년)을 확인했고, 크레딧 약관과 주문 확인, 코드와 영수증 발송을 위한 이메일 수집에 동의합니다. <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a>, <a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a></span></label>
+      <div class="field"><label for="hzBuyMail">토큰 코드, 영수증을 받을 이메일 <em>필수</em></label><input class="inp" id="hzBuyMail" name="contact" type="email" inputmode="email" autocomplete="email" maxlength="80" required placeholder="name@example.com"></div>
+      <label class="consent"><input type="checkbox" name="agree"><span>쓴 토큰과 더 받은 토큰은 환불되지 않고, 쓰고 남은 유료 토큰은 충전한 날부터 7일 안에는 그대로, 그 뒤에는 10%를 뺀 금액만 환불된다는 것(유효기간 5년)을 확인했고, 토큰 약관과 주문 확인, 코드와 영수증 발송을 위한 이메일 수집에 동의합니다. <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a>, <a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a></span></label>
       <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button class="btn btn-p btn-l" type="submit"><span>주문하기</span></button>
       <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n" id="hzBuyNote">주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 크레딧 코드를 메일로 보내 드립니다.</p>
+      <p class="hz7-dlg-n" id="hzBuyNote">주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 토큰 코드를 메일로 보내 드립니다.</p>
       <p class="hz7-dlg-n">가격은 부가세 포함입니다. 결제는 공식 결제처 성균관컨설팅에서 하며, 카드 명세서에는 성균관컨설팅으로 표시됩니다. 미성년자는 법정대리인의 동의를 받아 구매해 주세요(동의 없는 구매는 취소할 수 있습니다). 운영 성균관컨설팅(대표 이채연), 사업자등록번호 272-32-01885, 통신판매업 신고 제2026-경기송탄-0622, 문의 contact@skkc.co.kr</p>
     </form>
   </div>
@@ -63,12 +63,12 @@
 <dialog class="hz7-dlg" id="hzCode" aria-labelledby="hzCodeT">
   <form method="dialog" class="hz7-dlg-x"><button type="submit" aria-label="닫기">{{ico:x}}</button></form>
   <div class="hz7-dlg-b">
-    <h2 id="hzCodeT">크레딧 코드 넣기</h2>
+    <h2 id="hzCodeT">토큰 코드 넣기</h2>
     <form id="hzCodeForm" novalidate>
       <div class="field"><label for="hzCodeIn">메일로 받은 16자리 코드</label><input class="inp hz7-code-in" id="hzCodeIn" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX"></div>
       <button class="btn btn-p btn-l" type="submit">코드 넣기</button>
       <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n">코드는 이 브라우저에만 저장됩니다. 다른 기기에서는 코드를 다시 넣어 주세요. 예전에 산 이용권 코드도 여기에 넣습니다. 코드가 없나요? <button type="button" class="hz7-link" data-buy="c10">크레딧 충전</button></p>
+      <p class="hz7-dlg-n">코드는 이 브라우저에만 저장됩니다. 다른 기기에서는 코드를 다시 넣어 주세요. 예전에 산 이용권 코드도 여기에 넣습니다. 코드가 없나요? <button type="button" class="hz7-link" data-buy="c10">토큰 충전</button></p>
     </form>
   </div>
 </dialog>

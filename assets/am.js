@@ -13,10 +13,30 @@
     var t = ctl ? setTimeout(function () { ctl.abort(); }, timeoutMs || 20000) : 0;
     return fetch(AM.API, { method: 'POST', body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined, redirect: 'follow' })
       .then(function (r) { return r.json(); })
+      .then(function (j) { return tokOf(action, j); })
       .finally(function () { if (t) clearTimeout(t); });
   };
+  /* 13.1 이름 '크레딧' → '토큰': 서버(PASS)는 아직 '크레딧'이라 화면에 보이기 전에 바꿈.
+     결제 · 충전 · 코드 응답은 전체를, 그 밖의 응답은 오류 문구와 pass 정보만(이용자가 넣은 글은 건드리지 않음) */
+  var TOK_ALL = { 'am.pass': 1, 'am.passinfo': 1, 'am.buy': 1, 'am.payok': 1, 'am.adm': 1, 'am.lead': 1 };
+  function tokS(v) { return typeof v === 'string' ? v.replace(/크레딧/g, '토큰') : v; }
+  function tokDeep(o, d) {
+    if (o == null || d > 8) return o;
+    if (typeof o === 'string') return tokS(o);
+    if (Array.isArray(o)) return o.map(function (x) { return tokDeep(x, d + 1); });
+    if (typeof o === 'object') { var r = {}; for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) r[k] = tokDeep(o[k], d + 1); return r; }
+    return o;
+  }
+  function tokOf(action, j) {
+    if (!j || typeof j !== 'object') return j;
+    if (TOK_ALL[action]) return tokDeep(j, 0);
+    if (typeof j.message === 'string') j.message = tokS(j.message);
+    if (j.pass && typeof j.pass === 'object') j.pass = tokDeep(j.pass, 0);
+    return j;
+  }
+  AM.tok = tokS;
   /* 응답이 없을 때 한 번 더 보내기(2026.10.20): 서버가 요청을 받고도 시작하지 못해 응답 없이 멈추는 일이 있어
-     앞부분 시간 안에 답이 없으면 같은 요청을 한 번만 다시 보냄. 결제 · 크레딧 차감 요청에는 쓰지 않음(두 번 처리될 수 있어서) */
+     앞부분 시간 안에 답이 없으면 같은 요청을 한 번만 다시 보냄. 결제 · 토큰 차감 요청에는 쓰지 않음(두 번 처리될 수 있어서) */
   AM.callRetry = function (action, data, timeoutMs, onRetry) {
     var total = timeoutMs || 60000, first = Math.min(30000, Math.round(total / 2));
     return AM.call(action, data, first).catch(function (e) {

@@ -1520,8 +1520,8 @@ a.k-bcard, .au-tri article, .why6 article, .mods6 article, .b-box .b-stage, .b-n
   .bz-two { grid-template-columns: 1fr; }
 }
 
-/* ================= 24. 12.0 크레딧(개인 · 기업): 단추 옆 크레딧, 한 번 묻기, 충전 창, 충전 칸, 단가 표 =================
-   1크레딧 = 10원 기준. 값은 서버 PASS 1.2 와 build.py CREDITS · CREDIT_COST 가 같게 */
+/* ================= 24. 12.0 토큰(개인 · 기업): 단추 옆 토큰, 한 번 묻기, 충전 창, 충전 칸, 단가 표 =================
+   1토큰 = 10원 기준. 값은 서버 PASS 1.2 와 build.py CREDITS · CREDIT_COST 가 같게 */
 .btn-p .hz7-pill { background: rgba(0, 0, 0, .22); color: #fff; }
 .hz7-act .hz7-pill { margin-left: 2px; font-variant-numeric: tabular-nums; }
 .hz7-link.em { padding: 2px 8px; border-radius: var(--r1); background: var(--ds-blue-50); }
@@ -1582,7 +1582,7 @@ body .hz7-dlg .hz7-prod label input:checked + span { border-color: var(--ds-blue
   .hz7-to { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* 요금 첫 화면 고르기: 기업 칸 넷(기업 크레딧 더함) + 개인 하나 */
+/* 요금 첫 화면 고르기: 기업 칸 넷(기업 토큰 더함) + 개인 하나 */
 .ds-pick.ds-pick-4 { grid-template-columns: minmax(0, 4fr) minmax(0, 1fr); }
 .ds-pick-4 .ds-pick-g.b .ds-pick-c { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 @media (max-width: 1080px) { .ds-pick.ds-pick-4 { grid-template-columns: minmax(0, 1fr); } .ds-pick-4 .ds-pick-g.c .ds-pick-c { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
@@ -1605,7 +1605,7 @@ body .hz7-dlg .hz7-prod label input:checked + span { border-color: var(--ds-blue
 .hu-lockn { display: flex; align-items: flex-start; gap: 6px; margin: 8px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--ds-slate); }
 .hu-lockn .ico { flex: none; width: 14px; height: 14px; margin-top: 2px; color: var(--ds-mist); }
 @media (prefers-reduced-motion: reduce) { .hu-doc .hu-s, .hu-cats, .hu-doc .hu-s.in { transition: none; animation: none; } }
-/* 12.1 휴머나이징 페이지 무료 맛보기: 바꾼 글 하나 + 갈래 칩(바꾼 이유는 크레딧 결과에서) */
+/* 12.1 휴머나이징 페이지 무료 맛보기: 바꾼 글 하나 + 갈래 칩(바꾼 이유는 토큰 결과에서) */
 .hz9-one { display: grid; gap: 10px; padding: 18px 24px 22px; border: 1px solid var(--ds-line); border-radius: 12px; background: linear-gradient(180deg, var(--ds-blue-50), #fff 60%); }
 .hz9-one .lb { margin: 0; font-size: 12.5px; font-weight: 650; color: var(--ds-ink); }
 .hz9-one .hz7-text { max-height: none; padding: 0; border: 0; border-radius: 0; background: none; }

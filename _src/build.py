@@ -21,8 +21,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261023a"
-TODAY = "2026-10-23"
+VER = "20261024a"
+TODAY = "2026-10-24"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
@@ -34,13 +34,13 @@ SHOP_IDX = {
     "label-standard-m": "", "label-standard-y": "", "label-business-m": "", "label-business-y": "",
     "geo-lite": "", "geo-standard": "", "geo-pro": "", "geocare-care-m": "", "geocare-grow-m": "",
     "service-starter-m": "", "bundle-trust": "",
-    # 12.1 크레딧(개인 c3 · c10 · c30 · c50 은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로
+    # 12.1 토큰(개인 c3 · c10 · c30 · c50 은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로
     "c3": "", "c10": "", "c30": "", "c50": "", "credit-b10": "", "credit-b30": "", "credit-b100": "",
 }
 CATALOG = {
     "label": {"name": "AI 마킹", "vat": "부가세 별도", "tiers": [
         {"id": "label-free", "name": "무료", "who": "개인 · 1인 사이트", "price": "0원", "note": "사이트 1개까지", "per": "", "cta": "무료로 시작", "href": "site/",
-         "feat": ["코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글에 AI 마크 자동 부착", "AI 마크와 근거 창, AI 활용 안내 창", "점검 모드: 무엇을 왜 표시했는지 한눈에", "검색 · AI가 읽는 표시(구조화 데이터) 자동", "파일 AI 마킹과 서명 마크(웹 도구) 무료"]},
+         "feat": ["코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글에 AI 마크 자동 부착", "AI 마크와 근거 창, AI 마킹 안내 창", "점검 모드: 무엇을 왜 표시했는지 한눈에", "검색 · AI가 읽는 표시(구조화 데이터) 자동", "파일 AI 마킹과 서명 마크(웹 도구) 무료"]},
         {"id": "label-standard", "name": "스탠다드", "who": "1인 사업자 · 소상공인", "price": "9,900원", "per": "월", "m": 9900, "y": 99000,
          "feat": ["무료의 모든 기능", "AIMarker 등록 사이트: 확인 페이지에 회사와 담당자 표시", "안내 창에 문의처와 등록 확인 링크", "매달 AI 마킹 현황 메일 리포트", "서명 마크에 회사 이름과 등록 사이트 표시", "설치 도움 1회(원격)"]},
         {"id": "label-business", "name": "비즈니스", "who": "소규모 · 중견 기업", "price": "49,000원", "per": "월", "m": 49000, "y": 490000, "best": "추천",
@@ -73,17 +73,17 @@ CATALOG = {
          "feat": ["관리의 모든 것", "AI가 인용하기 좋은 글 매달 2편", "자주 묻는 질문 · 상품 피드 갱신", "경쟁사 추적과 분기 전략 회의"]},
     ]},
 }
-CATALOG["credit"] = {"name": "크레딧 충전", "vat": "부가세 별도, 세금계산서", "tiers": [
-    {"id": "credit-b10", "name": "12,000크레딧", "full": "크레딧 12,000(세금계산서)", "who": "팀 하나 · 수업 한 반", "price": "100,000원", "per": "충전", "m": 100000, "note": "10,000크레딧 + 2,000크레딧 더", "cta": "충전하기",
+CATALOG["credit"] = {"name": "토큰 충전", "vat": "부가세 별도, 세금계산서", "tiers": [
+    {"id": "credit-b10", "name": "12,000토큰", "full": "토큰 12,000(세금계산서)", "who": "팀 하나 · 수업 한 반", "price": "100,000원", "per": "충전", "m": 100000, "note": "10,000토큰 + 2,000토큰 더", "cta": "충전하기",
      "feat": ["AI 작성률 검사 · AI 휴머나이징을 한 코드로 함께", "API · MCP 요청에도 같은 코드(pass)", "AI 마킹 · AI 검색 요금제와 옵션 결제에도", "세금계산서, 유효기간 5년"]},
-    {"id": "credit-b30", "name": "39,000크레딧", "full": "크레딧 39,000(세금계산서)", "who": "여러 팀 · 학과", "price": "300,000원", "per": "충전", "m": 300000, "best": "추천", "note": "30,000크레딧 + 9,000크레딧 더", "cta": "충전하기",
-     "feat": ["12,000크레딧의 모든 것", "쓴 내역 정리(요청 시)", "부서 · 반별로 코드 나누기(요청 시)", "세금계산서, 유효기간 5년"]},
-    {"id": "credit-b100", "name": "140,000크레딧", "full": "크레딧 140,000(세금계산서)", "who": "기관 전체 · 대학", "price": "1,000,000원", "per": "충전", "m": 1000000, "note": "100,000크레딧 + 40,000크레딧 더", "cta": "충전하기",
-     "feat": ["39,000크레딧의 모든 것", "담당자 안내와 사용 가이드", "기관 계약서", "세금계산서, 유효기간 5년"]},
+    {"id": "credit-b30", "name": "39,000토큰", "full": "토큰 39,000(세금계산서)", "who": "여러 팀 · 학과", "price": "300,000원", "per": "충전", "m": 300000, "best": "추천", "note": "30,000토큰 + 9,000토큰 더", "cta": "충전하기",
+     "feat": ["12,000토큰의 모든 것", "쓴 내역 정리(요청 시)", "부서 · 반별로 코드 나누기(요청 시)", "세금계산서, 유효기간 5년"]},
+    {"id": "credit-b100", "name": "140,000토큰", "full": "토큰 140,000(세금계산서)", "who": "기관 전체 · 대학", "price": "1,000,000원", "per": "충전", "m": 1000000, "note": "100,000토큰 + 40,000토큰 더", "cta": "충전하기",
+     "feat": ["39,000토큰의 모든 것", "담당자 안내와 사용 가이드", "기관 계약서", "세금계산서, 유효기간 5년"]},
     {"id": "credit-ent", "name": "맞춤", "who": "더 많이 · 정기 충전", "price": "견적", "note": "기관 계약 · 연간 충전", "per": "", "cta": "견적 받기", "href": "contact/?plan=credit-ent&type=enterprise",
      "feat": ["필요한 만큼 맞춰 충전", "정기 충전 · 연간 계약", "전용 API 한도", "계약서 · 세금계산서"]},
 ]}
-# 13.0 추가 옵션도 결제 시트에서 바로 주문(카드 · 크레딧 · 계좌이체). 요금 칸으로는 쓰지 않음
+# 13.0 추가 옵션도 결제 시트에서 바로 주문(카드 · 토큰 · 계좌이체). 요금 칸으로는 쓰지 않음
 CATALOG["addon"] = {"name": "추가 옵션", "vat": "부가세 별도", "tiers": [
     {"id": "addon-install", "name": "설치 대행", "full": "AI 마킹 설치 대행", "who": "코드 넣기가 어려운 사이트", "price": "99,000원", "per": "1회", "m": 99000,
      "feat": ["우리 사이트에 코드 한 줄을 대신 넣기(원격, 사이트 1개)", "위치 규칙 정하기", "점검 모드로 확인까지"]},
@@ -119,9 +119,9 @@ def tiers_html(key, root, pick=None):
             sub = '12개월 %s원(10개월 요금)' % format(t["y"], ",")
         else:
             sub = t.get("note", "")
-        # 13.0 크레딧 하나로: 상품 금액(부가세 별도) 1크레딧 10원
+        # 13.0 토큰 하나로: 상품 금액(부가세 별도) 1토큰 10원
         if t.get("m") and key != "credit":
-            crs = '%s%s크레딧' % ("월 " if t.get("per") == "월" else "", format(t["m"] // 10, ","))
+            crs = '%s%s토큰' % ("월 " if t.get("per") == "월" else "", format(t["m"] // 10, ","))
             sub = '<b class="crn">%s</b>%s' % (crs, (' · ' + sub) if sub else '')
         sub = '<p class="yr">%s</p>' % (sub or '<span aria-hidden="true">&nbsp;</span>')
         best = (' <em class="k-best">%s</em>' % t["best"]) if t.get("best") else ""
@@ -133,12 +133,12 @@ def tiers_html(key, root, pick=None):
         out.append('<div class="k-plan%s" id="%s"><div class="hd"><h3>%s%s</h3><p class="who">%s</p></div><p class="pr"><b>%s</b>%s</p>%s%s<ul>%s</ul></div>'
                    % (" best" if t.get("best") else "", t["id"], t["name"], best, t["who"], t["price"], per, sub, btn, feats))
     n = len(c["tiers"])
-    tail = '' if key == "credit" else ' 충전해 둔 크레딧으로도 냅니다(상품 금액 1크레딧 10원).'
+    tail = '' if key == "credit" else ' 충전해 둔 토큰으로도 냅니다(상품 금액 1토큰 10원).'
     return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">%s. 결제는 공식 결제처 성균관컨설팅에서 카드, 간편결제, 계좌이체로 합니다.%s</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"], tail)
 
 
-# 12.0 크레딧(AI 작성률 검사 · AI 휴머나이징). 글 검사, 요금, 개인용 페이지가 같은 칸을 씀(값은 서버 PASS_.PRODUCTS · PASS_.CR 와 같게)
-CREDIT_COST = {"unit": (100, 2, 10), "pro": (100, 4, 20)}   # (글자 수 단위, 크레딧, 최소). 600자 이하 검사 · 도우미는 0
+# 12.0 토큰(AI 작성률 검사 · AI 휴머나이징). 글 검사, 요금, 개인용 페이지가 같은 칸을 씀(값은 서버 PASS_.PRODUCTS · PASS_.CR 와 같게)
+CREDIT_COST = {"unit": (100, 2, 10), "pro": (100, 4, 20)}   # (글자 수 단위, 토큰, 최소). 600자 이하 검사 · 도우미는 0
 CREDITS = [
     {"id": "c3", "cr": 300, "base": 300, "price": 3000, "who": "한 편 검사하고 고칠 때"},
     {"id": "c10", "cr": 1100, "base": 1000, "price": 10000, "who": "레포트 여러 편"},
@@ -153,7 +153,7 @@ def credit_cost(kind, n):
 
 
 def credits_html(mode, root):
-    """크레딧 충전 칸 네 개. mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
+    """토큰 충전 칸 네 개. mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
     cyc = credit_cost("unit", 3000) + credit_cost("pro", 3000)
     feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "유효기간 5년, 모자라면 같은 코드에 충전"]
     out = []
@@ -165,58 +165,58 @@ def credits_html(mode, root):
             btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], label)
         else:
             btn = '<a class="k-btn %s" href="%shumanize/#buy-%s">%s</a>' % (kind, root, t["id"], label)
-        more = ("%s크레딧 + %s크레딧 더" % (format(t["base"], ","), format(t["cr"] - t["base"], ","))) if t["cr"] > t["base"] else "%s원 = %s크레딧" % (format(t["price"], ","), format(t["cr"], ","))
+        more = ("%s토큰 + %s토큰 더" % (format(t["base"], ","), format(t["cr"] - t["base"], ","))) if t["cr"] > t["base"] else "%s원 = %s토큰" % (format(t["price"], ","), format(t["cr"], ","))
         k = t["cr"] // cyc
-        out.append('<article class="k-plan cr%s" id="cr-%s"><div class="hd"><h3>%s크레딧%s</h3><p class="who">%s</p></div><p class="pr"><b>%s원</b></p><p class="yr">%s</p>%s<ul><li class="cyc">%s<span>3,000자 글 검사와 휴머나이징 약 %d번</span></li></ul></article>'
+        out.append('<article class="k-plan cr%s" id="cr-%s"><div class="hd"><h3>%s토큰%s</h3><p class="who">%s</p></div><p class="pr"><b>%s원</b></p><p class="yr">%s</p>%s<ul><li class="cyc">%s<span>3,000자 글 검사와 휴머나이징 약 %d번</span></li></ul></article>'
                    % (" best" if t.get("tag") else "", t["id"], format(t["cr"], ","), tag, t["who"], format(t["price"], ","), more, btn, ico("pen"), k))
     allf = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in feat)
     return ('<div class="k-plans ds-plans c4 cr-plans">%s</div>'
-            '<div class="cr-all"><b>어느 크레딧이든 똑같이 열립니다</b><ul>%s</ul></div>') % ("".join(out), allf)
+            '<div class="cr-all"><b>어느 토큰이든 똑같이 열립니다</b><ul>%s</ul></div>') % ("".join(out), allf)
 
 
 def credit_cost_html():
     u, pr = CREDIT_COST["unit"], CREDIT_COST["pro"]
     rows = [
-        ("AI 작성률 검사", "모든 문장의 색과 이유, 구간별 분석, 결과상세내역서", "%d자당 %d크레딧, 최소 %d크레딧" % u, credit_cost("unit", 3000)),
-        ("AI 휴머나이징", "글 전체, 바꾼 이유, 다른 버전, 바꾸기 전후 AI 작성률", "%d자당 %d크레딧, 최소 %d크레딧" % pr, credit_cost("pro", 3000)),
-        ("문장 도우미 · 짧은 다시 검사", "600자 이하 문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "빠지지 않음(크레딧이 남아 있을 때)", 0),
+        ("AI 작성률 검사", "모든 문장의 색과 이유, 구간별 분석, 결과상세내역서", "%d자당 %d토큰, 최소 %d토큰" % u, credit_cost("unit", 3000)),
+        ("AI 휴머나이징", "글 전체, 바꾼 이유, 다른 버전, 바꾸기 전후 AI 작성률", "%d자당 %d토큰, 최소 %d토큰" % pr, credit_cost("pro", 3000)),
+        ("문장 도우미 · 짧은 다시 검사", "600자 이하 문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "빠지지 않음(토큰이 남아 있을 때)", 0),
         ("무료 맛보기", "앞 6,000자 AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "코드 없이 무료", 0),
     ]
-    tr = "".join('<tr><th scope="row">%s<small>%s</small></th><td data-h="빠지는 크레딧">%s</td><td data-h="3,000자 글이면">%s</td></tr>'
-                 % (a, b, c, ("%s크레딧(%s원)" % (format(d, ","), format(d * 10, ","))) if d else "0크레딧") for a, b, c, d in rows)
-    return ('<table class="k-table cr-cost"><thead><tr><th scope="col">하는 일</th><th scope="col">빠지는 크레딧</th><th scope="col">3,000자 글이면</th></tr></thead><tbody>%s</tbody></table>'
-            '<p class="k-small cr-note">1크레딧은 10원으로 셉니다. 글자 수만큼 빠지고, 처리하지 못한 요청은 빠지지 않습니다. 크레딧은 발급 또는 마지막 충전부터 5년 동안 사용할 수 있고, 모자라면 같은 코드에 충전합니다. '
-            '충전한 날부터 7일 안에는 쓰고 남은 유료 크레딧을 그대로, 그 뒤에는 10%%를 빼고 환불해 드립니다(<a href="{{root}}terms/#pass">이용약관 제7조의3</a>).</p>') % tr
+    tr = "".join('<tr><th scope="row">%s<small>%s</small></th><td data-h="빠지는 토큰">%s</td><td data-h="3,000자 글이면">%s</td></tr>'
+                 % (a, b, c, ("%s토큰(%s원)" % (format(d, ","), format(d * 10, ","))) if d else "0토큰") for a, b, c, d in rows)
+    return ('<table class="k-table cr-cost"><thead><tr><th scope="col">하는 일</th><th scope="col">빠지는 토큰</th><th scope="col">3,000자 글이면</th></tr></thead><tbody>%s</tbody></table>'
+            '<p class="k-small cr-note">1토큰은 10원으로 셉니다. 글자 수만큼 빠지고, 처리하지 못한 요청은 빠지지 않습니다. 토큰은 발급 또는 마지막 충전부터 5년 동안 사용할 수 있고, 모자라면 같은 코드에 충전합니다. '
+            '충전한 날부터 7일 안에는 쓰고 남은 유료 토큰을 그대로, 그 뒤에는 10%%를 빼고 환불해 드립니다(<a href="{{root}}terms/#pass">이용약관 제7조의3</a>).</p>') % tr
 
 
 def credit_packs_html(root):
-    """13.0 크레딧 충전 칸: 누구나(부가세 포함, 그 자리 충전 창) + 팀 · 기관(부가세 별도, 세금계산서, 결제 시트)"""
+    """13.0 토큰 충전 칸: 누구나(부가세 포함, 그 자리 충전 창) + 팀 · 기관(부가세 별도, 세금계산서, 결제 시트)"""
     cyc = credit_cost("unit", 3000) + credit_cost("pro", 3000)
-    out = ['<div class="cr13-packs-l"><b>개인 크레딧</b><span>누구나 · 부가세 포함 · 결제하면 크레딧 코드를 메일로</span></div><div class="cr13-packs">']
+    out = ['<div class="cr13-packs-l"><b>개인 토큰</b><span>누구나 · 부가세 포함 · 결제하면 토큰 코드를 메일로</span></div><div class="cr13-packs">']
     for t in CREDITS:
         best = bool(t.get("tag"))
         bonus = t["cr"] - t["base"]
-        out.append('<article class="cr13-pack%s" id="pk-%s">%s<h3>%s<small>크레딧</small></h3><p class="pr">%s원 <span>부가세 포함</span></p><p class="bn">%s</p><p class="who">%s · 3,000자 검사와 휴머나이징 약 %d번</p><a class="k-btn %s" href="%shumanize/#buy-%s">충전하기</a></article>'
+        out.append('<article class="cr13-pack%s" id="pk-%s">%s<h3>%s<small>토큰</small></h3><p class="pr">%s원 <span>부가세 포함</span></p><p class="bn">%s</p><p class="who">%s · 3,000자 검사와 휴머나이징 약 %d번</p><a class="k-btn %s" href="%shumanize/#buy-%s">충전하기</a></article>'
                    % (" best" if best else "", t["id"], ('<span class="tag">%s</span>' % t["tag"]) if best else "", format(t["cr"], ","), format(t["price"], ","),
-                      ("%s크레딧 더" % format(bonus, ",")) if bonus else "&nbsp;", t["who"], t["cr"] // cyc, "k-btn-p" if best else "k-btn-l", root, t["id"]))
-    out.append('</div><div class="cr13-packs-l"><b>기업 크레딧</b><span>팀 · 기관 · 학교 · 부가세 별도 · 세금계산서 · 한 코드를 팀이 함께</span></div><div class="cr13-packs">')
+                      ("%s토큰 더" % format(bonus, ",")) if bonus else "&nbsp;", t["who"], t["cr"] // cyc, "k-btn-p" if best else "k-btn-l", root, t["id"]))
+    out.append('</div><div class="cr13-packs-l"><b>기업 토큰</b><span>팀 · 기관 · 학교 · 부가세 별도 · 세금계산서 · 한 코드를 팀이 함께</span></div><div class="cr13-packs">')
     for t in CATALOG["credit"]["tiers"]:
         if not t.get("m"):
             out.append('<article class="cr13-pack" id="pk-ent"><h3>맞춤</h3><p class="pr">견적 <span>기관 계약 · 연간 충전</span></p><p class="bn">&nbsp;</p><p class="who">%s</p><a class="k-btn k-btn-l" href="%s%s">견적 받기</a></article>'
                        % (t["who"], root, t["href"].replace("&", "&amp;")))
             continue
-        cr = int(t["name"].replace(",", "").replace("크레딧", ""))
+        cr = int(t["name"].replace(",", "").replace("토큰", ""))
         base = t["m"] // 10
         best = bool(t.get("best"))
-        out.append('<article class="cr13-pack%s" id="pk-%s">%s<h3>%s<small>크레딧</small></h3><p class="pr">%s원 <span>부가세 별도</span></p><p class="bn">%s</p><p class="who">%s</p><button class="k-btn %s" type="button" data-buy="%s">충전하기</button></article>'
+        out.append('<article class="cr13-pack%s" id="pk-%s">%s<h3>%s<small>토큰</small></h3><p class="pr">%s원 <span>부가세 별도</span></p><p class="bn">%s</p><p class="who">%s</p><button class="k-btn %s" type="button" data-buy="%s">충전하기</button></article>'
                    % (" best" if best else "", t["id"], ('<span class="tag">%s</span>' % t["best"]) if best else "", format(cr, ","), format(t["m"], ","),
-                      ("%s크레딧 더" % format(cr - base, ",")) if cr > base else "&nbsp;", t["who"], "k-btn-p" if best else "k-btn-l", t["id"]))
+                      ("%s토큰 더" % format(cr - base, ",")) if cr > base else "&nbsp;", t["who"], "k-btn-p" if best else "k-btn-l", t["id"]))
     out.append('</div>')
     return "".join(out)
 
 
 def credit_rates_html(root):
-    """13.0 크레딧 가격표: 모든 기능을 같은 크레딧으로(상품 금액 1크레딧 10원, 기업 상품은 부가세 별도 금액 기준)"""
+    """13.0 토큰 가격표: 모든 기능을 같은 토큰으로(상품 금액 1토큰 10원, 기업 상품은 부가세 별도 금액 기준)"""
     def tier(key, tid):
         for t in CATALOG[key]["tiers"]:
             if t["id"] == tid:
@@ -225,8 +225,8 @@ def credit_rates_html(root):
     def crs(t):
         n = format(t["m"] // 10, ",")
         if t.get("per") == "월":
-            return '월 %s크레딧' % n, '%s원 / 월%s' % (format(t["m"], ","), (' · 12개월 %s크레딧' % format(t["y"] // 10, ",")) if t.get("y") else '')
-        return '%s크레딧' % n, '%s원%s' % (format(t["m"], ","), ' · 1회' if t.get("per") == "1회" else '')
+            return '월 %s토큰' % n, '%s원 / 월%s' % (format(t["m"], ","), (' · 12개월 %s토큰' % format(t["y"] // 10, ",")) if t.get("y") else '')
+        return '%s토큰' % n, '%s원%s' % (format(t["m"], ","), ' · 1회' if t.get("per") == "1회" else '')
     def buy(tid, label="결제하기"):
         return '<button class="k-btn k-btn-l k-btn-s" type="button" data-buy="%s">%s</button>' % (tid, label)
     def link(h, label):
@@ -239,18 +239,18 @@ def credit_rates_html(root):
                     % (name, ('<small>%s</small>' % sub) if sub else '', what, " free" if free else "", cr, ('<small>%s</small>' % crsub) if crsub else '', go))
     u, pr = CREDIT_COST["unit"], CREDIT_COST["pro"]
     grp("글 검사와 다듬기")
-    row("AI 작성률 검사", "레포트, 논문, 자기소개서, 원고", "모든 문장의 AI 검출과 이유, 구간별 분석, 결과상세내역서", "%d자당 %d크레딧" % (u[0], u[1]), "최소 %d · 3,000자 글이면 %d크레딧" % (u[2], credit_cost("unit", 3000)), link("humanize/", "검사하기"))
-    row("AI 휴머나이징", "글 전체를 자연스럽게", "바꾼 곳과 이유, 다른 버전, 바꾸기 전후 AI 작성률, 같은 형식 파일로 받기", "%d자당 %d크레딧" % (pr[0], pr[1]), "최소 %d · 3,000자 글이면 %d크레딧" % (pr[2], credit_cost("pro", 3000)), link("humanize/", "다듬기"))
-    row("문장 도우미, 짧은 다시 검사", "600자 이하", "문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "0크레딧", "크레딧이 남아 있을 때", "", True)
+    row("AI 작성률 검사", "레포트, 논문, 자기소개서, 원고", "모든 문장의 AI 검출과 이유, 구간별 분석, 결과상세내역서", "%d자당 %d토큰" % (u[0], u[1]), "최소 %d · 3,000자 글이면 %d토큰" % (u[2], credit_cost("unit", 3000)), link("humanize/", "검사하기"))
+    row("AI 휴머나이징", "글 전체를 자연스럽게", "바꾼 곳과 이유, 다른 버전, 바꾸기 전후 AI 작성률, 같은 형식 파일로 받기", "%d자당 %d토큰" % (pr[0], pr[1]), "최소 %d · 3,000자 글이면 %d토큰" % (pr[2], credit_cost("pro", 3000)), link("humanize/", "다듬기"))
+    row("문장 도우미, 짧은 다시 검사", "600자 이하", "문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "0토큰", "토큰이 남아 있을 때", "", True)
     row("무료 맛보기", "가입 없이", "앞 6,000자 AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "무료", "", link("humanize/", "무료로 검사"), True)
     grp("AI 마킹")
-    row("사이트 AI 마킹", "사이트 1개", "코드 한 줄로 자동 AI 마크, 근거 창, AI 활용 안내 창, 점검 모드", "무료", "", link("site/", "설치하기"), True)
+    row("사이트 AI 마킹", "사이트 1개", "코드 한 줄로 자동 AI 마크, 근거 창, AI 마킹 안내 창, 점검 모드", "무료", "", link("site/", "설치하기"), True)
     t = tier("label", "label-standard"); a, b = crs(t)
     row("AI 마킹 스탠다드", "1인 사업자, 소상공인", "등록 사이트 확인 페이지, 매달 리포트, 서명 마크에 회사 이름, 설치 도움 1회", a, b, buy("label-standard"))
     t = tier("label", "label-business"); a, b = crs(t)
     row("AI 마킹 비즈니스", "사이트 3개", "위치 규칙 설정 대행, 매주 누락 점검, 사내 가이드, API 대량 발급과 감사 기록", a, b, buy("label-business"))
     row("파일 AI 마킹", "이미지, 영상, 문서", "보이는 AI 마크와 파일 속 기록, 서명 마크(웹 도구), 폴더 연결, 공유하기", "무료", "", link("mark/", "마크 넣기"), True)
-    row("API 마크 발급, 확인", "서비스와 AI 에이전트", "서명 마크 발급과 서버 확인(무료 키는 하루 300회)", "발급 건당 5크레딧", "확인 건당 1크레딧 · 마크 확인 페이지는 무료", link("developers/#key", "키 받기"))
+    row("API 마크 발급, 확인", "서비스와 AI 에이전트", "서명 마크 발급과 서버 확인(무료 키는 하루 300회)", "발급 건당 5토큰", "확인 건당 1토큰 · 마크 확인 페이지는 무료", link("developers/#key", "키 받기"))
     t = tier("service", "service-starter"); a, b = crs(t)
     row("AI 서비스 마킹 스타터", "생성형 AI 서비스", "결과물 서명 마크 월 1만 건, 사전 고지 문구, 내려받기 안내 창", a, b, buy("service-starter"))
     t = tier("service", "service-growth"); a, b = crs(t)
@@ -264,13 +264,13 @@ def credit_rates_html(root):
         t = tier("geocare", tid); a, b = crs(t)
         row(t["name"], t["who"], ", ".join(t["feat"][:2]), a, b, buy(tid))
     bd = BUNDLES[0]
-    row(bd["name"], "함께 사면", " + ".join(bd["feat"]), "%s크레딧" % format(bd["m"] // 10, ","), "%s원 · 따로 사면 %s" % (format(bd["m"], ","), bd["was"]), buy(bd["id"]))
+    row(bd["name"], "함께 사면", " + ".join(bd["feat"]), "%s토큰" % format(bd["m"] // 10, ","), "%s원 · 따로 사면 %s" % (format(bd["m"], ","), bd["was"]), buy(bd["id"]))
     grp("추가 옵션")
     for t in CATALOG["addon"]["tiers"]:
         a, b = crs(t)
         row(t["name"], t["who"], ", ".join(t["feat"]), a, b, buy(t["id"], "주문하기"))
-    return ('<table class="cr13-rates"><caption>기업 상품은 부가세 별도 금액을 1크레딧 10원으로 셉니다. 크레딧으로 내면 충전할 때 더 받은 크레딧만큼 덜 냅니다. 대량 처리, 기관 계약 같은 맞춤은 견적으로 합니다.</caption>'
-            '<thead><tr><th scope="col">기능</th><th scope="col">받는 것</th><th scope="col">크레딧</th><th scope="col"><span class="k-sr">바로 하기</span></th></tr></thead><tbody>%s</tbody></table>') % "".join(rows)
+    return ('<table class="cr13-rates"><caption>기업 상품은 부가세 별도 금액을 1토큰 10원으로 셉니다. 토큰으로 내면 충전할 때 더 받은 토큰만큼 덜 냅니다. 대량 처리, 기관 계약 같은 맞춤은 견적으로 합니다.</caption>'
+            '<thead><tr><th scope="col">기능</th><th scope="col">받는 것</th><th scope="col">토큰</th><th scope="col"><span class="k-sr">바로 하기</span></th></tr></thead><tbody>%s</tbody></table>') % "".join(rows)
 
 
 def products_js():
@@ -416,7 +416,7 @@ MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코
                ("시작하기", [("business/", "building", "기업용 한눈에", "필요한 일로 고르는 제품과 요금"),
                           ("site/", "rocket", "설치 마법사", "AI 마킹을 무료로 설치"),
                           ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결"),
-                          ("pricing/#credits", "card", "크레딧 충전", "상담 없이, 크레딧 하나로 모든 기능")])]
+                          ("pricing/#credits", "card", "토큰 충전", "상담 없이, 토큰 하나로 모든 기능")])]
 B2C_MENU = [("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 썼는지 정리")]
 NAV = [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("products", "기업용"), ("pricing/", "요금"), ("developers/", "개발자"), ("company/", "회사")]
 PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
@@ -424,10 +424,10 @@ NAV_KEY = {"humanize/": ["humanize", "personal", "proof"], "label/": ["label", "
 B2C_KEYS = ["humanize", "personal", "proof"]
 TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "휴머나이징", ["humanize", "personal", "proof"]),
         ("label/", "fingerprint", "AI 마킹", ["label", "site", "v", "mark", "mcheck", "m"]),
-        ("pricing/", "card", "크레딧", ["pricing"])]
+        ("pricing/", "card", "토큰", ["pricing"])]
 
 
-# 13.0 우리 사이트의 'AI 활용 안내' 단추: 소개 페이지는 넓은 화면에서 왼쪽 아래에 떠 있고, 입력 · 도구 화면은 가리지 않게 바닥글 안에 둠
+# 13.0 우리 사이트의 'AI 마킹' 단추: 소개 페이지는 넓은 화면에서 왼쪽 아래에 떠 있고, 입력 · 도구 화면은 가리지 않게 바닥글 안에 둠
 NOTICE_INLINE_KEYS = {"humanize", "mark", "mcheck", "m", "site", "check", "scan", "report", "proof", "v", "verify", "contact", "adminpass", "approve", "app", "404", "terms", "privacy"}
 
 
@@ -450,28 +450,28 @@ def header(root, key):
             cur = " cur" if key in PRODUCT_PAGE_KEYS and key not in NAV_KEY["label/"] else ""
             groups = "".join('<div class="grp"><span>%s</span>%s</div>' % (g, "".join('<a href="%s%s"><i>%s</i><span><b>%s</b><small>%s</small></span></a>' % (root, h, ico(ic), t, d) for h, ic, t, d in links)) for g, links in MENU_GROUPS)
             items.append('<div class="k-dd%s"><button type="button" aria-haspopup="true" aria-expanded="false"><span>%s</span>%s</button>'
-                         '<div class="k-menu">%s<div class="k-menu-f"><span>상담 없이 바로 시작합니다. AI 마킹은 사이트 1개 무료, 그다음은 크레딧 하나로</span><a href="%spricing/#credits">크레딧 충전</a></div></div></div>'
+                         '<div class="k-menu">%s<div class="k-menu-f"><span>상담 없이 바로 시작합니다. AI 마킹은 사이트 1개 무료, 그다음은 토큰 하나로</span><a href="%spricing/#credits">토큰 충전</a></div></div></div>'
                          % (cur, label, ico("chev"), groups, root))
         else:
             on = key in NAV_KEY.get(href, [])
             items.append('<a href="%s%s"%s><span>%s</span></a>' % (root, href, ' aria-current="page"' if on else "", label))
-    # 12.0 주 단추는 보는 사람에 맞춤: 기업 페이지는 AI 마킹 무료 시작, 그 밖(첫 화면 · 개인 · 안내)은 AI 휴머나이징. 13.0 옆 글자 링크는 '크레딧 충전'(도입 상담 대신)
+    # 12.0 주 단추는 보는 사람에 맞춤: 기업 페이지는 AI 마킹 무료 시작, 그 밖(첫 화면 · 개인 · 안내)은 AI 휴머나이징. 13.0 옆 글자 링크는 '토큰 충전'(도입 상담 대신)
     biz = key in PRODUCT_PAGE_KEYS
     if key == "humanize":
-        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#price">크레딧 충전</a>' % root)
+        cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#price">토큰 충전</a>' % root)
     elif key == "home":   # 12.1 첫 화면은 바로 위 검사 칸으로
         cta = '<a class="k-btn k-btn-p k-btn-s" href="#top" data-focus="hzText">무료로 검사</a>'
     elif biz:
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 시작</a>' % root)
     else:
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/">무료로 시작</a>' % root)
-    # 13.0 주 단추 옆 글자 링크: 도입 상담 대신 '크레딧 충전'(글 검사 화면은 주 단추가 이미 충전이라 뺌)
-    side = '' if key == "humanize" else '<a class="k-hl opt cr13-hl" href="%spricing/#credits">크레딧 충전</a>' % root
+    # 13.0 주 단추 옆 글자 링크: 도입 상담 대신 '토큰 충전'(글 검사 화면은 주 단추가 이미 충전이라 뺌)
+    side = '' if key == "humanize" else '<a class="k-hl opt cr13-hl" href="%spricing/#credits">토큰 충전</a>' % root
     sheet = '<span class="grp">AI 글 검사와 휴머나이징</span>' + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, t, d in B2C_MENU)
     for g, links in MENU_GROUPS[:2]:
         sheet += '<span class="grp">%s</span>' % g + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, ic, t, d in links)
     sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%spricing/">요금과 결제</a><a href="%sdevelopers/">개발자</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a>' % (root, root, root, root, root)
-    sheet += '<div class="ds-sheet-cta"><a href="%spricing/#credits">크레딧 충전</a><a class="p" href="%s">%s</a></div>' % (root, (root + "site/") if biz else (root + "humanize/"), "무료로 시작" if biz else "무료로 시작")
+    sheet += '<div class="ds-sheet-cta"><a href="%spricing/#credits">토큰 충전</a><a class="p" href="%s">%s</a></div>' % (root, (root + "site/") if biz else (root + "humanize/"), "무료로 시작" if biz else "무료로 시작")
     return ('<a class="k-skip" href="#main">본문으로 건너뛰기</a>'
             '<header class="k-hd" id="hd"><div class="k-hd-in">%s<nav class="k-nav" aria-label="주 메뉴">%s</nav>'
             '<div class="k-hd-r">%s%s'
@@ -502,7 +502,7 @@ def footer(root):
     cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("site/", "설치 마법사"), ("mark/", "파일 AI 마킹"), ("geo/", "AI 검색 노출 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
             ("고객별", [("personal/", "개인 · 학생"), ("proof/", "AI 활용 증빙서"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "문의하기")]),
             ("개발자", [("developers/", "API와 SDK"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("m.js", "AI 마킹 스크립트(공개 코드)"), ("v/", "사이트 AI 마크 확인"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
-            ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금과 크레딧"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
+            ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금과 토큰"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b>%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
     std = ('<div class="k-ft-std"><span><b>표준</b>C2PA, IPTC, XMP, schema.org, llms.txt</span>'
            '<span><b>서명</b>Ed25519(JWS), <a href="%s.well-known/aimarker-keys.json">공개키</a></span>'
@@ -568,7 +568,7 @@ def page(meta, body):
         scripts = '<script src="%sm.js?v=%s" data-preview defer></script>' % (root, VER) + scripts
     elif sl != "none":
         # 9.0: 휴대폰 아래 탭과 겹치지 않게 바닥글 안에 둠(밝은 바닥글).
-        # 13.0: 넓은 화면(900px 이상)에서는 우리 사이트에도 고객 사이트와 같은 'AI 활용 안내' 단추가 왼쪽 아래에 떠 있음(은은한 움직임)
+        # 13.0: 넓은 화면(900px 이상)에서는 우리 사이트에도 고객 사이트와 같은 'AI 마킹' 단추가 왼쪽 아래에 떠 있음(은은한 움직임)
         look = 'data-style="inline" data-theme="light"' if meta.get("layout") != "app" else 'data-side="right"'
         scripts += ('<script src="%sm.js?v=%s" data-name="AIMarker" data-use="text image" data-level="assist" data-review="all" '
                     'data-privacy="1" data-auto="0" %s data-date="2026-10" defer></script>' % (root, VER, look))
@@ -661,8 +661,8 @@ FC_TOOLS = [
      {"kind": {"type": "string", "enum": ["image", "video", "person", "text", "sponsor"]}, "level": {"type": "string", "enum": ["gen", "edit"], "description": "gen: AI로 만듦 · edit: AI로 고침"}}, ["kind"]),
     ("aimarker_geo_check", "am.geo", "사이트 · 상품 쪽 주소 하나로 AI 검색 준비 점수(0~100: AI 크롤러 접근 · 구조화 데이터 · 본문 · 메타 · 질문과 답 · 이미지 · 신뢰)와 붙여 넣을 고칠 코드(JSON-LD · llms.txt · robots.txt · 메타 · FAQ)를 받습니다. 상품 쪽이면 AI 상품 피드 한 줄도 줍니다.",
      {"url": {"type": "string", "description": "사이트 · 상품 쪽 주소"}}, ["url"]),
-    ("aimarker_detect_text", "am.detect", "글의 AI 작성률(0~100)과 판정(band: 안전 · 고위험 · 부적합, AIMarker 판정 기준 1.0) · 판정 근거(band.why) · 구간별 검출 · AI 문체 특성 · 종합 의견과 AI 패턴이 몰린 문장을 받습니다. 같은 글은 언제나 같은 값 · 같은 판정입니다. 추정일 뿐 증명이 아니므로 결과만으로 사람을 판단하지 마세요. 글은 서버로 보내지만 저장하지 않습니다. 6,000자까지. 무료 키는 맛보기(판정 · 수치는 같은 값, 문장 위치는 가장 뚜렷한 2개만)이고, 크레딧 코드(pass)나 유료 키면 모든 문장 · 구간을 받습니다.",
-     {"text": {"type": "string", "description": "확인할 글(6,000자까지)"}, "pass": {"type": "string", "description": "크레딧 코드(선택). 글자 수만큼 크레딧이 빠짐: 100자당 2크레딧(최소 10), 600자 이하는 0. 코드가 없으면 맛보기"}}, ["text"]),
+    ("aimarker_detect_text", "am.detect", "글의 AI 작성률(0~100)과 판정(band: 안전 · 고위험 · 부적합, AIMarker 판정 기준 1.0) · 판정 근거(band.why) · 구간별 검출 · AI 문체 특성 · 종합 의견과 AI 패턴이 몰린 문장을 받습니다. 같은 글은 언제나 같은 값 · 같은 판정입니다. 추정일 뿐 증명이 아니므로 결과만으로 사람을 판단하지 마세요. 글은 서버로 보내지만 저장하지 않습니다. 6,000자까지. 무료 키는 맛보기(판정 · 수치는 같은 값, 문장 위치는 가장 뚜렷한 2개만)이고, 토큰 코드(pass)나 유료 키면 모든 문장 · 구간을 받습니다.",
+     {"text": {"type": "string", "description": "확인할 글(6,000자까지)"}, "pass": {"type": "string", "description": "토큰 코드(선택). 글자 수만큼 토큰이 빠짐: 100자당 2토큰(최소 10), 600자 이하는 0. 코드가 없으면 맛보기"}}, ["text"]),
     ("aimarker_stamp", "am.stamp", "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려주고, 하루치 원장은 다음 날 공개 앵커로 묶입니다.",
      {"content": {"type": "string", "description": "기록할 내용(실행 코드가 해시로 바꿈)"}, "k": {"type": "string", "enum": ["report", "version", "approval"], "description": "기록 종류"}, "n": {"type": "integer", "description": "보고서에 든 소재 수(선택)"}}, ["content"]),
     ("aimarker_verify", "am.verify", "원장 번호(id, LG로 시작)나 내용(content, 실행 코드가 해시로 바꿈)으로 증거 원장 기록을 확인합니다.",
@@ -745,19 +745,19 @@ def build_ai_assets():
     shutil.copyfile(os.path.join(HERE, "lib", "aim-seo.js"), os.path.join(ROOT, "lib", "aim-seo.js"))   # 6.0 검색 · AI 검색 꾸러미
     os.makedirs(os.path.join(ROOT, "m"), exist_ok=True)
     shutil.copyfile(os.path.join(HERE, "m", "embed.js"), os.path.join(ROOT, "m", "embed.js"))
-    # 10.0 자동 표시 3.0: 지문 심볼(작은 크기용) 경로를 넣어 m.js 한 파일로
-    sym = open(os.path.join(ROOT, "assets", "brand", "aimarker-symbol-small.svg"), encoding="utf-8").read()
+    # 10.0 자동 표시 3.0: 지문 심볼 경로를 넣어 m.js 한 파일로. 13.1 부터 로고와 같은 지문(전체 심볼, viewBox 0 0 84.97 100)
+    sym = open(os.path.join(ROOT, "assets", "brand", "aimarker-symbol.svg"), encoding="utf-8").read()
     fp_d = re.search(r'<path fill="url\(#amg\)" d="([^"]+)"', sym).group(1)
     lab = open(os.path.join(HERE, "m", "label.src.js"), encoding="utf-8").read()
-    assert "@@FP_SMALL@@" in lab
-    out = lab.replace("@@FP_SMALL@@", fp_d)
+    assert "@@FP@@" in lab
+    out = lab.replace("@@FP@@", fp_d)
     old_m = open(os.path.join(ROOT, "m.js"), encoding="utf-8").read() if os.path.exists(os.path.join(ROOT, "m.js")) else ""
     if old_m != out:
         open(os.path.join(ROOT, "m.js"), "w", encoding="utf-8").write(out)
     # 10.0 AI 마크 넣기(브라우저) 라이브러리
     st = open(os.path.join(HERE, "lib", "aimarker-stamp.src.js"), encoding="utf-8").read()
-    assert "@@FP_SMALL@@" in st
-    st = st.replace("@@FP_SMALL@@", fp_d)
+    assert "@@FP@@" in st
+    st = st.replace("@@FP@@", fp_d)
     sp = os.path.join(ROOT, "lib", "aimarker-stamp.js")
     if not os.path.exists(sp) or open(sp, encoding="utf-8").read() != st:
         open(sp, "w", encoding="utf-8").write(st)

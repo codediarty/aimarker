@@ -1,4 +1,4 @@
-/*! AIMarker AI 마킹 3.1 · https://aimarker.kr/label/
+/*! AIMarker AI 마킹 3.2 · https://aimarker.kr/label/
  * 코드 한 줄이면 사이트 속 AI 생성물(이미지 · 영상 · 배경 · 글)에 AIMarker AI 마크가 자동으로 붙습니다.
  *
  *   <script src="https://aimarker.kr/m.js" data-name="회사 이름" async></script>
@@ -20,16 +20,16 @@
   'use strict';
   var W = window, D = document;
   if (W.AIMarker && W.AIMarker.v3) return;
-  var VERSION = '3.1.0', HOME = 'https://aimarker.kr', NOW = Date.now();
-  var FP = '@@FP_SMALL@@';
-  var FP_VB = '0 0 87.49 100';
+  var VERSION = '3.2.0', HOME = 'https://aimarker.kr', NOW = Date.now();
+  var FP = '@@FP@@';   // 13.1 로고와 같은 지문(전체 심볼)
+  var FP_VB = '0 0 84.97 100';
   var FONT = '"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif';
   var uid = 0;
   function fp(cls, mono) {
     uid++;
     var g = 'amfp' + uid;
     return '<svg class="' + (cls || 'fp') + '" viewBox="' + FP_VB + '" aria-hidden="true" focusable="false">' +
-      (mono ? '' : '<defs><linearGradient id="' + g + '" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="87.49" y2="0"><stop offset="0" stop-color="#0030C4"/><stop offset=".45" stop-color="#0858F0"/><stop offset=".8" stop-color="#0E8BFB"/><stop offset="1" stop-color="#33C8FF"/></linearGradient></defs>') +
+      (mono ? '' : '<defs><linearGradient id="' + g + '" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="84.97" y2="0"><stop offset="0" stop-color="#0030C4"/><stop offset=".45" stop-color="#0858F0"/><stop offset=".8" stop-color="#0E8BFB"/><stop offset="1" stop-color="#33C8FF"/></linearGradient></defs>') +
       '<path fill="' + (mono ? 'currentColor' : 'url(#' + g + ')') + '" d="' + FP + '"/></svg>';
   }
 
@@ -44,12 +44,13 @@
       basis: '근거', tool: '도구', who: '붙인 곳', when: '확인',
       b_owner: '사이트 운영자가 표시', b_rule: '운영자가 정한 위치 규칙', b_c2pa: '파일 속 출처 기록(C2PA)', b_iptc: '파일 속 출처 기록(IPTC)', b_gen: '파일 속 생성 정보', b_name: '파일 이름, 설명의 AI 도구 흔적',
       g3: '기록', g2: '규칙', g1: '흔적',
-      verify: 'AIMarker에서 확인', notice: '이 사이트의 AI 활용 안내',
+      verify: 'AIMarker에서 확인', notice: '이 사이트의 AI 마킹',
       foot: '이 마크는 사이트 운영자가 AIMarker로 설정했습니다. 콘텐츠의 적법성을 보증하지 않습니다.',
       std: '표시 문구 기준 한국AI윤리위원회', nocert: '이 안내와 AI 마크는 심사나 보증이 아닙니다',
-      close: '닫기', open: '안내 보기', here: '이 페이지의 AI 마크', go: '위치 보기',
+      close: '닫기', open: 'AI 마킹 보기', here: '이 페이지의 AI 마킹', go: '위치 보기',
       browser: '이 브라우저에서 확인',
-      mk: 'AI 마크', ariaGo: 'AIMarker AI 마크 근거 보기', cardL: 'AI 마크 근거', brand: 'AIMarker AI 마킹',
+      mk: 'AI 마크', ariaGo: 'AIMarker AI 마킹 근거 보기', cardL: 'AI 마킹 근거', brand: 'AIMarker AI 마킹',
+      mark: 'AI 마킹', k_gen: '생성', k_edit: '편집', k_assist: '보조', k_virtual: '가상인물', k_text: '도움 글', noticeT: 'AI 마킹', noticeA: 'AI 마킹 안내',
       mOff: 'AI 마크 움직임 멈추기', mOn: 'AI 마크 움직임 다시 켜기'
     },
     en: {
@@ -66,6 +67,7 @@
       close: 'Close', open: 'Details', here: 'Labeled on this page', go: 'Show',
       browser: 'checked in this browser',
       mk: 'AI label', ariaGo: 'see AIMarker label details', cardL: 'AI label details', brand: 'AIMarker AI labeling',
+      mark: 'AI marked', k_gen: 'generated', k_edit: 'edited', k_assist: 'assisted', k_virtual: 'virtual human', k_text: 'assisted text', noticeT: 'AI marked', noticeA: 'AI use notice',
       mOff: 'Stop label motion', mOn: 'Resume label motion'
     }
   };
@@ -73,7 +75,7 @@
   var GRADE = { owner: 2, rule: 2, c2pa: 3, iptc: 3, gen: 3, name: 1 };
   var DST = { gen: 'trainedAlgorithmicMedia', edit: 'compositeWithTrainedAlgorithmicMedia', assist: 'algorithmicallyEnhanced', virtual: 'trainedAlgorithmicMedia' };
 
-  /* ---------- 2.0 안내 창(사이트 전체 AI 활용 안내) ---------- */
+  /* ---------- 2.0 안내 창(사이트 전체 AI 마킹 안내) ---------- */
   var USE = {
     text: '글 · 상품 설명 · 공지를 쓸 때 AI의 도움을 받습니다',
     image: '일부 이미지를 AI로 만들거나 다듬습니다',
@@ -126,7 +128,7 @@
       '.badge.fl{animation:amf 6s ease-in-out infinite}@keyframes amf{0%,100%{translate:0 0}50%{translate:0 -3px}}' +
       '.badge:hover{box-shadow:0 1px 2px rgba(9,20,47,.06),0 16px 34px -12px rgba(9,20,47,.34)}' +
       '.inl .badge{box-shadow:none}.inl .badge:hover{box-shadow:none;border-color:' + C.acc + '}' +
-      '.badge .ic{position:relative;width:30px;height:30px;border-radius:50%;background:' + C.chip + ';display:inline-flex;align-items:center;justify-content:center}.badge .ic svg{width:15px;height:17px}' +
+      '.badge .ic{position:relative;width:30px;height:30px;border-radius:50%;background:' + C.chip + ';display:inline-flex;align-items:center;justify-content:center}.badge .ic svg{width:15.3px;height:18px}' +
       '.badge.fl .ic::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(11,99,246,.36);opacity:0;animation:amp 6s ease-out infinite;pointer-events:none}@keyframes amp{0%,55%{opacity:0;transform:scale(1)}62%{opacity:1}100%{opacity:0;transform:scale(1.5)}}' +
       '.badge .n{min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:' + C.acc + ';color:#fff;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}.badge .n[hidden]{display:none}' +
       '.badge .lb{padding-right:4px}' +
@@ -173,7 +175,7 @@
       LEVELS.map(function (l) { return '<span class="' + l[0] + (l[0] === c.level ? ' on' : '') + '">' + l[1] + '</span>'; }).join('') + '</div><p class="lvt">AI 성분표 · 이 사이트의 콘텐츠는 주로 \'' + lvName + '\'입니다</p>';
     var who = (c.name ? esc(c.name) + josa(c.name) + ' 이렇게 AI를 사용합니다' : '이 사이트는 이렇게 AI를 사용합니다') + (c.date ? ' · ' + c.date.replace('-', '.') + ' 작성' : '');
     var reg = c.site ? '<a class="lnk" href="' + HOME + '/v/?s=' + encodeURIComponent(location.hostname) + '&id=' + encodeURIComponent(c.site) + '" target="_blank" rel="noopener" style="margin-top:4px"><span><em>AIMarker 등록 사이트인지 확인 →</em></span></a>' : '';
-    var pop = '<div class="pop" role="dialog" aria-label="AI 활용 안내"><button class="x" type="button" aria-label="' + t('close') + '">×</button><h4>' + fp('h') + 'AI 활용 안내</h4><p class="who">' + who + '</p>' + lv + '<ul>' + items + '</ul>' +
+    var pop = '<div class="pop" role="dialog" aria-label="' + t('noticeA') + '"><button class="x" type="button" aria-label="' + t('close') + '">×</button><h4>' + fp('h') + t('noticeT') + '</h4><p class="who">' + who + '</p>' + lv + '<ul>' + items + '</ul>' +
       '<div class="here" hidden><b>' + t('here') + '</b><div class="list"></div></div>' + ct +
       '<div class="ft">이 안내는 사이트 운영자가 직접 작성했습니다.' + reg + '<a class="lnk" href="' + HOME + '/label/?utm_source=label&utm_medium=referral" target="_blank" rel="noopener">' + fp('l') + '<span><b><span class="ai">AI</span>Marker</b><em>AI 마킹 · 무료로 시작하기 →</em></span></a><span class="std">' + t('std') + '. ' + t('nocert') + '</span>' + (CFG.motion && !mountEl ? '<button class="mo" type="button" data-mo>' + t(moving() ? 'mOff' : 'mOn') + '</button>' : '') + '</div></div>';
     var host = D.createElement('div');
@@ -188,7 +190,7 @@
     var root = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
     var trigger = style === 'line'
       ? '<div class="line"><button type="button" aria-expanded="false">' + fp('m') + '<span>' + (c.name ? esc(c.name) + josa(c.name) : '이 사이트는') + ' 일부 콘텐츠에 AI를 활용합니다 · <b>' + t('open') + '</b></span></button></div>'
-      : '<button class="badge' + (!box && !mountEl && moving() ? ' fl' : '') + '" type="button" aria-expanded="false"><span class="ic">' + fp('b') + '</span><span class="lb">AI 활용 안내</span><span class="n" hidden></span></button>';
+      : '<button class="badge' + (!box && !mountEl && moving() ? ' fl' : '') + '" type="button" aria-expanded="false"><span class="ic">' + fp('b') + '</span><span class="lb">' + t('noticeT') + '</span><span class="n" hidden></span></button>';
     root.innerHTML = '<style>' + noticeCss(C, c.side) + '</style><div class="k' + (box ? ' inl' : '') + '"><div class="wrap">' + pop + trigger + '</div></div>';
     var p = root.querySelector('.pop'), tr = root.querySelector('.badge, .line button');
     if (style === 'line') { var wr = root.querySelector('.wrap'); wr.style.display = 'block'; p.style.left = '50%'; p.style.right = 'auto'; p.style.transform = 'translateX(-50%)'; p.style.bottom = '48px'; }
@@ -218,7 +220,7 @@
       if (!cnt) return;
       var n = ITEMS.filter(function (x) { return x.kind; }).length;
       cnt.hidden = !n; cnt.textContent = n > 99 ? '99+' : String(n);
-      tr.setAttribute('aria-label', 'AI 활용 안내' + (n ? ', 이 페이지 AI 마크 ' + n + '건' : ''));
+      tr.setAttribute('aria-label', t('noticeA') + (n ? ', 이 페이지 AI 마킹 ' + n + '건' : ''));
       if (p.classList.contains('on')) fillHere();
     }
     host.__open = setOpen;
@@ -249,6 +251,8 @@
   var BY = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   function itemOf(el) { if (BY) return BY.get(el); for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].el === el) return ITEMS[i]; return null; }
   function labelOf(x) { return x.type === 'block' ? t('text') : t(x.kind); }
+  /* 13.1 마크 글자: 'AI 마킹'을 크게, 어떤 AI 사용인지(생성 · 편집 · 보조 · 가상인물 · 도움 글)는 표시 기준이라 가는 선 뒤에 함께 */
+  function markText(x) { return '<span class="l"><b>' + esc(t('mark')) + '</b><i>' + esc(t('k_' + (x.type === 'block' ? 'text' : x.kind))) + '</i></span>'; }
   function docOrder(a, b) { if (a.el === b.el) return 0; return a.el.compareDocumentPosition(b.el) & 4 ? -1 : 1; }
 
   /* 13.0 AI 마크(2026.10.23): 둥근 알약 · 유리 같은 남색 바탕 · 흰 원 안의 지문, 은은하게 떠 있는 움직임(data-motion="0" 이면 멈춤, 움직임 줄이기 설정 존중) */
@@ -257,14 +261,15 @@
     '.t.fl{animation:amf var(--d,5.6s) ease-in-out var(--dl,0s) infinite}' +
     '@keyframes amf{0%,100%{translate:0 0}50%{translate:0 -3px}}' +
     '.t:hover{background:linear-gradient(180deg,rgba(32,60,128,.94),rgba(8,20,47,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 14px 30px -10px rgba(8,20,47,.6),0 2px 6px rgba(8,20,47,.22)}.t:active{scale:.97}.t:focus-visible{outline:2px solid #33C8FF;outline-offset:3px}' +
-    '.f{position:relative;width:22px;height:22px;border-radius:50%;background:#fff;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;box-shadow:0 0 0 2px rgba(125,184,255,.3)}.f svg{width:12.5px;height:14.3px}' +
+    '.f{position:relative;width:22px;height:22px;border-radius:50%;background:#fff;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;box-shadow:0 0 0 2px rgba(125,184,255,.3)}.f svg{width:13.6px;height:16px}' +
+    '.l b{font-weight:760}.l i{font-style:normal;font-weight:560;opacity:.8;margin-left:7px;padding-left:7px;border-left:1px solid rgba(255,255,255,.3)}.t.light .l i{border-left-color:rgba(14,31,71,.2)}.bar .l i{border-left-color:rgba(255,255,255,.3)}' +
     '.t.fl .f::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid rgba(51,200,255,.5);opacity:0;animation:amp var(--d,5.6s) ease-out var(--dl,0s) infinite;pointer-events:none}' +
     '@keyframes amp{0%,55%{opacity:0;transform:scale(1)}62%{opacity:1}100%{opacity:0;transform:scale(1.45)}}' +
     '.l{display:inline-block}' +
     '.t.light{background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(242,246,252,.92));color:#0E1F47;border-color:rgba(14,31,71,.14);box-shadow:inset 0 1px 0 #fff,0 10px 24px -10px rgba(9,20,47,.34),0 2px 6px rgba(9,20,47,.1)}.t.light:hover{background:#fff}.t.light .f{background:#EEF4FF;box-shadow:0 0 0 2px rgba(11,99,246,.14)}' +
     '.t.mini{padding:0 3px;gap:0}.t.mini .l{max-width:0;overflow:hidden;opacity:0;transition:max-width .24s ease,opacity .18s ease,margin .24s ease}' +
-    '.t.mini:hover,.t.mini:focus-visible{padding:0 12px 0 3px}.t.mini:hover .l,.t.mini:focus-visible .l{max-width:120px;opacity:1;margin-left:7px}' +
-    '.t.blk{height:24px;gap:6px;padding:0 10px 0 2px;font-size:11.5px}.t.blk .f{width:19px;height:19px;flex-basis:19px}.t.blk .f svg{width:11px;height:12.6px}' +
+    '.t.mini:hover,.t.mini:focus-visible{padding:0 12px 0 3px}.t.mini:hover .l,.t.mini:focus-visible .l{max-width:170px;opacity:1;margin-left:7px}' +
+    '.t.blk{height:24px;gap:6px;padding:0 10px 0 2px;font-size:11.5px}.t.blk .f{width:19px;height:19px;flex-basis:19px}.t.blk .f svg{width:11.9px;height:14px}.t.blk .l i{margin-left:6px;padding-left:6px}' +
     '.bar{display:flex;align-items:center;gap:8px;width:100%;height:30px;padding:0 10px 0 4px;border:0;border-radius:0;background:linear-gradient(0deg,rgba(8,20,47,.9),rgba(8,20,47,.6));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font:700 12px/1 ' + FONT + ';letter-spacing:-.01em;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden}' +
     '.bar .f{width:21px;height:21px;flex-basis:21px}.bar .s{margin-left:auto;font-weight:650;font-size:11px;opacity:.8}.bar .s b{color:#7DB8FF;font-weight:800}' +
     '.flash{animation:fl 1.1s ease 2}@keyframes fl{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 10px 24px -8px rgba(8,20,47,.55)}50%{box-shadow:0 0 0 6px rgba(51,200,255,.55)}}' +
@@ -300,16 +305,16 @@
     var style = x.type === 'block' ? 'tag' : (x.small && CFG.tag === 'tag' ? 'mini' : CFG.tag);
     if (style === 'bar' && x.type !== 'block') {
       el = D.createElement('button'); el.type = 'button'; el.className = 'bar';
-      el.innerHTML = '<span class="f">' + fp() + '</span><span>' + esc(lab) + '</span><span class="s"><b>AI</b>Marker</span>';
+      el.innerHTML = '<span class="f">' + fp() + '</span>' + markText(x) + '<span class="s"><b>AI</b>Marker</span>';
     } else {
       el = D.createElement('button'); el.type = 'button';
       el.className = 't' + (CFG.light ? ' light' : '') + (style === 'mini' ? ' mini' : '') + (x.type === 'block' ? ' blk' : '') + (moving() ? ' fl' : '');
-      el.innerHTML = '<span class="f">' + fp() + '</span><span class="l">' + esc(lab) + '</span>';
+      el.innerHTML = '<span class="f">' + fp() + '</span>' + markText(x);
       if (CFG.motion) { if (x.ph == null) x.ph = (Math.random() * 5.2).toFixed(2); el.style.setProperty('--dl', '-' + x.ph + 's'); el.style.setProperty('--d', (5.2 + (+x.ph % 1.4)).toFixed(2) + 's'); }
     }
     var tw = t(x.type === 'block' ? 'block' : x.type === 'video' || x.type === 'frame' ? 'video' : 'img');
     el.setAttribute('aria-label', (lab.slice(-tw.length) === tw ? lab : lab + ' ' + tw) + ', ' + t('ariaGo'));
-    el.title = lab + ' · ' + t('b_' + x.basis);
+    el.title = t('mark') + ' · ' + lab + ' · ' + t('b_' + x.basis);
     el.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); openCard(x, el); });
     el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') e.stopPropagation(); });
     ['mousedown', 'pointerdown', 'touchstart'].forEach(function (ev) { el.addEventListener(ev, function (e) { e.stopPropagation(); }, { passive: true }); });

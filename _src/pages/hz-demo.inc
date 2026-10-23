@@ -13,7 +13,7 @@
         <div class="hu-paper" id="huPaper"><p class="hu-doc hu-ghost">현대 사회에서 인공지능은 다양한 분야에서 핵심적인 요소로 사용되고 있다. 이러한 기술은 업무 효율을 높이는 데 있어서 긍정적인 영향을 미치고 있다. 또한, 인공지능을 효과적으로 활용하기 위해서는 데이터에 대한 이해가 필수적이다. 뿐만 아니라, 개인정보 보호와 같은 윤리적 문제를 판단하는 능력도 함께 길러야 한다. 결론적으로, 인공지능 교육은 이제 모든 학생이 거쳐야 할 과정이라고 할 수 있다.</p></div>
         <div class="hu-why" id="huWhy"></div>
         <div class="hu-meter" id="huMeter">
-          <div class="hu-mh"><b>AI 작성률(추정)</b><span>AIMarker 판정 기준</span></div>
+          <div class="hu-mh"><b>AI 작성률</b><span>AIMarker 판정 기준</span></div>
           <div class="hu-ms">
             <div class="hu-m from"><small>바꾸기 전</small><b><span class="v">-</span><i hidden>%</i></b><span class="bn"></span><span class="tr"><i></i></span></div>
             <span class="hu-arr" aria-hidden="true"></span>

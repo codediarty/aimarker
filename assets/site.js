@@ -74,7 +74,7 @@
   function plainText(c) {
     var parts = (c.use || 'text').split(',').map(function (k) { return USE_TXT[k]; }).filter(Boolean);
     var rv = c.review === 'all' ? ' AI 결과물은 담당자가 확인한 뒤 게시합니다.' : c.review === 'important' ? ' 중요한 안내는 담당자가 직접 확인합니다.' : '';
-    return '[AI 활용 안내] ' + (c.name ? c.name + ': ' : '') + parts.join(', ') + '.' + rv + ' (AIMarker 표시 기준)';
+    return '[AI 마킹 안내] ' + (c.name ? c.name + ': ' : '') + parts.join(', ') + '.' + rv + ' (AIMarker 표시 기준)';
   }
 
   var prev = $('#preview'), host = null;
@@ -102,9 +102,9 @@
     e.preventDefault();
     var tab = document.querySelector('#install .tabs button[aria-selected="true"]');
     var pane = document.querySelector('#install .tabpane.on');
-    var body = '안녕하세요. 우리 사이트에 \'AI 활용 안내\' 표시를 붙이려고 합니다.\n모든 페이지에 공통으로 들어가는 곳(</body> 바로 위)에 아래 한 줄을 넣어 주세요.\n\n' + $('#codeOut').textContent +
+    var body = '안녕하세요. 우리 사이트에 \'AI 마킹\' 표시를 붙이려고 합니다.\n모든 페이지에 공통으로 들어가는 곳(</body> 바로 위)에 아래 한 줄을 넣어 주세요.\n\n' + $('#codeOut').textContent +
       '\n\n[' + (tab ? tab.textContent : '설치') + ' 기준 넣는 곳]\n' + (pane ? pane.innerText.replace(/\n{2,}/g, '\n').trim() : '') + '\n\n표시 만들기: https://aimarker.kr/site/';
-    location.href = 'mailto:?subject=' + encodeURIComponent('[요청] 사이트에 AI 활용 안내 코드 넣기') + '&body=' + encodeURIComponent(body);
+    location.href = 'mailto:?subject=' + encodeURIComponent('[요청] 사이트에 AI 마킹 코드 넣기') + '&body=' + encodeURIComponent(body);
   });
 
   ['#name', '#contact'].forEach(function (s) { $(s).addEventListener('input', update); });

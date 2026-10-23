@@ -1,4 +1,4 @@
-/*! AIMarker AI 마킹 3.1 · https://aimarker.kr/label/
+/*! AIMarker AI 마킹 3.2 · https://aimarker.kr/label/
  * 코드 한 줄이면 사이트 속 AI 생성물(이미지 · 영상 · 배경 · 글)에 AIMarker AI 마크가 자동으로 붙습니다.
  *
  *   <script src="https://aimarker.kr/m.js" data-name="회사 이름" async></script>
@@ -20,16 +20,16 @@
   'use strict';
   var W = window, D = document;
   if (W.AIMarker && W.AIMarker.v3) return;
-  var VERSION = '3.1.0', HOME = 'https://aimarker.kr', NOW = Date.now();
-  var FP = 'M41.64 99.89C32.27 99.14 23.13 94.86 15.91 87.85C13.26 85.28 12.55 84.31 12.3 82.87C12.14 81.99 12.29 80.82 12.65 80.1L12.87 79.63L11.9 79.63C10.44 79.63 9.16 79.11 8.24 78.13C7.53 77.39 5.77 74.09 4.47 71.05C2.27 65.91 0.82 60.14 0.18 54.05C0.01 52.33 0 45.3 0.18 43.64C0.64 39.41 1.27 36.16 2.33 32.67C2.79 31.12 3.73 28.49 4.15 27.54C4.28 27.26 4.55 26.64 4.77 26.15C6.33 22.64 8.29 19.43 11.09 15.79C11.82 14.84 13.79 12.69 14.93 11.6C15.75 10.82 16.21 10.47 16.8 10.18C17.58 9.79 17.58 9.79 18.87 9.79C20.17 9.79 20.17 9.79 20.93 10.18C22.19 10.82 22.97 11.66 23.46 12.89C23.68 13.48 23.72 13.75 23.72 14.62C23.72 16.27 23.22 17.32 21.76 18.67C17.61 22.53 13.82 28.85 11.87 35.18C11.01 37.97 10.36 41.07 10.03 44.05C9.85 45.72 9.85 52.06 10.03 53.59C10.87 60.52 12.54 65.85 15.69 71.59C16.1 72.33 16.49 73.18 16.57 73.47C16.85 74.51 16.7 76.23 16.27 76.83C16.17 76.96 16.1 77.1 16.1 77.13C16.1 77.16 16.55 77.18 17.1 77.18C18.94 77.18 19.71 77.61 21.81 79.78C25.54 83.67 29.84 86.53 34.59 88.31C37.13 89.25 39.54 89.76 43.18 90.14C43.98 90.24 44.41 90.34 44.89 90.55C45.64 90.91 46.64 91.63 46.72 91.9C46.75 91.99 46.86 92.15 46.96 92.25C47.15 92.41 47.17 92.39 47.47 91.87C47.83 91.23 48.81 90.3 49.47 89.97C49.71 89.85 50.48 89.6 51.17 89.44C57.11 87.97 62 85.13 66.41 80.61C70.06 76.86 72.45 73.04 74.88 67.09C75.98 64.39 79.12 63.16 81.63 64.43C83.56 65.42 84.69 67.59 84.32 69.61C84.14 70.56 83.15 73.01 81.95 75.44C78.33 82.77 73.13 88.84 66.77 93.15C62.94 95.75 58.66 97.68 54.19 98.83C51.9 99.42 50.76 99.39 49.47 98.75C48.94 98.48 47.94 97.61 47.68 97.2C47.51 96.89 47.51 96.89 47.29 97.29C46.74 98.34 46.11 98.93 45.07 99.43C44.05 99.91 43.25 100.01 41.64 99.89ZM44.05 68.98C41.65 68.58 39.64 67.78 37.68 66.48C34.04 64.04 31.45 60.08 30.54 55.57C30.24 54.02 30.21 50.9 30.49 49.49C31.37 45.16 33.82 41.74 37.18 40.14C38.5 39.52 39.5 39.27 41.04 39.21C42.51 39.15 43.54 39.3 44.82 39.81C47.34 40.78 49.29 42.84 50.13 45.44C50.95 47.95 50.39 50.1 48.54 51.5C46.85 52.78 44.36 52.81 42.75 51.56C42.07 51.04 41.67 50.57 41.29 49.93C41.13 49.65 40.98 49.44 40.96 49.44C40.93 49.44 40.78 49.72 40.62 50.08C39.87 51.67 39.94 53.57 40.82 55.44C42.44 58.9 46.01 60.24 49.22 58.56C51.68 57.28 53.51 54.64 54.33 51.18C54.65 49.84 54.76 47.17 54.57 45.71C53.98 41.23 51.68 37.17 48.31 34.68C47.19 33.85 45.24 32.89 44 32.57C38.39 31.11 32.64 33.69 28.94 39.33C27.44 41.64 26.3 44.65 25.73 47.85C25.46 49.41 25.35 52.96 25.53 54.69C25.73 56.65 26.22 58.78 26.92 60.87C27.28 61.95 27.61 63.08 27.65 63.39C27.85 65.08 26.93 66.99 25.49 67.95C22.93 69.65 19.64 68.68 18.28 65.85C17.39 64 16.37 60.25 15.9 57.08C15.61 55.23 15.5 50.79 15.69 48.84C16.44 40.94 19.55 34.11 24.65 29.14C25.88 27.94 26.72 27.26 28.41 26.14C31.09 24.35 33.86 23.22 36.92 22.67C45.84 21.07 54.68 24.96 60.03 32.88C62.37 36.35 63.94 40.72 64.41 45.1C64.59 46.77 64.49 50.28 64.22 51.85C63.76 54.43 63.18 56.3 62.16 58.41C59.52 63.9 55.02 67.64 49.62 68.83C48.38 69.11 45.28 69.19 44.05 68.98ZM81.26 63.99C79.04 63.62 77.45 61.99 77.14 59.75C77.08 59.3 77.1 58.73 77.23 57.69C77.59 54.95 77.67 53.32 77.61 50.16C77.55 47.24 77.44 45.78 77.07 43.59C75.57 34.52 71.57 26.3 65.68 20.18C64.01 18.44 61.12 16.01 59.74 15.18C59.52 15.05 58.96 14.7 58.51 14.41C57.04 13.46 54.82 12.39 52.8 11.65C49.14 10.33 45.63 9.75 41.85 9.88C39.57 9.95 37.75 10.21 35.54 10.78C33.13 11.39 32.11 11.34 30.69 10.54C28.98 9.59 27.98 7.49 28.31 5.57C28.43 4.8 28.87 3.74 29.16 3.5C29.26 3.43 29.33 3.3 29.33 3.23C29.33 3.04 30.4 2.19 31.01 1.91C32.03 1.43 34.74 0.77 37.17 0.41C41.49-0.23 46.09-0.09 50.41 0.77C55.92 1.89 61.25 4.21 66.09 7.6C68.28 9.14 69.78 10.41 71.93 12.51C78.66 19.11 83.73 28.31 85.99 38C87.15 43.02 87.55 46.89 87.46 52.29C87.38 56.39 87.06 59.55 86.55 60.92C86.13 62.09 84.98 63.26 83.84 63.69C83.34 63.88 82.15 64.12 81.9 64.09C81.85 64.08 81.56 64.04 81.26 63.99Z';
-  var FP_VB = '0 0 87.49 100';
+  var VERSION = '3.2.0', HOME = 'https://aimarker.kr', NOW = Date.now();
+  var FP = 'M37.71 99.99C37.6 99.96 36.62 99.9 36.01 99.87C34.52 99.82 33.88 99.76 32.93 99.61C27.82 98.77 22.85 96.67 18.84 93.67C17.85 92.93 17.13 92.34 16.28 91.55C14.69 90.08 13.47 88.65 11.87 86.35C10.77 84.77 10.41 84.27 10.19 83.97C9.63 83.21 9.46 82.82 9.41 82.15C9.34 81.28 9.59 80.54 10.2 79.84C10.44 79.56 10.97 79.21 11.4 79.05C12.14 78.77 13.11 78.84 13.82 79.24C14.48 79.6 14.68 79.84 16.19 81.98C16.29 82.11 16.5 82.42 16.68 82.67C18 84.55 18.69 85.39 19.83 86.52C23.58 90.23 28.62 92.73 34.11 93.61C34.67 93.7 35 93.73 36.24 93.78C38.35 93.87 38.85 93.96 39.5 94.36C41.11 95.35 41.43 97.56 40.18 98.97C39.67 99.53 38.99 99.88 38.23 99.97C38.01 100 37.79 100 37.71 99.99ZM46.12 99.88C44.53 99.74 43.33 98.44 43.33 96.84C43.33 95.68 43.96 94.65 44.99 94.13C45.37 93.93 45.73 93.84 46.33 93.79C47.29 93.7 49.34 93.17 51.19 92.53C57.04 90.5 61.64 87.03 65.33 81.86C67.28 79.13 69.05 75.83 70.64 71.96C71.06 70.94 71.17 70.75 71.57 70.36C71.85 70.09 72.04 69.95 72.36 69.8C73.17 69.42 74.09 69.42 74.89 69.79C75.98 70.31 76.63 71.41 76.58 72.62C76.56 73.03 76.48 73.31 76.19 74.04C75.47 75.83 74.78 77.35 73.95 79.02C73.47 79.97 73.31 80.29 72.89 81.04C70.4 85.57 67.36 89.37 63.98 92.19C63.84 92.31 63.69 92.43 63.66 92.46C63.42 92.66 62.76 93.17 62.41 93.43C60.76 94.65 59.14 95.64 57.27 96.56C56.75 96.82 56.61 96.89 56.11 97.12C55.4 97.44 54.2 97.92 53.43 98.19C50.54 99.2 47.99 99.83 46.54 99.88C46.37 99.89 46.19 99.89 46.12 99.88ZM39.37 91.76C33.47 91.49 28.24 89.59 23.62 86.04C22.04 84.82 20.33 83.19 18.95 81.58C16.12 78.25 13.78 74.23 12.01 69.62C10.93 66.82 9.79 62.82 9.38 60.41C9.22 59.52 9.19 59.2 9.19 58.62C9.19 58.1 9.19 58.06 9.26 57.82C9.41 57.28 9.66 56.84 10.04 56.47C10.41 56.11 10.82 55.88 11.35 55.73C11.57 55.67 11.63 55.66 12.04 55.66C12.52 55.66 12.67 55.69 13.05 55.83C13.62 56.03 14.12 56.44 14.46 56.96C14.75 57.4 14.88 57.8 14.94 58.48C15.03 59.45 15.29 60.66 15.78 62.46C16.34 64.52 16.9 66.22 17.58 67.93C18.9 71.27 20.72 74.46 22.69 76.9C22.86 77.11 23.03 77.31 23.06 77.35C23.09 77.4 23.31 77.65 23.54 77.91C27.56 82.51 32.58 85.19 38.22 85.76C39.19 85.85 39.58 85.87 40.69 85.87C43.41 85.87 45.87 85.5 48.04 84.76C52.14 83.36 55.87 80.66 58.43 77.24C58.87 76.64 59.12 76.27 59.52 75.65C60.2 74.55 60.94 73.09 61.44 71.82C62.86 68.24 63.62 64.31 63.81 59.5C63.84 58.7 63.84 56.27 63.81 55.37C63.66 51.06 63.12 47.05 62.22 43.38C60.6 36.83 58.18 31.98 54.78 28.49C52.17 25.81 48.78 24.15 45.19 23.8C42.14 23.49 39.27 23.96 36.5 25.22C32.49 27.03 28.89 30.52 26.27 35.11C24.16 38.84 22.8 43.2 22.34 47.76C22.2 49.13 22.19 49.47 22.19 51.23C22.19 52.91 22.2 53.18 22.3 54.38C22.82 60.27 24.88 65.97 27.97 70.07C29.19 71.68 30.66 73.17 32.05 74.21C34.27 75.88 36.83 76.94 39.41 77.25C40.43 77.38 41.68 77.4 42.61 77.3C47.32 76.8 51.28 74.14 53.71 69.86C55.66 66.41 56.41 62.08 55.88 57.31C55.38 52.89 53.68 48.52 51.22 45.38C50.61 44.59 49.58 43.51 49.02 43.07C47.85 42.14 46.57 41.58 45.21 41.39C44.84 41.34 44.04 41.34 43.72 41.38C41.71 41.67 40.25 42.88 39.36 44.98C38.39 47.26 38.23 50.28 38.91 53.47C39.05 54.1 39.35 55.2 39.51 55.64C39.81 56.46 39.89 56.69 40.07 57.09C40.68 58.49 41.43 59.43 41.94 59.43L42.05 59.43L42.04 59.05C42.02 58.58 41.95 58.23 41.67 57.09C41.56 56.61 41.45 56.13 41.43 56.02C41.35 55.43 41.52 54.72 41.88 54.22C42.01 54.04 42.39 53.66 42.55 53.56C43.64 52.85 45.03 53.02 45.89 53.98C46.28 54.42 46.34 54.57 46.66 55.78C46.99 56.99 47.09 57.46 47.19 58.15C47.27 58.69 47.28 59.81 47.21 60.26C47.04 61.33 46.66 62.24 46.1 62.95C45.71 63.44 45.17 63.86 44.55 64.15C43.38 64.71 41.89 64.86 40.58 64.55C38.78 64.11 37.24 62.84 36.06 60.78C34.8 58.59 33.72 54.98 33.42 51.91C33.32 50.97 33.31 50.78 33.31 49.57C33.31 48.31 33.32 48.05 33.43 47.17C33.74 44.55 34.6 42.18 35.91 40.36C36.56 39.46 37.46 38.55 38.33 37.92C42.22 35.13 47.63 35.38 51.95 38.55C53.89 39.98 55.97 42.45 57.52 45.17C60.75 50.85 62.13 57.91 61.26 64.34C60.71 68.41 59.29 72 56.99 75.08C53.5 79.76 48.34 82.6 42.57 83.02C42.01 83.07 40.36 83.07 39.81 83.03C36.26 82.76 32.93 81.63 29.9 79.66C27.54 78.12 25.29 75.95 23.36 73.34C20.3 69.2 18.11 63.81 17.15 58.04C16.76 55.74 16.59 53.65 16.59 51.25C16.59 49.12 16.71 47.39 17.01 45.35C18.13 37.57 21.48 30.53 26.47 25.45C31.3 20.53 37.14 17.94 43.41 17.94C47.19 17.94 50.58 18.8 53.76 20.55C56.4 22.01 58.77 24.07 60.82 26.74C63.83 30.62 66.04 35.5 67.57 41.65C68.51 45.42 69.07 49.21 69.35 53.71C69.49 55.96 69.5 59.06 69.37 61.23C68.95 68.57 67.13 74.67 63.89 79.56C61.28 83.51 57.65 86.71 53.34 88.9C49.99 90.59 46.67 91.46 42.55 91.73C41.81 91.77 40.05 91.79 39.37 91.76ZM7.61 77.15C7.21 77.09 6.75 76.92 6.42 76.71C6.23 76.59 5.89 76.28 5.73 76.09C5.29 75.55 4.5 74.03 3.83 72.43C2.24 68.63 0.92 63.17 0.34 57.93C-0.06 54.29-0.11 50.33 0.19 46.63C0.77 39.55 2.62 32.71 5.6 26.55C5.76 26.2 5.94 25.84 5.99 25.75C6.04 25.66 6.18 25.38 6.31 25.13C8.05 21.75 10.35 18.33 12.76 15.52C14.43 13.57 16.34 11.66 18.19 10.08C19.2 9.22 19.5 8.99 19.82 8.81C20.78 8.29 21.99 8.33 22.88 8.9C24.47 9.91 24.8 12.04 23.6 13.46C23.45 13.65 23.19 13.88 22.79 14.19C22.59 14.36 21.85 14.98 21.69 15.12C21.64 15.16 21.48 15.31 21.32 15.45C21.17 15.58 20.91 15.82 20.74 15.97C20.42 16.26 18.85 17.83 18.54 18.17C12.09 25.09 7.88 34.16 6.46 44.18C5.93 47.95 5.82 52.01 6.13 55.83C6.66 62.19 8.41 68.85 10.49 72.41C10.83 73.01 10.94 73.3 11.01 73.79C11.23 75.32 10.19 76.8 8.68 77.12C8.35 77.18 7.91 77.2 7.61 77.15ZM41.27 73.82C39.46 73.7 37.7 73.23 36.19 72.46C33.09 70.88 30.46 67.99 28.37 63.88C25.82 58.85 24.67 52.77 25.17 46.94C25.54 42.58 26.85 38.61 29.02 35.31C29.3 34.9 29.36 34.8 29.76 34.28C31.31 32.21 33.3 30.44 35.46 29.19C37.63 27.94 39.92 27.21 42.44 26.97C42.99 26.92 44.4 26.91 44.97 26.96C47.82 27.19 50.46 28.08 52.71 29.56C54.33 30.63 55.73 31.99 56.83 33.56C57.25 34.16 57.43 34.68 57.43 35.29C57.43 35.89 57.29 36.36 56.97 36.84C56.73 37.2 56.54 37.38 56.16 37.64C55.4 38.14 54.33 38.21 53.51 37.81C53.01 37.57 52.68 37.28 52.31 36.76C51.64 35.82 50.82 35 49.91 34.37C48.52 33.4 46.84 32.78 44.98 32.55C44.55 32.49 43.09 32.48 42.66 32.53C39.68 32.88 36.98 34.35 34.79 36.81C31.38 40.64 29.86 46.55 30.64 52.97C31.06 56.43 32.2 59.83 33.88 62.64C34.64 63.93 35.36 64.86 36.27 65.78C37.99 67.48 39.56 68.21 41.79 68.35C42.87 68.41 43.95 68.22 44.76 67.81C46.58 66.9 47.83 64.79 48.25 61.92C48.44 60.61 48.44 59.11 48.24 57.7C48.04 56.33 47.71 55.16 47.13 53.8C46.44 52.19 45.83 51.12 45.34 50.65C44.75 50.09 44.54 49.79 44.39 49.25C43.98 47.83 44.87 46.34 46.33 46.02C46.6 45.96 47.06 45.95 47.31 45.99C48.02 46.12 48.65 46.55 49.37 47.36C50.29 48.41 51.18 50 52.14 52.27C53.43 55.33 53.95 58.84 53.61 62.16C53.3 65.16 52.3 67.84 50.74 69.81C50.49 70.12 50.44 70.17 50.06 70.59C49.65 71.04 48.86 71.71 48.29 72.09C46.32 73.4 43.92 73.99 41.27 73.82ZM80.75 67.89C80.05 67.81 79.47 67.53 78.96 67.02C78.63 66.69 78.41 66.34 78.26 65.9C78.13 65.51 78.1 65.31 78.1 64.86C78.1 64.26 78.17 63.76 78.45 62.46C78.78 60.85 79.02 57.85 78.98 55.63C78.92 51.83 78.42 46.96 77.66 42.84C76.43 36.21 74.56 30.39 71.98 25.22C69.31 19.87 66.11 15.69 62.23 12.48C59.5 10.23 56.31 8.49 52.98 7.44C50.76 6.74 48.98 6.42 46.12 6.23C45.5 6.19 43.05 6.19 42.42 6.23C39.46 6.43 37.44 6.88 35.84 7.69C35.59 7.82 35.3 7.96 35.2 8C34.08 8.4 32.84 8.13 31.99 7.29C31.59 6.9 31.25 6.28 31.13 5.7C31.07 5.44 31.07 4.81 31.12 4.57C31.3 3.74 31.71 3.07 32.34 2.62C32.83 2.27 33.93 1.74 34.9 1.39C36.7 0.75 38.98 0.29 41.33 0.12C42.44 0.03 42.91 0.01 44.25 0.01C47.49 0.01 50.21 0.32 52.83 0.97C57.94 2.25 62.58 4.67 66.65 8.17C68.81 10.03 70.97 12.37 72.72 14.76C72.91 15.03 73.1 15.28 73.14 15.33C73.37 15.64 74.23 16.93 74.73 17.71C79.54 25.37 82.88 35.51 84.29 46.77C84.58 49.15 84.78 51.41 84.9 53.88C85.03 56.69 84.93 59.16 84.58 62.02C84.48 62.78 84.45 62.99 84.27 63.86C84.18 64.33 84.1 64.79 84.08 64.96C84.01 65.86 83.74 66.48 83.2 67.03C82.71 67.52 82.07 67.82 81.37 67.89C81.1 67.92 81.03 67.92 80.75 67.89ZM73.11 66.38C72.63 66.29 72.36 66.2 72.01 65.99C71.34 65.6 70.8 64.87 70.64 64.11C70.58 63.83 70.56 63.27 70.58 62.79C70.6 62.33 70.63 62.1 70.77 61.15C70.93 60.02 71 58.6 71 55.94C71 53.89 70.98 53.45 70.89 52.07C70.72 49.46 70.33 46.56 69.89 44.64C69.54 43.1 69.45 42.55 69.45 41.87C69.45 41.4 69.46 41.35 69.52 41.12C69.6 40.81 69.82 40.37 69.99 40.14C70.39 39.62 70.97 39.23 71.59 39.06C71.81 39 71.88 38.99 72.31 38.99C72.76 38.99 72.81 38.99 73.05 39.06C74.23 39.39 75.05 40.37 75.19 41.6C75.23 42.01 75.31 42.41 75.51 43.3C75.84 44.82 76.03 45.95 76.29 47.95C76.78 51.74 76.91 55.65 76.7 59.98C76.65 60.99 76.64 61.09 76.44 62.47C76.42 62.61 76.39 63 76.38 63.33C76.36 63.97 76.33 64.17 76.2 64.49C75.85 65.41 75.12 66.06 74.18 66.31C73.98 66.36 73.86 66.38 73.56 66.38C73.35 66.39 73.15 66.39 73.11 66.38ZM11.44 48.19C10.24 47.96 9.32 47.04 9.11 45.85C8.93 44.81 9.46 41.73 10.47 38.08C11.32 34.96 12.38 32.2 13.78 29.4C15.91 25.13 18.51 21.47 21.66 18.31C27.31 12.62 34.19 9.32 41.51 8.78C46.65 8.41 51.41 9.3 55.64 11.43C57.26 12.25 58.66 13.13 60.14 14.29C63.51 16.9 66.53 20.4 68.97 24.53C69.78 25.91 70.18 26.71 71.15 28.97C71.82 30.52 72 30.92 72.38 31.69C72.82 32.58 72.91 32.89 72.88 33.54C72.86 33.95 72.78 34.28 72.61 34.63C72.43 34.99 72.31 35.15 72.04 35.43C71.53 35.95 70.87 36.25 70.13 36.28C69.58 36.31 69.2 36.23 68.69 35.98C68.22 35.76 67.77 35.35 67.5 34.9C67.18 34.38 66.54 33.02 65.75 31.21C64.97 29.39 64.62 28.69 63.93 27.55C60.97 22.59 56.99 18.71 52.83 16.7C52.04 16.32 51.47 16.08 50.72 15.82C47.45 14.66 43.59 14.38 39.8 15C36.29 15.59 32.97 16.97 29.79 19.16C27.43 20.79 25.04 23.07 23.05 25.61C20.22 29.2 17.9 33.63 16.5 38.1C15.63 40.88 14.99 43.67 14.84 45.4C14.8 45.85 14.78 45.96 14.7 46.22C14.42 47.13 13.62 47.89 12.68 48.14C12.37 48.22 11.74 48.25 11.44 48.19Z';   // 13.1 로고와 같은 지문(전체 심볼)
+  var FP_VB = '0 0 84.97 100';
   var FONT = '"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif';
   var uid = 0;
   function fp(cls, mono) {
     uid++;
     var g = 'amfp' + uid;
     return '<svg class="' + (cls || 'fp') + '" viewBox="' + FP_VB + '" aria-hidden="true" focusable="false">' +
-      (mono ? '' : '<defs><linearGradient id="' + g + '" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="87.49" y2="0"><stop offset="0" stop-color="#0030C4"/><stop offset=".45" stop-color="#0858F0"/><stop offset=".8" stop-color="#0E8BFB"/><stop offset="1" stop-color="#33C8FF"/></linearGradient></defs>') +
+      (mono ? '' : '<defs><linearGradient id="' + g + '" gradientUnits="userSpaceOnUse" x1="0" y1="100" x2="84.97" y2="0"><stop offset="0" stop-color="#0030C4"/><stop offset=".45" stop-color="#0858F0"/><stop offset=".8" stop-color="#0E8BFB"/><stop offset="1" stop-color="#33C8FF"/></linearGradient></defs>') +
       '<path fill="' + (mono ? 'currentColor' : 'url(#' + g + ')') + '" d="' + FP + '"/></svg>';
   }
 
@@ -44,12 +44,13 @@
       basis: '근거', tool: '도구', who: '붙인 곳', when: '확인',
       b_owner: '사이트 운영자가 표시', b_rule: '운영자가 정한 위치 규칙', b_c2pa: '파일 속 출처 기록(C2PA)', b_iptc: '파일 속 출처 기록(IPTC)', b_gen: '파일 속 생성 정보', b_name: '파일 이름, 설명의 AI 도구 흔적',
       g3: '기록', g2: '규칙', g1: '흔적',
-      verify: 'AIMarker에서 확인', notice: '이 사이트의 AI 활용 안내',
+      verify: 'AIMarker에서 확인', notice: '이 사이트의 AI 마킹',
       foot: '이 마크는 사이트 운영자가 AIMarker로 설정했습니다. 콘텐츠의 적법성을 보증하지 않습니다.',
       std: '표시 문구 기준 한국AI윤리위원회', nocert: '이 안내와 AI 마크는 심사나 보증이 아닙니다',
-      close: '닫기', open: '안내 보기', here: '이 페이지의 AI 마크', go: '위치 보기',
+      close: '닫기', open: 'AI 마킹 보기', here: '이 페이지의 AI 마킹', go: '위치 보기',
       browser: '이 브라우저에서 확인',
-      mk: 'AI 마크', ariaGo: 'AIMarker AI 마크 근거 보기', cardL: 'AI 마크 근거', brand: 'AIMarker AI 마킹',
+      mk: 'AI 마크', ariaGo: 'AIMarker AI 마킹 근거 보기', cardL: 'AI 마킹 근거', brand: 'AIMarker AI 마킹',
+      mark: 'AI 마킹', k_gen: '생성', k_edit: '편집', k_assist: '보조', k_virtual: '가상인물', k_text: '도움 글', noticeT: 'AI 마킹', noticeA: 'AI 마킹 안내',
       mOff: 'AI 마크 움직임 멈추기', mOn: 'AI 마크 움직임 다시 켜기'
     },
     en: {
@@ -66,6 +67,7 @@
       close: 'Close', open: 'Details', here: 'Labeled on this page', go: 'Show',
       browser: 'checked in this browser',
       mk: 'AI label', ariaGo: 'see AIMarker label details', cardL: 'AI label details', brand: 'AIMarker AI labeling',
+      mark: 'AI marked', k_gen: 'generated', k_edit: 'edited', k_assist: 'assisted', k_virtual: 'virtual human', k_text: 'assisted text', noticeT: 'AI marked', noticeA: 'AI use notice',
       mOff: 'Stop label motion', mOn: 'Resume label motion'
     }
   };
@@ -73,7 +75,7 @@
   var GRADE = { owner: 2, rule: 2, c2pa: 3, iptc: 3, gen: 3, name: 1 };
   var DST = { gen: 'trainedAlgorithmicMedia', edit: 'compositeWithTrainedAlgorithmicMedia', assist: 'algorithmicallyEnhanced', virtual: 'trainedAlgorithmicMedia' };
 
-  /* ---------- 2.0 안내 창(사이트 전체 AI 활용 안내) ---------- */
+  /* ---------- 2.0 안내 창(사이트 전체 AI 마킹 안내) ---------- */
   var USE = {
     text: '글 · 상품 설명 · 공지를 쓸 때 AI의 도움을 받습니다',
     image: '일부 이미지를 AI로 만들거나 다듬습니다',
@@ -126,7 +128,7 @@
       '.badge.fl{animation:amf 6s ease-in-out infinite}@keyframes amf{0%,100%{translate:0 0}50%{translate:0 -3px}}' +
       '.badge:hover{box-shadow:0 1px 2px rgba(9,20,47,.06),0 16px 34px -12px rgba(9,20,47,.34)}' +
       '.inl .badge{box-shadow:none}.inl .badge:hover{box-shadow:none;border-color:' + C.acc + '}' +
-      '.badge .ic{position:relative;width:30px;height:30px;border-radius:50%;background:' + C.chip + ';display:inline-flex;align-items:center;justify-content:center}.badge .ic svg{width:15px;height:17px}' +
+      '.badge .ic{position:relative;width:30px;height:30px;border-radius:50%;background:' + C.chip + ';display:inline-flex;align-items:center;justify-content:center}.badge .ic svg{width:15.3px;height:18px}' +
       '.badge.fl .ic::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(11,99,246,.36);opacity:0;animation:amp 6s ease-out infinite;pointer-events:none}@keyframes amp{0%,55%{opacity:0;transform:scale(1)}62%{opacity:1}100%{opacity:0;transform:scale(1.5)}}' +
       '.badge .n{min-width:22px;height:22px;padding:0 7px;border-radius:999px;background:' + C.acc + ';color:#fff;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center}.badge .n[hidden]{display:none}' +
       '.badge .lb{padding-right:4px}' +
@@ -173,7 +175,7 @@
       LEVELS.map(function (l) { return '<span class="' + l[0] + (l[0] === c.level ? ' on' : '') + '">' + l[1] + '</span>'; }).join('') + '</div><p class="lvt">AI 성분표 · 이 사이트의 콘텐츠는 주로 \'' + lvName + '\'입니다</p>';
     var who = (c.name ? esc(c.name) + josa(c.name) + ' 이렇게 AI를 사용합니다' : '이 사이트는 이렇게 AI를 사용합니다') + (c.date ? ' · ' + c.date.replace('-', '.') + ' 작성' : '');
     var reg = c.site ? '<a class="lnk" href="' + HOME + '/v/?s=' + encodeURIComponent(location.hostname) + '&id=' + encodeURIComponent(c.site) + '" target="_blank" rel="noopener" style="margin-top:4px"><span><em>AIMarker 등록 사이트인지 확인 →</em></span></a>' : '';
-    var pop = '<div class="pop" role="dialog" aria-label="AI 활용 안내"><button class="x" type="button" aria-label="' + t('close') + '">×</button><h4>' + fp('h') + 'AI 활용 안내</h4><p class="who">' + who + '</p>' + lv + '<ul>' + items + '</ul>' +
+    var pop = '<div class="pop" role="dialog" aria-label="' + t('noticeA') + '"><button class="x" type="button" aria-label="' + t('close') + '">×</button><h4>' + fp('h') + t('noticeT') + '</h4><p class="who">' + who + '</p>' + lv + '<ul>' + items + '</ul>' +
       '<div class="here" hidden><b>' + t('here') + '</b><div class="list"></div></div>' + ct +
       '<div class="ft">이 안내는 사이트 운영자가 직접 작성했습니다.' + reg + '<a class="lnk" href="' + HOME + '/label/?utm_source=label&utm_medium=referral" target="_blank" rel="noopener">' + fp('l') + '<span><b><span class="ai">AI</span>Marker</b><em>AI 마킹 · 무료로 시작하기 →</em></span></a><span class="std">' + t('std') + '. ' + t('nocert') + '</span>' + (CFG.motion && !mountEl ? '<button class="mo" type="button" data-mo>' + t(moving() ? 'mOff' : 'mOn') + '</button>' : '') + '</div></div>';
     var host = D.createElement('div');
@@ -188,7 +190,7 @@
     var root = host.attachShadow ? host.attachShadow({ mode: 'open' }) : host;
     var trigger = style === 'line'
       ? '<div class="line"><button type="button" aria-expanded="false">' + fp('m') + '<span>' + (c.name ? esc(c.name) + josa(c.name) : '이 사이트는') + ' 일부 콘텐츠에 AI를 활용합니다 · <b>' + t('open') + '</b></span></button></div>'
-      : '<button class="badge' + (!box && !mountEl && moving() ? ' fl' : '') + '" type="button" aria-expanded="false"><span class="ic">' + fp('b') + '</span><span class="lb">AI 활용 안내</span><span class="n" hidden></span></button>';
+      : '<button class="badge' + (!box && !mountEl && moving() ? ' fl' : '') + '" type="button" aria-expanded="false"><span class="ic">' + fp('b') + '</span><span class="lb">' + t('noticeT') + '</span><span class="n" hidden></span></button>';
     root.innerHTML = '<style>' + noticeCss(C, c.side) + '</style><div class="k' + (box ? ' inl' : '') + '"><div class="wrap">' + pop + trigger + '</div></div>';
     var p = root.querySelector('.pop'), tr = root.querySelector('.badge, .line button');
     if (style === 'line') { var wr = root.querySelector('.wrap'); wr.style.display = 'block'; p.style.left = '50%'; p.style.right = 'auto'; p.style.transform = 'translateX(-50%)'; p.style.bottom = '48px'; }
@@ -218,7 +220,7 @@
       if (!cnt) return;
       var n = ITEMS.filter(function (x) { return x.kind; }).length;
       cnt.hidden = !n; cnt.textContent = n > 99 ? '99+' : String(n);
-      tr.setAttribute('aria-label', 'AI 활용 안내' + (n ? ', 이 페이지 AI 마크 ' + n + '건' : ''));
+      tr.setAttribute('aria-label', t('noticeA') + (n ? ', 이 페이지 AI 마킹 ' + n + '건' : ''));
       if (p.classList.contains('on')) fillHere();
     }
     host.__open = setOpen;
@@ -249,6 +251,8 @@
   var BY = typeof WeakMap !== 'undefined' ? new WeakMap() : null;
   function itemOf(el) { if (BY) return BY.get(el); for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].el === el) return ITEMS[i]; return null; }
   function labelOf(x) { return x.type === 'block' ? t('text') : t(x.kind); }
+  /* 13.1 마크 글자: 'AI 마킹'을 크게, 어떤 AI 사용인지(생성 · 편집 · 보조 · 가상인물 · 도움 글)는 표시 기준이라 가는 선 뒤에 함께 */
+  function markText(x) { return '<span class="l"><b>' + esc(t('mark')) + '</b><i>' + esc(t('k_' + (x.type === 'block' ? 'text' : x.kind))) + '</i></span>'; }
   function docOrder(a, b) { if (a.el === b.el) return 0; return a.el.compareDocumentPosition(b.el) & 4 ? -1 : 1; }
 
   /* 13.0 AI 마크(2026.10.23): 둥근 알약 · 유리 같은 남색 바탕 · 흰 원 안의 지문, 은은하게 떠 있는 움직임(data-motion="0" 이면 멈춤, 움직임 줄이기 설정 존중) */
@@ -257,14 +261,15 @@
     '.t.fl{animation:amf var(--d,5.6s) ease-in-out var(--dl,0s) infinite}' +
     '@keyframes amf{0%,100%{translate:0 0}50%{translate:0 -3px}}' +
     '.t:hover{background:linear-gradient(180deg,rgba(32,60,128,.94),rgba(8,20,47,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 14px 30px -10px rgba(8,20,47,.6),0 2px 6px rgba(8,20,47,.22)}.t:active{scale:.97}.t:focus-visible{outline:2px solid #33C8FF;outline-offset:3px}' +
-    '.f{position:relative;width:22px;height:22px;border-radius:50%;background:#fff;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;box-shadow:0 0 0 2px rgba(125,184,255,.3)}.f svg{width:12.5px;height:14.3px}' +
+    '.f{position:relative;width:22px;height:22px;border-radius:50%;background:#fff;display:inline-flex;align-items:center;justify-content:center;flex:0 0 22px;box-shadow:0 0 0 2px rgba(125,184,255,.3)}.f svg{width:13.6px;height:16px}' +
+    '.l b{font-weight:760}.l i{font-style:normal;font-weight:560;opacity:.8;margin-left:7px;padding-left:7px;border-left:1px solid rgba(255,255,255,.3)}.t.light .l i{border-left-color:rgba(14,31,71,.2)}.bar .l i{border-left-color:rgba(255,255,255,.3)}' +
     '.t.fl .f::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid rgba(51,200,255,.5);opacity:0;animation:amp var(--d,5.6s) ease-out var(--dl,0s) infinite;pointer-events:none}' +
     '@keyframes amp{0%,55%{opacity:0;transform:scale(1)}62%{opacity:1}100%{opacity:0;transform:scale(1.45)}}' +
     '.l{display:inline-block}' +
     '.t.light{background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(242,246,252,.92));color:#0E1F47;border-color:rgba(14,31,71,.14);box-shadow:inset 0 1px 0 #fff,0 10px 24px -10px rgba(9,20,47,.34),0 2px 6px rgba(9,20,47,.1)}.t.light:hover{background:#fff}.t.light .f{background:#EEF4FF;box-shadow:0 0 0 2px rgba(11,99,246,.14)}' +
     '.t.mini{padding:0 3px;gap:0}.t.mini .l{max-width:0;overflow:hidden;opacity:0;transition:max-width .24s ease,opacity .18s ease,margin .24s ease}' +
-    '.t.mini:hover,.t.mini:focus-visible{padding:0 12px 0 3px}.t.mini:hover .l,.t.mini:focus-visible .l{max-width:120px;opacity:1;margin-left:7px}' +
-    '.t.blk{height:24px;gap:6px;padding:0 10px 0 2px;font-size:11.5px}.t.blk .f{width:19px;height:19px;flex-basis:19px}.t.blk .f svg{width:11px;height:12.6px}' +
+    '.t.mini:hover,.t.mini:focus-visible{padding:0 12px 0 3px}.t.mini:hover .l,.t.mini:focus-visible .l{max-width:170px;opacity:1;margin-left:7px}' +
+    '.t.blk{height:24px;gap:6px;padding:0 10px 0 2px;font-size:11.5px}.t.blk .f{width:19px;height:19px;flex-basis:19px}.t.blk .f svg{width:11.9px;height:14px}.t.blk .l i{margin-left:6px;padding-left:6px}' +
     '.bar{display:flex;align-items:center;gap:8px;width:100%;height:30px;padding:0 10px 0 4px;border:0;border-radius:0;background:linear-gradient(0deg,rgba(8,20,47,.9),rgba(8,20,47,.6));-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font:700 12px/1 ' + FONT + ';letter-spacing:-.01em;cursor:pointer;text-align:left;white-space:nowrap;overflow:hidden}' +
     '.bar .f{width:21px;height:21px;flex-basis:21px}.bar .s{margin-left:auto;font-weight:650;font-size:11px;opacity:.8}.bar .s b{color:#7DB8FF;font-weight:800}' +
     '.flash{animation:fl 1.1s ease 2}@keyframes fl{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 10px 24px -8px rgba(8,20,47,.55)}50%{box-shadow:0 0 0 6px rgba(51,200,255,.55)}}' +
@@ -300,16 +305,16 @@
     var style = x.type === 'block' ? 'tag' : (x.small && CFG.tag === 'tag' ? 'mini' : CFG.tag);
     if (style === 'bar' && x.type !== 'block') {
       el = D.createElement('button'); el.type = 'button'; el.className = 'bar';
-      el.innerHTML = '<span class="f">' + fp() + '</span><span>' + esc(lab) + '</span><span class="s"><b>AI</b>Marker</span>';
+      el.innerHTML = '<span class="f">' + fp() + '</span>' + markText(x) + '<span class="s"><b>AI</b>Marker</span>';
     } else {
       el = D.createElement('button'); el.type = 'button';
       el.className = 't' + (CFG.light ? ' light' : '') + (style === 'mini' ? ' mini' : '') + (x.type === 'block' ? ' blk' : '') + (moving() ? ' fl' : '');
-      el.innerHTML = '<span class="f">' + fp() + '</span><span class="l">' + esc(lab) + '</span>';
+      el.innerHTML = '<span class="f">' + fp() + '</span>' + markText(x);
       if (CFG.motion) { if (x.ph == null) x.ph = (Math.random() * 5.2).toFixed(2); el.style.setProperty('--dl', '-' + x.ph + 's'); el.style.setProperty('--d', (5.2 + (+x.ph % 1.4)).toFixed(2) + 's'); }
     }
     var tw = t(x.type === 'block' ? 'block' : x.type === 'video' || x.type === 'frame' ? 'video' : 'img');
     el.setAttribute('aria-label', (lab.slice(-tw.length) === tw ? lab : lab + ' ' + tw) + ', ' + t('ariaGo'));
-    el.title = lab + ' · ' + t('b_' + x.basis);
+    el.title = t('mark') + ' · ' + lab + ' · ' + t('b_' + x.basis);
     el.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); openCard(x, el); });
     el.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') e.stopPropagation(); });
     ['mousedown', 'pointerdown', 'touchstart'].forEach(function (ev) { el.addEventListener(ev, function (e) { e.stopPropagation(); }, { passive: true }); });
