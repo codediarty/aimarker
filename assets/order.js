@@ -1,5 +1,5 @@
 /* AIMarker 결제 시트(10.0, 12.0 기업 토큰, 13.0 토큰 하나로): [data-buy="상품"] 단추 → 금액 확인 → 공식 결제처 성균관컨설팅 결제 페이지로(상품 번호가 없으면 결제 링크 받기 요청)
-   13.0: 결제 방법 '토큰'(개인 · 기업 모든 토큰, 1토큰 = 10원, 부가세 별도 상품 금액 기준). 이 브라우저에 저장된 코드가 있으면 먼저 고르고,
+   13.0: 결제 방법 '토큰'(개인 · 기업 모든 토큰, 13.2 부터 1토큰 = 100원, 부가세 별도 상품 금액 기준). 이 브라우저에 저장된 코드가 있으면 먼저 고르고,
    남은 토큰은 am.pass(읽기만, 빼지 않음)로 바로 보여 줌. 주문 기록에는 코드 전체를 남기지 않고 끝 4자리만 남겨 담당자가 확인 뒤 뺌.
    저장된 코드가 토큰 코드가 아니면(예전 이용권 · 없는 코드) 조용히 카드로 돌아감. 기업 토큰 충전은 '이미 받은 코드에 더하기'(끝 4자리)를 받음.
    상품 · 요금은 assets/products.js(빌드에서 만듦). 카드 번호 같은 결제 정보는 이 사이트에서 받지 않습니다. */
@@ -9,6 +9,9 @@
   if (!AMP) return;
   var EMAIL_RE = /^[^\s@]{1,64}@[A-Za-z0-9.\-]{1,120}\.[A-Za-z]{2,}$/;
   function won(n) { return Math.round(n).toLocaleString('ko-KR') + '원'; }
+  var TW = 100;   // 13.2 1토큰 = 100원(상품 금액 ÷ 100)
+  function tokN(base) { return Math.round(base / TW); }
+  function tn(x) { return (Math.round((+x || 0) * 10) / 10).toLocaleString('ko-KR', { maximumFractionDigits: 1 }); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   var root = document.body.getAttribute('data-root') || '';
   var box = null, last = null;
@@ -73,12 +76,12 @@
     function paint() {
       var c = cur(), pay = (f.querySelector('input[name=pay]:checked') || {}).value;
       sum.innerHTML = '<div><span>상품 금액' + (/별도/.test(it.vat) ? '(부가세 별도)' : '') + '</span><b>' + won(c.base) + '</b></div>' +
-        (pay === 'credit' ? '<div class="tot"><span>빠지는 토큰</span><b>' + Math.round(c.base / 10).toLocaleString('ko-KR') + '토큰</b></div>' :
+        (pay === 'credit' ? '<div class="tot"><span>빠지는 토큰</span><b>' + tn(tokN(c.base)) + '토큰</b></div>' :
         (c.vat ? '<div><span>부가세</span><b>' + won(c.vat) + '</b></div>' : '') +
         '<div class="tot"><span>결제 금액</span><b>' + won(c.total) + '</b></div>');
-      go.textContent = pay === 'credit' ? Math.round(c.base / 10).toLocaleString('ko-KR') + '토큰으로 주문하기' : pay === 'bank' ? '견적서 받기' : c.idx ? '성균관컨설팅 결제 페이지로' : '결제 링크 받기';
+      go.textContent = pay === 'credit' ? tn(tokN(c.base)) + '토큰으로 주문하기' : pay === 'bank' ? '견적서 받기' : c.idx ? '성균관컨설팅 결제 페이지로' : '결제 링크 받기';
       var crw = f.querySelector('.k-buy-cr'); if (crw) crw.hidden = pay !== 'credit';
-      var crn = f.querySelector('.crnote'); if (crn) crn.textContent = '충전해 둔 토큰에서 ' + Math.round(c.base / 10).toLocaleString('ko-KR') + '토큰(상품 금액 ' + won(c.base) + ', 1토큰 10원)을 뺍니다. 개인 · 기업 토큰 모두 됩니다.';
+      var crn = f.querySelector('.crnote'); if (crn) crn.textContent = '충전해 둔 토큰에서 ' + tn(tokN(c.base)) + '토큰(상품 금액 ' + won(c.base) + ', 100원 = 1토큰)을 뺍니다. 부가세는 토큰을 충전할 때 이미 냈으므로 따로 내지 않습니다. 개인 · 기업 토큰 모두 됩니다.';
       if (pay === 'credit') crShow();
       var flow = f.querySelector('.k-buy-flow'); if (flow) flow.hidden = pay === 'credit';
       var nt = f.querySelector('.k-buy-note .nt'); if (nt) nt.textContent = pay === 'credit' ? '주문 뒤 영업일 하루 안에 토큰을 빼고 시작 안내 메일을 드립니다.' : pay === 'bank' ? '입금이 확인되면 영업일 하루 안에 시작 안내 메일을 드립니다.' : '결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다.';
@@ -88,7 +91,7 @@
     var cr = { code: '', st: '', left: null, t: 0 };   // st: '' | wait | ok | bad | off
     function crShow() {
       var b = f.querySelector('.k-buy-crb'); if (!b) return;
-      var need = Math.round(cur().base / 10), n = function (x) { return Math.round(x).toLocaleString('ko-KR'); };
+      var need = tokN(cur().base), n = tn;
       b.hidden = !cr.st; b.className = 'k-buy-crb';
       if (cr.st === 'wait') b.innerHTML = '남은 토큰을 확인하는 중…';
       else if (cr.st === 'ok' && cr.left >= need) b.innerHTML = '<span>남은 토큰 <b>' + n(cr.left) + '</b>. 주문하면 영업일 하루 안에 ' + n(need) + '토큰을 빼서 <b>' + n(cr.left - need) + '</b>토큰이 남습니다.</span>';
@@ -132,14 +135,14 @@
       var full = f.crcode ? normCode(f.crcode.value) : '', tail = full.slice(-4);
       if (pay === 'credit' && full.length !== 16) { say('err', '토큰 코드 16자리를 넣어 주세요. 결제 메일에서 받은 코드입니다.'); if (f.crcode) f.crcode.focus(); return; }
       if (pay === 'credit' && cr.st === 'bad') { say('err', esc(cr.msg || '토큰 코드를 확인해 주세요.')); return; }
-      if (pay === 'credit' && cr.st === 'ok' && cr.left < Math.round(c.base / 10)) { say('err', '토큰이 모자라요. 같은 코드에 충전한 뒤 주문하거나 다른 결제 방법을 고르세요.'); return; }
+      if (pay === 'credit' && cr.st === 'ok' && cr.left < tokN(c.base)) { say('err', '토큰이 모자라요. 같은 코드에 충전한 뒤 주문하거나 다른 결제 방법을 고르세요.'); return; }
       var top = f.topup ? normCode(f.topup.value) : '';
       if (top && top.length < 4) { say('err', '더할 코드는 끝 4자리를 넣어 주세요. 비워 두면 새 코드를 보내 드립니다.'); f.topup.focus(); return; }
       top = top.slice(-4);
       if (!f.agree.checked) { say('err', '개인정보 수집 · 이용에 동의해 주세요.'); return; }
       go.disabled = true; var old = go.textContent; go.textContent = '처리하는 중…';
-      var crN = Math.round(c.base / 10);
-      var memo = '[주문] ' + c.label + ' · ' + (pay === 'credit' ? '토큰 ' + crN.toLocaleString('ko-KR') + '토큰(상품 금액 ' + won(c.base) + ', 코드 끝 ' + tail + (cr.st === 'ok' ? ', 확인한 남은 토큰 ' + cr.left.toLocaleString('ko-KR') : '') + ')' : '결제 금액 ' + won(c.total) + (c.vat ? '(부가세 포함)' : '') + ' · ' + (pay === 'bank' ? '계좌이체 · 세금계산서' : c.idx ? '카드(성균관컨설팅 결제 페이지로 이동)' : '카드 결제 링크 요청')) + (top ? ' · 이미 받은 코드에 더하기(코드 끝 ' + top + ')' : '') + ' · 상품 코드 ' + c.sku;
+      var crN = tokN(c.base);
+      var memo = '[주문] ' + c.label + ' · ' + (pay === 'credit' ? '토큰 ' + crN.toLocaleString('ko-KR') + '토큰(상품 금액 ' + won(c.base) + ', 코드 끝 ' + tail + (cr.st === 'ok' ? ', 확인한 남은 토큰 ' + tn(cr.left) : '') + ')' : '결제 금액 ' + won(c.total) + (c.vat ? '(부가세 포함)' : '') + ' · ' + (pay === 'bank' ? '계좌이체 · 세금계산서' : c.idx ? '카드(성균관컨설팅 결제 페이지로 이동)' : '카드 결제 링크 요청')) + (top ? ' · 이미 받은 코드에 더하기(코드 끝 ' + top + ')' : '') + ' · 상품 코드 ' + c.sku;
       var lead = AM.call ? AM.call('am.lead', { kind: 'biz', plan: c.label, name: '', org: org || site || (email.split('@')[1] || '') || '개인 주문', contact: email, site: site, memo: memo, hp: '', ms: Date.now() - t0, src: (location.pathname + location.search).slice(0, 80) + ' 결제 시트' }, 15000) : Promise.reject(new Error('no AM'));
       if (pay === 'card' && c.idx) {
         var moved = false, url = String(AMP.shop).replace('%s', encodeURIComponent(c.idx));

@@ -1521,7 +1521,7 @@ a.k-bcard, .au-tri article, .why6 article, .mods6 article, .b-box .b-stage, .b-n
 }
 
 /* ================= 24. 12.0 토큰(개인 · 기업): 단추 옆 토큰, 한 번 묻기, 충전 창, 충전 칸, 단가 표 =================
-   1토큰 = 10원 기준. 값은 서버 PASS 1.2 와 build.py CREDITS · CREDIT_COST 가 같게 */
+   13.2 부터 1토큰 = 100원(서버 PASS 1.2 값 ÷ 10). 값은 build.py CREDITS · CREDIT_COST 와 같게 */
 .btn-p .hz7-pill { background: rgba(0, 0, 0, .22); color: #fff; }
 .hz7-act .hz7-pill { margin-left: 2px; font-variant-numeric: tabular-nums; }
 .hz7-link.em { padding: 2px 8px; border-radius: var(--r1); background: var(--ds-blue-50); }

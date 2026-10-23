@@ -13,13 +13,28 @@
     var t = ctl ? setTimeout(function () { ctl.abort(); }, timeoutMs || 20000) : 0;
     return fetch(AM.API, { method: 'POST', body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined, redirect: 'follow' })
       .then(function (r) { return r.json(); })
-      .then(function (j) { return tokOf(action, j); })
+      .then(function (j) { return tokOf(action, j, data); })
       .finally(function () { if (t) clearTimeout(t); });
   };
-  /* 13.1 이름 '크레딧' → '토큰': 서버(PASS)는 아직 '크레딧'이라 화면에 보이기 전에 바꿈.
-     결제 · 충전 · 코드 응답은 전체를, 그 밖의 응답은 오류 문구와 pass 정보만(이용자가 넣은 글은 건드리지 않음) */
+  /* 13.1 이름 '크레딧' → '토큰', 13.2 단위 1토큰 = 100원.
+     서버(PASS 1.2)는 아직 '크레딧'(1크레딧 = 10원)이라, 화면에 보이기 전에 이름과 숫자를 토큰으로 바꿈(10크레딧 = 1토큰).
+     숫자: 충전 상품(cr · base), 단가(credit.cost), 토큰 코드(pass: cr · left · total · used · log), 충전 결과, 관리 화면 충전 · 차감 결과.
+     글: 결제 · 충전 · 코드 응답은 전체를, 그 밖의 응답은 오류 문구와 pass 정보만(이용자가 넣은 글은 건드리지 않음).
+     오류 응답의 left(남은 크레딧)는 토큰 코드인지 알 수 있는 곳(humanize.js)에서 AM.toTok 으로 바꿈 */
   var TOK_ALL = { 'am.pass': 1, 'am.passinfo': 1, 'am.buy': 1, 'am.payok': 1, 'am.adm': 1, 'am.lead': 1 };
-  function tokS(v) { return typeof v === 'string' ? v.replace(/크레딧/g, '토큰') : v; }
+  AM.TOK_WON = 100; AM.CR_WON = 10;   // 사이트 1토큰 = 100원, 서버 1크레딧 = 10원(am.passinfo credit.won 이 오면 그 값)
+  function toTok(cr) { return typeof cr === 'number' && isFinite(cr) ? Math.round(cr * AM.CR_WON / AM.TOK_WON * 10) / 10 : cr; }
+  function toCr(tk) { return Math.round((+tk || 0) * AM.TOK_WON / AM.CR_WON); }
+  function fmtTok(x) { return (Math.round((+x || 0) * 10) / 10).toLocaleString('ko-KR', { maximumFractionDigits: 1 }); }
+  AM.toTok = toTok; AM.toCr = toCr; AM.fmtTok = fmtTok;
+  function numOf(s) { return +String(s).replace(/,/g, ''); }
+  function tokS(v) {
+    if (typeof v !== 'string' || v.indexOf('크레딧') < 0) return v;
+    var N = '(\\d{1,3}(?:,\\d{3})+|\\d+)';   // 1,100 · 120 (뒤의 쉼표는 숫자가 아님)
+    return v.replace(new RegExp(N + '\\s?크레딧', 'g'), function (m, n) { return fmtTok(toTok(numOf(n))) + '토큰'; })
+      .replace(new RegExp('크레딧(\\s?)' + N, 'g'), function (m, sp, n) { return '토큰' + sp + fmtTok(toTok(numOf(n))); })
+      .replace(/크레딧/g, '토큰');
+  }
   function tokDeep(o, d) {
     if (o == null || d > 8) return o;
     if (typeof o === 'string') return tokS(o);
@@ -27,8 +42,27 @@
     if (typeof o === 'object') { var r = {}; for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) r[k] = tokDeep(o[k], d + 1); return r; }
     return o;
   }
-  function tokOf(action, j) {
+  function numTok(o, keys) { keys.forEach(function (k) { if (typeof o[k] === 'number') o[k] = toTok(o[k]); }); }
+  function convPass(p) {   // 토큰 코드(예전 이용권은 횟수라 그대로)
+    if (!p || typeof p !== 'object' || !p.credit) return;
+    numTok(p, ['cr', 'left', 'total', 'used', 'added', 'taken', 'spent']);
+    if (Array.isArray(p.log)) p.log.forEach(function (g) { if (g && typeof g === 'object') numTok(g, ['cr']); });
+  }
+  function tokOf(action, j, data) {
     if (!j || typeof j !== 'object') return j;
+    if (action === 'am.passinfo' && j.credit && typeof j.credit === 'object' && !j.credit.tok) {
+      if (+j.credit.won > 0) AM.CR_WON = +j.credit.won;
+      var C = j.credit.cost || {};
+      Object.keys(C).forEach(function (k) { if (C[k] && typeof C[k] === 'object') numTok(C[k], ['cr', 'min']); });
+      j.credit.crWon = AM.CR_WON; j.credit.won = AM.TOK_WON; j.credit.tok = 1;
+    }
+    if (TOK_ALL[action]) {
+      ['products', 'biz'].forEach(function (k) { if (Array.isArray(j[k])) j[k].forEach(function (p) { if (p && typeof p === 'object') numTok(p, ['cr', 'base']); }); });
+      if (Array.isArray(j.passes)) j.passes.forEach(convPass);
+      if (action === 'am.payok' && j.topup) numTok(j, ['added', 'left']);
+      if (action === 'am.adm' && data && (data.op === 'topup' || data.op === 'deduct')) numTok(j, ['added', 'taken', 'left', 'total']);
+    }
+    if (j.pass && typeof j.pass === 'object') convPass(j.pass);
     if (TOK_ALL[action]) return tokDeep(j, 0);
     if (typeof j.message === 'string') j.message = tokS(j.message);
     if (j.pass && typeof j.pass === 'object') j.pass = tokDeep(j.pass, 0);

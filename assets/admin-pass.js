@@ -4,6 +4,9 @@
   var AM = window.AM || {}, $ = function (s) { return document.querySelector(s); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function n2(n) { return Number(n || 0).toLocaleString('ko-KR'); }
+  /* 13.2 1토큰 = 100원: 서버(1크레딧 = 10원) 숫자는 am.js 가 토큰으로 바꿔 주고, 보낼 때는 AM.toCr 로 크레딧으로 */
+  function tn(x) { return (Math.round((+x || 0) * 10) / 10).toLocaleString('ko-KR', { maximumFractionDigits: 1 }); }
+  function toCr(t) { return AM.toCr ? AM.toCr(t) : Math.round((+t || 0) * 10); }
   function sget(k) { try { return sessionStorage.getItem(k) || ''; } catch (e) { return ''; } }
   function sset(k, v) { try { if (v) sessionStorage.setItem(k, v); else sessionStorage.removeItem(k); } catch (e) { /* 이 창에서만 */ } }
   function say(el, text, kind) { if (!el) return; el.textContent = text || ''; el.className = 'msg' + (text ? ' on ' + (kind || 'err') : ''); }
@@ -76,8 +79,8 @@
     var w = ($('#psQ').value || '').trim().toLowerCase(), ps = (D.passes || []).filter(function (p) { return !w || [p.id, p.order, p.to, p.memo, p.name].join(' ').toLowerCase().indexOf(w) >= 0; });
     $('#psList').innerHTML = ps.length ? ps.slice(0, 200).map(function (p) {
       var on = p.st === '사용';
-      var KL = { t: '충전', d: '차감', r: '환불' }, log = p.credit && (p.log || []).length ? '<div class="adm-log">' + p.log.slice(-6).reverse().map(function (g) { var d = new Date(g.at || 0); return '<span>' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + (KL[g.k] || g.k) + ' ' + (g.k === 't' ? '+' : '-') + n2(g.cr) + (g.o ? ' · ' + esc(g.o) : '') + (g.m ? ' · ' + esc(g.m) : '') + '</span>'; }).join('') + '</div>' : '';
-      var info = p.credit ? '<span class="adm-cr">남은 <b>' + n2(p.left) + '</b> / ' + n2(p.total) + '토큰 · 쓴 ' + n2(p.used) + ' · ' + n2(p.runs) + '번</span><span>유효기간 ' + esc((p.end || '').slice(0, 10)) + '까지</span>'
+      var KL = { t: '충전', d: '차감', r: '환불' }, log = p.credit && (p.log || []).length ? '<div class="adm-log">' + p.log.slice(-6).reverse().map(function (g) { var d = new Date(g.at || 0); return '<span>' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + (KL[g.k] || g.k) + ' ' + (g.k === 't' ? '+' : '-') + tn(g.cr) + (g.o ? ' · ' + esc(g.o) : '') + (g.m ? ' · ' + esc(g.m) : '') + '</span>'; }).join('') + '</div>' : '';
+      var info = p.credit ? '<span class="adm-cr">남은 <b>' + tn(p.left) + '</b> / ' + tn(p.total) + '토큰(' + n2(Math.round((+p.left || 0) * 100)) + '원어치) · 쓴 ' + tn(p.used) + ' · ' + n2(p.runs) + '번</span><span>유효기간 ' + esc((p.end || '').slice(0, 10)) + '까지</span>'
         : '<span>' + (p.start ? '시작 ' + esc(p.start.slice(0, 16)) + ' · 끝 ' + esc(p.end.slice(0, 16)) : '아직 안 씀') + '</span><span>쓴 횟수 ' + n2(p.used) + (p.pro ? ' · 고급 ' + n2(p.pro) : '') + ' · 남은 ' + n2(p.left) + '</span>';
       return '<div class="adm-it"><div class="adm-m"><b>' + esc(p.id) + '</b>' + badge(p.st) + '<span>' + esc(p.name) + (p.biz ? ' · 기업' : '') + '</span></div>' +
         '<div class="adm-s"><span>만든 ' + esc(p.at) + '</span>' + (p.order ? '<span>주문 ' + esc(p.order) + '</span>' : '') + (p.to ? '<span>' + esc(p.to) + '</span>' : '') + info + (p.memo ? '<span>' + esc(p.memo) + '</span>' : '') + log + '</div>' +
@@ -108,7 +111,7 @@
       if (!twice(b, '한 번 더 누르면 충전')) return;
       b.disabled = true; b.textContent = '충전하는 중…';
       call('topup', { id: b.getAttribute('data-top'), product: b.getAttribute('data-prod'), order: b.getAttribute('data-order'), to: b.getAttribute('data-to') || '', memo: '결제 확인 뒤 충전' }).then(function (r) {
-        toast(r.id + ' 에 ' + n2(r.added) + '토큰을 더했습니다(남은 ' + n2(r.left) + ')' + (r.mailed ? ' · 알림 메일 보냄' : '') + '.'); return load();
+        toast(r.id + ' 에 ' + tn(r.added) + '토큰을 더했습니다(남은 ' + tn(r.left) + ')' + (r.mailed ? ' · 알림 메일 보냄' : '') + '.'); return load();
       }).catch(function (e7) { toast((e7 && e7.message) || '충전하지 못했습니다.'); if (e7 && e7.code === 'ADMIN') gate(e7.message); b.disabled = false; b.textContent = b._old || '충전하기'; });
       return;
     }
@@ -168,26 +171,26 @@
   function idOk(v) { return /^PS\d{6}-[0-9A-F]{8}$/.test(v); }
   $('#topForm').addEventListener('submit', function (e) {
     e.preventDefault();
-    var f = e.target, msg = f.querySelector('.msg'), btn = f.querySelector('button[type="submit"]'), id = f.querySelector('[name="id"]').value.trim().toUpperCase(), pr = f.product.value, cr = Math.floor(+f.cr.value || 0), to = f.to.value.trim();
+    var f = e.target, msg = f.querySelector('.msg'), btn = f.querySelector('button[type="submit"]'), id = f.querySelector('[name="id"]').value.trim().toUpperCase(), pr = f.product.value, cr = Math.round((+f.cr.value || 0) * 10) / 10, to = f.to.value.trim();
     if (!idOk(id)) { say(msg, '코드 ID(PS261021-XXXXXXXX)를 확인해 주세요. 코드 자체가 아니라 목록의 ID입니다.'); return; }
     if (!pr && !(cr > 0)) { say(msg, '충전할 상품을 고르거나 토큰 수를 넣어 주세요.'); return; }
     if (to && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) { say(msg, '알림 메일 주소를 확인해 주세요.'); return; }
     if (!twice(btn, '한 번 더 누르면 충전')) return;
     btn.disabled = true; say(msg, '충전하는 중…', 'ok');
-    call('topup', { id: id, product: pr, cr: pr ? 0 : cr, order: f.order.value.trim(), to: to, memo: f.memo.value.trim() }).then(function (r) {
-      say(msg, r.id + ' 에 ' + n2(r.added) + '토큰을 더했습니다. 남은 ' + n2(r.left) + ' / ' + n2(r.total) + ' · 유효기간 ' + String(r.end || '').slice(0, 10) + '까지' + (r.mailed ? ' · 알림 메일 보냄' : ''), 'ok'); f.reset(); return load();
+    call('topup', { id: id, product: pr, cr: pr ? 0 : toCr(cr), order: f.order.value.trim(), to: to, memo: f.memo.value.trim() }).then(function (r) {
+      say(msg, r.id + ' 에 ' + tn(r.added) + '토큰을 더했습니다. 남은 ' + tn(r.left) + ' / ' + tn(r.total) + ' · 유효기간 ' + String(r.end || '').slice(0, 10) + '까지' + (r.mailed ? ' · 알림 메일 보냄' : ''), 'ok'); f.reset(); return load();
     }).catch(function (e8) { say(msg, (e8 && e8.message) || '충전하지 못했습니다.'); if (e8 && e8.code === 'ADMIN') gate(e8.message); }).then(function () { btn.disabled = false; });
   });
   $('#dedForm').addEventListener('submit', function (e) {
     e.preventDefault();
-    var f = e.target, msg = f.querySelector('.msg'), btn = f.querySelector('button[type="submit"]'), id = f.querySelector('[name="id"]').value.trim().toUpperCase(), cr = Math.floor(+f.cr.value || 0), memo = f.memo.value.trim();
+    var f = e.target, msg = f.querySelector('.msg'), btn = f.querySelector('button[type="submit"]'), id = f.querySelector('[name="id"]').value.trim().toUpperCase(), cr = Math.round((+f.cr.value || 0) * 10) / 10, memo = f.memo.value.trim();
     if (!idOk(id)) { say(msg, '코드 ID(PS261021-XXXXXXXX)를 확인해 주세요.'); return; }
     if (!(cr > 0)) { say(msg, '뺄 토큰 수를 넣어 주세요.'); return; }
     if (!memo) { say(msg, '무엇에 쓴 토큰인지 메모를 적어 주세요.'); return; }
-    if (!twice(btn, '한 번 더 누르면 ' + n2(cr) + '토큰 차감')) return;
+    if (!twice(btn, '한 번 더 누르면 ' + tn(cr) + '토큰 차감')) return;
     btn.disabled = true; say(msg, '차감하는 중…', 'ok');
-    call('deduct', { id: id, cr: cr, memo: memo }).then(function (r) {
-      say(msg, r.id + ' 에서 ' + n2(r.taken) + '토큰을 뺐습니다. 남은 ' + n2(r.left) + ' / ' + n2(r.total), 'ok'); f.reset(); return load();
+    call('deduct', { id: id, cr: toCr(cr), memo: memo }).then(function (r) {
+      say(msg, r.id + ' 에서 ' + tn(r.taken) + '토큰을 뺐습니다. 남은 ' + tn(r.left) + ' / ' + tn(r.total), 'ok'); f.reset(); return load();
     }).catch(function (e9) { say(msg, (e9 && e9.message) || '차감하지 못했습니다.'); if (e9 && e9.code === 'ADMIN') gate(e9.message); }).then(function () { btn.disabled = false; });
   });
 

@@ -292,3 +292,147 @@ fieldset.k-buy-pay { min-width: 0; margin: 0; padding: 0; border: 0; }
 @media (prefers-reduced-motion: reduce) {
   .am-mk.fl, .am-mk.fl::after, .k-fpt, .hz13-c, .hz13-bg .g1, .hz13-bg .g2, .hz13-bg .g3 { animation: none; }
 }
+
+/* ---------- 6. 13.2 토큰 100원: 충전 칸 · 탭 · 계산기 · 지갑 예시 · 충전 창 ---------- */
+/* 충전 칸: 값(원) → 토큰과 더 받는 토큰 → 레포트 몇 편 → 충전 */
+.cr13-pack { gap: 4px; padding: 20px 18px 16px; }
+.cr13-pack .pr { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; margin: 0; font-size: inherit; }
+.cr13-pack .pr b { font-size: 24px; font-weight: 750; letter-spacing: -.025em; color: var(--ds-ink); font-variant-numeric: tabular-nums; }
+.cr13-pack .pr span { font-size: 12.5px; font-weight: 500; color: var(--ds-mist); }
+.cr13-pack h3 { margin: 2px 0 0; font-size: 18px; font-weight: 700; color: var(--ds-blue-700); letter-spacing: -.015em; }
+.cr13-pack h3 small { margin-left: 2px; font-size: 13.5px; font-weight: 650; color: var(--ds-blue-700); }
+.cr13-pack .bn { margin: 2px 0 0; min-height: 20px; font-size: 13px; font-weight: 500; color: var(--ds-slate); }
+.cr13-pack .bn b { font-weight: 700; color: var(--ds-blue-700); }
+.cr13-pack .bn.none { color: var(--ds-mist); }
+.cr13-pack .use { margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--ds-line); font-size: 13.5px; line-height: 1.5; color: var(--ds-ink-2); word-break: keep-all; }
+.cr13-pack .use b { font-weight: 700; color: var(--ds-ink); }
+.cr13-pack .who { margin: 2px 0 14px; font-size: 13px; color: var(--ds-slate); }
+.cr13-pack .k-btn { margin-top: auto; }
+.cr13-pack.ent h3 { color: var(--ds-ink); }
+.cr13-pack .tag { top: 14px; }
+.tk-unitl { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin: 16px 0 14px; font-size: 14px; color: var(--ds-slate); }
+.tk-unitl b { padding: 3px 10px; border-radius: 999px; background: var(--ds-blue-50); color: var(--ds-blue-700); font-size: 13px; font-weight: 700; }
+
+/* 개인 · 학생 | 회사 · 기관 탭 */
+.tk-seg { display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; margin: 0 0 16px; padding: 4px; border: 1px solid var(--ds-line); border-radius: 14px; background: var(--ds-canvas); max-width: 100%; }
+.tk-seg button { display: grid; gap: 1px; min-width: 200px; padding: 9px 16px; border: 0; border-radius: 10px; background: transparent; color: var(--ds-slate); font: inherit; text-align: left; cursor: pointer; }
+.tk-seg button b { font-size: 14.5px; font-weight: 650; }
+.tk-seg button small { font-size: 12px; color: var(--ds-mist); }
+.tk-seg button[aria-selected="true"] { background: #fff; color: var(--ds-ink); box-shadow: 0 1px 2px rgba(11, 23, 51, .08), 0 0 0 1px var(--ds-line); }
+.tk-seg button[aria-selected="true"] small { color: var(--ds-slate); }
+.tk-seg button:focus-visible { outline: 2px solid var(--ds-blue-600); outline-offset: 2px; }
+.k-panel .cr13-pack { background: #fff; }
+@media (max-width: 560px) { .tk-seg { display: grid; width: 100%; } .tk-seg button { min-width: 0; padding: 9px 12px; } }
+
+/* 계산기 */
+.tk-calc { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px; align-items: start; }
+.tk-calc-in { display: grid; gap: 16px; margin: 0; }
+.tk-calc-in fieldset { display: grid; gap: 8px; margin: 0; padding: 0; border: 0; }
+.tk-calc-in legend { margin-bottom: 8px; padding: 0; font-size: 13px; font-weight: 650; color: var(--ds-slate); }
+.tk-calc-in label { position: relative; display: block; cursor: pointer; }
+.tk-calc-in fieldset input { position: absolute; opacity: 0; }
+.tk-calc-in fieldset span { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 13px 16px; border: 1px solid var(--ds-line-2); border-radius: var(--r2); background: #fff; }
+.tk-calc-in fieldset b { font-size: 15px; font-weight: 650; color: var(--ds-ink); }
+.tk-calc-in fieldset small { font-size: 13px; color: var(--ds-slate); font-variant-numeric: tabular-nums; }
+.tk-calc-in fieldset input:checked + span { border-color: var(--ds-blue-600); background: var(--ds-blue-50); box-shadow: inset 0 0 0 1px var(--ds-blue-600); }
+.tk-calc-in fieldset input:focus-visible + span { outline: 2px solid var(--ds-blue-600); outline-offset: 2px; }
+.tk-calc-in .field label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 650; color: var(--ds-slate); }
+.tk-calc-in .field label small { font-weight: 500; color: var(--ds-mist); }
+.tk-calc-in .field input { width: 100%; font-size: 16px; font-variant-numeric: tabular-nums; }
+.tk-calc-out { padding: 20px 22px; border: 1px solid var(--ds-line); border-radius: var(--r3); background: #fff; }
+.tk-calc-l { margin: 0; }
+.tk-calc-l > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--ds-line); }
+.tk-calc-l > div:first-child { padding-top: 0; }
+.tk-calc-l dt { font-size: 15px; font-weight: 650; color: var(--ds-ink); }
+.tk-calc-l dt small { display: block; margin-top: 2px; font-size: 12.5px; font-weight: 500; color: var(--ds-mist); }
+.tk-calc-l dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.tk-calc-l dd b { display: block; font-size: 17px; font-weight: 700; color: var(--ds-ink); }
+.tk-calc-l dd span { font-size: 13px; color: var(--ds-slate); }
+.tk-calc-l .sum { border-bottom: 0; }
+.tk-calc-l .sum dt { font-size: 15px; }
+.tk-calc-l .sum dd b { font-size: 22px; color: var(--ds-blue-700); }
+.tk-calc-l .sum dd span { font-weight: 650; color: var(--ds-ink-2); }
+.tk-calc-h { margin: 8px 0 8px; font-size: 13px; font-weight: 650; color: var(--ds-slate); }
+.tk-ladder { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tk-ladder li { min-width: 0; }
+.tk-ladder li a { display: grid; gap: 4px; height: 100%; padding: 10px 12px; border: 1px solid var(--ds-line); border-radius: var(--r2); background: var(--ds-canvas); color: inherit; text-decoration: none; }
+.tk-ladder li a:hover { border-color: var(--ds-blue-300); }
+.tk-ladder li a:focus-visible { outline: 2px solid var(--ds-blue-600); outline-offset: 2px; }
+.tk-ladder li span { font-size: 13.5px; font-weight: 650; color: var(--ds-ink); font-variant-numeric: tabular-nums; }
+.tk-ladder li span small { display: block; font-size: 12px; font-weight: 500; color: var(--ds-mist); }
+.tk-ladder li b { font-size: 15px; font-weight: 700; color: var(--ds-blue-700); font-variant-numeric: tabular-nums; }
+.tk-ladder li.pick a { border-color: var(--ds-blue-600); background: var(--ds-blue-50); box-shadow: inset 0 0 0 1px var(--ds-blue-600); }
+.tk-calc-go { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 16px; }
+.tk-calc-go .k-small { margin: 0; color: var(--ds-slate); }
+.tk-calc-f { margin: 12px 0 0; }
+@media (max-width: 900px) { .tk-calc { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 480px) { .tk-ladder { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tk-calc-out { padding: 16px; } }
+
+/* 지갑 예시 */
+.cr13-w-n em { margin-left: 10px; padding: 3px 9px; border-radius: 999px; background: rgba(255, 255, 255, .12); font-size: 13px; font-style: normal; font-weight: 650; color: #DDE5F3; vertical-align: 6px; letter-spacing: 0; }
+.cr13-w-l li b small { display: inline; margin: 0 0 0 6px; font-size: 12px; font-weight: 500; color: #93A4CC; }
+.cr13-w-f { margin: 12px 0 0; font-size: 12.5px; color: #9FB0D6; }
+
+/* 충전 창: 1토큰 = 100원 · 이 글 값 · 결제 순서 · 안심 한 줄 */
+.hz13-unit { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: -6px 0 10px; font-size: 13px; color: var(--ds-slate); }
+.hz13-unit b { padding: 2px 9px; border-radius: 999px; background: var(--ds-blue-50); color: var(--ds-blue-700); font-size: 12.5px; font-weight: 700; }
+.hz12-need .t { font-size: 13px; color: var(--ds-slate); }
+.hz12-need .v { float: right; margin-left: 12px; text-align: right; font-size: 20px; font-weight: 750; line-height: 1.2; color: var(--ds-ink); font-variant-numeric: tabular-nums; }
+.hz12-need .v small { display: block; font-size: 12px; font-weight: 600; color: var(--ds-blue-700); }
+.hz12-need .r { display: block; clear: both; margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--ds-blue-100); font-size: 13.5px; color: var(--ds-ink-2); }
+.hz12-need .r b { color: var(--ds-blue-700); }
+.hz12-need::after { content: ""; display: table; clear: both; }
+.hz7-prod b i.bn { margin-left: 6px; padding: 1px 6px; border: 1px solid var(--ds-blue-200); background: #fff; color: var(--ds-blue-700); font-weight: 700; }
+.hz13-stepw { margin: 10px 0 0; }
+.hz13-stepw[hidden] { display: none; }
+.hz13-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; counter-reset: none; }
+.hz13-steps li { display: flex; align-items: flex-start; gap: 6px; padding: 6px 10px; border-radius: 10px; background: var(--ds-canvas); font-size: 12.5px; line-height: 1.45; color: var(--ds-ink-2); word-break: keep-all; }
+.hz13-steps li b { flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--ds-ink); color: #fff; font-size: 11px; font-weight: 700; }
+.hz13-steps li span { display: block; min-width: 0; }
+.hz13-steps li small { display: block; margin-top: 1px; font-size: 11.5px; color: var(--ds-mist); }
+.hz13-rules { margin: 0; padding: 0 0 0 16px; font-size: 12.5px; line-height: 1.6; color: var(--ds-slate); }
+.hz13-rules li { padding-left: 2px; }
+/* 결제 단추는 창 아래에 고정(긴 창에서도 보이게) */
+body .hz7-dlg #hzBuyForm > button[type="submit"] { position: sticky; bottom: 0; z-index: 2; box-shadow: 0 -10px 16px -8px rgba(11, 23, 51, .18), 0 0 0 10px #fff; }
+body .hz7-dlg .hz7-link { min-height: 44px; display: inline-flex; align-items: center; }
+.hz7-pass .hz7-link, .hz12-next .hz7-link, .hz9-cta .hz7-link { min-height: 44px; display: inline-flex; align-items: center; }
+/* 13.2b 안전 판정 + AI처럼 읽히는 표현 */
+.hz13-sig { margin: 0 0 16px; padding: 16px 18px; border: 1px solid var(--ds-amber-line); border-radius: var(--r3); background: var(--ds-amber-bg); }
+.hz13-sig .h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.hz13-sig h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--ds-ink); letter-spacing: -.01em; }
+.hz13-sig h3 em { font-style: normal; color: var(--ds-amber-ink); }
+.hz13-sig .lv { font-size: 12.5px; font-weight: 650; color: var(--ds-amber-ink); }
+.hz13-sig .cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+.hz13-sig .cats span { padding: 3px 9px; border-radius: 999px; background: #fff; border: 1px solid var(--ds-amber-line); font-size: 12.5px; color: var(--ds-ink-2); }
+.hz13-sig .cats b { font-weight: 700; color: var(--ds-ink); }
+.hz13-sig .ex { display: grid; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
+.hz13-sig .ex li { display: grid; gap: 2px; padding: 9px 12px; border-radius: 10px; background: #fff; font-size: 13.5px; line-height: 1.5; }
+.hz13-sig .ex b { font-weight: 650; color: var(--ds-ink); }
+.hz13-sig .ex span { font-size: 12.5px; color: var(--ds-slate); }
+.hz13-sig .why { margin: 10px 0 0; font-size: 13px; line-height: 1.6; color: var(--ds-ink-2); word-break: keep-all; }
+.hz12-next.sig { border-color: var(--ds-amber-line); background: linear-gradient(135deg, var(--ds-amber-bg), #fff 70%); }
+.hz12-next.calm { border-color: var(--ds-line); background: #fff; box-shadow: none; }
+.hz12-next.calm .btn-p { background: #fff; color: var(--ds-ink); border: 1px solid var(--ds-line-2); }
+@media (max-width: 480px) { .hz13-sig { padding: 14px; } }
+.hz13-safe { display: flex; align-items: flex-start; gap: 6px; margin: 4px 0 10px; font-size: 12.5px; line-height: 1.5; color: var(--ds-green-ink); }
+.hz13-safe .ico { flex: none; width: 15px; height: 15px; transform: translateY(1px); }
+@media (max-width: 480px) { .hz13-steps { grid-template-columns: minmax(0, 1fr); } }
+/* 충전 창을 조금 더 촘촘하게(결제 단추가 덜 내려가게) */
+body .hz7-dlg .hz7-prod { gap: 6px; }
+body .hz7-dlg .hz7-prod span { padding: 10px 14px; row-gap: 1px; }
+body .hz7-dlg .hz7-prod b { font-size: 15px; }
+body .hz7-dlg .hz12-need { margin-bottom: 10px; }
+body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
+/* 휴대폰: 충전 칸을 한 줄 카드로(값 · 토큰 왼쪽, 충전 단추 오른쪽) */
+@media (max-width: 480px) {
+  .cr13-packs { gap: 8px; }
+  .cr13-pack { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; row-gap: 2px; align-items: center; padding: 14px 16px; }
+  .cr13-pack > * { grid-column: 1; }
+  .cr13-pack .tag { position: static; grid-column: 1 / -1; justify-self: start; margin: 0 0 4px; }
+  .cr13-pack .k-btn { grid-column: 2; grid-row: 1 / span 2; width: auto; min-height: 40px; margin: 0; padding: 0 14px; white-space: nowrap; }
+  .cr13-pack.best .k-btn { grid-row: 2 / span 2; }
+  .cr13-pack .bn, .cr13-pack .use, .cr13-pack .who { grid-column: 1 / -1; }
+  .cr13-pack .use { margin-top: 8px; padding-top: 8px; }
+  .cr13-pack .who { margin-bottom: 0; }
+  .cr13-pack .pr b { font-size: 21px; }
+}

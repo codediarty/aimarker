@@ -40,18 +40,22 @@
   <form method="dialog" class="hz7-dlg-x"><button type="submit" aria-label="닫기">{{ico:x}}</button></form>
   <div class="hz7-dlg-b" id="hzBuyBody">
     <h2 id="hzBuyT">토큰 충전</h2>
+    <p class="hz13-unit"><b>1토큰 = 100원</b><span>쓴 만큼만 빠지고, 5년 동안 나눠 씁니다</span></p>
     <p class="hz12-need" id="hzBuyNeed" hidden></p>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>
       <fieldset class="hz7-prod"><legend class="sr">충전할 토큰</legend>
-        <label><input type="radio" name="product" value="c3"><span><b>300토큰</b><em>3,000원</em><small>300토큰 · 3,000자 글 검사와 휴머나이징 약 1번</small></span></label>
-        <label><input type="radio" name="product" value="c10" checked><span><b>1,100토큰</b><em>10,000원</em><small>1,000토큰 + 100토큰 더 · 3,000자 글 검사와 휴머나이징 약 6번</small></span></label>
-        <label class="best"><input type="radio" name="product" value="c30"><span><b>3,500토큰<i>추천</i></b><em>30,000원</em><small>3,000토큰 + 500토큰 더 · 3,000자 글 검사와 휴머나이징 약 19번</small></span></label>
-        <label><input type="radio" name="product" value="c50"><span><b>6,000토큰</b><em>50,000원</em><small>5,000토큰 + 1,000토큰 더 · 3,000자 글 검사와 휴머나이징 약 33번</small></span></label>
+        <label><input type="radio" name="product" value="c3"><span><b>30토큰</b><em>3,000원</em><small>레포트(3,000자) 검사와 휴머나이징 약 1편</small></span></label>
+        <label><input type="radio" name="product" value="c10" checked><span><b>110토큰<i class="bn">+10</i></b><em>10,000원</em><small>10토큰 더(1,000원어치) · 레포트(3,000자) 검사와 휴머나이징 약 6편</small></span></label>
+        <label class="best"><input type="radio" name="product" value="c30"><span><b>350토큰<i class="bn">+50</i><i>추천</i></b><em>30,000원</em><small>50토큰 더(5,000원어치) · 레포트(3,000자) 검사와 휴머나이징 약 19편</small></span></label>
+        <label><input type="radio" name="product" value="c50"><span><b>600토큰<i class="bn">+100</i></b><em>50,000원</em><small>100토큰 더(10,000원어치) · 레포트(3,000자) 검사와 휴머나이징 약 33편</small></span></label>
       </fieldset>
+      <div class="hz13-stepw" id="hzBuySteps" hidden></div>
       <div class="field"><label for="hzBuyMail">토큰 코드, 영수증을 받을 이메일 <em>필수</em></label><input class="inp" id="hzBuyMail" name="contact" type="email" inputmode="email" autocomplete="email" maxlength="80" required placeholder="name@example.com"></div>
-      <label class="consent"><input type="checkbox" name="agree"><span>쓴 토큰과 더 받은 토큰은 환불되지 않고, 쓰고 남은 유료 토큰은 충전한 날부터 7일 안에는 그대로, 그 뒤에는 10%를 뺀 금액만 환불된다는 것(유효기간 5년)을 확인했고, 토큰 약관과 주문 확인, 코드와 영수증 발송을 위한 이메일 수집에 동의합니다. <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a>, <a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a></span></label>
+      <ul class="hz13-rules" aria-label="환불 기준"><li>쓴 토큰과 더 받은 토큰은 환불되지 않습니다</li><li>쓰고 남은 유료 토큰은 충전한 날부터 7일 안에는 전액, 그 뒤에는 10%를 뺀 금액을 돌려 드립니다</li><li>유효기간은 마지막 충전부터 5년입니다</li></ul>
+      <label class="consent"><input type="checkbox" name="agree"><span>위 기준과 <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a>을 확인했고, 주문 확인과 코드 · 영수증 발송을 위한 이메일 수집(<a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a>)에 동의합니다.</span></label>
       <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="hz13-safe">{{ico:shield}}<span>가입 없이 · 처리하지 못한 요청은 빠지지 않음 · 7일 안에는 남은 유료 토큰 전액 환불</span></p>
       <button class="btn btn-p btn-l" type="submit"><span>주문하기</span></button>
       <p class="msg" role="status"></p>
       <p class="hz7-dlg-n" id="hzBuyNote">주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 토큰 코드를 메일로 보내 드립니다.</p>
@@ -68,7 +72,7 @@
       <div class="field"><label for="hzCodeIn">메일로 받은 16자리 코드</label><input class="inp hz7-code-in" id="hzCodeIn" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX"></div>
       <button class="btn btn-p btn-l" type="submit">코드 넣기</button>
       <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n">코드는 이 브라우저에만 저장됩니다. 다른 기기에서는 코드를 다시 넣어 주세요. 예전에 산 이용권 코드도 여기에 넣습니다. 코드가 없나요? <button type="button" class="hz7-link" data-buy="c10">토큰 충전</button></p>
+      <p class="hz7-dlg-n">코드는 이 브라우저에만 저장됩니다. 다른 기기에서는 코드를 다시 넣어 주세요. 예전에 산 이용권 코드도 여기에 넣습니다. 코드가 없나요? <button type="button" class="hz7-link" data-buy="best">토큰 충전</button></p>
     </form>
   </div>
 </dialog>
