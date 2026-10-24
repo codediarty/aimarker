@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261024h"
+VER = "20261024i"
 TODAY = "2026-10-24"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -402,21 +402,12 @@ def logo_img(root, dark=False):
 LOGO = ""   # 예전 이름(쓰지 않음, {{logo}} 는 logo_img 로 바뀜)
 
 # 한국AI윤리위원회 상징(인증 기업 표시용, 8.0). 밝은 바탕 · 어두운 바탕 두 가지
-KAIEC_SVG = ('<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="%(bg)s" stroke="%(g)s" stroke-width="3"/>'
-             '<circle cx="32" cy="32" r="25.6" fill="none" stroke="%(au)s" stroke-width="1.3"/>'
-             '<path d="M32 13.5 20.4 43.6M32 13.5l11.6 30.1" stroke="%(g)s" stroke-width="4.2" fill="none"/>'
-             '<circle cx="20.4" cy="45" r="1.8" fill="%(g)s"/><circle cx="43.6" cy="45" r="1.8" fill="%(g)s"/>'
-             '<rect x="31" y="10.4" width="2" height="35.4" fill="%(au)s"/><rect x="27.2" y="10.4" width="9.6" height="1.8" fill="%(au)s"/>'
-             '<rect x="24.6" y="32.4" width="14.8" height="2" fill="%(au)s"/><rect x="27.6" y="44.4" width="8.8" height="1.8" fill="%(au)s"/>'
-             '<text x="32" y="54.6" text-anchor="middle" font-family="Pretendard Variable, Pretendard, sans-serif" font-size="6.2" font-weight="700" letter-spacing="1.1" fill="%(tx)s">KAIEC</text></svg>')
-KAIEC_LT = {"bg": "#FBFAF5", "g": "#0F4A3A", "au": "#B48A3C", "tx": "#1F2B3A"}
-KAIEC_DK = {"bg": "none", "g": "#E6ECF5", "au": "#C9A55C", "tx": "#E6ECF5"}
-
-
-def kaiec_badge(dark=False, lg=False):
-    return ('<a class="x-kaiec%s%s" href="https://kaiec.kr/" target="_blank" rel="noopener" aria-label="한국AI윤리위원회 인증 기업(위원회 누리집 새 창)">%s'
+def kaiec_badge(dark=False, lg=False, root=""):
+    """13.4f 한국AI윤리위원회 마크(2026.10.24 대표가 준 원 모양 엠블럼, 바깥은 투명 PNG 256px). 예전 저울 · 문양 SVG 는 쓰지 않음"""
+    return ('<a class="x-kaiec%s%s" href="https://kaiec.kr/" target="_blank" rel="noopener" aria-label="한국AI윤리위원회 인증 기업(위원회 누리집 새 창)">'
+            '<img src="%sassets/brand/kaiec-mark.png?v=%s" width="64" height="64" alt="" loading="lazy" decoding="async">'
             '<span><b>한국AI윤리위원회 인증 기업</b><small>KOREA AI ETHICS COMMITTEE</small></span></a>'
-            % (" dk" if dark else "", " lg" if lg else "", KAIEC_SVG % (KAIEC_DK if dark else KAIEC_LT)))
+            % (" dk" if dark else "", " lg" if lg else "", root, VER))
 
 
 # 메뉴(9.0, 2026.10.18): 제품 · 기업용 · 기술 · 요금 · 회사. 펼침은 제품 하나, 휴대폰은 아래 탭(앱처럼)
@@ -537,7 +528,7 @@ def footer(root):
             '<div class="k-ft-biz">%s<br>'
             '<span>AIMarker 마크는 표시와 그 근거를 기록하는 것이며, 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. 광고 검수 결과는 위험 후보와 근거입니다. AI 작성률은 정해진 기준에 따른 추정이며 증명이 아닙니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
             '<span>© 2026 AIMarker</span></div></div></footer>'
-            % (brand(root), kaiec_badge(), colhtml, std, "".join(biz)))
+            % (brand(root), kaiec_badge(root=root), colhtml, std, "".join(biz)))
 
 
 def auto_ld(meta, body, path, title, desc):
@@ -574,7 +565,7 @@ def page(meta, body):
     for _ in range(3):   # 13.4 조각 안의 조각(hz-hero.inc → hz-tool.inc · hz-stage.inc)까지, 세 단계까지만
         if "{{inc:" not in body: break
         body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
-    body = body.replace("{{root}}", root).replace("{{ver}}", VER).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge()).replace("{{kaiec_lg}}", kaiec_badge(lg=True)).replace("{{kaiec_dk}}", kaiec_badge(dark=True))
+    body = body.replace("{{root}}", root).replace("{{ver}}", VER).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge(root=root)).replace("{{kaiec_lg}}", kaiec_badge(lg=True, root=root)).replace("{{kaiec_dk}}", kaiec_badge(dark=True, root=root))
     body = re.sub(r"\{\{tiers:([a-z]+)(?::([a-z]+))?\}\}", lambda m: tiers_html(m.group(1), root, m.group(2)), body)
     body = re.sub(r"\{\{(?:passes|credits):(buy|link)\}\}", lambda m: credits_html(m.group(1), root), body)
     body = body.replace("{{credit_cost}}", credit_cost_html().replace("{{root}}", root))
