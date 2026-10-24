@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261024c"
+VER = "20261024d"
 TODAY = "2026-10-24"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -571,7 +571,9 @@ def page(meta, body):
     path = meta.get("path", "")
     depth = len([p for p in path.split("/") if p])
     root = "/" if meta.get("absroot") else "../" * depth
-    body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
+    for _ in range(3):   # 13.4 조각 안의 조각(hz-hero.inc → hz-tool.inc · hz-stage.inc)까지, 세 단계까지만
+        if "{{inc:" not in body: break
+        body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
     body = body.replace("{{root}}", root).replace("{{ver}}", VER).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge()).replace("{{kaiec_lg}}", kaiec_badge(lg=True)).replace("{{kaiec_dk}}", kaiec_badge(dark=True))
     body = re.sub(r"\{\{tiers:([a-z]+)(?::([a-z]+))?\}\}", lambda m: tiers_html(m.group(1), root, m.group(2)), body)
     body = re.sub(r"\{\{(?:passes|credits):(buy|link)\}\}", lambda m: credits_html(m.group(1), root), body)

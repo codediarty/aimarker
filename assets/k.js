@@ -154,22 +154,24 @@
     });
   });
 
-  /* ---------- 12.1 예시 재생(AI 초안 → AI 검출 문장 → 문장마다 다듬기 → AI 작성률 전 · 뒤) ----------
-     입력과 검사는 humanize.js(첫 화면과 /humanize/ 가 같은 도구). 여기서는 아래 '이렇게 찾고 다듬습니다' 예시만 돌림.
-     화면에 들어오면 한 번. 무대 크기는 끝 모양으로 미리 잡아 아래 내용이 밀리지 않게. 움직임 줄이기면 결과만 */
+  /* ---------- 13.4 첫 화면 예시 창(AI 초안 → 검사 → 필터링 대상 → 의미는 그대로 다듬기 → 전 · 뒤) ----------
+     입력과 검사는 humanize.js(첫 화면과 /humanize/ 가 같은 도구). 여기서는 오른쪽 예시 창(#huStage)만 돌림.
+     값은 huDemo JSON(예시 문단을 라이브 서버 판정 기준 · 인간화 엔진으로 잰 실제 값, 13.4: 64% → 12%). 움직임 줄이기면 끝 모양만.
+     검사 결과가 나오면(am:hz-out) 예시는 멈추고 첫 화면은 한 단으로(#hzHero.has-out) */
   (function () {
     var stage = $('#huStage');
     if (!stage) return;
-    var st = $('#huSt'), paper = $('#huPaper'), meter = $('#huMeter'), why = $('#huWhy'), foot = $('#huFoot'), live = $('#huLive'), replay = $('#huReplay'), stamp = $('#huStamp');
-    var plays = 0, LOOPS = 3;   // 13.3 첫 화면 무대: 끝나면 잠시 뒤 다시(세 번까지), 그다음은 '다시 보기'
-    function stampShow(kind, a, b) { if (!stamp) return; stamp.className = 'hz14-stamp ' + kind; stamp.querySelector('b').textContent = a; stamp.querySelector('span').textContent = b; stamp.hidden = false; void stamp.offsetWidth; stamp.classList.add('on'); }
-    function stampHide() { if (!stamp) return; stamp.classList.remove('on'); stamp.hidden = true; }
-    var MF = $('.hu-m.from', meter), MT = $('.hu-m.to', meter), FOOT0 = foot.innerHTML;
+    var st = $('#huSt'), paper = $('#huPaper'), meter = $('#huMeter'), why = $('#huWhy'), foot = $('#huFoot'), live = $('#huLive'), replay = $('#huReplay'), badge = $('#huStamp'), hero = $('#hzHero');
+    var plays = 0, LOOPS = 3;   // 끝나면 잠시 뒤 다시(세 번까지), 그다음은 '다시 보기'
+    function badgeShow(kind, a, b) { if (!badge) return; badge.className = 'hz15-badge ' + kind; badge.querySelector('b').textContent = a; badge.querySelector('span').textContent = b; badge.hidden = false; void badge.offsetWidth; badge.classList.add('on'); }
+    function badgeHide() { if (!badge) return; badge.classList.remove('on'); badge.hidden = true; }
+    function scene(k) { stage.setAttribute('data-scene', k); }
+    var MF = $('.hu-m.from', meter), MT = $('.hu-m.to', meter), FOOT0 = foot ? foot.innerHTML : '';
     var played = false, T = [];
     function stop() { T.forEach(clearTimeout); T = []; }
     function say(k, t) { st.innerHTML = (k === 'spin' ? '<span class="ds-spin" aria-hidden="true"></span>' : '<span class="dot' + (k ? ' ' + k : '') + '"></span>') + '<span>' + esc(t) + '</span>'; }
     function later(fn, ms) { var id = setTimeout(function () { T = T.filter(function (x) { return x !== id; }); fn(); }, ms); T.push(id); }
-    function focusTool() {   // '내 글로 해 보기': 위 검사 칸으로(결과가 나와 칸이 접혀 있으면 펼침)
+    function focusTool() {   // '내 글로 해 보기': 검사 칸으로(결과가 나와 칸이 접혀 있으면 펼침)
       var t = document.getElementById('hzText'); if (!t) { location.href = ROOT + 'humanize/'; return; }
       var inp = document.getElementById('hzIn'), ed = document.querySelector('#hzSum [data-act="edit"]');
       if (inp && inp.hidden && ed) ed.click();
@@ -193,12 +195,9 @@
       });
       flush(); return R;
     }
-    /* 12.1: 문장 단위로 다시 써지는 모습만 보여 줌. 어느 말을 왜 바꿨는지(규칙과 이유)는 토큰으로 여는 결과 화면에서만
-       (사용자 2026.10.21: '조금조금씩 수정하는 걸 보여 주면 팁으로 여기고 직접 고쳐서 결제를 안 할 것 같다') */
-    var CAT = { 0: '말투', 1: '번역투', 2: '상투적 연결어', 3: '빈말 · 과장 수식', 4: '틀에 박힌 도입 · 마무리', 5: '대화창 복사 흔적', 6: '문장 리듬', 7: '딱딱한 어휘' };
+    /* 문장 단위로 다시 써지는 모습만 보여 줌. 어느 말을 왜 바꿨는지(규칙과 이유)는 토큰으로 여는 결과 화면에서만
+       (사용자 2026.10.21 · 10.24: 바꾼 말을 보여 주면 팁으로 여기고 직접 고쳐서 결제를 안 함) */
     var ICO_LOCK = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
-    function sents(t) { return String(t || '').replace(/([.!?])\s+/g, '$1\u0001').split('\u0001').map(function (x) { return x.trim(); }).filter(Boolean); }   // 뒤쪽 보기(?<=)는 옛 사파리에서 파일 전체가 멈춰 쓰지 않음
-    function pairs(a, b) { var A = sents(a), B = sents(b); if (A.length && A.length === B.length) return A.map(function (x, i) { return [x, B[i]]; }); return [[String(a || '').trim(), String(b || '').trim()]]; }
     function sentHtml(a, b) {   // 바뀐 문장: 새로 들어간 말에만 밑줄(지운 말은 보여 주지 않음). 쉼표만 빠진 말은 밑줄 없이, 끝 문장 부호는 밑줄 밖으로
       if (a === b) return esc(b);
       var ops = diffOps(a, b), bare = function (x) { return String(x || '').replace(/[\s,.!?·]+/g, ''); };
@@ -264,17 +263,17 @@
       function f(t) { if (t0 === null) t0 = t; var k = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(a + (b - a) * e); if (k < 1) requestAnimationFrame(f); }
       requestAnimationFrame(f);
     }
-    function setM(box, rate, label, from) {
+    function setM(box, rate, label, from, cls) {
       var v = $('.v', box), pc = $('b i', box), bn = $('.bn', box), bar = $('.tr i', box), side = box === MF ? 'from' : 'to';
       if (rate == null) { box.className = 'hu-m ' + side; v.textContent = '-'; pc.hidden = true; bn.textContent = ''; bar.style.transition = 'none'; bar.style.width = '0'; return; }
-      var a = from == null ? 0 : from;
+      var a = from == null ? 0 : from, end = cls || band(rate);
       pc.hidden = false; bn.textContent = '';
-      box.className = 'hu-m ' + side + ' ' + band(RM ? rate : a);
+      box.className = 'hu-m ' + side + ' ' + (RM ? end : band(a));
       bar.style.transition = 'none'; bar.style.width = (RM ? Math.max(2, rate) : Math.max(a ? 2 : 0, a)) + '%'; void bar.offsetWidth; bar.style.transition = '';
       if (RM) { v.textContent = rate; bn.textContent = label || ''; return; }
       bar.style.width = Math.max(2, rate) + '%';
       num(v, a, rate, 700);
-      later(function () { box.className = 'hu-m ' + side + ' ' + band(rate); bn.textContent = label || ''; }, 420);
+      later(function () { box.className = 'hu-m ' + side + ' ' + end; bn.textContent = label || ''; }, 420);
     }
     function catsHtml(n, cats, note) {   // 바꾼 곳 수와 갈래만(무엇을 무엇으로 바꿨는지는 결과 화면에서). 갈래는 셋까지, 나머지는 '그 밖'
       var top = cats.slice(0, 3), more = cats.slice(3).reduce(function (a, c) { return a + (c[1] || 1); }, 0);
@@ -286,21 +285,25 @@
     var DEMO = null;
     try { DEMO = JSON.parse(($('#huDemo') || {}).textContent || 'null'); } catch (e) { DEMO = null; }
     if (DEMO && !DEMO.sents) DEMO = null;   // 예전 모양의 예시 데이터는 쓰지 않음
+    function afterCls() { return DEMO.after.rate >= 40 ? 'bad' : DEMO.after.n > 0 || DEMO.after.rate >= 20 ? 'mid' : 'ok'; }   // 남은 AI 문장이 있으면 판정 기준대로 '일부 검출'(호박색)
+    function leftNote() { var k = (DEMO.aiAfter || []).length; return k ? '남은 AI 패턴 문장 ' + k + '개는 다른 버전으로 다시 다듬거나 직접 고칩니다. 바꾼 이유는 토큰 결과에서 보여 드려요.' : '바꾼 이유와 다른 버전은 글 전체 휴머나이징 결과에서 보여 드려요.'; }
     function demoEnd(P) {
-      say('ok', '휴머나이징 완료 · 바꾼 곳 ' + DEMO.n + '곳 · 의미와 문맥은 그대로');
-      setM(MT, DEMO.after.rate, DEMO.after.band, DEMO.before.rate);
-      why.innerHTML = catsHtml(DEMO.n, DEMO.cats);
-      stampShow('ok', '뜻과 문맥 그대로', 'AI 작성률 ' + DEMO.after.rate + '% · 바꾼 곳 ' + DEMO.n);
+      var left = DEMO.aiAfter || [];
+      say('ok', '휴머나이징 완료 · AI 작성률 ' + DEMO.before.rate + '% → ' + DEMO.after.rate + '% · 바꾼 곳 ' + DEMO.n + '곳');
+      setM(MT, DEMO.after.rate, DEMO.after.band, DEMO.before.rate, afterCls());
+      why.innerHTML = catsHtml(DEMO.n, DEMO.cats, leftNote());
+      left.forEach(function (i) { if (P.S[i]) P.S[i].el.classList.add('ai2'); });
+      badgeShow('ok', '의미와 문맥은 그대로', 'AI 패턴 문장 ' + (DEMO.ai || []).length + ' → ' + left.length + ' · 바꾼 곳 ' + DEMO.n);
       replay.hidden = false;
-      stage.classList.remove('scanning'); stage.classList.add('done');
-      if (!RM && plays < LOOPS) later(function () { if (plays < LOOPS) demo(); }, 5200);   // 높이는 잡아 둔 채로(끝나는 순간 아래 내용이 올라붙지 않게). 화면 크기가 바뀌면 풂
+      stage.classList.remove('scanning'); stage.classList.add('done'); scene('done');
+      if (!RM && plays < LOOPS) later(function () { if (plays < LOOPS) demo(); }, 6000);
       P.S.forEach(function (x) { x.el.classList.remove('now', 'in'); });
-      live.textContent = '예시: ' + DEMO.label.replace(/^예시 · /, '') + '. AI 패턴 문장 ' + P.S.length + '개를 의미는 그대로 두고 다듬어 ' + DEMO.n + '곳을 바꿨습니다. AI 작성률(추정)은 ' + DEMO.before.rate + '%에서 ' + DEMO.after.rate + '%가 되었습니다.';
+      live.textContent = '예시: ' + DEMO.label.replace(/^예시 · /, '') + '. AI 패턴 문장 ' + (DEMO.ai || []).length + '개 가운데 ' + ((DEMO.ai || []).length - left.length) + '개를 의미는 그대로 두고 다듬어 ' + DEMO.n + '곳을 바꿨습니다. AI 작성률(추정)은 ' + DEMO.before.rate + '%에서 ' + DEMO.after.rate + '%가 되었습니다.';
     }
     function demoBase() {
       stop(); played = true; plays++;
-      stampHide(); stage.classList.remove('done', 'scanning');
-      replay.hidden = true; meter.hidden = false; why.innerHTML = ''; foot.innerHTML = FOOT0;
+      badgeHide(); stage.classList.remove('done', 'scanning'); scene('type');
+      replay.hidden = true; meter.hidden = false; why.innerHTML = ''; if (foot) foot.innerHTML = FOOT0;
       stage.classList.remove('is-user'); stage.classList.add('is-demo');
       setM(MF, null); setM(MT, null);
       var P = sbuild(DEMO.sents);
@@ -316,22 +319,23 @@
       if (!DEMO) return;
       if (RM) { still(); return; }
       var P = demoBase(), ai = DEMO.ai || P.S.map(function (x, i) { return i; });
-      say('', 'AI가 작성한 초안 · ' + DEMO.label.replace(/^예시 · /, ''));
+      say('', 'AI가 작성한 ' + DEMO.label.replace(/^예시 · /, '') + ' · 붙여 넣는 중');
       stype(P, function () {
         later(function () {
-          stage.classList.add('scanning'); say('run', 'AI 패턴 검사 중');
+          stage.classList.add('scanning'); scene('scan'); say('run', 'AI 패턴 검사 중');
           later(function () {
+            scene('flag');
             setM(MF, DEMO.before.rate, DEMO.before.band, 0);
             say('warn', 'AI 패턴 문장 ' + ai.length + '/' + P.S.length + ' · 판정 ' + DEMO.before.band);
-            sflag(P, ai, 260, function () {
+            sflag(P, ai, 240, function () {
               stage.classList.remove('scanning');
-              stampShow('bad', '필터링 대상', 'AI 작성률 ' + DEMO.before.rate + '% · AI 패턴 문장 ' + ai.length + '/' + P.S.length);
+              badgeShow('bad', '검사기 필터링 대상', 'AI 작성률 ' + DEMO.before.rate + '% · AI 패턴 문장 ' + ai.length + '/' + P.S.length);
               later(function () {
-                stampHide(); say('run', '의미와 문맥은 그대로, AI 패턴만 다듬는 중');
-                srewrite(P, 760, function (n, all) { say('run', '의미는 그대로, AI 패턴만 다듬는 중 · 문장 ' + n + '/' + all); }, function () { later(function () { demoEnd(P); }, 260); });
-              }, 1500);
+                badgeHide(); scene('rewrite'); say('run', '의미와 문맥은 그대로, AI 패턴만 다듬는 중');
+                srewrite(P, 700, function (n, all) { say('run', '의미는 그대로, AI 패턴만 다듬는 중 · 문장 ' + n + '/' + all); }, function () { later(function () { demoEnd(P); }, 260); });
+              }, 1700);
             });
-          }, 900);
+          }, 950);
         }, 380);
       });
     }
@@ -346,8 +350,12 @@
       }
     }
 
-    foot.addEventListener('click', function (e) { if (e.target.closest('[data-hu]')) focusTool(); });
-    window.addEventListener('am:hz-out', function () { stop(); });   // 검사 결과가 나오면 예시는 멈춤
+    if (foot) foot.addEventListener('click', function (e) { if (e.target.closest('[data-hu]')) focusTool(); });
+    /* 검사 결과가 나오면 예시는 멈추고, 첫 화면 두 단(도구 | 예시)은 한 단으로(결과 화면이 넓게). '새 글'로 비우면 다시 두 단 */
+    var hz = document.getElementById('hz');
+    function syncHero() { if (!hero || !hz) return; var on = hz.classList.contains('has-out'); hero.classList.toggle('has-out', on); if (on) stop(); }
+    window.addEventListener('am:hz-out', function () { stop(); syncHero(); });
+    if (hz && hero && 'MutationObserver' in window) { new MutationObserver(syncHero).observe(hz, { attributes: true, attributeFilter: ['class'] }); syncHero(); }
   })();
 
   /* 13.0 움직임 멈추기: 방문자가 AI 마크 근거 창 · 안내 창에서 멈추면(m.js, 이 브라우저에 기억) 이 사이트의 떠 있는 그림도 함께 멈춤 */
