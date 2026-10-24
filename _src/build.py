@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261024j"
+VER = "20261024k"
 TODAY = "2026-10-24"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -35,7 +35,8 @@ SHOP_IDX = {
     "geo-lite": "", "geo-standard": "", "geo-pro": "", "geocare-care-m": "", "geocare-grow-m": "",
     "service-starter-m": "", "bundle-trust": "",
     # 12.1 토큰(개인 c3 · c10 · c30 · c50 은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로
-    "c3": "", "c10": "", "c30": "", "c50": "", "credit-b10": "", "credit-b30": "", "credit-b100": "",
+    # 13.5(10.24) skkc.co.kr 상품 7개 등록(카테고리 AIMarker, 디지털 상품). kaiec_buy=1 이면 바로 결제 페이지로 열림
+    "c3": "34", "c10": "35", "c30": "36", "c50": "37", "credit-b10": "38", "credit-b30": "39", "credit-b100": "40",
 }
 CATALOG = {
     "label": {"name": "AI 마킹", "vat": "부가세 별도", "tiers": [
@@ -73,13 +74,17 @@ CATALOG = {
          "feat": ["관리의 모든 것", "AI가 인용하기 좋은 글 매달 2편", "자주 묻는 질문 · 상품 피드 갱신", "경쟁사 추적과 분기 전략 회의"]},
     ]},
 }
-CATALOG["credit"] = {"name": "토큰 충전", "vat": "부가세 별도, 세금계산서", "tiers": [
-    {"id": "credit-b10", "name": "1,200토큰", "full": "토큰 1,200(세금계산서)", "who": "팀 하나 · 수업 한 반", "price": "100,000원", "per": "충전", "m": 100000, "cr": 1200, "base": 1000, "note": "1,000토큰 + 200토큰 더", "cta": "충전하기",
-     "feat": ["AI 작성률 검사 · AI 휴머나이징을 한 코드로 함께", "API · MCP 요청에도 같은 코드(pass)", "AI 마킹 · AI 검색 요금제와 옵션 결제에도", "세금계산서, 유효기간 5년"]},
-    {"id": "credit-b30", "name": "3,900토큰", "full": "토큰 3,900(세금계산서)", "who": "여러 팀 · 학과", "price": "300,000원", "per": "충전", "m": 300000, "cr": 3900, "base": 3000, "best": "추천", "note": "3,000토큰 + 900토큰 더", "cta": "충전하기",
-     "feat": ["1,200토큰의 모든 것", "쓴 내역 정리(요청 시)", "부서 · 반별로 코드 나누기(요청 시)", "세금계산서, 유효기간 5년"]},
-    {"id": "credit-b100", "name": "14,000토큰", "full": "토큰 14,000(세금계산서)", "who": "기관 전체 · 대학", "price": "1,000,000원", "per": "충전", "m": 1000000, "cr": 14000, "base": 10000, "note": "10,000토큰 + 4,000토큰 더", "cta": "충전하기",
-     "feat": ["3,900토큰의 모든 것", "담당자 안내와 사용 가이드", "기관 계약서", "세금계산서, 유효기간 5년"]},
+# 13.5 기업 토큰은 'GEO 스타터 · 비즈니스 · 맥스'(AI 검색 노출 최적화 중심, 모든 기업 기능에 같은 토큰). 부가세 별도, 결제는 부가세 포함 금액
+CATALOG["credit"] = {"name": "기업 토큰", "vat": "부가세 별도, 세금계산서", "tiers": [
+    {"id": "credit-b10", "name": "GEO 스타터", "full": "GEO 스타터(기업 토큰 4,500)", "who": "1인 기업 · 소상공인, 사이트 하나부터", "price": "200,000원", "per": "충전", "m": 200000, "cr": 4500, "base": 2000, "note": "2,000토큰 + 2,500토큰 더", "cta": "충전하기",
+     "use": "AI 검색 노출 최적화 라이트 세팅(1,990토큰) + AI 마킹 스탠다드 12개월(990토큰) + 광고 문구 검수 1개월(990토큰)을 하고도 <b>530토큰</b>이 남습니다",
+     "feat": ["AI 검색 노출 최적화 세팅과 월 관리, AI 마킹 요금제, 추가 옵션을 같은 토큰으로", "AI 작성률 검사 · 휴머나이징 · API 요청에도 한 코드로", "세금계산서, 유효기간 5년", "모자라면 같은 코드에 충전"]},
+    {"id": "credit-b30", "name": "GEO 비즈니스", "full": "GEO 비즈니스(기업 토큰 12,500)", "who": "소규모 · 중견 기업, 쇼핑몰과 브랜드", "price": "500,000원", "per": "충전", "m": 500000, "cr": 12500, "base": 5000, "best": "추천", "note": "5,000토큰 + 7,500토큰 더", "cta": "충전하기",
+     "use": "AI 검색 노출 최적화 스탠다드 세팅(4,900토큰) + AI 마킹 비즈니스 12개월(4,900토큰) + 경쟁사 비교 리포트(1,900토큰)를 하고도 <b>800토큰</b>이 남습니다",
+     "feat": ["GEO 스타터의 모든 것", "쓴 내역 정리와 부서별 코드 나누기(요청 시)", "세금계산서, 유효기간 5년", "모자라면 같은 코드에 충전"]},
+    {"id": "credit-b100", "name": "GEO 맥스", "full": "GEO 맥스(기업 토큰 30,000)", "who": "쇼핑몰 · 중견 기업, 여러 팀이 함께 쓰는 기관", "price": "1,000,000원", "per": "충전", "m": 1000000, "cr": 30000, "base": 10000, "note": "10,000토큰 + 20,000토큰 더", "cta": "충전하기",
+     "use": "AI 검색 노출 최적화 프로 세팅(14,900토큰) + AI 검색 성장 월 관리 5개월(14,500토큰)을 하고도 <b>600토큰</b>이 남습니다",
+     "feat": ["GEO 비즈니스의 모든 것", "담당자 안내와 사용 가이드", "기관 계약서", "세금계산서, 유효기간 5년"]},
     {"id": "credit-ent", "name": "맞춤", "who": "더 많이 · 정기 충전", "price": "견적", "note": "기관 계약 · 연간 충전", "per": "", "cta": "견적 받기", "href": "contact/?plan=credit-ent&type=enterprise",
      "feat": ["필요한 만큼 맞춰 충전", "정기 충전 · 연간 계약", "전용 API 한도", "계약서 · 세금계산서"]},
 ]}
@@ -141,11 +146,12 @@ def tiers_html(key, root, pick=None):
 # 13.2 단위 1토큰 = 100원. 서버 PASS 1.2 는 1크레딧 = 10원이라 여기 값 = 서버 PASS_.PRODUCTS · PASS_.CR 값 ÷ 10(사이트 am.js 가 서버 숫자를 바꿔 보여 줌)
 TOKEN_WON = 100
 CREDIT_COST = {"unit": (100, 0.2, 1), "pro": (100, 0.4, 2)}   # (글자 수 단위, 토큰, 최소). 600자 이하 검사 · 도우미는 0
+# 13.5(10.24) 개인 토큰 4종: 체험 · 라이트 · 프로(추천) · 프리미엄(가장 큰 혜택). base = 값 ÷ 100(유료 토큰), 나머지는 더 드리는 토큰
 CREDITS = [
-    {"id": "c3", "cr": 30, "base": 30, "price": 3000, "who": "한 편 검사하고 고칠 때"},
-    {"id": "c10", "cr": 110, "base": 100, "price": 10000, "who": "레포트 여러 편"},
-    {"id": "c30", "cr": 350, "base": 300, "price": 30000, "who": "한 학기 내내", "tag": "추천"},
-    {"id": "c50", "cr": 600, "base": 500, "price": 50000, "who": "논문 · 졸업 시즌"},
+    {"id": "c3", "name": "체험", "cr": 30, "base": 30, "price": 3000, "who": "처음 한 편을 확인하고 다듬을 때"},
+    {"id": "c10", "name": "라이트", "cr": 150, "base": 100, "price": 10000, "who": "과제 · 자기소개서 시즌"},
+    {"id": "c30", "name": "프로", "cr": 500, "base": 300, "price": 30000, "who": "보고서 · 논문, 한 학기 내내", "tag": "추천"},
+    {"id": "c50", "name": "프리미엄", "cr": 1100, "base": 500, "price": 50000, "who": "자주 쓰는 분 · 함께 쓰는 팀", "tag": "가장 큰 혜택"},
 ]
 
 
@@ -172,12 +178,13 @@ def report_cost():
 
 
 def pack_html(t, root, mode="link", biz=False):
-    """13.2 충전 칸: 값(원) → 토큰과 더 받는 토큰(원어치) → 레포트 몇 편 → 충전. 개인은 글 검사 페이지 충전 창, 기업은 결제 시트"""
+    """13.2 충전 칸 → 13.5: 이름(체험 · 라이트 · 프로 · 프리미엄 / GEO 스타터 · 비즈니스 · 맥스) → 값(원) → 토큰과 더 받는 토큰 → 쓰임 → 충전.
+    개인은 글 검사 페이지 충전 창, 기업은 결제 시트(성균관컨설팅 결제 페이지로)"""
     price = t["m"] if biz else t["price"]
     best = t.get("tag") or t.get("best")
     bonus = t["cr"] - t["base"]
     n = int(t["cr"] // report_cost())
-    kind = "k-btn-p" if best else "k-btn-l"
+    kind = "k-btn-p" if best == "추천" else "k-btn-l"
     label = "%s원 충전" % format(price, ",")
     if biz:
         btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], label)
@@ -185,15 +192,18 @@ def pack_html(t, root, mode="link", biz=False):
         btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], label)
     else:
         btn = '<a class="k-btn %s" href="%shumanize/#buy-%s">%s</a>' % (kind, root, t["id"], label)
-    bn = ('<p class="bn"><b>+%s토큰</b> 더 드립니다</p>' % tk(bonus)) if bonus else '<p class="bn none">기본 충전</p>'
+    bn = ('<p class="bn"><b>+%s토큰</b> 더 드립니다 · 1토큰 100원 기준 %s원어치</p>' % (tk(bonus), format(t["cr"] * TOKEN_WON, ","))) if bonus else '<p class="bn none">기본 충전 · 더 받는 토큰 없음</p>'
     if biz:
-        mo = int(t["cr"] // (9900 // TOKEN_WON))
-        use = 'AI 마킹 스탠다드 <b>약 %s개월</b> 또는 레포트(3,000자) 검사와 휴머나이징 약 %s편' % (format(mo, ","), format(n, ","))
+        use = t.get("use") or ('AI 마킹 스탠다드 <b>약 %s개월</b> 또는 레포트(3,000자) 검사와 휴머나이징 약 %s편' % (format(int(t["cr"] // (9900 // TOKEN_WON)), ","), format(n, ",")))
+        nm = t["name"]
+        sub = "부가세 별도 · 결제 %s원" % format(int(price * 1.1), ",")
     else:
         use = '레포트(3,000자) 검사와 휴머나이징 <b>약 %s편</b>' % format(n, ",")
-    return ('<article class="cr13-pack%s" id="pk-%s">%s<p class="pr"><b>%s원</b><span>%s</span></p><h3>%s<small>토큰</small></h3>%s'
+        nm = "휴머나이징 " + t["name"]
+        sub = "부가세 포함"
+    return ('<article class="cr13-pack%s" id="pk-%s">%s<p class="nm">%s</p><p class="pr"><b>%s원</b><span>%s</span></p><h3>%s<small>토큰</small></h3>%s'
             '<p class="use">%s</p><p class="who">%s</p>%s</article>'
-            % (" best" if best else "", t["id"], ('<span class="tag">%s</span>' % best) if best else "", format(price, ","), "부가세 별도" if biz else "부가세 포함",
+            % (" best" if best == "추천" else (" top" if best else ""), t["id"], ('<span class="tag">%s</span>' % best) if best else "", nm, format(price, ","), sub,
                tk(t["cr"]), bn, use, t["who"], btn))
 
 

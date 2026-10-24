@@ -38,11 +38,11 @@
   /* 판정 기준 AMJ-1.0(서버 detect.js와 같은 숫자 · 같은 문장 틀). 여러 조각(6,000자씩)을 합칠 때만 사이트에서 다시 계산 */
   var J = { HI: 85, MID: 65, SHORT: 60, SEG_AI: 20, UNFIT_RATE: 40, RISK_RATE: 20, UNFIT_SEG: 50,
     B: { unfit: ['부적합', '부적합 · 개선 필요'], risk: ['고위험', '고위험 · 수정 권고'], safe: ['안전', '안전 · AI 패턴 적음'], short: ['판단 보류', '판단 보류 · 글이 짧음'] } };
-  var PRODS = [   // 12.0 토큰 충전(서버 am.passinfo products 가 오면 그 값으로)
-    { id: 'c3', name: '토큰 30', price: 3000, cr: 30, base: 30 },
-    { id: 'c10', name: '토큰 110', price: 10000, cr: 110, base: 100 },
-    { id: 'c30', name: '토큰 350', price: 30000, cr: 350, base: 300, best: 1 },
-    { id: 'c50', name: '토큰 600', price: 50000, cr: 600, base: 500 }
+  var PRODS = [   // 13.5 토큰 충전 칸(사이트 표가 기준, build.py CREDITS 와 같게. 서버 products 는 결제 페이지 주소만 가져옴)
+    { id: 'c3', name: '휴머나이징 체험', price: 3000, cr: 30, base: 30, who: '처음 한 편을 확인하고 다듬을 때' },
+    { id: 'c10', name: '휴머나이징 라이트', price: 10000, cr: 150, base: 100, who: '과제 · 자기소개서 시즌' },
+    { id: 'c30', name: '휴머나이징 프로', price: 30000, cr: 500, base: 300, best: 1, who: '보고서 · 논문, 한 학기 내내' },
+    { id: 'c50', name: '휴머나이징 프리미엄', price: 50000, cr: 1100, base: 500, top: 1, who: '자주 쓰는 분 · 함께 쓰는 팀' }
   ];
   var CR0 = { unit: { per: 100, cr: 0.2, min: 1 }, pro: { per: 100, cr: 0.4, min: 2 } }, ASK = 10;   // 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음
 
@@ -62,12 +62,15 @@
   function ssset(k, v) { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 저장 없이 */ } }
   function tone() { return 'auto'; }   // 12.1 말투는 늘 자동(올린 글을 보고 서버가 정함, 정한 말투는 결과에 표시)
   function toneFor() { var t = tone(); return t === 'auto' && S.toneUsed ? S.toneUsed : t; }   // 문장 도우미는 글 전체에서 정한 말투로
-  function withDesc(p) {   // 13.2 설명: 더 받는 토큰(원어치) · 레포트(3,000자) 검사와 휴머나이징 몇 편
+  function withDesc(p) {   // 13.5 설명: 레포트(3,000자) 검사와 휴머나이징 몇 편 · 누구에게
     if (!p || !p.cr) return p;
     var cyc = r1(costOf('unit', 3000) + costOf('pro', 3000)), k = cyc ? Math.floor(r1(p.cr / cyc) + 1e-9) : 0, bn = r1(p.cr - (p.base || p.cr));
-    return Object.assign({}, p, { bonus: bn > 0 ? bn : 0, desc: (bn > 0 ? tk(bn) + '토큰 더' + (k ? ' · ' : '') : '') + (k ? '레포트(3,000자) 검사와 휴머나이징 약 ' + n2(k) + '편' : '') });
+    return Object.assign({}, p, { bonus: bn > 0 ? bn : 0, desc: (k ? '레포트(3,000자) 검사와 휴머나이징 약 ' + n2(k) + '편' : '') + (p.who ? (k ? ' · ' : '') + p.who : '') });
   }
-  function prodList() { var L = (S.info && S.info.products) || [], C = L.filter(function (p) { return p.cr && !p.legacy && !p.biz; }); return C.length ? C : PRODS; }   // 서버가 토큰 상품을 주지 않으면(예전 서버) 기본 칸
+  function prodList() {   // 13.5 칸은 사이트 표(PRODS)가 기준. 서버 am.passinfo products 는 결제 페이지 주소(link)만 가져옴
+    var L = (S.info && S.info.products) || [];
+    return PRODS.map(function (p) { var s = L.filter(function (x) { return x && x.id === p.id; })[0]; return s && s.link ? Object.assign({}, p, { link: s.link }) : p; });
+  }
   function prod(id) { var L = prodList(); for (var i = 0; i < L.length; i++) if (L[i].id === id) return withDesc(L[i]); return null; }
   function prods() { return prodList().map(withDesc); }
   function isCrId(id) { return /^(c\d+|topup|new|best)$/.test(id || '') || !!prod(id); }   // 12.1 개인 토큰 충전만 여기서(기업 상품은 order.js)
@@ -100,7 +103,7 @@
     stat('서버 응답이 늦어 한 번 더 보냈습니다');
   }
   function ico(name) {
-    var P = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', check: '<path d="M20 6 9 17l-5-5"/>', alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>', back: '<path d="M15 18l-6-6 6-6"/>', file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>', clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>', pen: '<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>' };
+    var P = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', check: '<path d="M20 6 9 17l-5-5"/>', alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>', back: '<path d="M15 18l-6-6 6-6"/>', file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>', clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>', pen: '<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>', shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>', open: '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>' };
     return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + (P[name] || '') + '</svg>';
   }
 
@@ -1169,15 +1172,21 @@
   function dlgOpen(d) { if (!d) return; if (typeof d.showModal === 'function') { if (!d.open) d.showModal(); } else d.setAttribute('open', ''); }
   function dlgClose(d) { if (d && d.open) { try { d.close(); } catch (e) { d.removeAttribute('open'); } } }
   var buyDlg = $('#hzBuy'), buyBody = $('#hzBuyBody'), buyTpl = buyBody ? buyBody.innerHTML : '', t0 = 0;
-  function prodsHtml(sel, noBest, need) {   // 13.2 칸: 토큰(더 받는 것) · 값, 이 글이 있으면 '이 글 N번'
+  function prodsHtml(sel, noBest, need) {   // 13.5 칸: 이름 · 토큰(더 받는 것) · 값 · 쓰임, 이 글이 있으면 '이 글 N번'
     return prods().map(function (p) {
       var best = p.best && !noBest, k = need > 0 ? Math.floor(r1(p.cr / need) + 1e-9) : 0;
-      var sm = need > 0 ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') + (p.bonus ? ' · ' + tk(p.bonus) + '토큰 더' : '') : p.desc;
-      return '<label' + (best ? ' class="best"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span><b>' + tk(p.cr) + '토큰' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + (best ? '<i>추천</i>' : '') + '</b><em>' + n2(p.price) + '원</em><small>' + esc(sm) + '</small></span></label>';
+      var sm = need > 0 ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') + (p.who ? ' · ' + p.who : '') : p.desc;
+      return '<label' + (best ? ' class="best"' : p.top ? ' class="top"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span>' +
+        (best ? '<i class="tg">추천</i>' : p.top ? '<i class="tg top">가장 큰 혜택</i>' : '') +
+        '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b><em class="pr">' + n2(p.price) + '원</em><small class="ds">' + esc(sm) + '</small></span></label>';
     }).join('');
   }
-  function stepsHtml(sh) {   // 13.2 바로 결제가 아닐 때: 결제 순서를 미리
-    return '<ol class="hz13-steps" aria-label="결제 순서"><li><b>1</b><span>지금 주문<small>이메일만 적으면 됩니다</small></span></li><li><b>2</b><span>' + (sh ? '성균관컨설팅 결제 페이지에서 카드 · 계좌이체로 결제' : '메일로 온 안내대로 카드 · 계좌이체 결제') + '<small>' + (sh ? '회원가입 없이' : '결제 안내 메일은 영업일 하루 안에') + '</small></span></li><li><b>3</b><span>메일로 받은 코드를 넣으면 바로 이어서<small>코드는 결제 확인 뒤 영업일 하루 안에</small></span></li></ol>';
+  function stepsHtml(sh) {   // 13.2 바로 결제가 아닐 때: 결제 순서를 미리(13.5 결제 페이지가 있으면 새 창으로 바로)
+    if (sh) return '<ol class="hz13-steps" aria-label="결제 순서"><li><b>1</b><span>결제 페이지 열기<small>이메일만 적으면 됩니다</small></span></li><li><b>2</b><span>성균관컨설팅 결제 페이지에서 결제<small>회원가입 없이 카드 · 간편결제 · 계좌이체</small></span></li><li><b>3</b><span>메일로 받은 코드를 넣으면 바로 이어서<small>결제 확인 뒤 영업일 하루 안에</small></span></li></ol>';
+    return '<ol class="hz13-steps" aria-label="결제 순서"><li><b>1</b><span>지금 주문<small>이메일만 적으면 됩니다</small></span></li><li><b>2</b><span>메일로 온 안내대로 카드 · 계좌이체 결제<small>결제 안내 메일은 영업일 하루 안에</small></span></li><li><b>3</b><span>메일로 받은 코드를 넣으면 바로 이어서<small>코드는 결제 확인 뒤 영업일 하루 안에</small></span></li></ol>';
+  }
+  function trustHtml() {   // 13.5 왜 성균관컨설팅 결제 페이지인지(거부감 없이)
+    return '<div class="hz18-trust">' + ico('shield') + '<div><b>결제는 운영사 성균관컨설팅 결제 페이지에서 합니다</b><span>AIMarker는 성균관컨설팅이 개발하고 운영하는 서비스입니다. 그래서 결제와 영수증, 세금계산서는 운영사 이름으로 처리되고, 카드 명세서에도 ‘성균관컨설팅’으로 표시됩니다. 회원가입 없이 카드 · 간편결제 · 계좌이체로 결제합니다.</span><small>성균관컨설팅 · 사업자등록번호 272-32-01885 · 통신판매업 신고 제2026-경기송탄-0622</small></div></div>';
   }
   function shopLink(pid) {   // 12.1 공식 결제처 성균관컨설팅 결제 페이지(서버 AM_BUY_LINKS 또는 사이트 SHOP_IDX 에 상품 번호가 있을 때)
     var p = prod(pid); if (p && p.link) return p.link;
@@ -1186,7 +1195,7 @@
     return ix && A.shop ? String(A.shop).replace('%s', encodeURIComponent(ix)) : '';
   }
   function topupOn() { var f = $('#hzBuyForm'), r = f && f.querySelector('input[name="to"]:checked'); return !!(r && r.value === 'this' && isCr()); }
-  function buyBtnLabel() { var f = $('#hzBuyForm'); if (!f) return; var id = (f.querySelector('input[name="product"]:checked') || {}).value || 'c10', p = prod(id) || PRODS[1], b = f.querySelector('button[type="submit"]'), tu = topupOn(); var sh = !payReady() && shopLink(id); needLine(p, tu); var st = $('#hzBuySteps'); if (st) { st.innerHTML = payReady() ? '' : stepsHtml(!!sh); st.hidden = payReady(); } if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : '<span>' + n2(p.price) + '원 ' + (sh ? '주문하고 결제하러 가기' : '주문하기') + '</span>'; var n = $('#hzBuyNote'); if (n) n.textContent = payReady() ? (tu ? '카드나 간편결제로 바로 결제합니다. 승인되면 지금 코드에 ' + tk(p.cr) + '토큰이 바로 더해집니다.' : '카드나 간편결제로 바로 결제합니다. 승인되면 이 화면에서 바로 토큰이 열리고, 코드는 메일로도 보내 드립니다.') : sh ? '주문 번호를 받은 뒤 공식 결제처 성균관컨설팅 결제 페이지에서 회원가입 없이 결제합니다. 결제가 확인되면 ' + (tu ? '지금 코드에 ' + tk(p.cr) + '토큰을 더해' : '토큰 코드를 메일로 보내') + ' 드립니다.' : (tu ? '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 지금 코드에 ' + tk(p.cr) + '토큰을 더해 드립니다.' : '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 토큰 코드를 메일로 보내 드립니다.'); var ml = f.querySelector('label[for="hzBuyMail"]'); if (ml) ml.innerHTML = (tu ? '영수증을 받을 이메일' : '토큰 코드, 영수증을 받을 이메일') + ' <em>필수</em>'; }
+  function buyBtnLabel() { var f = $('#hzBuyForm'); if (!f) return; var id = (f.querySelector('input[name="product"]:checked') || {}).value || 'c30', p = prod(id) || PRODS[2], b = f.querySelector('button[type="submit"]'), tu = topupOn(); var sh = !payReady() && shopLink(id); needLine(p, tu); var st = $('#hzBuySteps'); if (st) { st.innerHTML = payReady() ? '' : stepsHtml(!!sh); st.hidden = payReady(); } if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : sh ? ico('card') + '<span>성균관컨설팅에서 ' + n2(p.price) + '원 결제하기</span>' : '<span>' + n2(p.price) + '원 주문하기</span>'; var n = $('#hzBuyNote'); if (n) n.textContent = payReady() ? (tu ? '카드나 간편결제로 바로 결제합니다. 승인되면 지금 코드에 ' + tk(p.cr) + '토큰이 바로 더해집니다.' : '카드나 간편결제로 바로 결제합니다. 승인되면 이 화면에서 바로 토큰이 열리고, 코드는 메일로도 보내 드립니다.') : sh ? '단추를 누르면 운영사 성균관컨설팅 결제 페이지가 새 창으로 열립니다. 결제가 확인되면 영업일 하루 안에 ' + (tu ? '지금 코드에 ' + tk(p.cr) + '토큰을 더해' : '토큰 코드를 메일로 보내') + ' 드립니다.' : (tu ? '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 지금 코드에 ' + tk(p.cr) + '토큰을 더해 드립니다.' : '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 토큰 코드를 메일로 보내 드립니다.'); var ml = f.querySelector('label[for="hzBuyMail"]'); if (ml) ml.innerHTML = (tu ? '영수증을 받을 이메일' : '토큰 코드, 영수증을 받을 이메일') + ' <em>필수</em>'; }
   function needLine(p, tu) {   // 13.2 이 글 값(원 · 토큰)과, 고른 충전으로 하고 남는 토큰
     var nd = $('#hzBuyNeed'), N = S.buyNeed; if (!nd) return;
     if (!N || !p) { nd.hidden = true; nd.innerHTML = ''; return; }
@@ -1200,7 +1209,7 @@
     if (!buyDlg) return;
     opt = opt || {};
     var wantTop = pid === 'topup' || (isCr() && pid !== 'new');
-    if (!prod(pid)) pid = opt.need ? packFor(Math.max(0, opt.need - (wantTop ? crLeft() : 0))).id : (prods().filter(function (p) { return p.best; })[0] || prod('c10') || PRODS[1]).id;   // 13.2 그냥 열면 추천 칸
+    if (!prod(pid)) pid = opt.need ? packFor(Math.max(0, opt.need - (wantTop ? crLeft() : 0))).id : (prods().filter(function (p) { return p.best; })[0] || prod('c30') || PRODS[2]).id;   // 13.2 그냥 열면 추천 칸
     buyBody.innerHTML = buyTpl;
     S.buyNeed = opt.need > 0 ? { need: r1(opt.need), len: opt.len || 0, what: opt.what || 'AI 휴머나이징' } : null;
     var fs = buyBody.querySelector('.hz7-prod'); if (fs) fs.innerHTML = '<legend class="sr">충전할 토큰</legend>' + prodsHtml(pid, !!opt.need, opt.need > 0 ? r1(opt.need) : 0);
@@ -1245,9 +1254,31 @@
     var f = e.target;
     if (f.id === 'hzBuyForm') {
       e.preventDefault();
-      var msg = f.querySelector('.msg'), mail = f.querySelector('[name="contact"]').value.trim(), pid = (f.querySelector('input[name="product"]:checked') || {}).value || 'c10', btn = f.querySelector('button[type="submit"]'), to = topupOn() ? S.pass : '';
+      var msg = f.querySelector('.msg'), mail = f.querySelector('[name="contact"]').value.trim(), pid = (f.querySelector('input[name="product"]:checked') || {}).value || 'c30', btn = f.querySelector('button[type="submit"]'), to = topupOn() ? S.pass : '';
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) { say(msg, '토큰 코드와 영수증을 받을 이메일 주소를 확인해 주세요.'); return; }
       if (!f.querySelector('[name="agree"]').checked) { say(msg, '구매와 환불 안내, 이메일 수집에 동의해 주세요.'); return; }
+      var shop = !payReady() && shopLink(pid), pk = prod(pid);
+      if (shop && pk) {   // 13.5 결제 페이지가 있으면 바로: 새 창으로 성균관컨설팅 결제 페이지, 기록(am.lead)은 뒤에서
+        btn.disabled = true;
+        var win = true; try { window.open(shop, '_blank', 'noopener'); } catch (eW) { win = false; }   // noopener 면 창 객체가 안 돌아오므로 열었다고 보고, 막혔을 때를 위해 '다시 열기' 단추를 둠
+        sset('am_buy_mail', mail);
+        var tail = to ? String(S.pass).replace(/[^0-9A-Za-z]/g, '').slice(-4) : '';
+        var memo = '[토큰 주문] ' + pk.name + ' ' + tk(pk.cr) + '토큰 · ' + n2(pk.price) + '원(부가세 포함) · 성균관컨설팅 결제 페이지로 이동' + (to ? ' · 지금 코드에 충전(코드 끝 ' + tail + ')' : ' · 새 코드') + ' · 상품 코드 ' + pid + (S.buyNeed ? ' · 이 글 ' + n2(S.buyNeed.len) + '자 ' + S.buyNeed.what : '');
+        var lead = AM.call('am.lead', { kind: 'biz', plan: pk.name, name: '', org: '개인 토큰 · ' + (mail.split('@')[1] || '개인'), contact: mail, site: '', memo: memo, hp: f.querySelector('[name="hp"]').value, ms: Date.now() - t0, src: (location.pathname + location.search).slice(0, 80) + ' 충전 창', cid: cid() }, 15000);
+        buyBody.innerHTML = '<h2 id="hzBuyT" tabindex="-1">' + (win ? '성균관컨설팅 결제 페이지를 새 창으로 열었습니다' : '성균관컨설팅 결제 페이지에서 결제해 주세요') + '</h2><div class="hz7-done hz18-go">' +
+          '<p class="sum"><b>' + esc(pk.name) + ' · ' + tk(pk.cr) + '토큰' + (pk.bonus ? ' <i>+' + tk(pk.bonus) + ' 포함</i>' : '') + '</b><span>' + n2(pk.price) + '원 · 부가세 포함' + (to ? ' · 지금 코드(끝 ' + esc(tail) + ')에 충전' : ' · 새 코드') + '</span></p>' +
+          '<ol class="hz13-steps v" aria-label="다음 순서"><li><b>1</b><span>' + (win ? '새 창의 ' : '') + '결제 페이지에서 회원가입 없이 결제<small>주문자 이메일은 ' + esc(mail) + ' 로 적어 주세요</small></span></li>' +
+          '<li><b>2</b><span>결제 확인 뒤 영업일 하루 안에 ' + (to ? '지금 코드에 ' + tk(pk.cr) + '토큰을 더해 드립니다' : '토큰 코드를 메일로 보내 드립니다') + '<small>메일이 없으면 스팸함을 확인하거나 contact@skkc.co.kr</small></span></li>' +
+          '<li><b>3</b><span>' + (to ? '코드는 그대로, 남은 토큰만 늘어납니다' : '메일의 코드를 ‘코드 넣기’에 넣으면 바로 이어서') + '<small>이 창은 닫아도 됩니다</small></span></li></ol>' +
+          '<a class="btn btn-p btn-l" href="' + esc(shop) + '" target="_blank" rel="noopener">' + ico('card') + '<span>' + (win ? '결제 페이지가 안 보이면 다시 열기' : '결제 페이지 열기') + '</span></a>' +
+          (to ? '' : '<button class="btn btn-g" type="button" data-code>코드를 받았어요 · 코드 넣기</button>') + trustHtml() +
+          '<p class="msg on ok" role="status" id="hzBuyLead">주문 내용을 기록하는 중…</p></div>';
+        var hL = $('#hzBuyT'); if (hL) { try { hL.focus({ preventScroll: true }); } catch (eF2) { hL.focus(); } }
+        lead.then(function (r) { var el = $('#hzBuyLead'); if (!el) return; if (r && r.ok) { el.textContent = '주문 내용을 기록했습니다' + (r.id ? '(접수번호 ' + r.id + ')' : '') + '. 결제 페이지의 주문자 이메일과 같은 메일(' + mail + ')로 코드를 보내 드립니다.'; } else throw r || {}; })
+          .catch(function () { var el = $('#hzBuyLead'); if (el) { el.className = 'msg on'; el.textContent = '주문 기록은 남기지 못했지만 결제에는 영향이 없습니다. 결제 페이지의 주문자 이메일로 코드를 보내 드립니다.'; } });
+        if (window.gtag) try { window.gtag('event', 'begin_checkout', { items: [{ item_id: pid, item_name: pk.name, price: pk.price }] }); } catch (eG2) { /* 무시 */ }
+        return;
+      }
       btn.disabled = true; say(msg, payReady() ? '결제를 준비하는 중…' : '주문을 보내는 중…', 'ok');
       var hold = Math.max(0, 2700 - (Date.now() - t0));   // 너무 빨리 낸 주문은 서버가 사람이 아닌 것으로 보므로, 그만큼만 기다렸다 보냄
       new Promise(function (ok) { setTimeout(ok, hold); }).then(function () { return AM.call('am.buy', { product: pid, to: to, contact: mail, agree: 1, pay: payReady() ? 1 : 0, hp: f.querySelector('[name="hp"]').value, ms: Date.now() - t0, src: location.pathname, cid: cid() }, 30000); }).then(function (r) {

@@ -58,7 +58,7 @@
         '<div class="k-buy-crb" aria-live="polite" hidden></div><p class="k-buy-crn">토큰이 없다면 <a href="' + root + 'pricing/#credits" target="_blank" rel="noopener">먼저 충전</a>하세요. 3,000원부터, 같은 코드로 모든 기능에 씁니다.</p></div>') +
       '<label' + (saved ? '' : ' class="on"') + '><input type="radio" name="pay" value="card"' + (saved ? '' : ' checked') + '><span><b>카드 · 간편결제</b><small class="cardnote">성균관컨설팅 결제 페이지에서 회원가입 없이 결제합니다.</small></span></label>' +
       '<label><input type="radio" name="pay" value="bank"><span><b>계좌이체 · 세금계산서</b><small>견적서와 입금 안내를 메일로 보내 드립니다.</small></span></label></fieldset>' +
-      '<div class="k-buy-flow" aria-hidden="true"><b>AIMarker</b>' + '→' + '<b class="sk">성균관컨설팅</b><span>공식 결제처 · 카드 명세서에 성균관컨설팅으로 표시</span></div>' +
+      '<div class="k-buy-flow"><b>AIMarker</b>' + '→' + '<b class="sk">성균관컨설팅</b><span>운영사 결제 페이지 · 카드 명세서와 세금계산서에 성균관컨설팅으로 표시</span><small class="why">AIMarker는 성균관컨설팅이 개발하고 운영하는 서비스라서 결제와 영수증, 세금계산서는 운영사 이름으로 처리합니다. 회원가입 없이 카드 · 간편결제 · 계좌이체로 결제하고, 결제 페이지의 상품 이름에 AIMarker 상품 이름이 그대로 적혀 있습니다. 성균관컨설팅 · 사업자등록번호 272-32-01885 · 통신판매업 신고 제2026-경기송탄-0622</small></div>' +
       '<label class="k-buy-ok"><input type="checkbox" name="agree"><span>주문 처리와 시작 안내를 위해 이메일, 사이트 주소, 회사 이름을 받는 데 동의합니다(<a href="' + root + 'privacy/" target="_blank" rel="noopener">개인정보처리방침</a>). 결제 정보는 이 사이트에서 받지 않습니다.</span></label>' +
       '<button class="k-btn k-btn-p k-buy-go" type="submit">결제 페이지로</button>' +
       '<div class="k-buy-msg" role="status"></div>' +
@@ -148,7 +148,7 @@
         var moved = false, url = /^https?:\/\//.test(String(c.idx)) ? String(c.idx) : String(AMP.shop).replace('%s', encodeURIComponent(c.idx));
         var t = setTimeout(function () { moved = true; location.href = url; }, 1800);
         lead.then(function () { if (!moved) { clearTimeout(t); location.href = url; } }, function () { if (!moved) { clearTimeout(t); location.href = url; } });
-        say('ok', '성균관컨설팅 결제 페이지로 이동합니다. 회원가입 없이 비회원 주문서에서 결제하세요.');
+        say('ok', '운영사 성균관컨설팅 결제 페이지로 이동합니다. 회원가입 없이 비회원 주문서에서 결제하면 되고, 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.');
         return;
       }
       lead.then(function (r) {

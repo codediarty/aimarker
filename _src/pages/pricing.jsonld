@@ -2,7 +2,7 @@
  "@context": "https://schema.org",
  "@type": "Product",
  "name": "AIMarker",
- "description": "AI가 만든 이미지 · 영상 · 글에 AI 마크를 자동으로 붙이는 AI 마킹, ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리 회사를 읽고 인용하도록 돕는 AI 검색 노출 최적화, 생성형 AI 서비스의 결과물 표시 의무 대응, 개인 AI 작성률 검사와 휴머나이징. 결제는 운영사 성균관컨설팅. 상담 없이 토큰 코드 하나로 모든 기능을 씁니다(1토큰 100원, 충전 3,000원부터).",
+ "description": "AI가 만든 이미지 · 영상 · 글에 AI 마크를 자동으로 붙이는 AI 마킹, ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리 회사를 읽고 인용하도록 돕는 AI 검색 노출 최적화, 생성형 AI 서비스의 결과물 표시 의무 대응, 개인 AI 작성률 검사와 휴머나이징. 결제는 운영사 성균관컨설팅 결제 페이지(AIMarker는 성균관컨설팅이 개발 · 운영). 상담 없이 토큰 코드 하나로 모든 기능을 씁니다(1토큰 100원, 충전 3,000원부터).",
  "brand": {
   "@type": "Brand",
   "name": "AIMarker"
@@ -171,7 +171,7 @@
   },
   {
    "@type": "Offer",
-   "name": "AI 작성률 검사 · 휴머나이징 토큰 30",
+   "name": "AIMarker 휴머나이징 체험 · AI 글 인간화 작업 30토큰",
    "category": "개인",
    "description": "30토큰 · 1토큰 100원 · 쓴 만큼 빠짐(AI 작성률 검사 1,000자 2토큰, AI 휴머나이징 1,000자 4토큰) · 유효기간 5년",
    "price": 3000,
@@ -186,9 +186,9 @@
   },
   {
    "@type": "Offer",
-   "name": "AI 작성률 검사 · 휴머나이징 토큰 110",
+   "name": "AIMarker 휴머나이징 라이트 · AI 글 인간화 작업 150토큰",
    "category": "개인",
-   "description": "100토큰 + 10토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(AI 작성률 검사 1,000자 2토큰, AI 휴머나이징 1,000자 4토큰) · 유효기간 5년",
+   "description": "100토큰 + 50토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(AI 작성률 검사 1,000자 2토큰, AI 휴머나이징 1,000자 4토큰) · 유효기간 5년",
    "price": 10000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#personal",
@@ -201,9 +201,9 @@
   },
   {
    "@type": "Offer",
-   "name": "AI 작성률 검사 · 휴머나이징 토큰 350",
+   "name": "AIMarker 휴머나이징 프로 · AI 글 인간화 작업 500토큰",
    "category": "개인",
-   "description": "300토큰 + 50토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(AI 작성률 검사 1,000자 2토큰, AI 휴머나이징 1,000자 4토큰) · 유효기간 5년",
+   "description": "300토큰 + 200토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(AI 작성률 검사 1,000자 2토큰, AI 휴머나이징 1,000자 4토큰) · 유효기간 5년",
    "price": 30000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#personal",
@@ -216,9 +216,9 @@
   },
   {
    "@type": "Offer",
-   "name": "AI 작성률 검사 · 휴머나이징 토큰 600",
+   "name": "AIMarker 휴머나이징 프리미엄 · AI 글 인간화 작업 1,100토큰",
    "category": "개인",
-   "description": "500토큰 + 100토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(AI 작성률 검사 1,000자 2토큰, AI 휴머나이징 1,000자 4토큰) · 유효기간 5년",
+   "description": "500토큰 + 600토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(AI 작성률 검사 1,000자 2토큰, AI 휴머나이징 1,000자 4토큰) · 유효기간 5년",
    "price": 50000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#personal",
@@ -231,39 +231,39 @@
   },
   {
    "@type": "Offer",
-   "name": "토큰 1,200(팀 · 기관, 세금계산서)",
+   "name": "AIMarker GEO 스타터(기업 토큰 4,500, 세금계산서)",
    "category": "기업",
-   "description": "1,000토큰 + 200토큰 더 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
-   "price": 100000,
+   "description": "2,000토큰 + 2,500토큰 더 · AI 검색 노출 최적화(GEO) · AI 마킹 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
+   "price": 200000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#credit",
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
-    "price": 100000,
+    "price": 200000,
     "priceCurrency": "KRW",
     "valueAddedTaxIncluded": false
    }
   },
   {
    "@type": "Offer",
-   "name": "토큰 3,900(팀 · 기관, 세금계산서)",
+   "name": "AIMarker GEO 비즈니스(기업 토큰 12,500, 세금계산서)",
    "category": "기업",
-   "description": "3,000토큰 + 900토큰 더 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
-   "price": 300000,
+   "description": "5,000토큰 + 7,500토큰 더 · AI 검색 노출 최적화(GEO) · AI 마킹 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
+   "price": 500000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#credit",
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
-    "price": 300000,
+    "price": 500000,
     "priceCurrency": "KRW",
     "valueAddedTaxIncluded": false
    }
   },
   {
    "@type": "Offer",
-   "name": "토큰 14,000(팀 · 기관, 세금계산서)",
+   "name": "AIMarker GEO 맥스(기업 토큰 30,000, 세금계산서)",
    "category": "기업",
-   "description": "10,000토큰 + 4,000토큰 더 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
+   "description": "10,000토큰 + 20,000토큰 더 · AI 검색 노출 최적화(GEO) · AI 마킹 · 검사 · 휴머나이징 · API · 요금제 결제에 사용 · 세금계산서 · 유효기간 5년",
    "price": 1000000,
    "priceCurrency": "KRW",
    "url": "https://aimarker.kr/pricing/#credit",

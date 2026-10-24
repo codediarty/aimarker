@@ -6,7 +6,7 @@
   var root = document.body.getAttribute('data-root') || '';
   var TW = 100, CHUNK = 6000, HELP = 600, MAXC = 50000;
   var U = { per: 100, cr: 0.2, min: 1 }, H = { per: 100, cr: 0.4, min: 2 };
-  var PK = [{ id: 'c3', price: 3000, cr: 30 }, { id: 'c10', price: 10000, cr: 110 }, { id: 'c30', price: 30000, cr: 350, best: 1 }, { id: 'c50', price: 50000, cr: 600 }];
+  var PK = [{ id: 'c3', nm: '체험', price: 3000, cr: 30 }, { id: 'c10', nm: '라이트', price: 10000, cr: 150 }, { id: 'c30', nm: '프로', price: 30000, cr: 500, best: 1 }, { id: 'c50', nm: '프리미엄', price: 50000, cr: 1100 }];   // 13.5 표(humanize.js PRODS · build.py CREDITS 와 같게)
   function $(s, r) { return (r || document).querySelector(s); }
   function r1(x) { return Math.round(x * 10) / 10; }
   function n2(x) { return Math.round(x).toLocaleString('ko-KR'); }
@@ -36,7 +36,7 @@
       pick = pick || PK[PK.length - 1];
       if (lad) lad.innerHTML = PK.map(function (p) {   // 고른 칸(단추와 같은 칸)을 강조, 칸마다 충전 창으로
         var k = c3 > 0 ? Math.floor(r1(p.cr / c3) + 1e-9) : 0;
-        return '<li' + (p === pick ? ' class="pick"' : '') + '><a href="' + root + 'humanize/#buy-' + p.id + '"' + (p === pick ? ' aria-current="true"' : '') + '><span>' + n2(p.price) + '원<small>' + tk(p.cr) + '토큰</small></span><b>' + (k ? (k >= 1000 ? '1,000번 넘게' : n2(k) + '번') : '모자라요') + '</b></a></li>';
+        return '<li' + (p === pick ? ' class="pick"' : '') + '><a href="' + root + 'humanize/#buy-' + p.id + '"' + (p === pick ? ' aria-current="true"' : '') + '><span>' + (p.nm ? p.nm + ' ' : '') + n2(p.price) + '원<small>' + tk(p.cr) + '토큰</small></span><b>' +(k ? (k >= 1000 ? '1,000번 넘게' : n2(k) + '번') : '모자라요') + '</b></a></li>';
       }).join('');
       var k1 = c3 > 0 ? Math.floor(r1(pick.cr / c3) + 1e-9) : 0;
       var go = $('#tkGo'); if (go) { go.href = root + 'humanize/#buy-' + pick.id; go.textContent = n2(pick.price) + '원 충전하기'; }

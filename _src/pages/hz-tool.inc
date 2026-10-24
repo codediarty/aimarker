@@ -36,30 +36,32 @@
   <div class="hz12-out" id="hzOut"></div>
 </div>
 
-<dialog class="hz7-dlg" id="hzBuy" aria-labelledby="hzBuyT">
+<dialog class="hz7-dlg hz18-dlg" id="hzBuy" aria-labelledby="hzBuyT">
   <form method="dialog" class="hz7-dlg-x"><button type="submit" aria-label="닫기">{{ico:x}}</button></form>
   <div class="hz7-dlg-b" id="hzBuyBody">
-    <h2 id="hzBuyT">토큰 충전</h2>
-    <p class="hz13-unit"><b>1토큰 = 100원</b><span>쓴 만큼만 빠지고, 5년 동안 나눠 씁니다</span></p>
+    <p class="hz18-k">{{ico:fingerprint}}AIMarker 토큰 충전</p>
+    <h2 id="hzBuyT">필요한 만큼만 충전하세요</h2>
+    <p class="hz13-unit"><b>1토큰 = 100원</b><span>쓴 만큼만 빠지고, 5년 동안 나눠 씁니다 · 검사 · 휴머나이징 · 결과상세내역서 모두 같은 토큰</span></p>
     <p class="hz12-need" id="hzBuyNeed" hidden></p>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>
-      <fieldset class="hz7-prod"><legend class="sr">충전할 토큰</legend>
-        <label><input type="radio" name="product" value="c3"><span><b>30토큰</b><em>3,000원</em><small>레포트(3,000자) 검사와 휴머나이징 약 1편</small></span></label>
-        <label><input type="radio" name="product" value="c10" checked><span><b>110토큰<i class="bn">+10</i></b><em>10,000원</em><small>10토큰 더(1,000원어치) · 레포트(3,000자) 검사와 휴머나이징 약 6편</small></span></label>
-        <label class="best"><input type="radio" name="product" value="c30"><span><b>350토큰<i class="bn">+50</i><i>추천</i></b><em>30,000원</em><small>50토큰 더(5,000원어치) · 레포트(3,000자) 검사와 휴머나이징 약 19편</small></span></label>
-        <label><input type="radio" name="product" value="c50"><span><b>600토큰<i class="bn">+100</i></b><em>50,000원</em><small>100토큰 더(10,000원어치) · 레포트(3,000자) 검사와 휴머나이징 약 33편</small></span></label>
+      <fieldset class="hz7-prod hz18-packs"><legend class="sr">충전할 토큰</legend>
+        <label><input type="radio" name="product" value="c3"><span><b class="nm">휴머나이징 체험</b><b class="tk">30<small>토큰</small></b><em class="pr">3,000원</em><small class="ds">레포트(3,000자) 검사와 휴머나이징 약 1편 · 처음 한 편을 확인하고 다듬을 때</small></span></label>
+        <label><input type="radio" name="product" value="c10"><span><b class="nm">휴머나이징 라이트</b><b class="tk">150<small>토큰</small><i class="bn">+50</i></b><em class="pr">10,000원</em><small class="ds">레포트(3,000자) 검사와 휴머나이징 약 8편 · 과제 · 자기소개서 시즌</small></span></label>
+        <label class="best"><input type="radio" name="product" value="c30" checked><span><i class="tg">추천</i><b class="nm">휴머나이징 프로</b><b class="tk">500<small>토큰</small><i class="bn">+200</i></b><em class="pr">30,000원</em><small class="ds">레포트(3,000자) 검사와 휴머나이징 약 27편 · 보고서 · 논문, 한 학기 내내</small></span></label>
+        <label class="top"><input type="radio" name="product" value="c50"><span><i class="tg top">가장 큰 혜택</i><b class="nm">휴머나이징 프리미엄</b><b class="tk">1,100<small>토큰</small><i class="bn">+600</i></b><em class="pr">50,000원</em><small class="ds">레포트(3,000자) 검사와 휴머나이징 약 61편 · 자주 쓰는 분 · 함께 쓰는 팀</small></span></label>
       </fieldset>
       <div class="hz13-stepw" id="hzBuySteps" hidden></div>
       <div class="field"><label for="hzBuyMail">토큰 코드, 영수증을 받을 이메일 <em>필수</em></label><input class="inp" id="hzBuyMail" name="contact" type="email" inputmode="email" autocomplete="email" maxlength="80" required placeholder="name@example.com"></div>
+      <div class="hz18-trust">{{ico:shield}}<div><b>결제는 운영사 성균관컨설팅 결제 페이지에서 합니다</b><span>AIMarker는 성균관컨설팅이 개발하고 운영하는 서비스입니다. 그래서 결제와 영수증, 세금계산서는 운영사 이름으로 처리되고, 카드 명세서에도 ‘성균관컨설팅’으로 표시됩니다. 회원가입 없이 카드 · 간편결제 · 계좌이체로 결제합니다.</span><small>성균관컨설팅 · 사업자등록번호 272-32-01885 · 통신판매업 신고 제2026-경기송탄-0622</small></div></div>
       <ul class="hz13-rules" aria-label="환불 기준"><li>쓴 토큰과 더 받은 토큰은 환불되지 않습니다</li><li>쓰고 남은 유료 토큰은 충전한 날부터 7일 안에는 전액, 그 뒤에는 10%를 뺀 금액을 돌려 드립니다</li><li>유효기간은 마지막 충전부터 5년입니다</li></ul>
       <label class="consent"><input type="checkbox" name="agree"><span>위 기준과 <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a>을 확인했고, 주문 확인과 코드 · 영수증 발송을 위한 이메일 수집(<a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a>)에 동의합니다.</span></label>
       <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <p class="hz13-safe">{{ico:shield}}<span>가입 없이 · 처리하지 못한 요청은 빠지지 않음 · 7일 안에는 남은 유료 토큰 전액 환불</span></p>
-      <button class="btn btn-p btn-l" type="submit"><span>주문하기</span></button>
+      <button class="btn btn-p btn-l" type="submit"><span>성균관컨설팅에서 30,000원 결제하기</span></button>
       <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n" id="hzBuyNote">주문하면 결제 안내를 메일로 드리고, 결제가 확인되면 토큰 코드를 메일로 보내 드립니다.</p>
-      <p class="hz7-dlg-n">가격은 부가세 포함입니다. 결제는 공식 결제처 성균관컨설팅에서 하며, 카드 명세서에는 성균관컨설팅으로 표시됩니다. 미성년자는 법정대리인의 동의를 받아 구매해 주세요(동의 없는 구매는 취소할 수 있습니다). 운영 성균관컨설팅(대표 이채연), 사업자등록번호 272-32-01885, 통신판매업 신고 제2026-경기송탄-0622, 문의 contact@skkc.co.kr</p>
+      <p class="hz7-dlg-n" id="hzBuyNote">단추를 누르면 운영사 성균관컨설팅 결제 페이지가 새 창으로 열립니다. 결제가 확인되면 영업일 하루 안에 토큰 코드를 메일로 보내 드립니다.</p>
+      <p class="hz7-dlg-n">가격은 부가세 포함입니다. 미성년자는 법정대리인의 동의를 받아 구매해 주세요(동의 없는 구매는 취소할 수 있습니다). 운영 성균관컨설팅(대표 이채연), 사업자등록번호 272-32-01885, 통신판매업 신고 제2026-경기송탄-0622, 문의 contact@skkc.co.kr</p>
     </form>
   </div>
 </dialog>
