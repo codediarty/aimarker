@@ -289,11 +289,11 @@
     function leftNote() { var k = (DEMO.aiAfter || []).length; return k ? '남은 AI 패턴 문장 ' + k + '개는 다른 버전으로 다시 다듬거나 직접 고칩니다. 바꾼 이유는 토큰 결과에서 보여 드려요.' : '바꾼 이유와 다른 버전은 글 전체 휴머나이징 결과에서 보여 드려요.'; }
     function demoEnd(P) {
       var left = DEMO.aiAfter || [];
-      say('ok', '휴머나이징 완료 · 바꾼 곳 ' + DEMO.n + '곳 · 의미와 문맥은 그대로');
+      say('ok', '휴머나이징 완료 · ' + DEMO.after.band + ' · 바꾼 곳 ' + DEMO.n + '곳');
       setM(MT, DEMO.after.rate, DEMO.after.band, DEMO.before.rate, afterCls());
       why.innerHTML = '';   // 13.4b 갈래 칩 · 잠금 안내는 예시 창에 넣지 않음(사용자 10.24 11:53: 글이 많아 가독성이 떨어짐). 바꾼 곳 · 갈래는 결과 화면에서
       left.forEach(function (i) { if (P.S[i]) P.S[i].el.classList.add('ai2'); });
-      badgeShow('ok', 'AI 작성률 ' + DEMO.before.rate + '% → ' + DEMO.after.rate + '%', 'AI 패턴 문장 ' + (DEMO.ai || []).length + ' → ' + left.length);
+      badgeShow(left.length ? 'mid' : 'ok', DEMO.after.band, 'AI 작성률 ' + DEMO.before.rate + '% → ' + DEMO.after.rate + '% · 의미와 문맥은 그대로');
       replay.hidden = false;
       stage.classList.remove('scanning'); stage.classList.add('done'); scene('done');
       if (!RM && plays < LOOPS) later(function () { if (plays < LOOPS) demo(); }, 6000);
@@ -326,10 +326,10 @@
           later(function () {
             scene('flag');
             setM(MF, DEMO.before.rate, DEMO.before.band, 0);
-            say('warn', 'AI 패턴 문장 ' + ai.length + '/' + P.S.length + ' · 판정 ' + DEMO.before.band);
+            say('warn', DEMO.before.band + ' · AI 패턴 문장 ' + ai.length + '/' + P.S.length);
             sflag(P, ai, 240, function () {
               stage.classList.remove('scanning');
-              badgeShow('bad', '검사기 필터링 대상', 'AI 작성률 ' + DEMO.before.rate + '% · AI 패턴 문장 ' + ai.length + '/' + P.S.length);
+              badgeShow('bad', DEMO.before.band, 'AI 작성률 ' + DEMO.before.rate + '% · 검사기 필터링 대상');
               later(function () {
                 badgeHide(); scene('rewrite'); say('run', '의미와 문맥은 그대로, AI 패턴만 다듬는 중');
                 srewrite(P, 700, function (n, all) { say('run', '의미는 그대로, AI 패턴만 다듬는 중 · 문장 ' + n + '/' + all); }, function () { later(function () { demoEnd(P); }, 260); });

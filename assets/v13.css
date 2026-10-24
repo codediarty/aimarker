@@ -558,6 +558,7 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
 .hz15-badge span { font-weight: 500; opacity: .9; }
 .hz15-badge.bad { color: #A41F25; background: #FDEDEE; border-color: #F3B9BC; }
 .hz15-badge.ok { color: #0A6B42; background: #E6F6EE; border-color: #A9DDC2; }
+.hz15-badge.mid { color: #8A4B06; background: #FFF3E0; border-color: #F3CFA0; }
 .hz15-paper-w { position: relative; padding: 14px 16px; border: 1px solid var(--ds-line); border-radius: 12px; background: var(--ds-canvas); overflow: hidden; }
 .hz15 .hu-paper { margin: 0; padding: 0; border: 0; background: none; }
 .hz15 .hu-doc { font-size: 14.5px; line-height: 1.95; color: var(--ds-ink); }
@@ -576,6 +577,7 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
 .hz15 .hu-ms { margin-top: 6px; }
 .hz15 .hu-m { padding: 9px 12px; }
 .hz15 .hu-m b { font-size: 27px; }
+.hz15 .hu-m .bn { display: block; margin: 3px 0 0; font-size: 12.5px; font-weight: 650; }
 .hz15 .hu-m.bad b { color: #C5242B; } .hz15 .hu-m.mid b { color: #B45309; } .hz15 .hu-m.ok b { color: #0B7A48; }
 .hz15 .hu-why { min-height: 0; margin: 0; }
 .hz15 .hu-why:empty { display: none; }
@@ -608,6 +610,7 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
   .hz15 .hu-doc { font-size: 14px; line-height: 1.8; }
   .hz15 .hu-m { padding: 8px 10px; }
   .hz15 .hu-m b { font-size: 24px; }
+  .hz15 .hu-m .bn { font-size: 12px; }
   .hz15-badge { white-space: normal; padding: 5px 10px; font-size: 12px; }
   .hz15-ft { padding: 10px 14px 12px; gap: 8px; }
   .hz15-ft .hu-note { font-size: 11.5px; }
