@@ -5,7 +5,7 @@
       <div class="hz15-l" id="tool">
         <div class="hz12-hd hz15-hd">
           <p class="hz12-k">{{ico:fingerprint}}AI 작성률 검사 · AI 휴머나이징</p>
-          <h1 class="hz12-h1" id="h1">AI로 작성된 글에는<br><span class="hz13-mk">AI 패턴</span>이 남고,<br>필터링됩니다</h1>
+          <h1 class="hz12-h1" id="h1">AI로 작성된 글은<br>검사기에 <span class="hz13-mk">필터링</span>됩니다</h1>
         </div>
 {{inc:hz-tool.inc}}
       </div>
