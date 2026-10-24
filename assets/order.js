@@ -145,7 +145,7 @@
       var memo = '[주문] ' + c.label + ' · ' + (pay === 'credit' ? '토큰 ' + crN.toLocaleString('ko-KR') + '토큰(상품 금액 ' + won(c.base) + ', 코드 끝 ' + tail + (cr.st === 'ok' ? ', 확인한 남은 토큰 ' + tn(cr.left) : '') + ')' : '결제 금액 ' + won(c.total) + (c.vat ? '(부가세 포함)' : '') + ' · ' + (pay === 'bank' ? '계좌이체 · 세금계산서' : c.idx ? '카드(성균관컨설팅 결제 페이지로 이동)' : '카드 결제 링크 요청')) + (top ? ' · 이미 받은 코드에 더하기(코드 끝 ' + top + ')' : '') + ' · 상품 코드 ' + c.sku;
       var lead = AM.call ? AM.call('am.lead', { kind: 'biz', plan: c.label, name: '', org: org || site || (email.split('@')[1] || '') || '개인 주문', contact: email, site: site, memo: memo, hp: '', ms: Date.now() - t0, src: (location.pathname + location.search).slice(0, 80) + ' 결제 시트' }, 15000) : Promise.reject(new Error('no AM'));
       if (pay === 'card' && c.idx) {
-        var moved = false, url = String(AMP.shop).replace('%s', encodeURIComponent(c.idx));
+        var moved = false, url = /^https?:\/\//.test(String(c.idx)) ? String(c.idx) : String(AMP.shop).replace('%s', encodeURIComponent(c.idx));
         var t = setTimeout(function () { moved = true; location.href = url; }, 1800);
         lead.then(function () { if (!moved) { clearTimeout(t); location.href = url; } }, function () { if (!moved) { clearTimeout(t); location.href = url; } });
         say('ok', '성균관컨설팅 결제 페이지로 이동합니다. 회원가입 없이 비회원 주문서에서 결제하세요.');

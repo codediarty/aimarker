@@ -394,6 +394,9 @@ fieldset.k-buy-pay { min-width: 0; margin: 0; padding: 0; border: 0; }
 .hz13-rules li { padding-left: 2px; }
 /* 결제 단추는 창 아래에 고정(긴 창에서도 보이게) */
 body .hz7-dlg #hzBuyForm > button[type="submit"] { position: sticky; bottom: 0; z-index: 2; box-shadow: 0 -10px 16px -8px rgba(11, 23, 51, .18), 0 0 0 10px #fff; }
+/* 13.3 붙어 있는 주문 단추 아래로 동의 칸 · 이메일 칸이 숨지 않게(포커스 · 검증 안내로 스크롤할 때 단추 높이만큼 위로) */
+body .hz7-dlg { scroll-padding-bottom: 76px; }
+body .hz7-dlg #hzBuyForm .consent, body .hz7-dlg #hzBuyForm input, body .hz7-dlg #hzBuyForm .hz13-rules { scroll-margin-bottom: 76px; }
 body .hz7-dlg .hz7-link { min-height: 44px; display: inline-flex; align-items: center; }
 .hz7-pass .hz7-link, .hz12-next .hz7-link, .hz9-cta .hz7-link { min-height: 44px; display: inline-flex; align-items: center; }
 /* 13.2b 안전 판정 + AI처럼 읽히는 표현 */
@@ -436,3 +439,78 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
   .cr13-pack .who { margin-bottom: 0; }
   .cr13-pack .pr b { font-size: 21px; }
 }
+
+/* ---------- 7. 13.3 첫 화면 무대(검사 → 필터링 대상 → 의미는 그대로 다듬기) ---------- */
+.hz13 .hz14 { position: relative; margin: 26px 0 0; padding: 0; border: 1px solid var(--ds-line-2); border-radius: 20px; background: #fff; box-shadow: 0 30px 70px -40px rgba(14, 31, 71, .45), 0 1px 2px rgba(14, 31, 71, .06); overflow: hidden; }
+.hz14-top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; min-height: 48px; padding: 10px 18px; border-bottom: 1px solid var(--ds-line); background: var(--ds-canvas); }
+.hz14-k { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ds-slate); }
+.hz14-k .ico { width: 16px; height: 16px; color: var(--ds-blue-600); }
+.hz14-k b { padding: 2px 8px; border-radius: 999px; background: var(--ds-blue-50); color: var(--ds-blue-700); font-size: 12px; font-weight: 700; }
+.hz14 .hu-st { margin-left: auto; font-size: 13.5px; }
+.hz14 .hu-st .dot.warn { box-shadow: 0 0 0 4px rgba(217, 122, 6, .18); }
+.hz14 .hu-st .dot.run { box-shadow: 0 0 0 4px rgba(11, 99, 246, .16); animation: hz14-pulse 1.2s ease-in-out infinite; }
+@keyframes hz14-pulse { 0%, 100% { box-shadow: 0 0 0 3px rgba(11, 99, 246, .14); } 50% { box-shadow: 0 0 0 7px rgba(11, 99, 246, .05); } }
+.hz14-body { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+.hz14-paper-w { position: relative; padding: 22px 26px 24px; min-width: 0; }
+.hz14 .hu-paper { margin: 0; padding: 0; border: 0; background: none; }
+.hz14 .hu-doc { font-size: 17px; line-height: 2; color: var(--ds-ink); }
+.hz14 .hu-doc .hu-s.ai { background: linear-gradient(rgba(255, 88, 95, .22), rgba(255, 88, 95, .22)) 0 40% / 100% 86% no-repeat, linear-gradient(#D62B32, #D62B32) 0 100% / 100% 2px no-repeat; box-shadow: none; }
+.hz14 .hu-doc .hu-s.ai::after { content: "AI 패턴"; display: inline-block; margin: 0 4px 0 6px; padding: 1px 6px; border-radius: 999px; background: #D62B32; color: #fff; font-size: 10.5px; font-weight: 700; line-height: 1.5; vertical-align: 3px; letter-spacing: 0; animation: ds-fade .25s var(--ease) both; }
+.hz14 .hu-doc .hu-s.ok::after, .hz14 .hu-doc .hu-s.out::after, .hz14 .hu-doc .hu-s.now::after { display: none; }
+.hz14 .hu-doc mark.hu-c { background: rgba(11, 99, 246, .1); box-shadow: inset 0 -2px 0 var(--ds-blue-600); }
+.hz14.scanning .hz14-paper-w::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, rgba(11, 99, 246, 0), var(--ds-blue-600) 30%, var(--ds-blue-600) 70%, rgba(11, 99, 246, 0)); box-shadow: 0 0 18px 4px rgba(11, 99, 246, .35); animation: hz14-scan 1.15s cubic-bezier(.4, 0, .2, 1) infinite; pointer-events: none; }
+@keyframes hz14-scan { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: calc(100% - 3px); opacity: 0; } }
+.hz14-stamp { position: absolute; right: 22px; bottom: 18px; display: grid; gap: 2px; padding: 10px 16px 11px; border: 3px solid currentColor; border-radius: 10px; color: #C5242B; background: rgba(255, 255, 255, .92); text-align: center; transform: rotate(-7deg) scale(1.25); opacity: 0; transition: transform .32s cubic-bezier(.2, .9, .3, 1.3), opacity .22s var(--ease); pointer-events: none; }
+.hz14-stamp[hidden] { display: none; }
+.hz14-stamp.on { opacity: 1; transform: rotate(-7deg) scale(1); }
+.hz14-stamp b { font-size: 22px; font-weight: 800; letter-spacing: .06em; line-height: 1.1; }
+.hz14-stamp span { font-size: 12px; font-weight: 650; letter-spacing: .02em; }
+.hz14-stamp.ok { color: #0B7A48; transform: rotate(-4deg) scale(1.2); }
+.hz14-stamp.ok.on { transform: rotate(-4deg) scale(1); }
+.hz14-side { display: grid; align-content: start; gap: 12px; padding: 20px 20px 18px; border-left: 1px solid var(--ds-line); background: var(--ds-canvas); min-width: 0; }
+.hz14 .hu-meter { margin: 0; }
+.hz14 .hu-mh b { font-size: 13.5px; }
+.hz14 .hu-m b { font-size: 32px; }
+.hz14 .hu-m.bad b { color: #C5242B; } .hz14 .hu-m.ok b { color: #0B7A48; }
+.hz14 .hu-why { min-height: 0; margin: 0; }
+.hz14 .hu-cats b { display: block; width: 100%; margin: 0 0 4px; }
+.hz14 .hu-st-f { margin: 0; padding: 4px 0 0; }
+.hz14 .hu-note { margin: 0; }
+.hz14.done .hu-doc .hu-s.ok { color: var(--ds-ink); }
+@media (max-width: 920px) {
+  .hz14-body { grid-template-columns: minmax(0, 1fr); }
+  .hz14-side { border-left: 0; border-top: 1px solid var(--ds-line); }
+  .hz14-paper-w { padding: 18px 18px 56px; }
+  .hz14 .hu-doc { font-size: 15.5px; line-height: 1.9; }
+  .hz14-stamp { right: 14px; bottom: 12px; padding: 8px 12px; }
+  .hz14-stamp b { font-size: 17px; }
+  .hz14-stamp span { font-size: 11px; }
+  .hz14 .hu-st { margin-left: 0; width: 100%; }
+}
+.hz14-how .hz12-how-in { display: block; }
+.hz14-how .hz12-how-t { gap: 20px; }
+.hz14-how .hz14-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 28px; }
+@media (max-width: 760px) { .hz14-how .hz14-steps { grid-template-columns: minmax(0, 1fr); } }
+.am-still .hz14.scanning .hz14-paper-w::after, .am-still .hz14 .hu-st .dot.run { animation: none; }
+@media (prefers-reduced-motion: reduce) { .hz14.scanning .hz14-paper-w::after, .hz14 .hu-st .dot.run, .hz14 .hu-doc .hu-s.ai::after { animation: none; } .hz14-stamp { transition: none; } }
+
+/* 13.3 무료 결과: 주의 상태(안전인데 AI처럼 읽히는 표현이 있음) · 맛보기 가림 */
+.is-c { --c: var(--br); --c-ink: var(--br-ink); --c-t: var(--br-t); --c-bd: var(--br-bd); }
+.hz9-ch { padding: 1px 2px; border-radius: 3px; background: var(--ds-amber-bg); box-shadow: inset 0 -2px 0 var(--ds-amber); color: var(--ds-ink); }
+/* 13.3 무료 맛보기 전 · 후: 원문은 그대로, 다듬은 글은 가림 막대 + 잠금(바뀐 자리 · 바꾼 말은 토큰 결과에서) */
+.hz13-ba { display: grid; gap: 10px; }
+@media (min-width: 760px) { .hz13-ba { grid-template-columns: 1fr 1fr; align-items: stretch; } }
+.hz13-ba > div { position: relative; display: grid; gap: 8px; align-content: start; padding: 16px 18px 18px; border: 1px solid var(--ds-line); border-radius: 12px; background: #fff; }
+.hz13-ba .lb { margin: 0; font-size: 12.5px; font-weight: 650; color: var(--ds-ink); }
+.hz13-ba .a { border-color: var(--ds-blue-100, #d6e2f7); background: linear-gradient(180deg, var(--ds-blue-50), #f6f9ff); }
+.hz13-ba .a .lb { color: var(--ds-blue-700, #1e4fb8); }
+.hz13-ba .hz7-text { max-height: none; padding: 0; border: 0; border-radius: 0; background: none; }
+.hz13-ba .hz7-text.rd { line-height: 1.95; user-select: none; }
+.hz13-ba .rd i { display: inline-block; height: .78em; vertical-align: -.08em; border-radius: 5px; background: linear-gradient(90deg, #c3d1ea, #b4c5e3); }
+.hz13-ba .rd i:nth-child(3n) { background: #cbd7ec; } .hz13-ba .rd i:nth-child(5n) { background: #bccbe6; }
+.hz13-ba .lk { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; display: inline-flex; align-items: center; gap: 6px; padding: 9px 15px; border-radius: 999px; background: rgba(255, 255, 255, .96); border: 1px solid var(--ds-line); box-shadow: 0 10px 28px -12px rgba(11, 23, 51, .35); font-size: 13px; font-weight: 700; color: var(--ds-ink); white-space: nowrap; }
+.hz13-ba .lk .ico { width: 14px; height: 14px; color: var(--ds-blue-600); }
+.hz13-ba .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); margin: -1px; }
+@media (max-width: 560px) { .hz13-ba > div { padding: 13px 14px 15px; } .hz13-ba .a .hz7-text.rd { max-height: 7.8em; overflow: hidden; } }
+.hz13-fxn { display: flex; align-items: flex-start; gap: 6px; margin: 8px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--ds-slate); }
+.hz13-fxn .ico { flex: none; width: 14px; height: 14px; margin-top: 2px; color: var(--ds-mist); }

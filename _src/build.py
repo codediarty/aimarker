@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261024b"
+VER = "20261024c"
 TODAY = "2026-10-24"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -185,7 +185,7 @@ def pack_html(t, root, mode="link", biz=False):
         btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], label)
     else:
         btn = '<a class="k-btn %s" href="%shumanize/#buy-%s">%s</a>' % (kind, root, t["id"], label)
-    bn = ('<p class="bn"><b>+%s토큰</b> %s어치 더</p>' % (tk(bonus), won(bonus))) if bonus else '<p class="bn none">기본 충전</p>'
+    bn = ('<p class="bn"><b>+%s토큰</b> 더 드립니다</p>' % tk(bonus)) if bonus else '<p class="bn none">기본 충전</p>'
     if biz:
         mo = int(t["cr"] // (9900 // TOKEN_WON))
         use = 'AI 마킹 스탠다드 <b>약 %s개월</b> 또는 레포트(3,000자) 검사와 휴머나이징 약 %s편' % (format(mo, ","), format(n, ","))
@@ -201,20 +201,20 @@ def credits_html(mode, root):
     """토큰 충전 칸 네 개(13.2 요금 페이지와 같은 칸). mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
     feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "유효기간 5년, 모자라면 같은 코드에 충전"]
     allf = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in feat)
-    return ('<p class="tk-unitl"><b>1토큰 = 100원</b><span>레포트(3,000자) 한 편 검사와 휴머나이징 %s토큰(%s)</span></p><div class="cr13-packs cr-plans">%s</div>'
-            '<div class="cr-all"><b>어느 충전이든 똑같이 열립니다</b><ul>%s</ul></div>') % (tk(report_cost()), won(report_cost()), "".join(pack_html(t, root, mode=mode) for t in CREDITS), allf)
+    return ('<p class="tk-unitl"><b>1토큰 = 100원</b><span>레포트(3,000자) 한 편 검사와 휴머나이징 %s토큰</span></p><div class="cr13-packs cr-plans">%s</div>'
+            '<div class="cr-all"><b>어느 충전이든 똑같이 열립니다</b><ul>%s</ul></div>') % (tk(report_cost()), "".join(pack_html(t, root, mode=mode) for t in CREDITS), allf)
 
 
 def credit_cost_html():
     u, pr = CREDIT_COST["unit"], CREDIT_COST["pro"]
     rows = [
-        ("AI 작성률 전체 검사", "모든 문장의 색과 이유, 구간별 분석, 결과상세내역서", "1,000자 %s토큰(%s) · 100자 단위 · 600자 이하는 0토큰" % (tk(u[1] * 1000 / u[0]), won(u[1] * 1000 / u[0])), credit_cost("unit", 3000)),
-        ("AI 휴머나이징", "글 전체, 바꾼 이유, 다른 버전, 바꾸기 전후 AI 작성률", "1,000자 %s토큰(%s) · 100자 단위, 최소 %s토큰" % (tk(pr[1] * 1000 / pr[0]), won(pr[1] * 1000 / pr[0]), tk(pr[2])), credit_cost("pro", 3000)),
+        ("AI 작성률 전체 검사", "모든 문장의 색과 이유, 구간별 분석, 결과상세내역서", "1,000자 %s토큰 · 100자 단위 · 600자 이하는 0토큰" % tk(u[1] * 1000 / u[0]), credit_cost("unit", 3000)),
+        ("AI 휴머나이징", "글 전체, 바꾼 이유, 다른 버전, 바꾸기 전후 AI 작성률", "1,000자 %s토큰 · 100자 단위, 최소 %s토큰" % (tk(pr[1] * 1000 / pr[0]), tk(pr[2])), credit_cost("pro", 3000)),
         ("문장 도우미 · 짧은 다시 검사", "600자 이하 문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "빠지지 않음(토큰이 남아 있을 때)", 0),
         ("무료 맛보기", "앞 6,000자 AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "코드 없이 무료", 0),
     ]
     tr = "".join('<tr><th scope="row">%s<small>%s</small></th><td data-h="빠지는 토큰">%s</td><td data-h="3,000자 글이면">%s</td></tr>'
-                 % (a, b, c, ("%s토큰(%s)" % (tk(d), won(d))) if d else "0토큰") for a, b, c, d in rows)
+                 % (a, b, c, ("%s토큰" % tk(d)) if d else "0토큰") for a, b, c, d in rows)
     return ('<table class="k-table cr-cost"><thead><tr><th scope="col">하는 일</th><th scope="col">빠지는 토큰</th><th scope="col">3,000자 글이면</th></tr></thead><tbody>%s</tbody></table>'
             '<p class="k-small cr-note">1토큰은 100원입니다. 글자 수(공백 포함)만큼 100자 단위로 빠지고, 처리하지 못한 요청은 빠지지 않습니다. 토큰은 발급 또는 마지막 충전부터 5년 동안 사용할 수 있고, 모자라면 같은 코드에 충전합니다. '
             '충전한 날부터 7일 안에는 쓰고 남은 유료 토큰을 그대로, 그 뒤에는 10%%를 빼고 환불해 드립니다(<a href="{{root}}terms/#pass">이용약관 제7조의3</a>).</p>') % tr
@@ -262,8 +262,8 @@ def credit_rates_html(root):
                     % (name, ('<small>%s</small>' % sub) if sub else '', what, " free" if free else "", cr, ('<small>%s</small>' % crsub) if crsub else '', go))
     u, pr = CREDIT_COST["unit"], CREDIT_COST["pro"]
     grp("글 검사와 다듬기")
-    row("AI 작성률 전체 검사", "레포트, 논문, 자기소개서, 원고 · 무료 맛보기 다음", "모든 문장의 AI 검출과 이유, 구간별 분석, 결과상세내역서", "1,000자 %s토큰" % tk(u[1] * 1000 / u[0]), "%s · 3,000자 글이면 %s토큰(%s) · 600자 이하는 0토큰" % (won(u[1] * 1000 / u[0]), tk(credit_cost("unit", 3000)), won(credit_cost("unit", 3000))), link("humanize/", "검사하기"))
-    row("AI 휴머나이징", "글 전체를 자연스럽게", "바꾼 곳과 이유, 다른 버전, 바꾸기 전후 AI 작성률, 같은 형식 파일로 받기", "1,000자 %s토큰" % tk(pr[1] * 1000 / pr[0]), "%s · 3,000자 글이면 %s토큰(%s) · 최소 %s토큰" % (won(pr[1] * 1000 / pr[0]), tk(credit_cost("pro", 3000)), won(credit_cost("pro", 3000)), tk(pr[2])), link("humanize/", "다듬기"))
+    row("AI 작성률 전체 검사", "레포트, 논문, 자기소개서, 원고 · 무료 맛보기 다음", "모든 문장의 AI 검출과 이유, 구간별 분석, 결과상세내역서", "1,000자 %s토큰" % tk(u[1] * 1000 / u[0]), "3,000자 글이면 %s토큰 · 600자 이하는 0토큰" % tk(credit_cost("unit", 3000)), link("humanize/", "검사하기"))
+    row("AI 휴머나이징", "글 전체를 자연스럽게", "바꾼 곳과 이유, 다른 버전, 바꾸기 전후 AI 작성률, 같은 형식 파일로 받기", "1,000자 %s토큰" % tk(pr[1] * 1000 / pr[0]), "3,000자 글이면 %s토큰 · 최소 %s토큰" % (tk(credit_cost("pro", 3000)), tk(pr[2])), link("humanize/", "다듬기"))
     row("문장 도우미, 짧은 다시 검사", "600자 이하", "문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "0토큰", "토큰이 남아 있을 때", "", True)
     row("무료 맛보기", "가입 없이", "앞 6,000자 AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "무료", "", link("humanize/", "무료로 검사"), True)
     grp("AI 마킹")
@@ -273,7 +273,7 @@ def credit_rates_html(root):
     t = tier("label", "label-business"); a, b = crs(t)
     row("AI 마킹 비즈니스", "사이트 3개", "위치 규칙 설정 대행, 매주 누락 점검, 사내 가이드, API 대량 발급과 감사 기록", a, b, buy("label-business"))
     row("파일 AI 마킹", "이미지, 영상, 문서", "보이는 AI 마크와 파일 속 기록, 서명 마크(웹 도구), 폴더 연결, 공유하기", "무료", "", link("mark/", "마크 넣기"), True)
-    row("API 마크 발급, 확인", "서비스와 AI 에이전트", "서명 마크 발급과 서버 확인(무료 키는 하루 300회)", "발급 100건 50토큰", "건당 50원 · 확인 100건 10토큰(건당 10원) · 마크 확인 페이지는 무료", link("developers/#key", "키 받기"))
+    row("API 마크 발급, 확인", "서비스와 AI 에이전트", "서명 마크 발급과 서버 확인(무료 키는 하루 300회)", "발급 100건 50토큰", "확인 100건 10토큰 · 마크 확인 페이지는 무료", link("developers/#key", "키 받기"))
     t = tier("service", "service-starter"); a, b = crs(t)
     row("AI 서비스 마킹 스타터", "생성형 AI 서비스", "결과물 서명 마크 월 1만 건, 사전 고지 문구, 내려받기 안내 창", a, b, buy("service-starter"))
     t = tier("service", "service-growth"); a, b = crs(t)

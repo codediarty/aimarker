@@ -160,7 +160,10 @@
   (function () {
     var stage = $('#huStage');
     if (!stage) return;
-    var st = $('#huSt'), paper = $('#huPaper'), meter = $('#huMeter'), why = $('#huWhy'), foot = $('#huFoot'), live = $('#huLive'), replay = $('#huReplay');
+    var st = $('#huSt'), paper = $('#huPaper'), meter = $('#huMeter'), why = $('#huWhy'), foot = $('#huFoot'), live = $('#huLive'), replay = $('#huReplay'), stamp = $('#huStamp');
+    var plays = 0, LOOPS = 3;   // 13.3 첫 화면 무대: 끝나면 잠시 뒤 다시(세 번까지), 그다음은 '다시 보기'
+    function stampShow(kind, a, b) { if (!stamp) return; stamp.className = 'hz14-stamp ' + kind; stamp.querySelector('b').textContent = a; stamp.querySelector('span').textContent = b; stamp.hidden = false; void stamp.offsetWidth; stamp.classList.add('on'); }
+    function stampHide() { if (!stamp) return; stamp.classList.remove('on'); stamp.hidden = true; }
     var MF = $('.hu-m.from', meter), MT = $('.hu-m.to', meter), FOOT0 = foot.innerHTML;
     var played = false, T = [];
     function stop() { T.forEach(clearTimeout); T = []; }
@@ -284,15 +287,19 @@
     try { DEMO = JSON.parse(($('#huDemo') || {}).textContent || 'null'); } catch (e) { DEMO = null; }
     if (DEMO && !DEMO.sents) DEMO = null;   // 예전 모양의 예시 데이터는 쓰지 않음
     function demoEnd(P) {
-      say('ok', '휴머나이징 완료 · 바꾼 곳 ' + DEMO.n + '곳');
+      say('ok', '휴머나이징 완료 · 바꾼 곳 ' + DEMO.n + '곳 · 의미와 문맥은 그대로');
       setM(MT, DEMO.after.rate, DEMO.after.band, DEMO.before.rate);
       why.innerHTML = catsHtml(DEMO.n, DEMO.cats);
-      replay.hidden = false;   // 높이는 잡아 둔 채로(끝나는 순간 아래 내용이 올라붙지 않게). 화면 크기가 바뀌면 풂
+      stampShow('ok', '뜻과 문맥 그대로', 'AI 작성률 ' + DEMO.after.rate + '% · 바꾼 곳 ' + DEMO.n);
+      replay.hidden = false;
+      stage.classList.remove('scanning'); stage.classList.add('done');
+      if (!RM && plays < LOOPS) later(function () { if (plays < LOOPS) demo(); }, 5200);   // 높이는 잡아 둔 채로(끝나는 순간 아래 내용이 올라붙지 않게). 화면 크기가 바뀌면 풂
       P.S.forEach(function (x) { x.el.classList.remove('now', 'in'); });
-      live.textContent = '예시: ' + DEMO.label.replace(/^예시 · /, '') + '. 문장 ' + P.S.length + '개를 다듬어 ' + DEMO.n + '곳을 바꿨습니다. AI 작성률(추정)은 ' + DEMO.before.rate + '%에서 ' + DEMO.after.rate + '%가 되었습니다.';
+      live.textContent = '예시: ' + DEMO.label.replace(/^예시 · /, '') + '. AI 패턴 문장 ' + P.S.length + '개를 의미는 그대로 두고 다듬어 ' + DEMO.n + '곳을 바꿨습니다. AI 작성률(추정)은 ' + DEMO.before.rate + '%에서 ' + DEMO.after.rate + '%가 되었습니다.';
     }
     function demoBase() {
-      stop(); played = true;
+      stop(); played = true; plays++;
+      stampHide(); stage.classList.remove('done', 'scanning');
       replay.hidden = true; meter.hidden = false; why.innerHTML = ''; foot.innerHTML = FOOT0;
       stage.classList.remove('is-user'); stage.classList.add('is-demo');
       setM(MF, null); setM(MT, null);
@@ -309,20 +316,27 @@
       if (!DEMO) return;
       if (RM) { still(); return; }
       var P = demoBase(), ai = DEMO.ai || P.S.map(function (x, i) { return i; });
-      say('', 'AI 초안 · ' + DEMO.label.replace(/^예시 · /, ''));
+      say('', 'AI가 작성한 초안 · ' + DEMO.label.replace(/^예시 · /, ''));
       stype(P, function () {
         later(function () {
-          setM(MF, DEMO.before.rate, DEMO.before.band, 0);
-          say('warn', 'AI 검출 문장 ' + ai.length + '개 · 판정 ' + DEMO.before.band);
-          sflag(P, ai, 140, function () {
-            later(function () {
-              srewrite(P, 760, function (n, all) { say('run', '사람 말투로 다듬는 중 · 문장 ' + n + '/' + all); }, function () { later(function () { demoEnd(P); }, 260); });
-            }, 650);
-          });
-        }, 420);
+          stage.classList.add('scanning'); say('run', 'AI 패턴 검사 중');
+          later(function () {
+            setM(MF, DEMO.before.rate, DEMO.before.band, 0);
+            say('warn', 'AI 패턴 문장 ' + ai.length + '/' + P.S.length + ' · 판정 ' + DEMO.before.band);
+            sflag(P, ai, 260, function () {
+              stage.classList.remove('scanning');
+              stampShow('bad', '필터링 대상', 'AI 작성률 ' + DEMO.before.rate + '% · AI 패턴 문장 ' + ai.length + '/' + P.S.length);
+              later(function () {
+                stampHide(); say('run', '의미와 문맥은 그대로, AI 패턴만 다듬는 중');
+                srewrite(P, 760, function (n, all) { say('run', '의미는 그대로, AI 패턴만 다듬는 중 · 문장 ' + n + '/' + all); }, function () { later(function () { demoEnd(P); }, 260); });
+              }, 1500);
+            });
+          }, 900);
+        }, 380);
       });
     }
-    replay.addEventListener('click', function () { demo(); });
+    replay.addEventListener('click', function () { plays = 0; demo(); });
+    stage.addEventListener('pointerenter', function () { plays = LOOPS; }, { passive: true });   // 들여다보면 되풀이를 멈춤(끝 모양에서)
     window.addEventListener('resize', function () { if (!T.length) paper.style.minHeight = ''; });
     if (DEMO) {
       if (!('IntersectionObserver' in window)) demo();

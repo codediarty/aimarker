@@ -28,9 +28,9 @@
         return;
       }
       var c1 = cost(U, n, true), c2 = cost(H, n, false), c3 = r1(c1 + c2), many = n > CHUNK;
-      set('tkC1', (many ? '약 ' : '') + tk(c1) + '토큰'); set('tkW1', c1 ? won(c1) : '600자 이하는 0원');
-      set('tkC2', (many ? '약 ' : '') + tk(c2) + '토큰'); set('tkW2', won(c2));
-      set('tkC3', (many ? '약 ' : '') + tk(c3) + '토큰'); set('tkW3', won(c3));
+      set('tkC1', (many ? '약 ' : '') + tk(c1) + '토큰'); set('tkW1', c1 ? '' : '600자 이하는 0토큰');
+      set('tkC2', (many ? '약 ' : '') + tk(c2) + '토큰'); set('tkW2', '');
+      set('tkC3', (many ? '약 ' : '') + tk(c3) + '토큰'); set('tkW3', '');
       var pick = null;
       PK.forEach(function (p) { var k = c3 > 0 ? Math.floor(r1(p.cr / c3) + 1e-9) : 0; if (!pick && k >= 1) pick = p; });
       pick = pick || PK[PK.length - 1];
