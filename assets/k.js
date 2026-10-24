@@ -222,7 +222,13 @@
     }
     function sshow(x) { x.el.className = 'hu-s ok' + (x.a === x.b ? ' same' : ''); x.el.innerHTML = sentHtml(x.a, x.b); }
     function sfinish(P) { P.S.forEach(sshow); }
-    function shold(P) { paper.style.minHeight = ''; sfinish(P); var h1 = paper.offsetHeight; P.S.forEach(function (x) { x.el.className = 'hu-s'; x.el.textContent = x.a; }); paper.style.minHeight = Math.max(h1, paper.offsetHeight) + 'px'; }   // 원문과 끝 모양 가운데 큰 높이를 미리 잡아 둠(도는 동안 아래 내용이 움직이지 않게)
+    function shold(P) {   // 원문 · 검출 표시(칩) · 끝 모양 가운데 가장 큰 높이를 미리 잡아 둠(도는 동안 창 높이가 변하지 않게)
+      paper.style.minHeight = ''; sfinish(P); var h1 = paper.offsetHeight;
+      P.S.forEach(function (x) { x.el.className = 'hu-s'; x.el.textContent = x.a; }); var h2 = paper.offsetHeight;
+      (DEMO && DEMO.ai || []).forEach(function (i) { if (P.S[i]) P.S[i].el.classList.add('ai'); }); var h3 = paper.offsetHeight;
+      P.S.forEach(function (x) { x.el.className = 'hu-s'; });
+      paper.style.minHeight = Math.max(h1, h2, h3) + 'px';
+    }
     function stype(P, done) {
       var all = P.S.map(function (x) { return x.a; }), total = all.join('').length, k = 0;
       P.S.forEach(function (x) { x.el.textContent = ''; });

@@ -518,7 +518,17 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
 /* ---------- 8. 13.4 첫 화면: 왼쪽 도구(컴팩트) | 오른쪽 예시 창(검사 → 필터링 대상 → 의미는 그대로 다듬기 → 전 · 뒤) ---------- */
 .hz15 { padding: var(--s7) 0 var(--s8); }
 .hz15 .hz13-fl { display: none; }
-.hz15-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr); gap: 20px 36px; align-items: start; }
+.hz15-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr); gap: 20px 36px; align-items: stretch; }
+/* 13.4e 왼쪽 도구 칸이 오른쪽 예시 창 높이까지 늘어나 아래가 맞음(결과가 나온 한 단에서는 늘리지 않음) */
+.hz15-grid:not(.has-out) .hz15-l { display: flex; flex-direction: column; }
+.hz15-grid:not(.has-out) .hz12 { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.hz15-grid:not(.has-out) .hz12-card { display: flex; flex-direction: column; flex: 1 1 auto; }
+.hz15-grid:not(.has-out) .hz12-in { display: flex; flex-direction: column; flex: 1 1 auto; }
+.hz15-grid:not(.has-out) .hz12-in[hidden] { display: none; }
+.hz15-grid:not(.has-out) .hz12-drop { display: flex; flex-direction: column; flex: 1 1 auto; }
+.hz15-grid:not(.has-out) .hz12-drop textarea { flex: 1 1 auto; max-height: none; }
+.hz15-grid:not(.has-out) .hz12-empty { top: 50%; bottom: auto; transform: translateY(-34%); }
+.hz15-grid:not(.has-out) .hz12-out { flex: 0 0 auto; }
 .hz15-l, .hz15-r { min-width: 0; }
 .hz15 .hz12-hd { max-width: none; margin: 0 0 18px; text-align: left; }
 .hz15 .hz12-k { margin-bottom: 10px; }
@@ -548,7 +558,9 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
 .hz15-bar .hu-replay { margin-left: 8px; height: 26px; padding: 0 8px; font-size: 12px; }
 .hz15-bar .hu-replay[hidden] { display: none; }
 .hz15-body { display: grid; gap: 12px; padding: 14px 18px 16px; background: #fff; }
-.hz15-st { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; min-height: 30px; }
+/* 상태 줄 + 알약 줄은 늘 두 줄 자리를 잡아 둠(단계가 바뀌어도 창 높이가 변하지 않게) */
+.hz15-st { display: grid; grid-template-rows: 24px 32px; align-items: center; justify-items: start; gap: 6px; }
+.hz15-st .hz15-badge[hidden] { display: inline-flex; visibility: hidden; }
 .hz15 .hu-st { font-size: 13.5px; white-space: normal; }
 .hz15 .hu-st .dot.run { animation: hz14-pulse 1.2s ease-in-out infinite; }
 .hz15-badge { display: inline-flex; align-items: baseline; gap: 8px; padding: 6px 12px; border-radius: 999px; border: 1px solid; font-size: 12.5px; line-height: 1.3; opacity: 0; transform: translateY(-4px); transition: opacity .22s var(--ease), transform .26s var(--ease); white-space: nowrap; }
@@ -576,8 +588,8 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
 .hz15 .hu-mh b { font-size: 13px; }
 .hz15 .hu-ms { margin-top: 6px; }
 .hz15 .hu-m { padding: 9px 12px; }
-.hz15 .hu-m b { font-size: 27px; }
-.hz15 .hu-m .bn { display: block; margin: 3px 0 0; font-size: 12.5px; font-weight: 650; }
+.hz15 .hu-m b { display: block; min-height: 1.2em; line-height: 1.2; font-size: 27px; }
+.hz15 .hu-m .bn { display: block; min-height: 1.45em; margin: 3px 0 0; font-size: 12.5px; font-weight: 650; }
 .hz15 .hu-m.bad b { color: #C5242B; } .hz15 .hu-m.mid b { color: #B45309; } .hz15 .hu-m.ok b { color: #0B7A48; }
 .hz15 .hu-why { min-height: 0; margin: 0; }
 .hz15 .hu-why:empty { display: none; }
@@ -591,7 +603,9 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
 .hz15-ft .hu-note { flex: 1 1 240px; margin: 0; font-size: 12px; line-height: 1.55; color: var(--ds-mist); }
 .hz15-demo.done .hu-doc .hu-s.ok { color: var(--ds-ink); }
 @media (max-width: 1099px) {
-  .hz15-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .hz15-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+  .hz15-grid:not(.has-out) .hz12-drop textarea { flex: 0 0 auto; max-height: 40vh; }
+  .hz15-grid:not(.has-out) .hz12-empty { top: auto; bottom: 14px; transform: none; }
   .hz15 .hz12-hd { max-width: 720px; }
   .hz15 .hz12-drop textarea { min-height: 200px; }
 }
@@ -604,7 +618,8 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
   .hz15 .hz12-go { padding: 10px 12px 12px; }
   .hz15 .hz12-go .k-btn-lg { height: 48px; font-size: 16px; }
   .hz15-body { padding: 12px 14px 14px; gap: 10px; }
-  .hz15-st { min-height: 0; }
+  .hz15-st { grid-template-rows: auto auto; }
+  .hz15-st .hz15-badge[hidden] { display: none; }
   .hz15 .hu-st { font-size: 13px; }
   .hz15-paper-w { padding: 12px 13px; }
   .hz15 .hu-doc { font-size: 14px; line-height: 1.8; }
