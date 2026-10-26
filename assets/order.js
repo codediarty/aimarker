@@ -37,7 +37,7 @@
     var it = AMP.items[id];
     if (!it) return false;
     last = from || null;
-    var hasY = !!it.y, monthly = it.per === '월', isCredit = /^credit-/.test(id), saved = isCredit ? '' : fmtCode(sget('am_pass')), auto = !!saved;
+    var hasY = !!it.y, monthly = it.per === '월', isCredit = /^credit-/.test(id), isLabel = /^label-/.test(id), saved = isCredit ? '' : fmtCode(sget('am_pass')), auto = !!saved;
     per = hasY && per === 'y' ? 'y' : 'm';
     var t0 = Date.now();
     box = document.createElement('div');
@@ -65,7 +65,8 @@
       '<button class="k-btn k-btn-p k-buy-go" type="submit">결제 페이지로</button>' +
       '<button class="hz19-later k-buy-later" type="button">조금 더 둘러볼게요</button>' +
       '<div class="k-buy-msg" role="status"></div>' +
-      '<p class="k-buy-note"><span class="nt">결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다.</span> ' + (monthly ? '월 요금제는 다음 달 결제를 하지 않으면 끝납니다. ' : '') + '환불은 <a href="' + root + 'terms/" target="_blank" rel="noopener">이용약관</a>을 따릅니다. 문의 contact@skkc.co.kr</p>' +
+      // 13.7 월 요금제는 1개월 · 12개월 선결제(자동 재결제 없음). 정기구독(자동 결제) 승인 뒤 문구를 바꿈
+      '<p class="k-buy-note"><span class="nt">결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다.</span> ' + (monthly ? '1개월 · 12개월 선결제이고 자동으로 다시 결제되지 않습니다. 끝나기 7일 전에 안내 메일을 드립니다. ' : '') + '환불은 <a href="' + root + 'terms/" target="_blank" rel="noopener">이용약관</a>을 따릅니다. 문의 contact@skkc.co.kr</p>' +
       '</form></div>';
     document.body.appendChild(box);
     document.body.style.overflow = 'hidden';
@@ -80,7 +81,7 @@
     function gateHtml(c, direct) {   // 13.6 KAIEC 결제 창처럼: 왜 성균관컨설팅인지 + 결제 페이지 미리보기 + 순서 셋(이메일 · 동의는 결제 페이지 주문서에서)
       var url = shopUrl(c), prev = direct ? '<a class="hz19-prev" href="' + esc(url) + '" target="_blank" rel="noopener" aria-label="구매하기: 성균관컨설팅 비회원 주문서로 이동"><span class="hz19-bar" aria-hidden="true"><i></i><i></i><i></i><em>skkc.co.kr</em></span>' +
         '<span class="hz19-body" aria-hidden="true"><b>AIMarker ' + esc(c.label) + '</b><span class="hz19-pr"><strong>' + won(c.total) + '</strong>' + (c.vat ? '<small class="vt">부가세 포함</small>' : '') + '</span><span class="hz19-btns"><span>장바구니</span><span class="buy">구매하기</span></span><small>구매하기를 누르면 비회원 주문서로 이어집니다</small></span></a>' : '';
-      var steps = direct ? '<li><b>[구매하기]</b>를 누르면 <b>비회원 주문서</b>가 열립니다. 회원가입은 필요 없습니다.</li><li>이름 · 이메일 · 휴대전화를 적고 카드 · 간편결제 · 계좌이체로 결제합니다.</li><li>결제 확인 뒤 영업일 하루 안에 결제할 때 적은 이메일로 ' + (isCredit ? '<b>기업 토큰 코드</b>와 세금계산서 안내가' : '<b>시작 안내</b>(설치 코드 · 사이트 주소 확인)가') + ' 도착합니다.</li>'
+      var steps = direct ? '<li><b>[구매하기]</b>를 누르면 <b>비회원 주문서</b>가 열립니다. 회원가입은 필요 없습니다.</li><li>이름 · 이메일 · 휴대전화를 적고 카드 · 간편결제 · 계좌이체로 결제합니다.</li><li>결제 확인 뒤 영업일 하루 안에 결제할 때 적은 이메일로 ' + (isCredit ? '<b>기업 토큰 코드</b>와 세금계산서 안내가 도착합니다.' : isLabel ? '<b>시작 안내</b>가 도착합니다. 사이트 주소와 관리자 초대만 회신하면 <b>설치는 저희가</b> 합니다(영업일 2일 안).' : '<b>시작 안내</b>(설치 코드 · 사이트 주소 확인)가 도착합니다.') + '</li>'
         : '<li>이메일을 적고 <b>결제 링크 받기</b>를 누릅니다.</li><li>영업일 하루 안에 메일로 온 성균관컨설팅 결제 링크에서 회원가입 없이 결제합니다.</li><li>결제 확인 뒤 영업일 하루 안에 같은 메일로 <b>시작 안내</b>가 도착합니다.</li>';
       return '<div class="hz19-flow" aria-hidden="true"><span class="a">AIMarker</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg><span class="s">성균관컨설팅</span></div>' +
         '<h3>결제는 운영사 성균관컨설팅<br>결제 페이지에서 진행됩니다</h3>' +

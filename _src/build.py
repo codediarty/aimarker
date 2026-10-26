@@ -21,8 +21,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261026a"
-TODAY = "2026-10-24"
+VER = "20261026b"
+TODAY = "2026-10-26"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
@@ -31,7 +31,8 @@ SITE = "https://aimarker.kr/"
 # 결제는 공식 결제처 성균관컨설팅(skkc.co.kr) 쇼핑몰. 상품을 등록하면 SHOP_IDX 에 상품 번호를 적으세요(비어 있으면 '결제 링크 받기'로 주문 요청).
 SHOP_URL = "https://skkc.co.kr/shop_view?idx=%s&kaiec_buy=1"
 SHOP_IDX = {
-    "label-standard-m": "", "label-standard-y": "", "label-business-m": "", "label-business-y": "",
+    # 13.7(10.26) AI 마킹 4개 등록(설치 포함 · 1개월 · 12개월 선결제, 자동 재결제 없음). 정기구독(자동 결제) 승인 뒤 월 상품을 바꿈
+    "label-standard-m": "41", "label-standard-y": "42", "label-business-m": "43", "label-business-y": "44",
     "geo-lite": "", "geo-standard": "", "geo-pro": "", "geocare-care-m": "", "geocare-grow-m": "",
     "service-starter-m": "", "bundle-trust": "",
     # 12.1 토큰(개인 c3 · c10 · c30 · c50 은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로
@@ -43,9 +44,9 @@ CATALOG = {
         {"id": "label-free", "name": "무료", "who": "개인 · 1인 사이트", "price": "0원", "note": "사이트 1개까지", "per": "", "cta": "무료로 시작", "href": "site/",
          "feat": ["코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글에 AI 마크 자동 부착", "AI 마크와 근거 창, AI 마킹 안내 창", "점검 모드: 무엇을 왜 표시했는지 한눈에", "검색 · AI가 읽는 표시(구조화 데이터) 자동", "파일 AI 마킹과 서명 마크(웹 도구) 무료"]},
         {"id": "label-standard", "name": "스탠다드", "who": "1인 사업자 · 소상공인", "price": "9,900원", "per": "월", "m": 9900, "y": 99000,
-         "feat": ["무료의 모든 기능", "AIMarker 등록 사이트: 확인 페이지에 회사와 담당자 표시", "안내 창에 문의처와 등록 확인 링크", "매달 AI 마킹 현황 메일 리포트", "서명 마크에 회사 이름과 등록 사이트 표시", "설치 도움 1회(원격)"]},
+         "feat": ["무료의 모든 기능", "설치는 저희가 합니다(원격, 사이트 1개)", "AIMarker 등록 사이트: 확인 페이지에 회사와 담당자 표시", "안내 창에 문의처와 등록 확인 링크", "매달 AI 마킹 현황 메일 리포트", "서명 마크에 회사 이름과 등록 사이트 표시"]},
         {"id": "label-business", "name": "비즈니스", "who": "소규모 · 중견 기업", "price": "49,000원", "per": "월", "m": 49000, "y": 490000, "best": "추천",
-         "feat": ["스탠다드의 모든 기능, 사이트 3개", "위치 규칙 설정 대행(상세페이지 · 배너 · 블로그)", "표시 누락 점검 매주, 새 AI 콘텐츠 알림", "AI 활용 고지문과 사내 AI 마킹 가이드", "API로 서명 마크 대량 발급, 감사 기록과 분기 보고서", "API 키(하루 1만 회), 담당자 온라인 교육 1회"]},
+         "feat": ["스탠다드의 모든 기능, 사이트 3개", "설치와 위치 규칙 설정은 저희가(상세페이지 · 배너 · 블로그)", "표시 누락 점검 매주, 새 AI 콘텐츠 알림", "AI 활용 고지문과 사내 AI 마킹 가이드", "API로 서명 마크 대량 발급, 감사 기록과 분기 보고서", "API 키(하루 1만 회), 담당자 온라인 교육 1회"]},
         {"id": "label-enterprise", "name": "엔터프라이즈", "who": "대기업 · 공공기관 · 학교", "price": "견적", "note": "월 30만 원부터", "per": "", "cta": "견적 받기", "href": "contact/?plan=label-enterprise&type=enterprise",
          "feat": ["사이트 · 건수 제한 없음", "우리 브랜드로 표시(화이트 라벨)", "전용 규칙과 내부 시스템 연동(API · MCP · 대량 처리)", "보안 검토, 계약서 · 세금계산서, 서비스 수준 협약", "표시 정책 수립과 임직원 교육"]},
     ]},
@@ -279,9 +280,9 @@ def credit_rates_html(root):
     grp("AI 마킹")
     row("사이트 AI 마킹", "사이트 1개", "코드 한 줄로 자동 AI 마크, 근거 창, AI 마킹 안내 창, 점검 모드", "무료", "", link("site/", "설치하기"), True)
     t = tier("label", "label-standard"); a, b = crs(t)
-    row("AI 마킹 스탠다드", "1인 사업자, 소상공인", "등록 사이트 확인 페이지, 매달 리포트, 서명 마크에 회사 이름, 설치 도움 1회", a, b, buy("label-standard"))
+    row("AI 마킹 스탠다드", "1인 사업자, 소상공인", "설치는 저희가, 등록 사이트 확인 페이지, 매달 리포트, 서명 마크에 회사 이름", a, b, buy("label-standard"))
     t = tier("label", "label-business"); a, b = crs(t)
-    row("AI 마킹 비즈니스", "사이트 3개", "위치 규칙 설정 대행, 매주 누락 점검, 사내 가이드, API 대량 발급과 감사 기록", a, b, buy("label-business"))
+    row("AI 마킹 비즈니스", "사이트 3개", "설치와 위치 규칙 설정은 저희가, 매주 누락 점검, 사내 가이드, API 대량 발급과 감사 기록", a, b, buy("label-business"))
     row("파일 AI 마킹", "이미지, 영상, 문서", "보이는 AI 마크와 파일 속 기록, 서명 마크(웹 도구), 폴더 연결, 공유하기", "무료", "", link("mark/", "마크 넣기"), True)
     row("API 마크 발급, 확인", "서비스와 AI 에이전트", "서명 마크 발급과 서버 확인(무료 키는 하루 300회)", "발급 100건 50토큰", "확인 100건 10토큰 · 마크 확인 페이지는 무료", link("developers/#key", "키 받기"))
     t = tier("service", "service-starter"); a, b = crs(t)
