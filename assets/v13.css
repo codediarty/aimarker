@@ -767,3 +767,48 @@ body .hz7-dlg .hz18-packs input:checked + span .nm, body .hz7-dlg .hz18-packs in
   body .hz7-dlg .hz18-packs .ds { grid-column: 1 / -1; margin-top: 3px; }
 }
 .k-buy-flow .why { flex-basis: 100%; margin-top: 2px; font-size: 12px; font-weight: 500; line-height: 1.55; color: var(--ds-mist); word-break: keep-all; }
+
+/* ---------- 10. 13.6 결제 안내(KAIEC 결제 창처럼): AIMarker → 성균관컨설팅, 결제 페이지 미리보기, 순서 셋, 단추 하나. 이메일 · 동의 칸 없음 ---------- */
+.hz19-gate { display: grid; gap: 10px; padding: 16px 16px 14px; border: 1px solid var(--ds-line); border-radius: 14px; background: var(--ds-canvas); }
+.hz19-gate[hidden], .hz19-fb[hidden], .k-buy-info[hidden], .k-buy-gate[hidden], .k-buy-later[hidden] { display: none; }
+.hz19-flow { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; }
+.hz19-flow .ico { width: 14px; height: 14px; color: var(--ds-mist); }
+.hz19-flow .a, .hz19-flow .s { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; white-space: nowrap; }
+.hz19-flow .a { background: var(--ds-ink); color: #fff; letter-spacing: .01em; }
+.hz19-flow .s { background: var(--ds-blue-50); border: 1px solid var(--ds-blue-200); color: var(--ds-blue-700); }
+.hz19-gate h3 { margin: 0; font-size: 17px; font-weight: 750; line-height: 1.3; letter-spacing: -.02em; color: var(--ds-ink); }
+.hz19-gate .hz19-lead { margin: 0; font-size: 13px; line-height: 1.65; color: var(--ds-ink-2); word-break: keep-all; }
+.hz19-prev { display: block; border: 1px solid var(--ds-line-2); border-radius: 12px; background: #fff; overflow: hidden; text-decoration: none; color: inherit; box-shadow: 0 1px 2px rgba(11, 23, 51, .04); }
+.hz19-prev:hover { border-color: var(--ds-blue-300); text-decoration: none; }
+.hz19-prev .hz19-bar { display: flex; align-items: center; gap: 5px; height: 28px; padding: 0 12px; background: var(--ds-sunken); border-bottom: 1px solid var(--ds-line); }
+.hz19-prev .hz19-bar i { flex: none; width: 7px; height: 7px; min-height: 7px; border-radius: 50%; background: #C5CCD8; }
+.hz19-prev .hz19-bar em { margin-left: 8px; font-style: normal; font-size: 11.5px; font-weight: 600; color: var(--ds-mist); }
+.hz19-prev .hz19-body { display: grid; gap: 7px; padding: 12px 14px 11px; }
+.hz19-prev .hz19-body > b { font-size: 13px; font-weight: 650; line-height: 1.4; color: var(--ds-ink); word-break: keep-all; }
+.hz19-prev .hz19-pr { display: flex; align-items: baseline; gap: 8px; }
+.hz19-prev .hz19-pr strong { font-size: 20px; font-weight: 750; letter-spacing: -.02em; line-height: 1.1; color: var(--ds-ink); font-variant-numeric: tabular-nums; }
+.hz19-prev .hz19-pr s { font-size: 12.5px; color: var(--ds-mist); }
+.hz19-prev .hz19-pr .vt { font-size: 11.5px; color: var(--ds-mist); }
+.hz19-prev .hz19-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.hz19-prev .hz19-btns span { display: inline-flex; align-items: center; justify-content: center; height: 34px; border-radius: 6px; border: 1px solid var(--ds-line-2); background: #fff; font-size: 12.5px; font-weight: 600; color: var(--ds-slate); }
+.hz19-prev .hz19-btns .buy { background: #222; border-color: #222; color: #fff; }
+.hz19-prev .hz19-body small { font-size: 11.5px; color: var(--ds-blue-700); text-align: right; }
+.hz19-steps { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; counter-reset: hz19; }
+.hz19-steps li { position: relative; padding-left: 28px; font-size: 13px; line-height: 1.55; color: var(--ds-ink-2); word-break: keep-all; }
+.hz19-steps li::before { counter-increment: hz19; content: counter(hz19); position: absolute; left: 0; top: 1px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--ds-blue-200); background: var(--ds-blue-50); color: var(--ds-blue-700); font-size: 11.5px; font-weight: 700; }
+.hz19-steps b { font-weight: 700; color: var(--ds-ink); }
+.hz19-gate .hz19-note { margin: 0; font-size: 12px; line-height: 1.6; color: var(--ds-slate); }
+.hz19-gate .hz19-note a { color: var(--ds-blue-700); text-decoration: underline; text-underline-offset: 3px; }
+.hz19-gate .hz19-note small { display: block; margin-top: 2px; font-size: 11.5px; color: var(--ds-mist); }
+.hz19-go .ico, .k-buy-go .ico { width: 18px; height: 18px; margin-left: 6px; flex: none; }
+.k-buy-go { display: inline-flex; align-items: center; justify-content: center; }
+.hz19-later { justify-self: center; margin: -4px 0 0; padding: 8px 12px; min-height: 44px; border: 0; background: none; font: inherit; font-size: 13.5px; font-weight: 600; color: var(--ds-slate); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.hz19-later:hover { color: var(--ds-ink); }
+body .hz7-dlg #hzBuyForm > .hz19-later { width: auto; }
+.hz19-fb { display: grid; gap: 10px; }
+.hz19-nt { display: block; margin-top: 8px; }
+.k-buy-priv { margin: 8px 0 0; font-size: 12px; line-height: 1.6; color: var(--ds-mist); word-break: keep-all; }
+.k-buy-priv a { color: var(--ds-blue-700); text-decoration: underline; text-underline-offset: 3px; }
+.k-buy-gate h3 { font-size: 16px; }
+@media (max-width: 480px) { .hz19-gate { padding: 14px 13px 12px; } .hz19-gate h3 { font-size: 16px; } .hz19-prev .hz19-pr strong { font-size: 18px; } }
+.k-buy-in:focus { outline: none; }
