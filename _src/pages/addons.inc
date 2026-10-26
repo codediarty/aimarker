@@ -6,7 +6,7 @@
         <tr><th>경쟁사 비교 리포트<small>AI 검색 노출 최적화</small></th><td>경쟁사 3곳까지 AI 검색 준비 점수, 영역별 차이, 따라잡을 순서를 한 권으로. 무료 진단의 '경쟁사와 나란히'를 넓힌 것입니다</td><td class="pr">1,900토큰<small>1회</small></td></tr>
         <tr><th>상품 피드 매일 갱신<small>AI 커머스 엔진</small></th><td>가격, 재고가 바뀌면 다음 날 AI 상품 피드에 반영합니다(AI 검색 성장 관리에는 들어 있습니다)</td><td class="pr">월 490토큰</td></tr>
         <tr><th>광고 문구 검수<small>AI 컴플라이언스</small></th><td>상세페이지, 배너, SNS 문구 월 50건의 위험 후보, 근거, 바꿀 말과 광고주 승인 링크(법률 자문은 아닙니다)</td><td class="pr">월 990토큰</td></tr>
-        <tr><th>기업 토큰 충전<small>모든 기능에 같은 토큰</small></th><td>팀이 한 토큰 코드로 외주, 납품 원고의 AI 작성률 점검과 휴머나이징을 하고, AI 마킹, AI 검색 요금제와 이 옵션들도 같은 토큰으로 냅니다. 세금계산서로 충전하고 유효기간은 5년입니다(<a href="{{root}}pricing/#credits">토큰 충전</a>)</td><td class="pr">GEO 스타터 4,500토큰</td></tr>
+        <tr><th>기업 토큰 충전<small>모든 기능에 같은 토큰</small></th><td>팀이 한 토큰 코드로 외주, 납품 원고의 AI 작성률 점검과 휴머나이징을 하고, AI 마킹, AI 검색 요금제와 이 옵션들도 같은 토큰으로 냅니다. 세금계산서로 충전하고 남은 토큰은 사라지지 않습니다(<a href="{{root}}pricing/#credits">토큰 충전</a>)</td><td class="pr">GEO 스타터 4,500토큰</td></tr>
       </tbody>
     </table>
     <details class="ds-more">

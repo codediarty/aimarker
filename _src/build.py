@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261026d"
+VER = "20261026e"
 TODAY = "2026-10-26"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -79,13 +79,13 @@ CATALOG = {
 CATALOG["credit"] = {"name": "기업 토큰", "vat": "부가세 별도, 세금계산서", "tiers": [
     {"id": "credit-b10", "name": "GEO 스타터", "full": "GEO 스타터(기업 토큰 4,500)", "who": "1인 기업 · 소상공인, 사이트 하나부터", "price": "200,000원", "per": "충전", "m": 200000, "cr": 4500, "base": 2000, "note": "2,000토큰 + 2,500토큰 더", "cta": "충전하기",
      "use": "AI 검색 노출 최적화 라이트 세팅(1,990토큰) + AI 마킹 스탠다드 12개월(990토큰) + 광고 문구 검수 1개월(990토큰)을 하고도 <b>530토큰</b>이 남습니다",
-     "feat": ["AI 검색 노출 최적화 세팅과 월 관리, AI 마킹 요금제, 추가 옵션을 같은 토큰으로", "AI 작성률 검사 · 휴머나이징 · API 요청에도 한 코드로", "세금계산서, 유효기간 5년", "모자라면 같은 코드에 충전"]},
+     "feat": ["AI 검색 노출 최적화 세팅과 월 관리, AI 마킹 요금제, 추가 옵션을 같은 토큰으로", "AI 작성률 검사 · 휴머나이징 · API 요청에도 한 코드로", "세금계산서", "모자라면 같은 코드에 충전, 남은 토큰은 사라지지 않음"]},
     {"id": "credit-b30", "name": "GEO 비즈니스", "full": "GEO 비즈니스(기업 토큰 12,500)", "who": "소규모 · 중견 기업, 쇼핑몰과 브랜드", "price": "500,000원", "per": "충전", "m": 500000, "cr": 12500, "base": 5000, "best": "추천", "note": "5,000토큰 + 7,500토큰 더", "cta": "충전하기",
      "use": "AI 검색 노출 최적화 스탠다드 세팅(4,900토큰) + AI 마킹 비즈니스 12개월(4,900토큰) + 경쟁사 비교 리포트(1,900토큰)를 하고도 <b>800토큰</b>이 남습니다",
-     "feat": ["GEO 스타터의 모든 것", "쓴 내역 정리와 부서별 코드 나누기(요청 시)", "세금계산서, 유효기간 5년", "모자라면 같은 코드에 충전"]},
+     "feat": ["GEO 스타터의 모든 것", "쓴 내역 정리와 부서별 코드 나누기(요청 시)", "세금계산서", "모자라면 같은 코드에 충전, 남은 토큰은 사라지지 않음"]},
     {"id": "credit-b100", "name": "GEO 맥스", "full": "GEO 맥스(기업 토큰 30,000)", "who": "쇼핑몰 · 중견 기업, 여러 팀이 함께 쓰는 기관", "price": "1,000,000원", "per": "충전", "m": 1000000, "cr": 30000, "base": 10000, "note": "10,000토큰 + 20,000토큰 더", "cta": "충전하기",
      "use": "AI 검색 노출 최적화 프로 세팅(14,900토큰) + AI 검색 성장 월 관리 5개월(14,500토큰)을 하고도 <b>600토큰</b>이 남습니다",
-     "feat": ["GEO 비즈니스의 모든 것", "담당자 안내와 사용 가이드", "기관 계약서", "세금계산서, 유효기간 5년"]},
+     "feat": ["GEO 비즈니스의 모든 것", "담당자 안내와 사용 가이드", "기관 계약서", "세금계산서, 남은 토큰은 사라지지 않음"]},
     {"id": "credit-ent", "name": "맞춤", "who": "더 많이 · 정기 충전", "price": "견적", "note": "기관 계약 · 연간 충전", "per": "", "cta": "견적 받기", "href": "contact/?plan=credit-ent&type=enterprise",
      "feat": ["필요한 만큼 맞춰 충전", "정기 충전 · 연간 계약", "전용 API 한도", "계약서 · 세금계산서"]},
 ]}
@@ -212,7 +212,7 @@ def pack_html(t, root, mode="link", biz=False):
 
 def credits_html(mode, root):
     """토큰 충전 칸 네 개(13.2 요금 페이지와 같은 칸). mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
-    feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "유효기간 5년, 모자라면 같은 코드에 충전"]
+    feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "남은 토큰은 사라지지 않고 이어서, 모자라면 같은 코드에 충전"]
     allf = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in feat)
     return ('<p class="tk-unitl"><b>1토큰 = 100원</b><span>레포트(3,000자) 한 편 검사와 휴머나이징 %s토큰</span></p><div class="cr13-packs cr-plans">%s</div>'
             '<div class="cr-all"><b>어느 충전이든 똑같이 열립니다</b><ul>%s</ul></div>') % (tk(report_cost()), "".join(pack_html(t, root, mode=mode) for t in CREDITS), allf)
@@ -229,7 +229,7 @@ def credit_cost_html():
     tr = "".join('<tr><th scope="row">%s<small>%s</small></th><td data-h="빠지는 토큰">%s</td><td data-h="3,000자 글이면">%s</td></tr>'
                  % (a, b, c, ("%s토큰" % tk(d)) if d else "0토큰") for a, b, c, d in rows)
     return ('<table class="k-table cr-cost"><thead><tr><th scope="col">하는 일</th><th scope="col">빠지는 토큰</th><th scope="col">3,000자 글이면</th></tr></thead><tbody>%s</tbody></table>'
-            '<p class="k-small cr-note">1토큰은 100원입니다. 글자 수(공백 포함)만큼 100자 단위로 빠지고, 처리하지 못한 요청은 빠지지 않습니다. 토큰은 발급 또는 마지막 충전부터 5년 동안 사용할 수 있고, 모자라면 같은 코드에 충전합니다. '
+            '<p class="k-small cr-note">1토큰은 100원입니다. 글자 수(공백 포함)만큼 100자 단위로 빠지고, 처리하지 못한 요청은 빠지지 않습니다. 남은 토큰은 사라지지 않고 다음에 이어서 쓰며, 모자라면 같은 코드에 충전합니다. '
             '충전한 날부터 7일 안에는 쓰고 남은 유료 토큰을 그대로, 그 뒤에는 10%%를 빼고 환불해 드립니다(<a href="{{root}}terms/#pass">이용약관 제7조의3</a>).</p>') % tr
 
 
@@ -446,18 +446,18 @@ MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코
                           ("site/", "rocket", "설치 마법사", "AI 마킹을 무료로 설치"),
                           ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결"),
                           ("pricing/#credits", "card", "토큰 충전", "상담 없이, 토큰 코드 하나로 모든 기능")])]
-B2C_MENU = [("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 썼는지 정리")]
+B2C_MENU = [("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인"), ("ai-rate/", "AI 작성률 낮추기", "AI 패턴을 찾아 그 문장만 사람 문장으로"), ("ai-detector/", "GPT킬러 · AI 탐지기 대비", "탐지기가 보는 것과 실제로 되는 방법"), ("resume/", "자기소개서 AI 검사", "서류에서 걸러지기 전에 문항별로"), ("academic/", "레포트 · 논문 · 과제", "한글 · 워드 · PDF 그대로, 각주는 그대로"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")]
 NAV = [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("products", "기업용"), ("pricing/", "요금"), ("developers/", "개발자"), ("company/", "회사")]
 PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
-NAV_KEY = {"humanize/": ["humanize", "personal", "proof"], "label/": ["label", "site", "v", "mark", "mcheck", "m"], "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
-B2C_KEYS = ["humanize", "personal", "proof"]
-TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "휴머나이징", ["humanize", "personal", "proof"]),
+NAV_KEY = {"humanize/": ["humanize", "personal", "proof", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check"], "label/": ["label", "site", "v", "mark", "mcheck", "m"], "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
+B2C_KEYS = ["humanize", "personal", "proof", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check"]   # 13.8 검색 수요 안내 페이지도 개인용 메뉴
+TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "휴머나이징", ["humanize", "personal", "proof", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check"]),
         ("label/", "fingerprint", "AI 마킹", ["label", "site", "v", "mark", "mcheck", "m"]),
         ("pricing/", "card", "토큰", ["pricing"])]
 
 
 # 13.0 우리 사이트의 'AI 마킹' 단추: 소개 페이지는 넓은 화면에서 왼쪽 아래에 떠 있고, 입력 · 도구 화면은 가리지 않게 바닥글 안에 둠
-NOTICE_INLINE_KEYS = {"humanize", "mark", "mcheck", "m", "site", "check", "scan", "report", "proof", "v", "verify", "contact", "adminpass", "approve", "app", "404", "terms", "privacy"}
+NOTICE_INLINE_KEYS = {"humanize", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check", "mark", "mcheck", "m", "site", "check", "scan", "report", "proof", "v", "verify", "contact", "adminpass", "approve", "app", "404", "terms", "privacy"}
 
 
 def ico(name, cls="ico"):
@@ -529,7 +529,7 @@ def footer(root):
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
     biz.append('<span>결제 · 세금계산서는 운영사 성균관컨설팅이 처리합니다</span>')
     cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("site/", "설치 마법사"), ("mark/", "파일 AI 마킹"), ("geo/", "AI 검색 노출 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
-            ("고객별", [("personal/", "개인 · 학생"), ("proof/", "AI 활용 증빙서"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "문의하기")]),
+            ("고객별", [("personal/", "개인 · 학생"), ("ai-rate/", "AI 작성률 낮추기"), ("resume/", "자기소개서 AI 검사"), ("academic/", "레포트 · 논문 AI 검사"), ("proof/", "AI 활용 증빙서"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "문의하기")]),
             ("개발자", [("developers/", "API와 SDK"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("m.js", "AI 마킹 스크립트(공개 코드)"), ("v/", "사이트 AI 마크 확인"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
             ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금과 토큰"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b>%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)

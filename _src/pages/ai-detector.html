@@ -1,0 +1,96 @@
+<!--
+path: ai-detector/
+key: ai-detector
+v9: 1
+title: GPT킬러 · GPTZero AI 탐지, 왜 걸리고 어떻게 낮추나 | 제출 전 AI 패턴 검사 | AIMarker
+ogtitle: GPT킬러에 걸리기 전에, AI 패턴부터 확인하세요 | AIMarker
+desc: 카피킬러 GPT킬러, GPTZero, Turnitin 같은 AI 탐지기는 글 속 AI 패턴(번역투, 상투적 연결어, 빈말 수식, 틀에 박힌 구조)을 봅니다. 'GPT킬러 안 걸리는 법'을 찾기 전에 내 글의 어느 문장에 패턴이 남았는지 먼저 확인하세요. AIMarker 는 그 문장을 표시하고 의미는 그대로 둔 채 사람 문장으로 다듬습니다. 가입 없이 무료 검사.
+scripts: assets/textin.js, assets/humanize.js
+styles: assets/humanize.css, assets/hz12.css
+selflabel: footer
+-->
+<section class="hz12-hero hz13 hz15 lp-hero" id="top" aria-labelledby="h1">
+  <div class="hz13-bg" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i><span class="grid"></span><span class="fade"></span></div>
+  <div class="k-wrap">
+    <div class="hz15-grid" id="hzHero">
+      <div class="hz15-l" id="tool">
+        <div class="hz12-hd hz15-hd">
+          <p class="hz12-k">{{ico:fingerprint}}GPT킬러 · GPTZero · Turnitin 같은 AI 탐지기 대비</p>
+          <h1 class="hz12-h1" id="h1">탐지기에 걸리는 글에는<br><span class="hz13-mk">패턴</span>이 있습니다</h1>
+          <p class="lp-sub">'GPT킬러 안 걸리는 법'의 답은 속이는 것이 아니라, 패턴이 남은 문장을 사람 문장으로 바꾸는 것입니다.</p>
+        </div>
+{{inc:hz-tool.inc}}
+      </div>
+      <div class="hz15-r">
+{{inc:hz-stage.inc}}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{inc:lp-links.inc}}
+
+<section class="k-sec lp-ans" id="answer" aria-labelledby="ansT">
+  <div class="k-wrap">
+    <div class="lp-ans-b">
+      <p class="lp-k">한 줄 답</p>
+      <h2 class="k-h2" id="ansT">AI 탐지기는 무엇을 보나요?</h2>
+      <p class="k-lead">GPT킬러(카피킬러), GPTZero, Turnitin 같은 탐지기는 글이 AI 가 쓴 글과 얼마나 닮았는지를 문장 단위로 봅니다. 단어 몇 개를 바꿔도 문장 구조와 연결어, 수식 습관이 그대로면 그대로 걸립니다. AIMarker 는 같은 관점으로 AI 패턴을 찾아 문장에 표시하고, 그 문장만 바꿉니다.</p>
+      <ul class="lp-pts"><li>국내 대학과 기업은 한국어 탐지기(GPT킬러 등)를, 영어권은 GPTZero · Turnitin 을 많이 씁니다. 보는 것은 비슷합니다.</li><li>탐지기마다 기준이 달라 숫자는 다를 수 있습니다. 공통 해법은 패턴이 남은 문장을 없애는 것입니다.</li><li>AIMarker 는 이 서비스들과 관계가 없고, 특정 탐지기의 결과를 보장하지 않습니다.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="compare" aria-labelledby="cmpT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="cmpT">흔히 하는 방법과 실제로 되는 방법</h2>
+      <p class="k-lead">커뮤니티에 도는 'GPT킬러 안 걸리는 법'은 대부분 단어를 바꾸거나 문장 순서를 섞는 방법입니다. 탐지기가 보는 것과 어긋나서 효과가 작습니다.</p>
+    </div>
+    <div class="k-tbl-w">
+      <table class="lp-tbl">
+        <thead><tr><th scope="col">흔히 하는 방법</th><th scope="col">탐지기가 보는 것</th><th scope="col">실제로 되는 방법</th></tr></thead>
+        <tbody>
+          <tr><td>동의어로 바꾸기</td><td>단어가 아니라 문장 구조와 연결어</td><td>연결어 · 번역투 · 빈말 수식이 든 문장을 통째로 바꾸기</td></tr>
+          <tr><td>문장 순서 섞기</td><td>문장마다 앞뒤 문장과 함께 보는 패턴</td><td>틀에 박힌 첫 문장과 끝 문장을 내 말로 다시 쓰기</td></tr>
+          <tr><td>영어 우회 도구에 넣기</td><td>한국어 조사와 어미가 깨진 어색한 글</td><td>한국어 엔진으로 뜻은 그대로 두고 말버릇만 고치기</td></tr>
+          <tr><td>감으로 몇 군데 고치기</td><td>글 전체 가운데 패턴이 남은 모든 문장</td><td>먼저 검사해서 걸리는 문장을 보고 그 문장만 고치기</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{{inc:lp-pat.inc}}
+
+{{inc:lp-steps.inc}}
+
+{{inc:lp-diff.inc}}
+
+<section class="k-sec" id="faq" aria-labelledby="fTitle">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
+    <div class="k-faq">
+      <details><summary>GPT킬러 안 걸리는 법이 정말 있나요?</summary><p>어떤 도구도 '안 걸림'을 보장할 수 없고, AIMarker 도 보장하지 않습니다. 다만 탐지기가 보는 것은 AI 패턴이므로, 패턴이 남은 문장을 찾아 내 경험과 숫자가 든 사람 문장으로 바꾸고 제출 전에 다시 검사하면 걸릴 가능성이 크게 줄어듭니다. 가장 안전한 방법은 AI 를 초안으로만 사용하고 마무리는 직접 하는 것입니다.</p></details>
+      <details><summary>AIMarker 결과와 GPT킬러 결과가 같나요?</summary><p>같지 않을 수 있습니다. 탐지기마다 모델과 기준이 다릅니다. AIMarker 는 판정 기준을 공개하고 같은 글은 언제나 같은 결과가 나오게 만들었으며, 검출 문장이 남지 않도록 다듬으면 다른 탐지기에서도 패턴이 줄어듭니다. 중요한 제출이면 제출처가 쓰는 탐지기로 한 번 더 확인하세요.</p></details>
+      <details><summary>우회 도구(바이패스)와 무엇이 다른가요?</summary><p>우회 도구는 탐지기를 속이려고 글을 비틀어, 조사가 어긋나고 뜻이 바뀐 글이 나오기 쉽습니다. AIMarker 는 AI 말버릇을 사람 문장으로 바꾸는 것이 목표라 뜻과 사실, 말투를 지키고, 지키지 못하는 문장은 원문 그대로 둡니다. 읽는 사람이 자연스럽다고 느끼는 글이 결과입니다.</p></details>
+      <details><summary>사람이 직접 쓴 글도 AI 로 나오나요?</summary><p>번역투와 격식체가 많은 글은 사람이 써도 AI 패턴으로 잡힐 수 있습니다. AIMarker 는 이런 글에 'AI 패턴 주의'로 알려 주고 어느 표현이 그렇게 읽히는지 보여 드립니다. 그 표현만 다듬으면 됩니다.</p></details>
+      <details><summary>학교나 회사가 어떤 탐지기를 쓰는지 모르면요?</summary><p>패턴을 없애는 것은 어느 탐지기에나 공통인 해법입니다. 검출 문장이 남지 않도록 다듬고, 제출처의 AI 사용 규칙을 확인하세요.</p></details>
+      <details><summary>AI 사용이 금지된 과제나 시험에도 써도 되나요?</summary><p>AIMarker 는 AI 사용을 숨기는 도구가 아닙니다. 제출처의 규칙이 먼저입니다. AI 사용이 허용된 범위 안에서 글을 자연스럽게 다듬는 데 쓰고, AI 사용을 밝혀야 한다면 <a class="k-a" href="{{root}}proof/">AI 활용 증빙서</a>를 무료로 만들어 함께 내세요.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="k-cta" aria-labelledby="cTitle">
+  <div class="k-wrap ds-cta2">
+    <div class="ds-cta-b">
+      <h2 class="k-h2" id="cTitle">걸리고 나서는 늦습니다. 내기 전에 확인하세요</h2>
+      <p class="k-lead">글을 붙여 넣으면 탐지기가 볼 문장을 먼저 보여 드립니다. 가입 없이 무료이고, 글은 저장하지 않습니다.</p>
+      <div class="k-acts"><a class="k-btn k-btn-p k-btn-lg" href="#top" data-focus="hzText">AI 작성률 무료 검사</a><a class="k-btn k-btn-l k-btn-lg" href="{{root}}pricing/#credits">토큰 충전 보기</a></div>
+    </div>
+    <div class="ds-cta-c">
+      <p class="k-prod-k">{{ico:fingerprint}}함께 보면 좋은 안내</p>
+      <p class="k-p"><a class="k-a" href="{{root}}ai-rate/">AI 작성률 낮추기</a> · <a class="k-a" href="{{root}}ai-check/">AI 검사기 무료</a> · <a class="k-a" href="{{root}}humanize/#read">AIMarker 판정 기준</a> · <a class="k-a" href="{{root}}academic/">레포트 · 논문 · 과제</a></p>
+    </div>
+  </div>
+</section>

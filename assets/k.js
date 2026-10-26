@@ -390,3 +390,11 @@
   var root = document.body.getAttribute('data-root') || '';
   window.addEventListener('load', function () { setTimeout(function () { navigator.serviceWorker.register(root + 'aimarker-sw.js', { scope: root || './' }).catch(function () { /* 무시 */ }); }, 1200); });
 })();
+
+/* 13.8 검색 수요 안내 칩: 지금 페이지 칩은 어둡게 */
+(function () {
+  var cur = location.pathname.replace(/index\.html$/, '');
+  document.querySelectorAll('.lp-chips a').forEach(function (a) {
+    if (a.pathname.replace(/index\.html$/, '') === cur) a.setAttribute('aria-current', 'page');
+  });
+})();

@@ -1,0 +1,91 @@
+<!--
+path: ai-check/
+key: ai-check
+v9: 1
+title: AI 검사기 무료 · 챗GPT 검사기 | 문장별 AI 패턴 표시, 가입 없이 6,000자 | AIMarker
+ogtitle: AI 검사기 무료, 문장별로 AI 패턴을 표시합니다 | AIMarker
+desc: 무료 AI 검사기(AI 글 판별, 챗GPT 검사기). 글을 붙여 넣거나 한글 · 워드 · PDF 를 올리면 AI 작성률(%)과 판정(안전 · 고위험 · 부적합), AI 패턴이 남은 문장을 빨간 형광펜으로 보여 드립니다. 가입 없이 6,000자까지 무료, 글은 저장하지 않습니다. 검출된 문장은 휴머나이징으로 바로 다듬습니다.
+scripts: assets/textin.js, assets/humanize.js
+styles: assets/humanize.css, assets/hz12.css
+selflabel: footer
+-->
+<section class="hz12-hero hz13 hz15 lp-hero" id="top" aria-labelledby="h1">
+  <div class="hz13-bg" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i><span class="grid"></span><span class="fade"></span></div>
+  <div class="k-wrap">
+    <div class="hz15-grid" id="hzHero">
+      <div class="hz15-l" id="tool">
+        <div class="hz12-hd hz15-hd">
+          <p class="hz12-k">{{ico:fingerprint}}AI 검사기 무료 · 챗GPT 검사기 · AI 글 판별</p>
+          <h1 class="hz12-h1" id="h1">이 글, AI 가 썼다고<br><span class="hz13-mk">나올까요</span>?</h1>
+          <p class="lp-sub">숫자 하나가 아니라, 어느 문장이 왜 AI 로 보이는지까지 보여 드립니다. 가입 없이 6,000자 무료.</p>
+        </div>
+{{inc:hz-tool.inc}}
+      </div>
+      <div class="hz15-r">
+{{inc:hz-stage.inc}}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{inc:lp-links.inc}}
+
+<section class="k-sec lp-ans" id="answer" aria-labelledby="ansT">
+  <div class="k-wrap">
+    <div class="lp-ans-b">
+      <p class="lp-k">한 줄 답</p>
+      <h2 class="k-h2" id="ansT">무료 AI 검사기, 무엇이 다른가요?</h2>
+      <p class="k-lead">대부분의 AI 검사기는 'AI 확률 N%' 숫자 하나만 보여 줍니다. AIMarker 는 문장마다 AI 패턴을 찾아 표시(AI 마킹)하고, 판정 기준을 공개하며, 같은 글은 언제나 같은 결과가 나옵니다. 그래서 검사에서 끝나지 않고, 표시된 문장을 바로 사람 문장으로 다듬을 수 있습니다.</p>
+      <ul class="lp-pts"><li>챗GPT · 제미나이 · 클로드 등 어떤 AI 가 썼든, 글에 남은 AI 패턴을 봅니다.</li><li>결과는 AI 작성률(%) · 판정(안전 · 고위험 · 부적합) · 문장별 표시 · 까닭입니다.</li><li>가입 없이 6,000자까지 무료, 한글 · 워드 · PDF 파일 그대로, 글은 저장하지 않습니다.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="read" aria-labelledby="rdT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="rdT">검사 결과는 이렇게 읽습니다</h2>
+      <p class="k-lead">AI 작성률은 'AI 검출 문장의 글자 수 ÷ 전체 글자 수'입니다. 판정은 정해진 기준(AMJ-1.0)으로만 하고 사람이 임의로 바꾸지 않습니다.</p>
+    </div>
+    <div class="k-cols lp-cols">
+      <div class="k-col"><h4><span class="k-verdict unfit">부적합</span>AI 검출됨</h4><p>AI 작성률 40% 이상이거나, AI 검출 구간이 절반 이상이거나, AI 대화창 흔적(줄 첫머리 굵게, 제목 기호, '물론입니다')이 있으면 부적합입니다. 이대로 내면 걸릴 가능성이 큽니다.</p></div>
+      <div class="k-col"><h4><span class="k-verdict risk">고위험</span>AI 일부 검출</h4><p>AI 검출 문장이 남아 있지만 40% 아래입니다. 표시된 문장만 다듬으면 됩니다.</p></div>
+      <div class="k-col"><h4><span class="k-verdict safe">안전</span>AI 패턴 낮음</h4><p>AI 검출 문장이 없습니다. 번역투 같은 문체 신호가 있으면 'AI 패턴 주의'로 어느 표현이 그렇게 읽히는지 알려 드립니다.</p></div>
+      <div class="k-col"><h4>짧은 글은 조심</h4><p>400자 아래 짧은 글은 AI 글도 낮게 나올 수 있습니다. 문단 두세 개 이상을 넣고 보세요. 판정은 추정이며 증명이 아닙니다.</p></div>
+    </div>
+  </div>
+</section>
+
+{{inc:lp-pat.inc}}
+
+{{inc:lp-steps.inc}}
+
+{{inc:lp-diff.inc}}
+
+<section class="k-sec" id="faq" aria-labelledby="fTitle">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
+    <div class="k-faq">
+      <details><summary>AI 검사 결과는 정확한가요?</summary><p>AI 작성 여부를 100% 확인할 수 있는 검사기는 없습니다. AIMarker 는 판별 모델과 AI 패턴 DB 로 문장마다 점수를 매기고 공개된 기준으로 판정하며, 같은 글은 언제나 같은 결과가 나옵니다. 결과는 추정이며 증명이 아니므로, 사람을 판단하는 근거로 쓰지 마세요. <a class="k-a" href="{{root}}humanize/#read">판정 기준 보기</a></p></details>
+      <details><summary>사람이 쓴 글인데 AI 로 나왔어요.</summary><p>번역투와 격식체가 많은 글, 틀에 박힌 보고서 문장은 사람이 써도 AI 패턴으로 잡힐 수 있습니다. 표시된 문장을 보고 그 표현만 다듬으면 내려갑니다. 'AI 패턴 주의'는 검출은 아니지만 그렇게 읽힐 수 있는 표현을 알려 드리는 것입니다.</p></details>
+      <details><summary>몇 자까지 무료인가요?</summary><p>가입 없이 앞 6,000자까지 무료로 검사합니다(AI 작성률 · 판정 · 판정 근거는 유료와 같은 값, 문장 위치는 가장 뚜렷한 것부터). 더 긴 글과 모든 문장의 표시 · 까닭 · 결과상세내역서는 토큰으로 봅니다(1,000자 2토큰).</p></details>
+      <details><summary>파일로 올릴 수 있나요?</summary><p>한글(HWP, HWPX) · 워드(DOCX) · PDF · 텍스트를 올릴 수 있습니다. 파일은 이 브라우저 안에서 글만 꺼내고 서버로 보내지 않습니다.</p></details>
+      <details><summary>검사한 글이 저장되나요?</summary><p>검사 요청은 처리한 뒤 응답과 함께 버리고 글 본문은 저장하지 않습니다. 결과를 남기고 싶으면 결과상세내역서(PDF)를 직접 저장하세요.</p></details>
+      <details><summary>챗GPT 말고 다른 AI 가 쓴 글도 되나요?</summary><p>됩니다. 특정 AI 의 서명을 찾는 것이 아니라 AI 가 쓴 글에 공통으로 남는 패턴(번역투, 상투적 연결어, 빈말 수식, 틀에 박힌 구조, 대화창 흔적)을 보기 때문입니다.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="k-cta" aria-labelledby="cTitle">
+  <div class="k-wrap ds-cta2">
+    <div class="ds-cta-b">
+      <h2 class="k-h2" id="cTitle">지금 붙여 넣어 보세요</h2>
+      <p class="k-lead">몇 초 안에 AI 작성률과 AI 패턴이 남은 문장을 보여 드립니다. 가입 없이 무료이고, 글은 저장하지 않습니다.</p>
+      <div class="k-acts"><a class="k-btn k-btn-p k-btn-lg" href="#top" data-focus="hzText">AI 작성률 무료 검사</a><a class="k-btn k-btn-l k-btn-lg" href="{{root}}pricing/#credits">토큰 충전 보기</a></div>
+    </div>
+    <div class="ds-cta-c">
+      <p class="k-prod-k">{{ico:fingerprint}}함께 보면 좋은 안내</p>
+      <p class="k-p"><a class="k-a" href="{{root}}ai-rate/">AI 작성률 낮추기</a> · <a class="k-a" href="{{root}}ai-detector/">GPT킬러 · AI 탐지기</a> · <a class="k-a" href="{{root}}humanizer/">한국어 AI 휴머나이저</a> · <a class="k-a" href="{{root}}humanize/#read">판정 기준</a></p>
+    </div>
+  </div>
+</section>

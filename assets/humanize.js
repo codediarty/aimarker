@@ -774,7 +774,7 @@
     var price;
     if (isCr()) price = crLeft() >= cost ? '남은 ' + tkw(crLeft()) + '에서 ' + tk(cost) + '토큰이 빠집니다.' : '남은 ' + tkw(crLeft()) + '으로는 모자라요. 같은 코드에 충전하면 이어서 다듬습니다.';
     else if (S.pass) price = '이용권의 휴머나이징 횟수로 셉니다.';
-    else price = '이 글은 <b>' + tk(cost) + '토큰</b>이에요. ' + tk(pk.cr) + '토큰(' + n2(pk.price) + '원) 충전이면 다듬고 ' + tk(pk.cr - cost) + '토큰이 남아 5년 동안 씁니다.';
+    else price = '이 글은 <b>' + tk(cost) + '토큰</b>이에요. ' + tk(pk.cr) + '토큰(' + n2(pk.price) + '원) 충전이면 다듬고 ' + tk(pk.cr - cost) + '토큰이 남아 다음에 이어서 씁니다.';
     return '<section class="hz12-next ' + bandCls(k) + (hot ? ' hot' : sig ? ' sig' : ' calm') + '" aria-labelledby="hzNextT"><div class="l"><h3 id="hzNextT">' + esc(title) + '</h3><p class="sub">' + esc(sub) + '</p>' +
       '<ul>' + li.map(function (x) { return '<li>' + ico('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></div>' +
       '<div class="r"><button class="btn btn-p btn-l" type="button" data-act="humall">' + ico('pen') + '<span>글 전체 휴머나이징 · ' + tk(cost) + '토큰</span></button><p class="price">' + price + '</p>' +

@@ -41,7 +41,7 @@
   <div class="hz7-dlg-b" id="hzBuyBody">
     <p class="hz18-k">{{ico:fingerprint}}AIMarker 토큰 충전</p>
     <h2 id="hzBuyT">필요한 만큼만 충전하세요</h2>
-    <p class="hz13-unit"><b>1토큰 = 100원</b><span>쓴 만큼만 빠지고, 5년 동안 씁니다</span></p>
+    <p class="hz13-unit"><b>1토큰 = 100원</b><span>쓴 만큼만 빠지고, 남은 토큰은 사라지지 않습니다</span></p>
     <p class="hz12-need" id="hzBuyNeed" hidden></p>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>
