@@ -46,10 +46,10 @@
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>
       <fieldset class="hz7-prod hz18-packs"><legend class="sr">충전할 토큰</legend>
-        <label><input type="radio" name="product" value="c3"><span><b class="nm">휴머나이징 체험</b><b class="tk">30<small>토큰</small></b><em class="pr">3,000원</em><small class="ds">레포트(3,000자) 약 1편 · 처음 한 편을 확인하고 다듬을 때</small></span></label>
-        <label><input type="radio" name="product" value="c10"><span><b class="nm">휴머나이징 라이트</b><b class="tk">150<small>토큰</small><i class="bn">+50</i></b><em class="pr">10,000원</em><small class="ds">레포트(3,000자) 약 8편 · 과제 · 자기소개서 시즌</small></span></label>
-        <label class="best"><input type="radio" name="product" value="c30" checked><span><i class="tg">추천</i><b class="nm">휴머나이징 프로</b><b class="tk">500<small>토큰</small><i class="bn">+200</i></b><em class="pr">30,000원</em><small class="ds">레포트(3,000자) 약 27편 · 보고서 · 논문, 한 학기 내내</small></span></label>
-        <label class="top"><input type="radio" name="product" value="c50"><span><i class="tg top">가장 큰 혜택</i><b class="nm">휴머나이징 프리미엄</b><b class="tk">1,100<small>토큰</small><i class="bn">+600</i></b><em class="pr">50,000원</em><small class="ds">레포트(3,000자) 약 61편 · 자주 쓰는 분 · 함께 쓰는 팀</small></span></label>
+        <label><input type="radio" name="product" value="c3"><span><b class="nm">휴머나이징 체험</b><b class="tk">30<small>토큰</small></b><small class="ds">레포트(3,000자) 약 1편</small></span></label>
+        <label><input type="radio" name="product" value="c10"><span><b class="nm">휴머나이징 라이트</b><b class="tk">150<small>토큰</small><i class="bn">+50</i></b><small class="ds">레포트(3,000자) 약 8편</small></span></label>
+        <label class="best"><input type="radio" name="product" value="c30" checked><span><i class="tg">추천</i><b class="nm">휴머나이징 프로</b><b class="tk">500<small>토큰</small><i class="bn">+200</i></b><small class="ds">레포트(3,000자) 약 27편</small></span></label>
+        <label class="top"><input type="radio" name="product" value="c50"><span><i class="tg top">가장 큰 혜택</i><b class="nm">휴머나이징 프리미엄</b><b class="tk">1,100<small>토큰</small><i class="bn">+600</i></b><small class="ds">레포트(3,000자) 약 61편</small></span></label>
       </fieldset>
       <div class="hz19-gate" id="hzBuyPay"></div>
       <div class="hz19-fb" id="hzBuyFb" hidden>
@@ -60,7 +60,7 @@
       <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button class="btn btn-p btn-l hz19-go" type="submit"><span>성균관컨설팅에서 결제하기</span>{{ico:arrow}}</button>
       <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n hz19-legal">부가세 포함 · 운영 성균관컨설팅(사업자등록번호 272-32-01885) · <a href="{{root}}terms/#pass" target="_blank" rel="noopener">환불 안내</a> · 문의 contact@skkc.co.kr</p>
+      <p class="hz7-dlg-n hz19-legal"><span id="hzBuyAmt"></span>운영 성균관컨설팅(사업자등록번호 272-32-01885) · <a href="{{root}}terms/#pass" target="_blank" rel="noopener">환불 안내</a> · 문의 contact@skkc.co.kr</p>
     </form>
   </div>
 </dialog>

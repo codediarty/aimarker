@@ -36,10 +36,10 @@
       pick = pick || PK[PK.length - 1];
       if (lad) lad.innerHTML = PK.map(function (p) {   // 고른 칸(단추와 같은 칸)을 강조, 칸마다 충전 창으로
         var k = c3 > 0 ? Math.floor(r1(p.cr / c3) + 1e-9) : 0;
-        return '<li' + (p === pick ? ' class="pick"' : '') + '><a href="' + root + 'humanize/#buy-' + p.id + '"' + (p === pick ? ' aria-current="true"' : '') + '><span>' + (p.nm ? p.nm + ' ' : '') + n2(p.price) + '원<small>' + tk(p.cr) + '토큰</small></span><b>' +(k ? (k >= 1000 ? '1,000번 넘게' : n2(k) + '번') : '모자라요') + '</b></a></li>';
+        return '<li' + (p === pick ? ' class="pick"' : '') + '><a href="' + root + 'humanize/#buy-' + p.id + '"' + (p === pick ? ' aria-current="true"' : '') + '><span>' + (p.nm || '') + '<small>' + tk(p.cr) + '토큰</small></span><b>' +(k ? (k >= 1000 ? '1,000번 넘게' : n2(k) + '번') : '모자라요') + '</b></a></li>';
       }).join('');
       var k1 = c3 > 0 ? Math.floor(r1(pick.cr / c3) + 1e-9) : 0;
-      var go = $('#tkGo'); if (go) { go.href = root + 'humanize/#buy-' + pick.id; go.textContent = n2(pick.price) + '원 충전하기'; }
+      var go = $('#tkGo'); if (go) { go.href = root + 'humanize/#buy-' + pick.id; go.textContent = (pick.nm ? pick.nm + ' ' : '') + tk(pick.cr) + '토큰 충전하기'; }
       set('tkGoN', k1 ? '이 글 검사와 휴머나이징 ' + n2(k1) + '번' : '이 글은 큰 충전이나 나눠서');
       set('tkLadH', n ? '충전하면 이 글(' + n2(n) + '자) 검사와 휴머나이징을' : '충전하면 이런 글을');
     };

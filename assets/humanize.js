@@ -65,7 +65,7 @@
   function withDesc(p) {   // 13.5 설명: 레포트(3,000자) 검사와 휴머나이징 몇 편 · 누구에게
     if (!p || !p.cr) return p;
     var cyc = r1(costOf('unit', 3000) + costOf('pro', 3000)), k = cyc ? Math.floor(r1(p.cr / cyc) + 1e-9) : 0, bn = r1(p.cr - (p.base || p.cr));
-    return Object.assign({}, p, { bonus: bn > 0 ? bn : 0, desc: (k ? '레포트(3,000자) 약 ' + n2(k) + '편' : '') + (p.who ? (k ? ' · ' : '') + p.who : '') });   // 13.7 짧게
+    return Object.assign({}, p, { bonus: bn > 0 ? bn : 0, desc: k ? '레포트(3,000자) 약 ' + n2(k) + '편' : (p.who || '') });   // 13.7 짧게(값 · 대상 없이)
   }
   function prodList() {   // 13.5 칸은 사이트 표(PRODS)가 기준. 서버 am.passinfo products 는 결제 페이지 주소(link)만 가져옴
     var L = (S.info && S.info.products) || [];
@@ -1175,10 +1175,10 @@
   function prodsHtml(sel, noBest, need) {   // 13.5 칸: 이름 · 토큰(더 받는 것) · 값 · 쓰임, 이 글이 있으면 '이 글 N번'
     return prods().map(function (p) {
       var best = p.best && !noBest, k = need > 0 ? Math.floor(r1(p.cr / need) + 1e-9) : 0;
-      var sm = need > 0 ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') + (p.who ? ' · ' + p.who : '') : p.desc;
+      var sm = need > 0 ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : p.desc;
       return '<label' + (best ? ' class="best"' : p.top ? ' class="top"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span>' +
         (best ? '<i class="tg">추천</i>' : p.top ? '<i class="tg top">가장 큰 혜택</i>' : '') +
-        '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b><em class="pr">' + n2(p.price) + '원</em><small class="ds">' + esc(sm) + '</small></span></label>';
+        '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b><small class="ds">' + esc(sm) + '</small></span></label>';
     }).join('');
   }
   function stepsHtml() {   // 바로 결제도, 결제 페이지도 없을 때(주문 → 결제 안내 메일): 결제 순서를 미리
@@ -1205,7 +1205,8 @@
     needLine(p, tu);
     if (gate) { gate.innerHTML = sh ? gateHtml(p, tu, sh) : ''; gate.hidden = !sh; }
     if (fb) { fb.hidden = !!sh; var ml = fb.querySelector('label[for="hzBuyMail"]'); if (ml) ml.innerHTML = (payReady() ? '영수증을 받을 이메일' : tu ? '결제 안내를 받을 이메일' : '토큰 코드와 결제 안내를 받을 이메일') + ' <em>필수</em>'; }
-    if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : sh ? '<span>성균관컨설팅에서 ' + n2(p.price) + '원 결제하기</span>' + ico('arrow') : '<span>' + n2(p.price) + '원 주문하기</span>';
+    if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : sh ? '<span>성균관컨설팅에서 결제하기</span>' + ico('arrow') : '<span>' + n2(p.price) + '원 주문하기</span>';
+    var am = $('#hzBuyAmt'); if (am) am.textContent = tk(p.cr) + '토큰 ' + n2(p.price) + '원(부가세 포함) · ';
     var n = $('#hzBuyNote'); if (n) n.innerHTML = sh ? '' : payReady() ? (tu ? '카드나 간편결제로 바로 결제합니다. 승인되면 지금 코드에 ' + tk(p.cr) + '토큰이 바로 더해집니다.' : '카드나 간편결제로 바로 결제합니다. 승인되면 이 화면에서 바로 토큰이 열리고, 코드는 메일로도 보내 드립니다.') : stepsHtml() + '<span class="hz19-nt">' + (tu ? '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 지금 코드에 ' + tk(p.cr) + '토큰을 더해 드립니다.' : '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 토큰 코드를 메일로 보내 드립니다.') + '</span>';
   }
   function needLine(p, tu) {   // 13.2 이 글 값(원 · 토큰)과, 고른 충전으로 하고 남는 토큰
@@ -1213,7 +1214,7 @@
     if (!N || !p) { nd.hidden = true; nd.innerHTML = ''; return; }
     var chk = S.intent === 'check', doW = chk ? '전체 검사를 해' : '다듬어', have = r1((tu ? crLeft() : 0) + p.cr), left = r1(have - N.need);
     nd.innerHTML = '<span class="t">이 글(' + n2(N.len) + '자) ' + esc(N.what) + '</span><b class="v">' + tk(N.need) + '토큰</b>' +
-      '<span class="r">' + (left >= 0 ? tk(p.cr) + '토큰(' + n2(p.price) + '원) 충전이면 ' + (chk ? '검사하고' : '다듬고') + ' <b>' + tkw(left) + '</b>이 남아요.' : tk(p.cr) + '토큰 충전으로는 ' + tk(-left) + '토큰이 모자라요. 더 큰 충전을 골라 주세요.') +
+      '<span class="r">' + (left >= 0 ? tk(p.cr) + '토큰 충전이면 ' + (chk ? '검사하고' : '다듬고') + ' <b>' + tkw(left) + '</b>이 남아요.' : tk(p.cr) + '토큰 충전으로는 ' + tk(-left) + '토큰이 모자라요. 더 큰 충전을 골라 주세요.') +
       (!S.intent ? '' : payReady() ? ' 결제하면 이 화면에서 바로 이어서 ' + doW + ' 드립니다.' : ' 코드를 받아 넣으면 이 글을 바로 이어서 ' + doW + ' 드립니다.') + '</span>';
     nd.hidden = false;
   }
