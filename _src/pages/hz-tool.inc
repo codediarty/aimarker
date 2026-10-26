@@ -41,27 +41,26 @@
   <div class="hz7-dlg-b" id="hzBuyBody">
     <p class="hz18-k">{{ico:fingerprint}}AIMarker 토큰 충전</p>
     <h2 id="hzBuyT">필요한 만큼만 충전하세요</h2>
-    <p class="hz13-unit"><b>1토큰 = 100원</b><span>쓴 만큼만 빠지고, 5년 동안 나눠 씁니다 · 검사 · 휴머나이징 · 결과상세내역서 모두 같은 토큰</span></p>
+    <p class="hz13-unit"><b>1토큰 = 100원</b><span>쓴 만큼만 빠지고, 5년 동안 씁니다</span></p>
     <p class="hz12-need" id="hzBuyNeed" hidden></p>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>
       <fieldset class="hz7-prod hz18-packs"><legend class="sr">충전할 토큰</legend>
-        <label><input type="radio" name="product" value="c3"><span><b class="nm">휴머나이징 체험</b><b class="tk">30<small>토큰</small></b><em class="pr">3,000원</em><small class="ds">레포트(3,000자) 검사와 휴머나이징 약 1편 · 처음 한 편을 확인하고 다듬을 때</small></span></label>
-        <label><input type="radio" name="product" value="c10"><span><b class="nm">휴머나이징 라이트</b><b class="tk">150<small>토큰</small><i class="bn">+50</i></b><em class="pr">10,000원</em><small class="ds">레포트(3,000자) 검사와 휴머나이징 약 8편 · 과제 · 자기소개서 시즌</small></span></label>
-        <label class="best"><input type="radio" name="product" value="c30" checked><span><i class="tg">추천</i><b class="nm">휴머나이징 프로</b><b class="tk">500<small>토큰</small><i class="bn">+200</i></b><em class="pr">30,000원</em><small class="ds">레포트(3,000자) 검사와 휴머나이징 약 27편 · 보고서 · 논문, 한 학기 내내</small></span></label>
-        <label class="top"><input type="radio" name="product" value="c50"><span><i class="tg top">가장 큰 혜택</i><b class="nm">휴머나이징 프리미엄</b><b class="tk">1,100<small>토큰</small><i class="bn">+600</i></b><em class="pr">50,000원</em><small class="ds">레포트(3,000자) 검사와 휴머나이징 약 61편 · 자주 쓰는 분 · 함께 쓰는 팀</small></span></label>
+        <label><input type="radio" name="product" value="c3"><span><b class="nm">휴머나이징 체험</b><b class="tk">30<small>토큰</small></b><em class="pr">3,000원</em><small class="ds">레포트(3,000자) 약 1편 · 처음 한 편을 확인하고 다듬을 때</small></span></label>
+        <label><input type="radio" name="product" value="c10"><span><b class="nm">휴머나이징 라이트</b><b class="tk">150<small>토큰</small><i class="bn">+50</i></b><em class="pr">10,000원</em><small class="ds">레포트(3,000자) 약 8편 · 과제 · 자기소개서 시즌</small></span></label>
+        <label class="best"><input type="radio" name="product" value="c30" checked><span><i class="tg">추천</i><b class="nm">휴머나이징 프로</b><b class="tk">500<small>토큰</small><i class="bn">+200</i></b><em class="pr">30,000원</em><small class="ds">레포트(3,000자) 약 27편 · 보고서 · 논문, 한 학기 내내</small></span></label>
+        <label class="top"><input type="radio" name="product" value="c50"><span><i class="tg top">가장 큰 혜택</i><b class="nm">휴머나이징 프리미엄</b><b class="tk">1,100<small>토큰</small><i class="bn">+600</i></b><em class="pr">50,000원</em><small class="ds">레포트(3,000자) 약 61편 · 자주 쓰는 분 · 함께 쓰는 팀</small></span></label>
       </fieldset>
       <div class="hz19-gate" id="hzBuyPay"></div>
       <div class="hz19-fb" id="hzBuyFb" hidden>
         <div class="field"><label for="hzBuyMail">토큰 코드와 결제 안내를 받을 이메일 <em>필수</em></label><input class="inp" id="hzBuyMail" name="contact" type="email" inputmode="email" autocomplete="email" maxlength="80" placeholder="name@example.com"></div>
         <p class="hz7-dlg-n" id="hzBuyNote"></p>
-        <p class="hz7-dlg-n">적어 주신 이메일은 주문 처리와 코드 · 결제 안내에만 사용합니다(<a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a>). 환불은 <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a>을 따릅니다. 결제 정보는 이 사이트에서 받지 않습니다.</p>
+        <p class="hz7-dlg-n">이메일은 주문 처리와 코드 · 결제 안내에만 씁니다(<a href="{{root}}privacy/" target="_blank" rel="noopener">개인정보처리방침</a>).</p>
       </div>
       <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <button class="btn btn-p btn-l hz19-go" type="submit"><span>성균관컨설팅 결제 페이지로 이동</span>{{ico:arrow}}</button>
-      <button class="hz19-later" type="button" data-later>조금 더 둘러볼게요</button>
+      <button class="btn btn-p btn-l hz19-go" type="submit"><span>성균관컨설팅에서 결제하기</span>{{ico:arrow}}</button>
       <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n hz19-legal">가격은 부가세 포함입니다. 미성년자는 법정대리인의 동의를 받아 구매해 주세요(동의 없는 구매는 취소할 수 있습니다). 운영 성균관컨설팅(대표 이채연), 사업자등록번호 272-32-01885, 통신판매업 신고 제2026-경기송탄-0622, 문의 contact@skkc.co.kr</p>
+      <p class="hz7-dlg-n hz19-legal">부가세 포함 · 운영 성균관컨설팅(사업자등록번호 272-32-01885) · <a href="{{root}}terms/#pass" target="_blank" rel="noopener">환불 안내</a> · 문의 contact@skkc.co.kr</p>
     </form>
   </div>
 </dialog>

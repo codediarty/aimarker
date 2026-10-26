@@ -65,7 +65,7 @@
   function withDesc(p) {   // 13.5 설명: 레포트(3,000자) 검사와 휴머나이징 몇 편 · 누구에게
     if (!p || !p.cr) return p;
     var cyc = r1(costOf('unit', 3000) + costOf('pro', 3000)), k = cyc ? Math.floor(r1(p.cr / cyc) + 1e-9) : 0, bn = r1(p.cr - (p.base || p.cr));
-    return Object.assign({}, p, { bonus: bn > 0 ? bn : 0, desc: (k ? '레포트(3,000자) 검사와 휴머나이징 약 ' + n2(k) + '편' : '') + (p.who ? (k ? ' · ' : '') + p.who : '') });
+    return Object.assign({}, p, { bonus: bn > 0 ? bn : 0, desc: (k ? '레포트(3,000자) 약 ' + n2(k) + '편' : '') + (p.who ? (k ? ' · ' : '') + p.who : '') });   // 13.7 짧게
   }
   function prodList() {   // 13.5 칸은 사이트 표(PRODS)가 기준. 서버 am.passinfo products 는 결제 페이지 주소(link)만 가져옴
     var L = (S.info && S.info.products) || [];
@@ -1185,19 +1185,11 @@
     return '<ol class="hz13-steps" aria-label="결제 순서"><li><b>1</b><span>지금 주문<small>이메일만 적으면 됩니다</small></span></li><li><b>2</b><span>메일로 온 안내대로 카드 · 계좌이체 결제<small>결제 안내 메일은 영업일 하루 안에</small></span></li><li><b>3</b><span>메일로 받은 코드를 넣으면 바로 이어서<small>코드는 결제 확인 뒤 영업일 하루 안에</small></span></li></ol>';
   }
   function shopName(p) { return 'AIMarker ' + p.name + ' · AI 글 인간화 작업 ' + tk(p.cr) + '토큰'; }   // 13.6 성균관컨설팅 결제 페이지의 상품 이름(아임웹 상품 34~37)
-  function gateHtml(p, tu, sh) {   // 13.6 KAIEC 결제 창처럼: 왜 성균관컨설팅인지 한 문단 + 결제 페이지 미리보기 + 순서 셋. 이메일 · 동의는 받지 않음(결제 페이지 주문서에서 받음)
-    var list = p.bonus ? '<s>' + n2(p.cr * TW) + '원</s>' : '';
+  function gateHtml(p, tu, sh) {   // 13.7 간단하게: AIMarker → 성균관컨설팅 칩 + 두 문장(왜 성균관컨설팅인지 · 코드는 어떻게 오는지). 이메일 · 동의는 결제 페이지 주문서에서
     return '<div class="hz19-flow" aria-hidden="true"><span class="a">AIMarker</span>' + ico('arrow') + '<span class="s">성균관컨설팅</span></div>' +
-      '<h3>결제는 운영사 성균관컨설팅<br>결제 페이지에서 진행됩니다</h3>' +
-      '<p class="hz19-lead">AIMarker는 성균관컨설팅이 개발하고 운영하는 서비스입니다. 그래서 결제와 영수증은 운영사 이름으로 처리되고, 카드 명세서에도 ‘성균관컨설팅’으로 표시됩니다. 성균관컨설팅 회원가입 없이 비회원으로 결제하면 됩니다.</p>' +
-      '<a class="hz19-prev" href="' + esc(sh) + '" target="_blank" rel="noopener" aria-label="구매하기: 성균관컨설팅 비회원 주문서로 이동">' +
-      '<span class="hz19-bar" aria-hidden="true"><i></i><i></i><i></i><em>skkc.co.kr</em></span>' +
-      '<span class="hz19-body" aria-hidden="true"><b>' + esc(shopName(p)) + '</b><span class="hz19-pr"><strong>' + n2(p.price) + '원</strong>' + list + '</span><span class="hz19-btns"><span>장바구니</span><span class="buy">구매하기</span></span><small>구매하기를 누르면 비회원 주문서로 이어집니다</small></span></a>' +
-      '<ol class="hz19-steps"><li><b>[구매하기]</b>를 누르면 <b>비회원 주문서</b>가 열립니다. 회원가입은 필요 없습니다.</li>' +
-      '<li>이름 · 이메일 · 휴대전화를 적고 카드 · 간편결제 · 계좌이체로 결제합니다.</li>' +
-      (tu ? '<li>코드를 받았던 이메일로 결제하면 영업일 하루 안에 <b>지금 코드에 ' + tk(p.cr) + '토큰</b>이 더해집니다. 코드는 그대로 씁니다.</li>'
-        : '<li>결제 확인 뒤 영업일 하루 안에 결제할 때 적은 이메일로 <b>16자리 토큰 코드</b>가 도착합니다. 코드를 넣으면 바로 이어서 씁니다.</li>') + '</ol>' +
-      '<p class="hz19-note">카드 명세서에는 ‘성균관컨설팅’으로 표시됩니다 · <a href="' + ROOT + 'terms/#pass" target="_blank" rel="noopener">청약철회 · 환불 안내</a><small>성균관컨설팅 · 사업자등록번호 272-32-01885 · 통신판매업 신고 제2026-경기송탄-0622</small></p>';
+      '<p class="hz19-lead">결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 카드 · 간편결제로 결제하면 ' +
+      (tu ? '지금 코드에 ' + tk(p.cr) + '토큰이 더해집니다(코드를 받았던 이메일로 결제해 주세요).' : '결제할 때 적은 이메일로 영업일 하루 안에 토큰 코드가 갑니다.') +
+      ' 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.</p>';
   }
   function shopLink(pid) {   // 12.1 공식 결제처 성균관컨설팅 결제 페이지(서버 AM_BUY_LINKS 또는 사이트 SHOP_IDX 에 상품 번호가 있을 때)
     var p = prod(pid); if (p && p.link) return p.link;
@@ -1213,7 +1205,7 @@
     needLine(p, tu);
     if (gate) { gate.innerHTML = sh ? gateHtml(p, tu, sh) : ''; gate.hidden = !sh; }
     if (fb) { fb.hidden = !!sh; var ml = fb.querySelector('label[for="hzBuyMail"]'); if (ml) ml.innerHTML = (payReady() ? '영수증을 받을 이메일' : tu ? '결제 안내를 받을 이메일' : '토큰 코드와 결제 안내를 받을 이메일') + ' <em>필수</em>'; }
-    if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : sh ? '<span>성균관컨설팅 결제 페이지로 이동</span>' + ico('arrow') : '<span>' + n2(p.price) + '원 주문하기</span>';
+    if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : sh ? '<span>성균관컨설팅에서 ' + n2(p.price) + '원 결제하기</span>' + ico('arrow') : '<span>' + n2(p.price) + '원 주문하기</span>';
     var n = $('#hzBuyNote'); if (n) n.innerHTML = sh ? '' : payReady() ? (tu ? '카드나 간편결제로 바로 결제합니다. 승인되면 지금 코드에 ' + tk(p.cr) + '토큰이 바로 더해집니다.' : '카드나 간편결제로 바로 결제합니다. 승인되면 이 화면에서 바로 토큰이 열리고, 코드는 메일로도 보내 드립니다.') : stepsHtml() + '<span class="hz19-nt">' + (tu ? '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 지금 코드에 ' + tk(p.cr) + '토큰을 더해 드립니다.' : '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 토큰 코드를 메일로 보내 드립니다.') + '</span>';
   }
   function needLine(p, tu) {   // 13.2 이 글 값(원 · 토큰)과, 고른 충전으로 하고 남는 토큰
@@ -1283,13 +1275,10 @@
         var win = true; try { window.open(shop, '_blank', 'noopener'); } catch (eW) { win = false; }   // noopener 면 창 객체가 안 돌아오므로 열었다고 보고, 막혔을 때를 위해 '다시 열기' 단추를 둠
         var tail = to ? String(S.pass).replace(/[^0-9A-Za-z]/g, '').slice(-4) : '';
         buyBody.innerHTML = '<h2 id="hzBuyT" tabindex="-1">' + (win ? '성균관컨설팅 결제 페이지를 새 창으로 열었습니다' : '성균관컨설팅 결제 페이지에서 결제해 주세요') + '</h2><div class="hz7-done hz18-go">' +
-          '<p class="sum"><b>' + esc(pk.name) + ' · ' + tk(pk.cr) + '토큰' + (pk.bonus ? ' <i>+' + tk(pk.bonus) + ' 포함</i>' : '') + '</b><span>' + n2(pk.price) + '원 · 부가세 포함' + (to ? ' · 지금 코드(끝 ' + esc(tail) + ')에 충전' : ' · 새 코드') + '</span></p>' +
-          '<ol class="hz13-steps v" aria-label="다음 순서"><li><b>1</b><span>' + (win ? '새 창의 ' : '') + '결제 페이지에서 회원가입 없이 결제<small>' + (to ? '코드를 받았던 이메일로 결제해 주세요' : '이름 · 이메일 · 휴대전화만 적으면 됩니다') + '</small></span></li>' +
-          '<li><b>2</b><span>결제 확인 뒤 영업일 하루 안에 ' + (to ? '지금 코드에 ' + tk(pk.cr) + '토큰을 더해 드립니다' : '결제할 때 적은 이메일로 토큰 코드를 보내 드립니다') + '<small>메일이 없으면 스팸함을 확인하거나 contact@skkc.co.kr</small></span></li>' +
-          '<li><b>3</b><span>' + (to ? '코드는 그대로, 남은 토큰만 늘어납니다' : '메일의 코드를 ‘코드 넣기’에 넣으면 바로 이어서') + '<small>이 창은 닫아도 됩니다</small></span></li></ol>' +
+          '<p class="sum"><b>' + esc(pk.name) + ' · ' + tk(pk.cr) + '토큰' + (pk.bonus ? ' <i>+' + tk(pk.bonus) + ' 포함</i>' : '') + '</b><span>' + n2(pk.price) + '원 · 부가세 포함' + (to ? ' · 지금 코드(끝 ' + esc(tail) + ')에 충전' : '') + '</span></p>' +
+          '<p class="hz7-dlg-n">' + (to ? '코드를 받았던 이메일로 결제해 주세요. 결제가 확인되면 영업일 하루 안에 지금 코드에 ' + tk(pk.cr) + '토큰이 더해집니다.' : '회원가입 없이 결제하면, 결제할 때 적은 이메일로 영업일 하루 안에 토큰 코드를 보내 드립니다. 메일이 없으면 스팸함을 확인하거나 contact@skkc.co.kr') + '</p>' +
           '<a class="btn btn-p btn-l" href="' + esc(shop) + '" target="_blank" rel="noopener">' + ico('open') + '<span>' + (win ? '결제 페이지가 안 보이면 다시 열기' : '결제 페이지 열기') + '</span></a>' +
-          (to ? '' : '<button class="btn btn-g" type="button" data-code>코드를 받았어요 · 코드 넣기</button>') +
-          '<p class="hz7-dlg-n">카드 명세서에는 ‘성균관컨설팅’으로 표시됩니다. 문의 contact@skkc.co.kr</p></div>';
+          (to ? '' : '<button class="btn btn-g" type="button" data-code>코드를 받았어요 · 코드 넣기</button>') + '</div>';
         var hL = $('#hzBuyT'); if (hL) { try { hL.focus({ preventScroll: true }); } catch (eF2) { hL.focus(); } }
         if (window.gtag) try { window.gtag('event', 'begin_checkout', { items: [{ item_id: pid, item_name: pk.name, price: pk.price }] }); } catch (eG2) { /* 무시 */ }
         return;

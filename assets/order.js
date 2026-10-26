@@ -3,7 +3,8 @@
    남은 토큰은 am.pass(읽기만, 빼지 않음)로 바로 보여 줌. 주문 기록에는 코드 전체를 남기지 않고 끝 4자리만 남겨 담당자가 확인 뒤 뺌.
    저장된 코드가 토큰 코드가 아니면(예전 이용권 · 없는 코드) 조용히 카드로 돌아감. 기업 토큰 충전은 '이미 받은 코드에 더하기'(끝 4자리)를 받음.
    13.6: 카드 · 간편결제(결제 페이지가 있을 때)는 KAIEC 결제 창처럼 이메일 · 동의 없이 바로 성균관컨설팅 결제 페이지로(이름 · 이메일 · 동의는 그곳 주문서에서, 사이트 쪽 주문 기록 없음).
-   이메일 · 사이트 · 회사 칸은 토큰 · 계좌이체 · 결제 링크 요청에만 보임. 상품 · 요금은 assets/products.js(빌드에서 만듦). 카드 번호 같은 결제 정보는 이 사이트에서 받지 않습니다. */
+   이메일 · 사이트 · 회사 칸은 토큰 · 계좌이체 · 결제 링크 요청에만 보임.
+   13.7: 시트를 간단하게(상품 · 기간 · 결제 금액 한 줄 · 성균관컨설팅 안내 두 문장 · 단추 하나). 토큰 · 계좌이체는 '다른 방법' 작은 단추로 펼침. 상품 · 요금은 assets/products.js(빌드에서 만듦). 카드 번호 같은 결제 정보는 이 사이트에서 받지 않습니다. */
 (function () {
   'use strict';
   var AMP = window.AMP, AM = window.AM || {};
@@ -37,36 +38,33 @@
     var it = AMP.items[id];
     if (!it) return false;
     last = from || null;
-    var hasY = !!it.y, monthly = it.per === '월', isCredit = /^credit-/.test(id), isLabel = /^label-/.test(id), saved = isCredit ? '' : fmtCode(sget('am_pass')), auto = !!saved;
+    var hasY = !!it.y, monthly = it.per === '월', isCredit = /^credit-/.test(id), isLabel = /^label-/.test(id), saved = isCredit ? '' : fmtCode(sget('am_pass')), auto = false;   // 13.7 저장된 코드가 있어도 카드가 기본(토큰은 '다른 방법'에서, 코드는 미리 채움)
     per = hasY && per === 'y' ? 'y' : 'm';
     var t0 = Date.now();
     box = document.createElement('div');
     box.className = 'k-buy';
     box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'kbuyT');
+    // 13.7 간단하게: 상품 · 기간 · 결제 금액 한 줄 · 성균관컨설팅 안내 두 문장 · 단추 하나. 토큰 · 계좌이체는 아래 작은 글자 단추로 펼침
     box.innerHTML = '<div class="k-buy-in"><button class="k-buy-x" type="button" aria-label="닫기">×</button>' +
-      '<div class="k-buy-h"><small>' + esc(it.group) + '</small><h2 id="kbuyT">' + esc(it.name) + '</h2><p>추천 대상: ' + esc(it.who) + '</p><ul class="k-buy-feat">' + it.feat.slice(0, 4).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' +
-      '<form class="k-buy-b" novalidate>' +
+      '<div class="k-buy-h"><small>' + esc(it.group) + '</small><h2 id="kbuyT">' + esc(it.name) + '</h2><p>' + esc(it.who) + '</p></div>' +
+      '<form class="k-buy-b k-buy-s" novalidate>' +
       (hasY ? '<div class="k-buy-per" role="radiogroup" aria-label="결제 기간"><label class="' + (per === 'm' ? 'on' : '') + '"><input type="radio" name="per" value="m"' + (per === 'm' ? ' checked' : '') + '><b>1개월</b><span>' + won(it.m) + ' / 월</span></label>' +
         '<label class="' + (per === 'y' ? 'on' : '') + '"><input type="radio" name="per" value="y"' + (per === 'y' ? ' checked' : '') + '><b>12개월 한 번에</b><span>' + won(it.y) + ' · 10개월 요금</span></label></div>' : '') +
-      '<div class="k-buy-sum" aria-live="polite"></div>' +
-      '<fieldset class="k-buy-pay"><legend class="k-buy-lg">결제 방법</legend>' +
-      (isCredit ? '' : '<label' + (saved ? ' class="on"' : '') + '><input type="radio" name="pay" value="credit"' + (saved ? ' checked' : '') + '><span><b>토큰</b><small class="crnote">충전해 둔 토큰에서 뺍니다.</small></span></label>' +
-        '<div class="k-buy-f k-buy-cr" hidden><label><span>토큰 코드<em>필수</em></span><input type="text" name="crcode" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" placeholder="XXXX-XXXX-XXXX-XXXX" value="' + esc(saved) + '"></label>' +
-        '<div class="k-buy-crb" aria-live="polite" hidden></div><p class="k-buy-crn">토큰이 없다면 <a href="' + root + 'pricing/#credits" target="_blank" rel="noopener">먼저 충전</a>하세요. 3,000원부터, 같은 코드로 모든 기능에 씁니다.</p></div>') +
-      '<label' + (saved ? '' : ' class="on"') + '><input type="radio" name="pay" value="card"' + (saved ? '' : ' checked') + '><span><b>카드 · 간편결제</b><small class="cardnote">성균관컨설팅 결제 페이지에서 회원가입 없이 결제합니다.</small></span></label>' +
-      '<label><input type="radio" name="pay" value="bank"><span><b>계좌이체 · 세금계산서</b><small>견적서와 입금 안내를 메일로 보내 드립니다.</small></span></label></fieldset>' +
-      // 13.6 이메일 · 사이트 · 회사 칸은 토큰 · 계좌이체 · 결제 링크 요청에만(카드 결제는 성균관컨설팅 주문서에서 받음), 동의 칸 대신 한 줄 안내
+      '<div class="k-buy-sum k-buy-sum1" aria-live="polite"></div>' +
+      '<span class="k-buy-payin" hidden><input type="radio" name="pay" value="card" checked>' + (isCredit ? '' : '<input type="radio" name="pay" value="credit">') + '<input type="radio" name="pay" value="bank"></span>' +
+      '<div class="k-buy-why" aria-live="polite"></div>' +
+      '<div class="k-buy-alt" hidden><p class="k-buy-alth"><b class="t"></b><button type="button" class="k-buy-back" data-pay="card">카드 · 간편결제로 돌아가기</button></p>' +
+      (isCredit ? '' : '<div class="k-buy-f k-buy-cr" hidden><label><span>토큰 코드<em>필수</em></span><input type="text" name="crcode" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" placeholder="XXXX-XXXX-XXXX-XXXX" value="' + esc(saved) + '"></label>' +
+        '<div class="k-buy-crb" aria-live="polite" hidden></div><p class="k-buy-crn">토큰이 없다면 <a href="' + root + 'pricing/#credits" target="_blank" rel="noopener">먼저 충전</a>하세요.</p></div>') + '</div>' +
       '<div class="k-buy-info"><div class="k-buy-f"><label><span>받을 이메일<em>필수</em></span><input type="email" name="email" autocomplete="email" maxlength="80" placeholder="name@company.co.kr"></label>' +
       '<label><span>사이트 주소<em>선택</em></span><input type="text" name="site" inputmode="url" maxlength="120" placeholder="예: myshop.co.kr" spellcheck="false"></label>' +
       '<label><span>회사 · 이름<em>선택</em></span><input type="text" name="org" maxlength="60" autocomplete="organization" placeholder="세금계산서를 받을 곳"></label>' +
       (isCredit ? '<label><span>이미 받은 코드에 더하기<em>선택</em></span><input type="text" name="topup" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="코드 끝 4자리(예: 8PLW)"></label>' : '') + '</div>' +
-      '<p class="k-buy-priv">적어 주신 이메일 · 사이트 주소 · 회사 이름은 주문 처리와 시작 안내에만 사용합니다(<a href="' + root + 'privacy/" target="_blank" rel="noopener">개인정보처리방침</a>). 결제 정보는 이 사이트에서 받지 않습니다.</p></div>' +
-      '<div class="k-buy-gate hz19-gate" aria-live="polite"></div>' +
-      '<button class="k-btn k-btn-p k-buy-go" type="submit">결제 페이지로</button>' +
-      '<button class="hz19-later k-buy-later" type="button">조금 더 둘러볼게요</button>' +
+      '<p class="k-buy-priv">이메일은 주문 처리와 시작 안내에만 씁니다(<a href="' + root + 'privacy/" target="_blank" rel="noopener">개인정보처리방침</a>).</p></div>' +
+      '<button class="k-btn k-btn-p k-buy-go" type="submit">결제하기</button>' +
+      '<p class="k-buy-more"><span>다른 방법</span>' + (isCredit ? '' : '<button type="button" data-pay="credit">토큰으로 내기' + (saved ? '<small>저장된 코드 ' + esc(saved.slice(-4)) + '</small>' : '') + '</button>') + '<button type="button" data-pay="bank">계좌이체 · 세금계산서</button></p>' +
       '<div class="k-buy-msg" role="status"></div>' +
-      // 13.7 월 요금제는 1개월 · 12개월 선결제(자동 재결제 없음). 정기구독(자동 결제) 승인 뒤 문구를 바꿈
-      '<p class="k-buy-note"><span class="nt">결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다.</span> ' + (monthly ? '1개월 · 12개월 선결제이고 자동으로 다시 결제되지 않습니다. 끝나기 7일 전에 안내 메일을 드립니다. ' : '') + '환불은 <a href="' + root + 'terms/" target="_blank" rel="noopener">이용약관</a>을 따릅니다. 문의 contact@skkc.co.kr</p>' +
+      '<p class="k-buy-note"><span class="nt">결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다.</span> <a href="' + root + 'terms/" target="_blank" rel="noopener">이용약관 · 환불</a> · contact@skkc.co.kr</p>' +
       '</form></div>';
     document.body.appendChild(box);
     document.body.style.overflow = 'hidden';
@@ -78,33 +76,26 @@
       return { p: p, base: base, vat: vat, total: base + vat, sku: sku, idx: (AMP.idx || {})[sku] || '', label: it.name + (monthly ? (p === 'y' ? ' · 12개월' : ' · 1개월') : '') };
     }
     function shopUrl(c) { return c.idx ? (/^https?:\/\//.test(String(c.idx)) ? String(c.idx) : String(AMP.shop).replace('%s', encodeURIComponent(c.idx))) : ''; }
-    function gateHtml(c, direct) {   // 13.6 KAIEC 결제 창처럼: 왜 성균관컨설팅인지 + 결제 페이지 미리보기 + 순서 셋(이메일 · 동의는 결제 페이지 주문서에서)
-      var url = shopUrl(c), prev = direct ? '<a class="hz19-prev" href="' + esc(url) + '" target="_blank" rel="noopener" aria-label="구매하기: 성균관컨설팅 비회원 주문서로 이동"><span class="hz19-bar" aria-hidden="true"><i></i><i></i><i></i><em>skkc.co.kr</em></span>' +
-        '<span class="hz19-body" aria-hidden="true"><b>AIMarker ' + esc(c.label) + '</b><span class="hz19-pr"><strong>' + won(c.total) + '</strong>' + (c.vat ? '<small class="vt">부가세 포함</small>' : '') + '</span><span class="hz19-btns"><span>장바구니</span><span class="buy">구매하기</span></span><small>구매하기를 누르면 비회원 주문서로 이어집니다</small></span></a>' : '';
-      var steps = direct ? '<li><b>[구매하기]</b>를 누르면 <b>비회원 주문서</b>가 열립니다. 회원가입은 필요 없습니다.</li><li>이름 · 이메일 · 휴대전화를 적고 카드 · 간편결제 · 계좌이체로 결제합니다.</li><li>결제 확인 뒤 영업일 하루 안에 결제할 때 적은 이메일로 ' + (isCredit ? '<b>기업 토큰 코드</b>와 세금계산서 안내가 도착합니다.' : isLabel ? '<b>시작 안내</b>가 도착합니다. 사이트 주소와 관리자 초대만 회신하면 <b>설치는 저희가</b> 합니다(영업일 2일 안).' : '<b>시작 안내</b>(설치 코드 · 사이트 주소 확인)가 도착합니다.') + '</li>'
-        : '<li>이메일을 적고 <b>결제 링크 받기</b>를 누릅니다.</li><li>영업일 하루 안에 메일로 온 성균관컨설팅 결제 링크에서 회원가입 없이 결제합니다.</li><li>결제 확인 뒤 영업일 하루 안에 같은 메일로 <b>시작 안내</b>가 도착합니다.</li>';
-      return '<div class="hz19-flow" aria-hidden="true"><span class="a">AIMarker</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg><span class="s">성균관컨설팅</span></div>' +
-        '<h3>결제는 운영사 성균관컨설팅<br>결제 페이지에서 진행됩니다</h3>' +
-        '<p class="hz19-lead">AIMarker는 성균관컨설팅이 개발하고 운영하는 서비스입니다. 그래서 결제와 영수증, 세금계산서는 운영사 이름으로 처리되고, 카드 명세서에도 ‘성균관컨설팅’으로 표시됩니다. 성균관컨설팅 회원가입 없이 비회원으로 결제하면 됩니다.</p>' +
-        prev + '<ol class="hz19-steps">' + steps + '</ol>' +
-        '<p class="hz19-note">카드 명세서에는 ‘성균관컨설팅’으로 표시됩니다 · <a href="' + root + 'terms/" target="_blank" rel="noopener">청약철회 · 환불 안내</a><small>성균관컨설팅 · 사업자등록번호 272-32-01885 · 통신판매업 신고 제2026-경기송탄-0622</small></p>';
+    var ARROW = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+    function whyHtml(direct) {   // 13.7 성균관컨설팅으로 넘어가는 까닭을 두 문장으로(이해하기 쉽고 거부감 없게)
+      return '<span class="k-buy-flow2" aria-hidden="true"><b>AIMarker</b>' + ARROW + '<b class="s">성균관컨설팅</b></span>' +
+        '<p>' + (direct ? '결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 카드 · 간편결제로 결제할 수 있고, 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.'
+          : 'AIMarker 운영사 <b>성균관컨설팅</b>의 결제 링크(카드 · 간편결제, 회원가입 없음)를 영업일 하루 안에 메일로 보내 드립니다. 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.') +
+        (isLabel && direct ? ' 결제 뒤 시작 안내 메일에 사이트 주소와 관리자 초대만 회신하면 설치는 저희가 합니다.' : '') + '</p>';
     }
     function paint() {
       var c = cur(), pay = (f.querySelector('input[name=pay]:checked') || {}).value, direct = pay === 'card' && !!c.idx;
-      sum.innerHTML = '<div><span>상품 금액' + (/별도/.test(it.vat) ? '(부가세 별도)' : '') + '</span><b>' + won(c.base) + '</b></div>' +
-        (pay === 'credit' ? '<div class="tot"><span>빠지는 토큰</span><b>' + tn(tokN(c.base)) + '토큰</b></div>' :
-        (c.vat ? '<div><span>부가세</span><b>' + won(c.vat) + '</b></div>' : '') +
-        '<div class="tot"><span>결제 금액</span><b>' + won(c.total) + '</b></div>');
-      go.innerHTML = pay === 'credit' ? tn(tokN(c.base)) + '토큰으로 주문하기' : pay === 'bank' ? '견적서 받기' : direct ? '<span>성균관컨설팅 결제 페이지로 이동</span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>' : '결제 링크 받기';
+      sum.innerHTML = '<div class="tot"><span>' + (pay === 'credit' ? '빠지는 토큰' : '결제 금액') + '</span><b>' + (pay === 'credit' ? tn(tokN(c.base)) + '토큰' : won(c.total)) + '</b></div>' +
+        '<small>' + (pay === 'credit' ? '상품 금액 ' + won(c.base) + ' · 100원 = 1토큰 · 부가세는 충전할 때 이미 냈습니다' : c.vat ? '부가세 포함 · 상품 금액 ' + won(c.base) + ' + 부가세 ' + won(c.vat) : '부가세 포함') + '</small>';
+      go.innerHTML = pay === 'credit' ? tn(tokN(c.base)) + '토큰으로 주문하기' : pay === 'bank' ? '견적서 받기' : direct ? '<span>성균관컨설팅에서 ' + won(c.total) + ' 결제하기</span>' + ARROW : '결제 링크 받기';
+      var why = f.querySelector('.k-buy-why'); if (why) { why.hidden = pay !== 'card'; why.innerHTML = pay === 'card' ? whyHtml(direct) : ''; }
+      var alt = f.querySelector('.k-buy-alt'); if (alt) { alt.hidden = pay === 'card'; var t = alt.querySelector('.t'); if (t) t.textContent = pay === 'credit' ? '토큰으로 내기' : '계좌이체 · 세금계산서'; }
       var crw = f.querySelector('.k-buy-cr'); if (crw) crw.hidden = pay !== 'credit';
-      var crn = f.querySelector('.crnote'); if (crn) crn.textContent = '충전해 둔 토큰에서 ' + tn(tokN(c.base)) + '토큰(상품 금액 ' + won(c.base) + ', 100원 = 1토큰)을 뺍니다. 부가세는 토큰을 충전할 때 이미 냈으므로 따로 내지 않습니다. 개인 · 기업 토큰 모두 됩니다.';
       if (pay === 'credit') crShow();
       var info = f.querySelector('.k-buy-info'); if (info) info.hidden = direct;
-      var gate = f.querySelector('.k-buy-gate'); if (gate) { gate.hidden = pay !== 'card'; gate.innerHTML = pay === 'card' ? gateHtml(c, direct) : ''; }
-      var later = f.querySelector('.k-buy-later'); if (later) later.hidden = !direct;
-      var nt = f.querySelector('.k-buy-note .nt'); if (nt) nt.textContent = pay === 'credit' ? '주문 뒤 영업일 하루 안에 토큰을 빼고 시작 안내 메일을 드립니다.' : pay === 'bank' ? '입금이 확인되면 영업일 하루 안에 시작 안내 메일을 드립니다.' : '결제 뒤 영업일 하루 안에 결제할 때 적은 이메일로 시작 안내 메일을 드립니다.';
-      var cn = f.querySelector('.cardnote'); if (cn) cn.textContent = c.idx ? '성균관컨설팅 결제 페이지에서 회원가입 없이 바로 결제합니다.' : '성균관컨설팅 결제 링크를 메일로 보내 드립니다. 회원가입 없이 결제합니다.';
-      Array.prototype.forEach.call(f.querySelectorAll('.k-buy-per label, .k-buy-pay label'), function (l) { var i = l.querySelector('input'); l.classList.toggle('on', !!(i && i.checked)); });
+      var more = f.querySelector('.k-buy-more'); if (more) more.hidden = pay !== 'card';
+      var nt = f.querySelector('.k-buy-note .nt'); if (nt) nt.textContent = pay === 'credit' ? '주문 뒤 영업일 하루 안에 토큰을 빼고 시작 안내 메일을 드립니다.' : pay === 'bank' ? '입금이 확인되면 영업일 하루 안에 시작 안내 메일을 드립니다.' : monthly ? '결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다. 1개월 · 12개월 선결제라 자동으로 다시 결제되지 않습니다.' : '결제 뒤 영업일 하루 안에 결제할 때 적은 이메일로 시작 안내 메일을 드립니다.';
+      Array.prototype.forEach.call(f.querySelectorAll('.k-buy-per label'), function (l) { var i = l.querySelector('input'); l.classList.toggle('on', !!(i && i.checked)); });
     }
     var cr = { code: '', st: '', left: null, t: 0 };   // st: '' | wait | ok | bad | off
     function crShow() {
@@ -139,13 +130,13 @@
     function fallback() { auto = false; var cd = f.querySelector('input[name=pay][value=card]'); if (cd) cd.checked = true; if (ci) ci.value = ''; cr = { code: '', st: '', left: null }; paint(); }
     if (ci) ci.addEventListener('input', function () { auto = false; var v = fmtCode(ci.value); if (v !== ci.value) ci.value = v; clearTimeout(cr.t); cr.t = setTimeout(crCheck, 350); });
     f.addEventListener('change', function (e) { if (e.target && e.target.name === 'pay') auto = false; paint(); });
+    f.addEventListener('click', function (e) { var pb = e.target.closest && e.target.closest('[data-pay]'); if (!pb) return; e.preventDefault(); var r = f.querySelector('input[name=pay][value=' + pb.getAttribute('data-pay') + ']'); if (r) { r.checked = true; auto = false; paint(); if (r.value === 'credit') { if (ci && normCode(ci.value).length === 16) crCheck(); if (ci && !ci.value) { ci.focus(); return; } } var em = f.querySelector('input[name=email]'); if (r.value !== 'card' && em) em.focus(); } });
     paint();
-    if (saved) crCheck();
     box.addEventListener('click', function (e) { if (e.target === box) close(); });
     box.querySelector('.k-buy-x').addEventListener('click', close);
     var lt = f.querySelector('.k-buy-later'); if (lt) lt.addEventListener('click', close);
     document.addEventListener('keydown', onKey, true);
-    setTimeout(function () { var info = f.querySelector('.k-buy-info'), em = f.querySelector('input[name=email]'), inn = box.querySelector('.k-buy-in'); if (info && info.hidden) { if (inn) { inn.setAttribute('tabindex', '-1'); try { inn.focus({ preventScroll: true }); } catch (eF) { /* 그대로 */ } } } else if (em) em.focus(); }, 50);
+    setTimeout(function () { if (!box) return; var info = f.querySelector('.k-buy-info'), em = f.querySelector('input[name=email]'), inn = box.querySelector('.k-buy-in'); if (info && info.hidden) { if (inn) { inn.setAttribute('tabindex', '-1'); try { inn.focus({ preventScroll: true }); } catch (eF) { /* 그대로 */ } } } else if (em) em.focus(); }, 50);
     f.addEventListener('submit', function (e) {
       e.preventDefault();
       var c = cur(), pay = (f.querySelector('input[name=pay]:checked') || {}).value, email = f.email.value.trim(), site = f.site.value.trim(), org = f.org.value.trim();
