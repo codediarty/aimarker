@@ -2,7 +2,7 @@
  "@context": "https://schema.org",
  "@type": "Product",
  "name": "AIMarker",
- "description": "AI가 만든 이미지 · 영상 · 글에 AI 마크를 자동으로 붙이는 AI 마킹, ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리 회사를 읽고 인용하도록 돕는 AI 검색 노출 최적화, 생성형 AI 서비스의 결과물 표시 의무 대응, 개인 AI 작성률 검사와 휴머나이징. 결제는 운영사 성균관컨설팅 결제 페이지(AIMarker는 성균관컨설팅이 개발 · 운영). 상담 없이 토큰 코드 하나로 모든 기능을 씁니다(1토큰 100원, 충전 3,000원부터).",
+ "description": "AI가 만든 이미지 · 영상 · 글에 AI 마크를 자동으로 붙이는 AI 마킹, ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리 회사를 읽고 인용하도록 돕는 AI 검색 노출 최적화, 병원 · 네일샵 · 카페 같은 동네 가게를 AI 검색에 등록하는 가게 AI 검색 등록, 생성형 AI 서비스의 결과물 표시 의무 대응, 개인 AI 작성률 검사와 휴머나이징. 결제는 운영사 성균관컨설팅 결제 페이지(AIMarker는 성균관컨설팅이 개발 · 운영). 상담 없이 토큰 코드 하나로 모든 기능을 씁니다(1토큰 100원, 충전 3,000원부터).",
  "brand": {
   "@type": "Brand",
   "name": "AIMarker"
@@ -116,6 +116,38 @@
    "priceSpecification": {
     "@type": "UnitPriceSpecification",
     "price": 1490000,
+    "priceCurrency": "KRW",
+    "valueAddedTaxIncluded": false,
+    "unitText": "1회"
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "가게 AI 검색 등록",
+   "category": "가게 AI 검색 등록",
+   "description": "병원 · 네일샵 · 카페 · 학원 · 부동산 등 가게 1곳, 홈페이지 없어도 · AI가 읽는 가게 페이지와 업종별 구조화 데이터 · 손님이 AI에게 묻는 질문 15개와 답 · 구글 · 네이버 · 빙 등록과 IndexNow 알림 · 지도 정보 맞춤 목록",
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#local",
+   "price": 99000,
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": 99000,
+    "priceCurrency": "KRW",
+    "valueAddedTaxIncluded": false,
+    "unitText": "1회"
+   }
+  },
+  {
+   "@type": "Offer",
+   "name": "가게 AI 검색 등록 + 1년 관리",
+   "category": "가게 AI 검색 등록",
+   "description": "등록의 모든 것 · 홈페이지 구조화 데이터 · 자주 묻는 질문 · llms.txt 설치 · 플레이스 · 카카오맵 · 구글 비즈니스 프로필 정리 · 1년 동안 바뀌는 정보 반영 · 매달 AI 답변 확인 리포트",
+   "priceCurrency": "KRW",
+   "url": "https://aimarker.kr/pricing/#local",
+   "price": 290000,
+   "priceSpecification": {
+    "@type": "UnitPriceSpecification",
+    "price": 290000,
     "priceCurrency": "KRW",
     "valueAddedTaxIncluded": false,
     "unitText": "1회"

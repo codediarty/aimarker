@@ -6,6 +6,7 @@
       <a href="{{root}}seo-setup/">SEO 설정 · SEO 세팅</a>
       <a href="{{root}}geo-marketing/">GEO 마케팅 · AI 검색 마케팅</a>
       <a href="{{root}}geo/">AI 검색 노출 최적화 전체</a>
+      <a href="{{root}}local/">가게 · 병원 AI 검색 등록</a>
       <a href="{{root}}label/">AI 마킹</a>
       <a href="{{root}}business/">기업용 한눈에</a>
     </div>

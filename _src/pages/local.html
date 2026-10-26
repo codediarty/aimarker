@@ -1,0 +1,105 @@
+<!--
+path: local/
+key: local
+v9: 1
+title: 가게 AI 검색 등록 · 자영업자 GEO 세팅 | ChatGPT · 네이버 AI 브리핑에 우리 가게가 나오게 | AIMarker
+ogtitle: 손님이 AI에게 물을 때, 우리 가게가 나오게 · AIMarker 가게 AI 검색 등록
+desc: 병원 · 치과 · 네일샵 · 미용실 · 카페 · 음식점 · 학원 · 부동산까지, 손님은 이제 ChatGPT · 제미나이 · 네이버 AI 브리핑에 가게를 묻습니다. 가게 정보를 넣으면 AI 검색 준비도와 손님 질문에 답할 수 있는지 무료로 진단하고, AI가 읽는 가게 페이지와 구조화 데이터를 자동으로 만들어 구글 · 네이버 · 빙에 등록합니다. 홈페이지가 없어도 됩니다. 990토큰(1토큰 100원)부터.
+lc_ind: 
+scripts: assets/local-core.js, assets/local.js
+styles: assets/local.css
+selflabel: footer
+-->
+<section class="k-phero k-ph2 lc-hero" id="top" aria-labelledby="h1">
+  <div class="k-wrap">
+    <div>
+      <ul class="lc-eye" aria-label="대상"><li>병원 · 치과</li><li>네일 · 미용</li><li>카페 · 음식점</li><li>학원 · 부동산</li><li>모든 동네 가게</li></ul>
+      <h1 class="k-h1" id="h1">손님이 AI에게 물을 때,<br>우리 가게가 나오게</h1>
+      <p class="k-lead">'강남역 근처 일요일에 여는 네일샵', '정자역 야간 진료 소아과'. 손님은 이제 검색창 대신 ChatGPT · 제미나이 · 네이버 AI 브리핑에 묻습니다. AIMarker는 우리 가게 정보를 AI가 읽는 형식으로 만들어 검색 엔진과 지도에 등록합니다. 홈페이지가 없어도 됩니다.</p>
+      <form class="lc-start" data-lc-start role="search" aria-label="가게 AI 검색 무료 진단"><label class="k-sr" for="sI">업종</label><select class="sel" id="sI" name="ind"></select><label class="k-sr" for="sN">가게 이름</label><input class="inp" id="sN" name="name" maxlength="60" placeholder="가게 이름"><label class="k-sr" for="sA">동네 · 가까운 역</label><input class="inp" id="sA" name="area" maxlength="30" placeholder="동네 · 가까운 역"><button class="k-btn k-btn-p" type="submit">무료로 AI 검색 진단하기{{ico:arrow}}</button></form>
+      <ul class="lc-trust"><li>{{ico:check}}가입 없이 무료</li><li>{{ico:clock}}3분이면 끝</li><li>{{ico:check}}홈페이지 없어도 됨</li><li>{{ico:lock}}입력한 정보는 서버로 보내지 않음</li></ul>
+    </div>
+    <div class="k-screen lc-ai" data-rot aria-hidden="true"><div class="k-screen-bar"><i></i><i></i><i></i><span>AI 검색 답변 예시</span><em class="k-ex">예시 · 가상의 가게</em></div><div class="lc-ai-body"><p class="lc-q"><span>손님</span><b>강남역 근처 일요일에도 하는 네일샵 추천해 줘</b></p><div class="lc-a"><p class="lc-a-t"><b>AI</b><span>일요일에도 문을 여는 곳으로 이런 곳이 있어요.</span></p><div class="lc-card"><div class="ch"><b>봄결 네일</b><span>네일샵 · 강남역 3번 출구 4분</span></div><ul><li>일요일 11:00~19:00</li><li>젤네일 45,000원부터</li><li>1인샵 · 네이버 예약</li></ul><p class="src">출처 <span>가게 정보 페이지</span><span>지도 · 플레이스</span></p></div></div><p class="lc-ai-ft"><span class="k">네일샵</span>AI가 답에 쓴 시간 · 가격 · 편의는 모두 가게가 미리 정리해 둔 정보입니다.</p></div></div>
+  </div>
+</section>
+<script type="application/json" id="lcEx">[{"q": "강남역 근처 일요일에도 하는 네일샵 추천해 줘", "a": "일요일에도 문을 여는 곳으로 이런 곳이 있어요.", "name": "봄결 네일", "meta": "네일샵 · 강남역 3번 출구 4분", "lines": ["일요일 11:00~19:00", "젤네일 45,000원부터", "1인샵 · 네이버 예약"], "ind": "네일샵"}, {"q": "정자역 근처 일요일에 진료하는 소아과 있어?", "a": "일요일 오전에 진료하는 곳으로 이런 곳이 있어요.", "name": "봄빛소아청소년과의원", "meta": "소아청소년과 · 정자역 2번 출구 3분", "lines": ["일요일 10:00~13:00 진료", "영유아 검진 · 예방접종", "주차 가능 · 실손 서류 바로 발급"], "ind": "병원 · 의원"}, {"q": "성수역 근처 노트북 하기 좋은 카페 알려 줘", "a": "콘센트와 와이파이가 있는 곳으로 이런 곳이 있어요.", "name": "봄결 커피", "meta": "카페 · 성수역 3번 출구 5분", "lines": ["와이파이 · 콘센트 · 2층 넓은 좌석", "매일 08:00~22:00", "아메리카노 4,500원"], "ind": "카페 · 베이커리"}, {"q": "대치동 소수 정원 중등 수학 학원 알려 줘", "a": "소수 정원으로 수업하는 곳으로 이런 곳이 있어요.", "name": "봄결수학학원", "meta": "수학 학원 · 대치역 6번 출구 5분", "lines": ["중등 · 고등 수학, 반 정원 6명", "교습비 중등 월 38만 원(주 3회)", "체험 수업 · 차량 운행"], "ind": "학원 · 교습소"}, {"q": "위례 신혼부부 전세 잘 보는 부동산 알려 줘", "a": "위례에서 전월세를 중개하는 곳으로 이런 곳이 있어요.", "name": "봄결공인중개사사무소", "meta": "부동산 · 위례 중앙광장 앞", "lines": ["아파트 매매 · 전월세 · 상가", "중개사무소 등록번호 함께 표시", "토요일 10:00~17:00 상담"], "ind": "부동산"}]</script>
+
+{{inc:lc-links.inc}}
+
+<section class="k-sec lp-ans" id="answer" aria-labelledby="ansT">
+  <div class="k-wrap">
+    <div class="lp-ans-b">
+      <p class="lp-k">한 줄 답</p>
+      <h2 class="k-h2" id="ansT">가게 AI 검색 등록은 무엇인가요?</h2>
+      <p class="k-lead">AI가 우리 가게를 답에 넣으려면 세 가지가 필요합니다. ① 어디서나 같은 기본 정보(이름 · 주소 · 전화 · 시간) ② 손님 질문에 답할 사실(가격 · 주차 · 예약 · 쉬는 날) ③ AI가 읽는 형식(구조화 데이터 · llms.txt). 가게 AI 검색 등록은 이 세 가지를 만들어 구글 · 네이버 · 빙과 지도에 올리고 서로 맞추는 일입니다.</p>
+      <ul class="lp-pts"><li>ChatGPT · 제미나이에는 가게를 직접 등록하는 창구가 없습니다. AI가 읽는 검색 색인과 지도에 올리는 것이 등록입니다.</li><li>홈페이지가 없으면 AI가 읽는 가게 페이지(aimarker.kr/p/가게 이름/)를 만들어 드립니다.</li><li>노출 순위는 약속하지 않습니다. 대신 AI가 답할 수 있는 질문 수를 전후로 보여 드립니다.</li></ul>
+    </div>
+  </div>
+</section>
+
+{{inc:lc-stats.inc}}
+
+<section class="k-sec" id="why" aria-labelledby="whyT">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="whyT">AI는 이런 가게를 골라 답합니다</h2>
+      <p class="k-lead">광고를 해도 AI가 읽을 정보가 없으면 답에 넣기 어렵습니다. AI는 읽을 수 있고, 질문에 바로 답할 수 있고, 믿을 근거가 있는 가게를 골라 소개하는 편입니다.</p></div>
+    <div class="lc-why">
+      <div><span class="ic">{{ico:check2}}</span><h3>어디서나 같은 기본 정보</h3><p>플레이스, 지도, SNS, 가게 페이지의 <b>이름 · 주소 · 전화 · 시간</b>이 같아야 AI가 같은 가게로 알아보고 믿습니다.</p></div>
+      <div><span class="ic">{{ico:chat}}</span><h3>질문에 바로 답하는 사실</h3><p>'주차 돼?', '일요일에 해?', '얼마야?'. <b>답이 적혀 있는 가게</b>가 답에 들어갑니다. 모르는 것은 AI도 말하지 않습니다.</p></div>
+      <div><span class="ic">{{ico:code}}</span><h3>AI가 읽는 형식</h3><p>사람이 보는 사진과 글만으로는 부족한 경우가 많습니다. <b>구조화 데이터(schema.org)</b>와 llms.txt로 기계가 읽게 정리합니다.</p></div>
+      <div><span class="ic">{{ico:shield}}</span><h3>믿을 근거</h3><p>사장님이 확인한 날짜, 사업자 정보, 업종 규정에 맞는 표현. <b>근거가 분명한 정보</b>일수록 AI가 그대로 옮깁니다.</p></div>
+    </div>
+    <p class="lc-alarm">AI는 모르는 가게를 추천하기 어렵습니다. 정보가 비어 있으면, 그 질문에 답할 수 있는 옆 가게가 먼저 나올 수 있습니다.</p>
+  </div>
+</section>
+
+{{inc:lc-tool.inc}}
+
+{{inc:lc-flow.inc}}
+
+{{inc:lc-pk.inc}}
+
+<section class="k-sec k-panel" id="vs" aria-labelledby="vsT">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="vsT">광고 대행과 무엇이 다른가요</h2>
+      <p class="k-lead">AIMarker는 자리를 사지 않고, AI가 읽는 사실을 갖춥니다. 그래서 멈춰도 남습니다.</p></div>
+    <div class="k-tbl-w"><table class="lp-tbl"><thead><tr><th scope="col">무엇을</th><th scope="col">플레이스 · 블로그 광고 대행</th><th scope="col">'AI 추천 1위' 약속 상품</th><th scope="col">AIMarker 가게 AI 검색 등록</th></tr></thead><tbody>
+      <tr><td>하는 일</td><td>광고 자리 · 순위 · 체험단 글</td><td>키워드 하나에 맞춘 작업</td><td>AI가 읽는 가게 페이지 · 구조화 데이터 · 검색 등록 · 정보 맞춤</td></tr>
+      <tr><td>약속</td><td>노출 기간 동안 광고 노출</td><td>특정 질문의 1위</td><td>순위 약속 없음. 답할 수 있는 질문 수를 전후로 보여 줌</td></tr>
+      <tr><td>비용</td><td>매달 광고비</td><td>키워드마다</td><td>990토큰(1회)부터, 1년 관리 2,900토큰</td></tr>
+      <tr><td>멈추면</td><td>노출도 멈춤</td><td>질문이 바뀌면 다시</td><td>정리해 둔 정보와 페이지가 남음</td></tr>
+      <tr><td>리뷰</td><td>체험단 · 후기 작업이 많음</td><td>상품마다 다름</td><td>리뷰를 만들지 않음. 답글로 사실만 보탬</td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+
+<section class="k-sec" id="industries" aria-labelledby="indT">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="indT">업종마다 손님이 묻는 것이 다릅니다</h2>
+      <p class="k-lead">업종을 고르면 그 업종 손님이 AI에게 자주 묻는 질문과 필요한 정보, 지켜야 할 규정까지 맞춰 진단합니다.</p></div>
+    <nav class="lc-inds" aria-label="업종별 안내"><a href="{{root}}local/clinic/"><b>병원 · 의원</b><span>'정자역 일요일에 진료하는 소아과'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/dental/"><b>치과</b><span>'잠실역 야간 진료하는 치과'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/hanui/"><b>한의원</b><span>'노원역 교통사고 치료 되는 한의원'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/derma/"><b>피부과</b><span>'신논현역 토요일에 하는 피부과'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/vet/"><b>동물병원</b><span>'마포 밤늦게 하는 동물병원'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/nail/"><b>네일샵</b><span>'강남역 일요일에 하는 네일샵'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/hair/"><b>미용실</b><span>'홍대 남자 커트 잘하는 미용실'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/beauty/"><b>피부관리 · 왁싱</b><span>'목동 1인 피부관리실'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/cafe/"><b>카페 · 베이커리</b><span>'성수 노트북 하기 좋은 카페'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/restaurant/"><b>음식점</b><span>'을지로 회식하기 좋은 한식집'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/academy/"><b>학원 · 교습소</b><span>'대치동 소수 정원 수학 학원'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/fitness/"><b>필라테스 · 헬스</b><span>'광교 새벽에 하는 필라테스'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/realty/"><b>부동산</b><span>'위례 전세 잘 보는 부동산'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/office/"><b>법률 · 세무 · 노무</b><span>'서초동 상속 상담 변호사'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/interior/"><b>인테리어 · 시공</b><span>'송도 아파트 리모델링 업체'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/stay/"><b>숙박 · 펜션</b><span>'가평 반려견 동반 펜션'</span><em>무료 진단하기 →</em></a><a href="{{root}}local/shop/"><b>꽃집 · 공방 · 그 밖의 가게</b><span>'합정 당일 꽃다발 되는 꽃집'</span><em>무료 진단하기 →</em></a><a href="#tool"><b>목록에 없나요?</b><span>업종에서 '그 밖의 가게'를 고르고 대표 상품 · 서비스를 적으면 됩니다.</span><em>지금 진단하기 →</em></a></nav>
+  </div>
+</section>
+
+<section class="k-sec" id="faq" aria-labelledby="fTitle">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="fTitle">사장님이 많이 묻는 질문</h2></div>
+    <div class="k-faq">
+      <details><summary>ChatGPT에 가게를 직접 등록하는 건가요?</summary><p>아니요. ChatGPT · 제미나이 같은 AI에는 가게를 따로 등록하는 창구가 없습니다. AI는 답을 만들 때 검색 엔진 색인(구글 · 빙 · 네이버)과 지도 · 플레이스 정보, 웹 페이지를 읽습니다. 가게 AI 검색 등록은 그곳들에 우리 가게 정보를 AI가 읽는 형식으로 올리고 서로 맞추는 일입니다.</p></details>
+      <details><summary>AI 답변에 꼭 나오나요? 1위가 되나요?</summary><p>약속할 수 없습니다. AI가 무엇을 답할지는 AI 회사의 모델과 질문, 손님 위치에 따라 달라집니다. AIMarker가 하는 일은 AI가 우리 가게를 몰라서, 또는 정보가 틀려서 빠지는 이유를 없애는 것이고, 1년 관리에서는 같은 질문을 매달 AI에게 물어 기록해 드립니다.</p></details>
+      <details><summary>얼마이고 어떻게 결제하나요?</summary><p>등록은 990토큰(99,000원), 등록 + 1년 관리는 2,900토큰(290,000원)이며 부가세 별도입니다. 결제는 운영사 성균관컨설팅 결제 페이지에서 회원가입 없이 토스페이 · 카드로 하고(결제 링크를 메일로 받을 수도 있습니다), 계좌이체와 세금계산서도 됩니다.</p></details>
+      <details><summary>결제하면 어떻게 진행되나요?</summary><p>결제할 때 적은 이메일로 영업일 하루 안에 시작 안내를 드립니다. 이 페이지에서 받은 '가게 정보 파일'을 회신하거나 가게 정보를 적어 보내 주시면, AI 가게 페이지를 올리고 검색 엔진에 등록한 뒤 전후 진단 결과를 보내 드립니다.</p></details>
+      <details><summary>홈페이지가 없어도 되나요?</summary><p>됩니다. AI가 읽는 가게 페이지를 aimarker.kr/p/가게 이름/ 주소에 만들어 드리고, 구조화 데이터와 자주 묻는 질문을 넣어 구글 · 네이버 · 빙에 등록합니다. 홈페이지가 있으면 그곳에도 함께 설치합니다.</p></details>
+      <details><summary>입력한 정보는 어디에 저장되나요?</summary><p>진단은 이 브라우저 안에서만 계산하고 서버로 보내지 않습니다. 작성 중인 내용은 다시 올 때를 위해 이 브라우저에만 임시로 남고, '처음부터'를 누르면 지워집니다. '광고 표현 점검'을 누를 때만 점검할 문장(소개 · 질문의 답 · 메뉴와 가격)을 전화번호와 링크는 빼고 검수 엔진에 보내며, 저장하지 않습니다.</p></details>
+      <details><summary>네이버 플레이스 상위노출 대행과 무엇이 다른가요?</summary><p>AIMarker는 순위를 사거나 리뷰를 만들지 않습니다. AI가 읽는 사실(시간 · 가격 · 주차 · 예약)을 정리해 AI가 읽는 곳에 올리고, 어디서나 같은 정보가 되도록 맞춥니다. 광고는 멈추면 끝나지만, 정리해 둔 정보는 남습니다.</p></details>
+      <details><summary>정보가 바뀌면 어떻게 하나요?</summary><p>등록 상품은 등록 뒤 한 달 동안 두 번까지 고쳐 드립니다. 등록 + 1년 관리는 1년 동안 영업시간 · 메뉴 · 가격 변경을 월 4번까지 바로 반영합니다.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="k-cta" aria-labelledby="ctaT">
+  <div class="k-wrap k-cta-in">
+    <div><h2 class="k-h2" id="ctaT">우리 가게, AI가 지금 얼마나 알까요?</h2><p class="k-lead">업종과 가게 이름만 넣으면 바로 시작합니다. 가입 없이 무료이고, 입력한 정보는 서버로 보내지 않습니다.</p></div>
+    <div><form class="lc-start" data-lc-start role="search" aria-label="가게 AI 검색 무료 진단"><label class="k-sr" for="tI">업종</label><select class="sel" id="tI" name="ind"></select><label class="k-sr" for="tN">가게 이름</label><input class="inp" id="tN" name="name" maxlength="60" placeholder="가게 이름"><label class="k-sr" for="tA">동네 · 가까운 역</label><input class="inp" id="tA" name="area" maxlength="30" placeholder="동네 · 가까운 역"><button class="k-btn k-btn-p" type="submit">무료로 진단하기{{ico:arrow}}</button></form></div>
+  </div>
+</section>

@@ -38,7 +38,7 @@
     var it = AMP.items[id];
     if (!it) return false;
     last = from || null;
-    var hasY = !!it.y, monthly = it.per === '월', isCredit = /^credit-/.test(id), isLabel = /^label-/.test(id), saved = isCredit ? '' : fmtCode(sget('am_pass')), auto = false;   // 13.7 저장된 코드가 있어도 카드가 기본(토큰은 '다른 방법'에서, 코드는 미리 채움)
+    var hasY = !!it.y, monthly = it.per === '월', isCredit = /^credit-/.test(id), isLabel = /^label-/.test(id), isLocal = /^local-/.test(id), saved = isCredit ? '' : fmtCode(sget('am_pass')), auto = false;   // 13.7 저장된 코드가 있어도 카드가 기본(토큰은 '다른 방법'에서, 코드는 미리 채움)
     per = hasY ? (per === 'm' ? 'm' : 'y') : 'm';   // 13.8c 12개월이 있으면 12개월이 기본(정기구독 없이 선결제로 전환을 올림). 1개월은 '먼저 써 보기'
     var t0 = Date.now();
     box = document.createElement('div');
@@ -81,7 +81,8 @@
       return '<span class="k-buy-flow2" aria-hidden="true"><b>AIMarker</b>' + ARROW + '<b class="s">성균관컨설팅</b></span>' +
         '<p>' + (direct ? '결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 토스페이 · 카드 · 계좌이체로 결제할 수 있고, 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.'
           : 'AIMarker 운영사 <b>성균관컨설팅</b>의 결제 링크(토스페이 · 카드 · 계좌이체, 회원가입 없음)를 영업일 하루 안에 메일로 보내 드립니다. 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.') +
-        (isLabel && direct ? ' 결제 뒤 시작 안내 메일에 사이트 주소와 관리자 초대만 회신하면 설치는 저희가 합니다.' : '') + '</p>';
+        (isLabel && direct ? ' 결제 뒤 시작 안내 메일에 사이트 주소와 관리자 초대만 회신하면 설치는 저희가 합니다.' : '') +
+        (isLocal ? ' 결제 뒤 시작 안내 메일에 무료 진단에서 받은 가게 정보 파일만 회신하면, 영업일 하루 안에 AI 가게 페이지를 올리고 등록합니다.' : '') + '</p>';
     }
     function paint() {
       var c = cur(), pay = (f.querySelector('input[name=pay]:checked') || {}).value, direct = pay === 'card' && !!c.idx;
