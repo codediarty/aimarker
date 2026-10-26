@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261027a"
+VER = "20261027b"
 TODAY = "2026-10-27"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -40,8 +40,8 @@ SHOP_IDX = {
     # 12.1 토큰(개인 c3 · c10 · c30 · c50 은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로
     # 13.5(10.24) skkc.co.kr 상품 7개 등록(카테고리 AIMarker, 디지털 상품). kaiec_buy=1 이면 바로 결제 페이지로 열림
     "c3": "34", "c10": "35", "c30": "36", "c50": "37", "credit-b10": "38", "credit-b30": "39", "credit-b100": "40",
-    # 13.9(10.27) 가게 AI 검색 등록(자영업자 GEO 세팅) 2개. 비어 있으면 '결제 링크 받기'
-    "local-basic": "", "local-year": "",
+    # 13.9(10.27) 가게 AI 검색 등록(자영업자 GEO 세팅) 2개. skkc.co.kr 디지털 상품 81(108,900원) · 82(319,000원), 부가세 포함 금액
+    "local-basic": "81", "local-year": "82",
 }
 CATALOG = {
     "label": {"name": "AI 마킹", "vat": "부가세 별도", "tiers": [

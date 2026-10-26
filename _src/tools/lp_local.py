@@ -225,7 +225,8 @@ COMMON_FAQ = [
  ("얼마이고 어떻게 결제하나요?", "등록은 990토큰(99,000원), 등록 + 1년 관리는 2,900토큰(290,000원)이며 부가세 별도입니다. 결제는 운영사 성균관컨설팅 결제 페이지에서 회원가입 없이 토스페이 · 카드로 하고(결제 링크를 메일로 받을 수도 있습니다), 계좌이체와 세금계산서도 됩니다."),
  ("결제하면 어떻게 진행되나요?", "결제할 때 적은 이메일로 영업일 하루 안에 시작 안내를 드립니다. 이 페이지에서 받은 '가게 정보 파일'을 회신하거나 가게 정보를 적어 보내 주시면, AI 가게 페이지를 올리고 검색 엔진에 등록한 뒤 전후 진단 결과를 보내 드립니다."),
  ("홈페이지가 없어도 되나요?", "됩니다. AI가 읽는 가게 페이지를 aimarker.kr/p/가게 이름/ 주소에 만들어 드리고, 구조화 데이터와 자주 묻는 질문을 넣어 구글 · 네이버 · 빙에 등록합니다. 홈페이지가 있으면 그곳에도 함께 설치합니다."),
- ("입력한 정보는 어디에 저장되나요?", "진단은 이 브라우저 안에서만 계산하고 서버로 보내지 않습니다. 작성 중인 내용은 다시 올 때를 위해 이 브라우저에만 임시로 남고, '처음부터'를 누르면 지워집니다. '광고 표현 점검'을 누를 때만 점검할 문장(소개 · 질문의 답 · 메뉴와 가격)을 전화번호와 링크는 빼고 검수 엔진에 보내며, 저장하지 않습니다."),
+ ("30초 진단 점수는 어떻게 계산하나요?", "사장님이 누른 답(홈페이지와 글로 적힌 정보, 구조화 데이터, 구글 지도 등록, 곳마다 같은 정보, 손님 질문에 답할 글, AI에게 물어본 결과)마다 정해진 점수를 더하고, 손님이 AI에게 묻는 질문마다 답할 근거가 있는지 맞춰 봅니다. 실제 AI 답변을 조회한 결과는 아니며, 1년 관리에서는 매달 실제 AI 답변을 확인해 기록해 드립니다."),
+ ("입력한 정보는 어디에 저장되나요?", "30초 진단과 자세한 진단은 이 브라우저 안에서만 계산하고 서버로 보내지 않습니다. 작성 중인 내용은 다시 올 때를 위해 이 브라우저에만 임시로 남고, '처음부터'를 누르면 지워집니다. '광고 표현 점검'을 누를 때만 점검할 문장(소개 · 질문의 답 · 메뉴와 가격)을 전화번호와 링크는 빼고 검수 엔진에 보내며, 저장하지 않습니다."),
  ("네이버 플레이스 상위노출 대행과 무엇이 다른가요?", "AIMarker는 순위를 사거나 리뷰를 만들지 않습니다. AI가 읽는 사실(시간 · 가격 · 주차 · 예약)을 정리해 AI가 읽는 곳에 올리고, 어디서나 같은 정보가 되도록 맞춥니다. 광고는 멈추면 끝나지만, 정리해 둔 정보는 남습니다."),
  ("정보가 바뀌면 어떻게 하나요?", "등록 상품은 등록 뒤 한 달 동안 두 번까지 고쳐 드립니다. 등록 + 1년 관리는 1년 동안 영업시간 · 메뉴 · 가격 변경을 월 4번까지 바로 반영합니다."),
 ]
@@ -287,10 +288,10 @@ def faq_html(items):
     return "\n".join('      <details><summary>%s</summary><p>%s</p></details>' % (q, a) for q, a in items)
 
 
-TRUST = ('<ul class="lc-trust"><li>{{ico:check}}가입 없이 무료</li><li>{{ico:clock}}3분이면 끝</li><li>{{ico:check}}홈페이지 없어도 됨</li><li>{{ico:lock}}입력한 정보는 서버로 보내지 않음</li></ul>')
+TRUST = ('<ul class="lc-trust"><li>{{ico:check}}가입 없이 무료</li><li>{{ico:clock}}30초면 결과</li><li>{{ico:check}}홈페이지 없어도 됨</li><li>{{ico:lock}}입력한 정보는 서버로 보내지 않음</li></ul>')
 
 
-def start_form(ind=None, label="무료로 AI 검색 진단하기"):
+def start_form(ind=None, label="30초 무료 진단 시작"):
     if ind:
         return ('<form class="lc-start one" data-lc-start data-ind="%s" role="search" aria-label="가게 AI 검색 무료 진단">'
                 '<label class="k-sr" for="sN">가게 이름</label><input class="inp" id="sN" name="name" maxlength="60" placeholder="가게 이름">'
@@ -322,8 +323,8 @@ def page_industry(d):
            ) % (esc(d["short"]), esc(d["qs"][0][0]), esc(d["n"]))
     ql = "".join("<li><span>%s<small>답하려면: %s</small></span></li>" % (esc(q), esc(n)) for q, n in d["qs"])
     qsec = ('<section class="k-sec k-tight" id="ask" aria-labelledby="askT">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="askT">%s 손님은 AI에게 이렇게 묻습니다</h2>\n'
-            '      <p class="k-lead">AI는 이 질문에 답할 수 있는 %s 골라 소개합니다. 아래 진단 도구에 정보를 넣으면 지금 몇 개에 답할 수 있는지 바로 보입니다.</p></div>\n'
-            '    <ul class="lc-ql">%s</ul>\n  </div>\n</section>\n') % (esc(d["short"]), esc(jo(d["n"], "을", "를")), ql)
+            '      <p class="k-lead">AI는 이 질문에 답할 수 있는 %s 골라 소개합니다. 30초 진단으로 지금 몇 개에 답할 근거가 있는지 바로 보입니다.</p></div>\n'
+            '    <ul class="lc-ql">%s</ul>\n    <p class="lc-ql-go"><button type="button" class="k-btn k-btn-p k-btn-lg" data-lq>30초 무료 진단 시작{{ico:arrow}}</button></p>\n  </div>\n</section>\n') % (esc(d["short"]), esc(jo(d["n"], "을", "를")), ql)
     tips = "".join("<li><b>%s</b><span>%s</span></li>" % (esc(a), esc(b)) for a, b in d["needs"])
     need = ('<section class="k-sec k-panel" id="need" aria-labelledby="needT">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="needT">AI가 우리 %s 추천하려면 필요한 정보</h2>\n'
             '      <p class="k-lead">이 여섯 가지가 어디서나 같은 사실로 정리되어 있으면 AI가 답에 넣을 근거가 됩니다. 비어 있는 것은 진단 도구가 알려 드립니다.</p></div>\n'
@@ -331,9 +332,9 @@ def page_industry(d):
     faq = d["faq"] + COMMON_FAQ[:4]
     tail = ('<section class="k-sec" id="faq" aria-labelledby="fTitle">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="fTitle">%s 사장님이 많이 묻는 질문</h2></div>\n    <div class="k-faq">\n%s\n    </div>\n  </div>\n</section>\n'
             % (esc(d["short"]), faq_html(faq)))
-    cta = ('<section class="k-cta" aria-labelledby="ctaT">\n  <div class="k-wrap k-cta-in">\n    <div><h2 class="k-h2" id="ctaT">우리 %s, AI가 지금 얼마나 알까요?</h2><p class="k-lead">가게 이름과 동네만 넣으면 바로 시작합니다. 가입 없이 무료이고, 입력한 정보는 서버로 보내지 않습니다.</p></div>\n'
+    cta = ('<section class="k-cta" aria-labelledby="ctaT">\n  <div class="k-wrap k-cta-in">\n    <div><h2 class="k-h2" id="ctaT">우리 %s, AI가 지금 얼마나 알까요?</h2><p class="k-lead">질문 몇 개에 누르기만 하면 30초 안에 결과가 나옵니다. 가입 없이 무료이고, 답한 내용은 서버로 보내지 않습니다.</p></div>\n'
            '    <div>%s<p class="k-small" style="margin-top:12px">다른 업종: <a href="{{root}}local/">가게 AI 검색 등록 전체</a> · <a href="{{root}}pricing/#local">요금</a></p></div>\n  </div>\n</section>\n'
-           ) % (esc(d["n"]), start_form(d["k"], "무료로 진단하기").replace('id="sN"', 'id="sN2"').replace('for="sN"', 'for="sN2"').replace('id="sA"', 'id="sA2"').replace('for="sA"', 'for="sA2"'))
+           ) % (esc(d["n"]), start_form(d["k"], "30초 무료 진단").replace('id="sN"', 'id="sN2"').replace('for="sN"', 'for="sN2"').replace('id="sA"', 'id="sA2"').replace('for="sA"', 'for="sA2"'))
     body = head + hero + "\n{{inc:lc-links.inc}}\n\n" + ans + "\n" + qsec + "\n{{inc:lc-tool.inc}}\n\n" + need + "\n{{inc:lc-stats.inc}}\n\n{{inc:lc-flow.inc}}\n\n{{inc:lc-pk.inc}}\n\n" + tail + "\n" + cta
     return body
 
@@ -382,8 +383,8 @@ def page_main():
             '    <nav class="lc-inds" aria-label="업종별 안내">%s</nav>\n  </div>\n</section>\n') % cards
     faq = ('<section class="k-sec" id="faq" aria-labelledby="fTitle">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="fTitle">사장님이 많이 묻는 질문</h2></div>\n    <div class="k-faq">\n%s\n    </div>\n  </div>\n</section>\n'
            % faq_html(COMMON_FAQ))
-    cta = ('<section class="k-cta" aria-labelledby="ctaT">\n  <div class="k-wrap k-cta-in">\n    <div><h2 class="k-h2" id="ctaT">우리 가게, AI가 지금 얼마나 알까요?</h2><p class="k-lead">업종과 가게 이름만 넣으면 바로 시작합니다. 가입 없이 무료이고, 입력한 정보는 서버로 보내지 않습니다.</p></div>\n'
-           '    <div>%s</div>\n  </div>\n</section>\n') % start_form(label="무료로 진단하기").replace('id="s', 'id="t').replace('for="s', 'for="t')
+    cta = ('<section class="k-cta" aria-labelledby="ctaT">\n  <div class="k-wrap k-cta-in">\n    <div><h2 class="k-h2" id="ctaT">우리 가게, AI가 지금 얼마나 알까요?</h2><p class="k-lead">업종을 고르고 질문 몇 개에 누르기만 하면 30초 안에 결과가 나옵니다. 가입 없이 무료이고, 답한 내용은 서버로 보내지 않습니다.</p></div>\n'
+           '    <div>%s</div>\n  </div>\n</section>\n') % start_form(label="30초 무료 진단").replace('id="s', 'id="t').replace('for="s', 'for="t')
     return head + hero + "\n{{inc:lc-links.inc}}\n\n" + ans + "\n{{inc:lc-stats.inc}}\n\n" + why + "\n{{inc:lc-tool.inc}}\n\n{{inc:lc-flow.inc}}\n\n{{inc:lc-pk.inc}}\n\n" + vs + "\n" + inds + "\n" + faq + "\n" + cta
 
 

@@ -1,4 +1,4 @@
-/* AIMarker 가게 AI 검색 등록 화면(13.9, 2026.10.27)
+/* AIMarker 가게 AI 검색 등록 화면(13.9, 2026.10.27 · 13.9b 30초 진단 창)
    입력하는 대로 바로 계산합니다(assets/local-core.js): AI 검색 준비도 · 손님이 AI에게 묻는 질문 · AI 가게 페이지 · 구조화 데이터 · llms.txt.
    계산은 이 브라우저 안에서만 하고 서버로 보내지 않습니다. 서버에 보내는 것은 '광고 표현 점검'을 누를 때 점검할 문장(소개 · 질문의 답 · 메뉴와 가격 · 참고,
    전화번호와 링크는 빼고)뿐이며 저장하지 않습니다(am.check).
@@ -29,20 +29,247 @@
     arrow: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>'
   };
 
-  /* ---------- 첫 화면 · 다른 페이지의 '빠른 시작' 양식: 업종 · 이름 · 지역 → 진단 칸으로 ---------- */
+  /* 자세한 진단(AI 가게 페이지 만들기)으로: 같은 페이지에 도구가 있으면 그 자리에서, 없으면 /local/ 로 */
+  function toTool(d) {
+    if (window.AMLocalTool) { window.AMLocalTool.start(d); return; }
+    var q = [];
+    Object.keys(d).forEach(function (k) { if (d[k] && /^(ind|name|area)$/.test(k)) q.push(k + '=' + encodeURIComponent(d[k])); });
+    location.href = root + 'local/' + (q.length ? '?' + q.join('&') : '') + '#tool';
+  }
+
+  /* ---------- 30초 AI 검색 진단(13.9b) ----------
+     질문 5~7개를 누르면, 지금 AI가 우리 가게를 소개할 근거가 있는지 바로 보여 줍니다(빈틈은 빨갛게, 크게).
+     결과는 사장님이 답한 내용으로만 계산합니다. 실제 AI 답변을 조회하거나 꾸며 내지 않고, 이 브라우저 밖으로 보내지 않습니다. */
+  var LQ = (function () {
+    var box = null, lastFocus = null, D = null, A = {}, path = [], busy = 0;
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var NQ = { restaurant: '식당' };
+    function I() { return has(L.IND, D.ind) ? L.IND[D.ind] : L.IND.shop; }
+    function n() { return NQ[D.ind] || I().n; }
+    function we() { return '우리 ' + n(); }
+    function nm() { return D.name || we(); }
+    /* 업종마다 손님이 꼭 묻는 것(질문 문구 · 빈틈 · 예시 답변에 씀) */
+    function word(k) {
+      var I0 = I(), med = !!I0.med, it = String(I0.itemsT || '대표 서비스').split(' · ')[0].replace(/와 가격$/, '');
+      var M = { sun: med ? '일요일 진료' : '일요일 영업', sat: med ? '토요일 진료' : '토요일 영업', night: med ? '야간 진료' : '늦은 시간 영업', early: '아침 일찍 여는지', items: it, price: '가격', fee: '교습비',
+        hours: I0.hw, book: '예약 방법', reserve: '예약', addr: '위치', base: '기본 정보', name: '기본 정보', reg: '등록번호', area2: '일하는 지역', checkin: '체크인 시간', tel: '연락처',
+        consult: '상담 방법', estimate: '견적', warranty: 'A/S', bbq: '바비큐', wifi: '콘센트 · 와이파이', pet: '반려동물 동반', group: '단체석', solo: '1인샵', auto: '자동차보험 진료', emergency: '응급 진료', shuttle: '차량 운행', trial: '체험 수업', online: '비대면 상담', parking: '주차' };
+      return M[k] || (L.FEAT[k] ? L.FEAT[k].t.split(' · ')[0] : '필요한 정보');
+    }
+    function keyFacts() {
+      var out = [];
+      (I().key || []).forEach(function (k) { var w = word(k); if (k !== 'hours' && out.indexOf(w) < 0 && out.length < 3) out.push(w); });
+      return out.join(' · ');
+    }
+    /* 질문(홈페이지가 없으면 홈페이지 질문 둘은 건너뜀) */
+    function QS() {
+      var q = [{ k: 'web', t: L.jo(we(), '은', '는') + ' 홈페이지가 있나요?', h: '네이버 플레이스 · 인스타그램 · 블로그는 빼고 생각해 주세요.', o: [['yes', '있어요'], ['none', '없어요(플레이스 · SNS만)']] }];
+      if (A.web === 'yes') {
+        q.push({ k: 'text', t: "홈페이지에 " + I().hw + " · 가격이 '글자로' 적혀 있나요?", h: '사진 속 글자는 AI가 잘 읽지 못합니다.', o: [['text', '글자로 적혀 있어요'], ['img', '사진 · 이미지로만 있어요'], ['unk', '잘 모르겠어요']] });
+        q.push({ k: 'sd', t: '홈페이지에 AI가 읽는 구조화 데이터(schema.org)가 들어 있나요?', h: '검색 엔진과 AI가 이름 · 주소 · 영업시간 · 가격을 기계로 정확히 읽는 형식입니다.', o: [['yes', '들어 있어요'], ['no', '없어요'], ['unk', '그게 뭔지 모르겠어요']] });
+      }
+      q.push({ k: 'gbp', t: '구글 지도(구글 비즈니스 프로필)에 ' + L.jo(we(), '을', '를') + ' 직접 등록했나요?', h: 'ChatGPT · 제미나이는 주로 구글 · 빙에 올라온 정보를 읽습니다.', o: [['yes', '등록했어요'], ['no', '안 했어요'], ['unk', '모르겠어요']] });
+      q.push({ k: 'nap', t: '네이버 · 카카오 · 구글에 적힌 ' + I().hw + '과 전화번호가 모두 같나요?', h: '서로 다르면 AI가 옛 시간이나 틀린 번호를 말할 수 있습니다.', o: [['same', '모두 같아요'], ['diff', '다른 곳이 있어요'], ['unk', '확인해 본 적 없어요']] });
+      q.push({ k: 'facts', t: '손님이 자주 묻는 것(' + keyFacts() + ')이 인터넷에 글로 정리돼 있나요?', h: "손님은 AI에게 '" + (I().med ? '일요일에 진료해?' : '주차 돼?') + "'처럼 아주 구체적으로 묻습니다.", o: [['all', '다 있어요'], ['some', '일부만 있어요'], ['few', '거의 없어요']] });
+      q.push({ k: 'ai', t: '최근에 ChatGPT나 네이버 AI에 ' + L.jo(we(), '을', '를') + ' 물어본 적 있나요?', h: '손님은 이미 묻고 있습니다. 마지막으로 확인한 때를 떠올려 보세요.', o: [['ok', '물어봤고 정확했어요'], ['bad', '틀리거나 안 나왔어요'], ['never', '물어본 적 없어요']] });
+      return q;
+    }
+    /* 점수: 답한 내용마다 정해진 점수(합 100). 모르는 것은 '확인되지 않음'으로 셈 */
+    var W = { text: { text: 20, img: 8, unk: 6 }, sd: { yes: 20, no: 0, unk: 0 }, gbp: { yes: 15, no: 0, unk: 4 }, nap: { same: 15, diff: 3, unk: 3 }, facts: { all: 15, some: 6, few: 0 }, ai: { ok: 15, bad: 0, never: 0 } };
+    function score() { var t = 0; Object.keys(W).forEach(function (k) { if (A.web === 'none' && (k === 'text' || k === 'sd')) return; if (has(W[k], A[k])) t += W[k][A[k]]; }); return Math.max(0, Math.min(100, t)); }
+    function web() { return A.web === 'yes' ? (A.text || 'unk') : 'none'; }
+    /* 손님 질문마다 AI가 답할 근거: 2 있음 · 1 틀리거나 빠질 수 있음 · 0 없음 */
+    function lvl(k) {
+      var w = web(), sd = A.web === 'yes' && A.sd === 'yes', g = A.gbp, f = A.facts;
+      if (/^(base|name|addr)$/.test(k)) return (g === 'yes' || w === 'text' || sd) ? 2 : (g === 'unk' || w === 'img' || w === 'unk') ? 1 : 0;
+      if (/^(hours|sun|sat|night|early)$/.test(k)) return ((g === 'yes' && A.nap === 'same') || sd || (w === 'text' && f !== 'few')) ? 2 : (g === 'yes' || w === 'text' || w === 'img') ? 1 : 0;
+      if (/^(items|price|fee|checkin|area2|reg)$/.test(k)) return ((w === 'text' && f === 'all') || (sd && f !== 'few')) ? 2 : (w === 'text' || w === 'img' || f === 'all') ? 1 : 0;
+      return (f === 'all' && (w === 'text' || sd || g === 'yes')) ? 2 : f !== 'few' ? 1 : 0;
+    }
+    function cover() {
+      return L.questions(L.normalize({ ind: D.ind, name: D.name, area: D.area })).map(function (q) { return { q: q.q, need: q.need, v: Math.min.apply(null, q.need.map(lvl)) }; });
+    }
+    /* 빈틈: [2 큰 빈틈 · 1 확인 필요, 제목, 무슨 일이 생기는지] */
+    function gaps() {
+      var G = [], w = web(), nn = n();
+      if (w === 'none') G.push([2, L.jo(we(), '을', '를') + ' 소개하는 공식 페이지가 없습니다', 'ChatGPT · 제미나이는 주로 구글 · 빙에 올라온 페이지를 읽습니다. 플레이스 · 인스타그램만으로는 ' + I().hw + ' · 가격 같은 사실이 AI에게 잘 전달되지 않습니다.']);
+      else if (w === 'img') G.push([2, I().hw + ' · 가격이 사진 속에만 있습니다', "사진 속 글자는 AI가 잘 읽지 못합니다. AI가 '얼마야?'에 답하지 못하는 가장 흔한 까닭입니다."]);
+      else if (w === 'unk') G.push([1, '홈페이지에 무엇이 글로 적혀 있는지 확인되지 않습니다', '사진만 있고 글이 없으면 AI가 읽을 것이 없습니다.']);
+      if (!(A.web === 'yes' && A.sd === 'yes')) G.push([2, 'AI가 읽는 형식(구조화 데이터)이 ' + (A.web === 'yes' && A.sd === 'unk' ? '확인되지 않습니다' : '없습니다'), '사람이 보는 글과 따로, 기계가 이름 · 주소 · ' + I().hw + ' · 가격을 정확히 읽는 schema.org 형식이 있어야 AI가 헷갈리지 않습니다.']);
+      if (A.gbp === 'no') G.push([2, '구글 지도에 ' + L.jo(we(), '이', '가') + ' 없습니다', '제미나이와 구글 AI 답변은 구글 지도 정보를 많이 씁니다. 여기에 없으면 답에서 빠지기 쉽습니다.']);
+      else if (A.gbp === 'unk') G.push([1, '구글 지도 등록이 확인되지 않습니다', '구글이 자동으로 만든 옛 정보가 그대로 남아 있을 수 있습니다.']);
+      if (A.nap === 'diff') G.push([2, '곳마다 ' + I().hw + ' · 전화번호가 다릅니다', 'AI는 여러 곳의 정보를 맞춰 봅니다. 서로 다르면 옛 시간이나 틀린 번호를 그대로 말할 수 있습니다.']);
+      else if (A.nap === 'unk') G.push([1, '정보가 서로 같은지 확인한 적이 없습니다', '한 곳만 고치고 다른 곳은 그대로인 경우가 가장 흔합니다.']);
+      if (A.facts === 'few') G.push([2, '손님이 묻는 것(' + keyFacts() + ')에 답할 글이 없습니다', '답할 근거가 없으면 AI는 그 질문에 답할 수 있는 다른 ' + L.jo(nn, '을', '를') + ' 권할 수 있습니다.']);
+      else if (A.facts === 'some') G.push([1, '손님이 묻는 것이 일부만 정리돼 있습니다', '빠진 질문에서는 답할 수 있는 다른 ' + L.jo(nn, '이', '가') + ' 먼저 나올 수 있습니다.']);
+      if (A.ai === 'bad') G.push([2, 'AI가 ' + L.jo(we(), '을', '를') + ' 틀리게 말하거나 빠뜨리고 있습니다', '사장님이 직접 확인한 신호입니다. 근거가 되는 페이지를 올리고 곳곳의 정보를 맞춰야 바뀝니다.']);
+      else if (A.ai === 'never') G.push([1, 'AI가 ' + L.jo(we(), '을', '를') + ' 어떻게 소개하는지 아무도 확인하지 않았습니다', '손님은 이미 묻고 있습니다. 1년 관리에서는 같은 질문을 매달 AI에게 물어 기록해 드립니다.']);
+      return G.sort(function (a, b) { return b[0] - a[0]; });
+    }
+    /* 정보가 비어 있을 때 AI 답변 예시(실제 답변이 아님을 함께 밝힘) */
+    function chat(C) {
+      var pick = null, nn = n();
+      C.forEach(function (c) { if (!pick && c.v < 2 && c.need[0] === 'base' && c.need[1] && c.need[1] !== 'items') pick = c; });
+      if (!pick) C.forEach(function (c) { if (!pick && c.v < 2 && c.need[0] === 'base') pick = c; });
+      if (!pick) return '';
+      var w = word(pick.need[1] || 'base'), q = pick.q + (/[?줘]$/.test(pick.q) ? '' : ' 있어?');
+      return '<div class="lq-chat"><p class="lq-chat-h"><b>정보가 비어 있으면, AI 답은 이렇게 됩니다</b><em>예시 화면 · 실제 AI 답변이 아님</em></p>' +
+        '<p class="lc-q"><span>손님</span><b>' + esc(q) + '</b></p>' +
+        '<div class="lc-a"><p class="lc-a-t"><b>AI</b><span>' + esc(L.jo(w, '을', '를')) + ' 확인할 수 있는 곳으로 이런 곳이 있어요.</span></p>' +
+        '<div class="lq-cs"><div class="lq-c ok"><b>A ' + esc(nn) + '</b><span>' + esc(w) + ' 정보 있음 · 출처 가게 페이지</span></div>' +
+        '<div class="lq-c ok"><b>B ' + esc(nn) + '</b><span>' + esc(w) + ' 정보 있음 · 출처 구글 지도</span></div>' +
+        '<div class="lq-c no"><b>' + esc(nm()) + '</b><span>' + esc(w) + ' 정보를 찾지 못해 답에서 빠짐</span></div></div></div>' +
+        '<p class="lq-chat-f">1년 관리에서는 이런 질문을 매달 실제 AI에게 물어, 우리 가게가 나오는지 기록해 드립니다.</p></div>';
+    }
+    function track(ev, p) { try { if (window.gtag) window.gtag('event', ev, p || {}); } catch (e) { /* 무시 */ } }
+
+    function frame() {
+      box = document.createElement('div');
+      box.className = 'lq';
+      box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'lqT');
+      box.innerHTML = '<div class="lq-in"><div class="lq-top"><p class="lq-k"><span class="dot" aria-hidden="true"></span>30초 AI 검색 진단<span class="lq-ind"></span></p><button type="button" class="lq-x" aria-label="진단 닫기">' + ICO.x + '</button>' +
+        '<div class="lq-bar" role="progressbar" aria-label="진행" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div></div><div class="lq-body" tabindex="-1"></div>' +
+        '<div class="lq-foot" hidden><button type="button" class="k-btn k-btn-p" data-buy="local-year"><span>빈틈 메우기 · 등록 + 1년 관리</span><b>2,900토큰</b></button></div></div>';
+      document.body.appendChild(box);
+      box.addEventListener('click', onClick);
+      document.addEventListener('keydown', onKey, true);
+    }
+    function body() { return box.querySelector('.lq-body'); }
+    function bar(p) { var b = box.querySelector('.lq-bar'); b.setAttribute('aria-valuenow', String(Math.round(p))); b.firstChild.style.width = p + '%'; }
+    function step() {
+      var Q = QS(), i = 0;
+      while (i < Q.length && has(A, Q[i].k)) i++;
+      if (i >= Q.length) { calc(); return; }
+      var q = Q[i];
+      foot(false);
+      bar(100 * i / (Q.length + 1));
+      body().innerHTML = '<p class="lq-n">질문 ' + (i + 1) + ' / ' + Q.length + '</p><h2 class="lq-q" id="lqT">' + esc(q.t) + '</h2><p class="lq-h">' + esc(q.h) + '</p>' +
+        '<div class="lq-o">' + q.o.map(function (o, j) { return '<button type="button" data-a="' + esc(q.k) + '" data-v="' + esc(o[0]) + '"><span class="no" aria-hidden="true">' + (j + 1) + '</span>' + esc(o[1]) + ICO.arrow + '</button>'; }).join('') + '</div>' +
+        (path.length ? '<button type="button" class="lq-back" data-back>이전 질문</button>' : '');
+      var first = body().querySelector('.lq-o button'); if (first) setTimeout(function () { try { first.focus({ preventScroll: true }); } catch (e) { first.focus(); } }, 30);
+    }
+    /* 결과 화면 아래 고정 단추: 본문의 결제 칸이 보이면 숨김 */
+    var io = null;
+    function foot(on) {
+      var f = box && box.querySelector('.lq-foot');
+      if (io) { io.disconnect(); io = null; }
+      if (!f) return;
+      f.hidden = !on; f.classList.remove('off');
+      if (!on) return;
+      var cta = box.querySelector('.lq-cta');
+      if (cta && window.IntersectionObserver) { io = new IntersectionObserver(function (es) { es.forEach(function (x) { f.classList.toggle('off', x.isIntersecting); }); }, { root: body(), threshold: .15 }); io.observe(cta); }
+    }
+    function calc() {
+      foot(false);
+      bar(96);
+      body().innerHTML = '<div class="lq-wait"><span class="spin" aria-hidden="true"></span><p id="lqT">답한 내용으로 계산하는 중…</p><small>손님이 AI에게 묻는 질문마다 답할 근거가 있는지 맞춰 봅니다</small></div>';
+      clearTimeout(busy); busy = setTimeout(result, reduce ? 50 : 900);
+    }
+    function result() {
+      var t = score(), C = cover(), G = gaps(), okN = C.filter(function (c) { return c.v === 2; }).length, big = G.filter(function (g) { return g[0] === 2; }).length, nn = n();
+      var gk = t >= 90 ? 'a' : t >= 70 ? 'b' : t >= 40 ? 'c' : 'd', lab = { a: '양호', b: '보통', c: '주의', d: '위험' }[gk];
+      var head = gk === 'd' ? L.jo(nm(), '은', '는') + ' 지금 AI가 소개할 근거가 거의 없습니다' :
+        gk === 'c' ? L.jo(nm(), '이', '가') + ' AI 답에서 빠지거나 틀리게 나올 빈틈이 ' + G.length + '개 있습니다' :
+        gk === 'b' ? '빈틈 ' + G.length + '개만 메우면 AI가 읽을 준비가 끝납니다' : '잘 갖춰져 있습니다. 이제 지키는 일이 남았습니다';
+      var sub = gk === 'a' ? '정보는 계속 바뀝니다. 매달 AI 답변을 확인해 틀린 곳이 생기기 전에 고치세요.' :
+        '손님이 AI에게 묻는 질문 ' + C.length + '개 가운데, AI가 확실히 답할 근거가 있는 질문은 <b>' + okN + '개</b>입니다. 나머지 질문에서는 답할 수 있는 다른 ' + esc(L.jo(nn, '이', '가')) + ' 먼저 나올 수 있습니다.';
+      bar(100);
+      track('local_quick_result', { score: t, grade: gk, ind: D.ind });
+      var cnt = function (v) { return C.filter(function (c) { return c.v === v; }).length; };
+      body().innerHTML =
+        '<section class="lq-r g-' + gk + '"><div class="lq-rh"><div class="lq-ring" style="--p:' + t + '"><b data-n="' + t + '">' + (reduce ? t : 0) + '</b><small>/ 100</small></div>' +
+        '<div><p class="lq-lv"><span>' + lab + '</span>지금 AI 검색 준비 상태</p><h2 class="lq-t" id="lqT">' + esc(head) + '</h2></div></div>' +
+        '<p class="lq-s">' + sub + '</p>' +
+        '<div class="lq-cells" aria-hidden="true">' + C.map(function (c) { return '<i class="v' + c.v + '"></i>'; }).join('') + '</div>' +
+        '<p class="lq-leg"><span class="v2">답할 근거 있음 ' + okN + '</span><span class="v1">틀리거나 빠질 수 있음 ' + cnt(1) + '</span><span class="v0">근거 없음 ' + cnt(0) + '</span></p>' +
+        '<p class="lq-why">10~50대의 54.5%가 최근 3개월 안에 ChatGPT를 사용했습니다. 손님은 지금도 AI에게 묻고 있습니다.<cite>오픈서베이 조사 · 2025.12</cite></p></section>' +
+        chat(C) +
+        (G.length ? '<section class="lq-g"><h3>지금 AI가 확인하지 못하는 것 <b>' + G.length + '개</b>' + (big ? '<em>큰 빈틈 ' + big + '</em>' : '') + '</h3><ol>' +
+          G.map(function (g) { return '<li class="lv' + g[0] + '"><span class="m" aria-hidden="true">' + (g[0] === 2 ? ICO.x : '!') + '</span><div><b>' + esc(g[1]) + '</b><p>' + esc(g[2]) + '</p></div></li>'; }).join('') + '</ol></section>' : '') +
+        '<section class="lq-cta"><h3>' + (gk === 'a' ? '1년 관리로 지키세요' : '이 빈틈, 영업일 하루 안에 메워 드립니다') + '</h3>' +
+        '<p>AI가 읽는 가게 페이지와 구조화 데이터를 만들어 구글 · 네이버 · 빙에 등록하고, 지도 정보를 같게 맞춥니다. 홈페이지가 없어도 되고, 사장님은 가게 정보만 한 번 보내 주시면 됩니다.</p>' +
+        '<div class="lq-btns"><button type="button" class="k-btn k-btn-p k-btn-lg" data-buy="local-year">등록 + 1년 관리 · 2,900토큰<em>추천</em></button>' +
+        '<button type="button" class="k-btn k-btn-l k-btn-lg" data-buy="local-basic">등록만 · 990토큰</button></div>' +
+        '<p class="lq-fine">1토큰 100원 · 부가세 별도 · 가게 페이지를 올리기 전에는 결제일부터 7일 안에 전액 환불</p>' +
+        '<p class="lq-more"><button type="button" class="k-a" data-detail>먼저 무료로 AI 가게 페이지 만들어 보기' + ICO.arrow + '</button><button type="button" class="k-a" data-again>다시 진단하기</button></p></section>' +
+        '<section class="lq-qs"><h3>손님이 AI에게 묻는 질문 ' + C.length + '개</h3><ul>' + C.map(function (c) {
+          return '<li class="v' + c.v + '"><span class="m" aria-hidden="true">' + (c.v === 2 ? ICO.check : c.v === 1 ? '!' : ICO.x) + '</span><span>' + esc(c.q) + '<small>' + (c.v === 2 ? '답할 근거 있음' : c.v === 1 ? '틀리거나 빠질 수 있음' : '근거 없음 · ' + esc(word(c.need[c.need.length - 1]))) + '</small></span></li>';
+        }).join('') + '</ul></section>' +
+        '<p class="lq-note">사장님이 답한 내용으로 계산한 결과이며, 실제 AI 답변을 조회한 것이 아닙니다. AI 답변에 나오는지와 순위는 약속하지 않습니다. 답한 내용은 서버로 보내지 않습니다.</p>';
+      var b = body(); b.scrollTop = 0;
+      foot(true);
+      try { b.focus({ preventScroll: true }); } catch (e) { b.focus(); }
+      var el = b.querySelector('.lq-ring b');
+      if (!reduce && el) { var t0 = performance.now(); (function tick(now) { var p = Math.min(1, (now - t0) / 700); el.textContent = String(Math.round(t * (1 - Math.pow(1 - p, 3)))); if (p < 1 && box) requestAnimationFrame(tick); })(t0); }
+    }
+    function onClick(e) {
+      var b;
+      if (e.target === box || e.target.closest('.lq-x')) { close(); return; }
+      if ((b = e.target.closest('[data-a]'))) { A[b.getAttribute('data-a')] = b.getAttribute('data-v'); path.push(b.getAttribute('data-a')); if (A.web === 'none') { delete A.text; delete A.sd; } step(); return; }
+      if (e.target.closest('[data-back]')) { var k = path.pop(); if (k) delete A[k]; step(); return; }
+      if (e.target.closest('[data-again]')) { A = {}; path = []; track('local_quick_again'); step(); return; }
+      if (e.target.closest('[data-detail]')) { var d = { ind: D.ind, name: D.name, area: D.area }; close(); toTool(d); return; }
+      /* [data-buy] 는 결제 시트(order.js)가 받아 이 창 위에 엽니다 */
+    }
+    function onKey(e) {
+      if (!box) return;
+      if (e.key === 'Escape') { if (document.querySelector('.k-buy')) return; e.preventDefault(); close(); return; }
+      if (/^[1-3]$/.test(e.key) && !document.querySelector('.k-buy')) { var o = box.querySelectorAll('.lq-o button')[+e.key - 1]; if (o) { e.preventDefault(); o.click(); } return; }
+      if (e.key !== 'Tab' || document.querySelector('.k-buy')) return;
+      var fs = Array.prototype.filter.call(box.querySelectorAll('button, a[href]'), function (x) { return x.offsetParent !== null; });
+      if (!fs.length) return;
+      var first = fs[0], last = fs[fs.length - 1];
+      if (!box.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+    function open(d) {
+      d = d || {};
+      D = { ind: has(L.IND, d.ind) ? d.ind : (has(L.IND, d.def) ? d.def : 'shop'), name: String(d.name || '').trim().slice(0, 60), area: String(d.area || '').trim().slice(0, 30) };
+      A = {}; path = [];
+      lastFocus = document.activeElement;
+      if (!box) frame();
+      box.querySelector('.lq-ind').textContent = ' · ' + I().t;
+      document.documentElement.classList.add('lq-on');
+      track('local_quick_start', { ind: D.ind });
+      step();
+    }
+    function close() {
+      if (!box) return;
+      clearTimeout(busy);
+      if (io) { io.disconnect(); io = null; }
+      document.removeEventListener('keydown', onKey, true);
+      box.remove(); box = null;
+      document.documentElement.classList.remove('lq-on');
+      if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) { lastFocus.focus(); }
+    }
+    return { open: open, close: close };
+  })();
+  window.AMLocalQuick = LQ;
+
+  /* ---------- 첫 화면 · 다른 페이지의 '빠른 시작' 양식: 업종 · 이름 · 지역 → 30초 진단 ---------- */
   $$('form[data-lc-start]').forEach(function (f) {
     var sel = f.querySelector('select[name=ind]');
     if (sel && !sel.options.length) L.ORDER.forEach(function (k) { var o = document.createElement('option'); o.value = k; o.textContent = L.IND[k].t; sel.appendChild(o); });
     f.addEventListener('submit', function (e) {
       e.preventDefault();
       var fe = function (n) { var el = f.elements.namedItem(n); return el && el.value ? String(el.value).trim() : ''; };
-      var d = { ind: fe('ind') || f.getAttribute('data-ind') || '', name: fe('name'), area: fe('area') };
-      if (window.AMLocalTool) { window.AMLocalTool.start(d); return; }
-      var q = [];
-      Object.keys(d).forEach(function (k) { if (d[k]) q.push(k + '=' + encodeURIComponent(d[k])); });
-      location.href = root + 'local/' + (q.length ? '?' + q.join('&') : '') + '#tool';
+      LQ.open({ ind: fe('ind') || f.getAttribute('data-ind') || '', name: fe('name'), area: fe('area') });
     });
   });
+  /* 다른 단추(업종 페이지 · 요금 칸 등): [data-lq] 또는 [data-lq="업종"] */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-lq]');
+    if (!b) return;
+    e.preventDefault();
+    var t = $('#lcTool'), nameEl = $('#f-name'), areaEl = $('#f-area');
+    LQ.open({ ind: b.getAttribute('data-lq') || (t && t.getAttribute('data-ind')) || ($('#f-ind') && $('#f-ind').value) || '', name: nameEl ? nameEl.value : '', area: areaEl ? areaEl.value : '' });
+  });
+  /* 주소로 바로 열기: …/local/#quick, …/local/nail/?quick=1 */
+  try {
+    var qq = new URLSearchParams(location.search);
+    if (location.hash === '#quick' || qq.get('quick') === '1') setTimeout(function () { var t = $('#lcTool'); LQ.open({ ind: qq.get('ind') || (t && t.getAttribute('data-ind')) || '', name: (qq.get('name') || ''), area: (qq.get('area') || '') }); }, 250);
+  } catch (e) { /* 무시 */ }
 
   /* ---------- AI 답변 예시 창: 업종 예시를 돌려 보여 줌(움직임 줄이기면 첫 예시만) ---------- */
   (function () {

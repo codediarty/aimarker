@@ -1,9 +1,9 @@
 <section class="k-sec lc-sec" id="tool" aria-labelledby="lcT">
   <div class="k-wrap">
     <div class="k-head">
-      <p class="k-eyebrow">{{ico:radar}}무료 진단 · 가입 없이 · 3분</p>
-      <h2 class="k-h2" id="lcT">우리 가게, AI가 지금 얼마나 알까요?</h2>
-      <p class="k-lead">가게 정보를 넣는 만큼 점수가 바로 오릅니다. 손님이 AI에게 묻는 질문 가운데 지금 몇 개에 답할 수 있는지, 무엇이 빠졌는지 보여 드리고, AI가 읽는 가게 페이지와 구조화 데이터를 그 자리에서 만들어 드립니다.</p>
+      <p class="k-eyebrow">{{ico:radar}}자세한 진단 · AI 가게 페이지 무료로 만들기</p>
+      <h2 class="k-h2" id="lcT">빈칸을 채우면, AI가 읽는 가게 페이지가 바로 생깁니다</h2>
+      <p class="k-lead">가게 정보를 넣는 만큼 점수가 바로 오르고, 손님 질문에 답할 수 있는 개수가 늘어납니다. AI가 읽는 가게 페이지와 구조화 데이터를 그 자리에서 만들어 드리고, 결제하신 분은 여기서 받은 '가게 정보 파일'만 회신하면 됩니다. <button type="button" class="k-a lc-lq" data-lq>먼저 30초 진단부터 하기</button></p>
     </div>
     <div class="lc" id="lcTool" data-ind="{{lc_ind}}">
       <form class="lc-form" id="lcForm" novalidate autocomplete="off">
