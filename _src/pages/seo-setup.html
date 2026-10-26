@@ -1,0 +1,145 @@
+<!--
+path: seo-setup/
+key: seo-setup
+title: SEO 설정 · SEO 세팅 체크리스트 2026 | 검색 엔진 등록부터 AI 검색(GEO)까지 한 번에 | AIMarker
+ogtitle: SEO 설정, 2026년에는 AI 검색까지 한 번에 | AIMarker
+desc: SEO 설정 · SEO 세팅 체크리스트: 네이버 서치어드바이저 · 구글 서치 콘솔 등록, 사이트맵 · robots.txt, 제목 · 설명, 구조화 데이터, 모바일 · 속도, 그리고 2026년에 빠지면 안 되는 AI 검색(GEO) 설정. 주소 하나로 지금 상태를 무료로 진단하고, SEO 기본과 GEO 를 1회 세팅(1,990토큰부터)으로 함께 끝냅니다.
+scripts: assets/geo.js
+styles: assets/mark.css, assets/v6.css
+selflabel: footer
+-->
+<section class="k-phero k-ph2" id="top" aria-labelledby="h1">
+  <div class="k-wrap">
+    <div>
+      <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}geo/">AI 검색 노출 최적화</a>{{ico:chev}}<span>SEO 설정 · SEO 세팅</span></p>
+      <h1 class="k-h1" id="h1">SEO 설정,<br>이제 AI 검색까지 한 번에</h1>
+      <p class="k-lead">검색 결과 위에 오르는 SEO 설정과, AI 가 답할 때 우리 회사를 인용하게 하는 GEO 설정은 절반 이상 겹칩니다. 2026년의 SEO 세팅은 둘을 한 번에 합니다. 주소 하나로 지금 상태부터 보세요.</p>
+      <form class="k-url" id="gForm" role="search" aria-label="AI 검색 노출 진단" style="margin-top:28px;max-width:560px">
+        <label class="k-sr" for="gUrl">진단할 주소</label>
+        <input id="gUrl" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="사이트나 상품 페이지 주소(예: myshop.co.kr)" maxlength="300" required>
+        <button class="k-btn k-btn-p" type="submit">{{ico:search}}무료로 진단하기</button>
+      </form>
+      <div class="k-hero-foot"><span>{{ico:lock}}공개된 페이지만 읽고 저장하지 않음</span><span>{{ico:clock}}10초 안팎</span><span>{{ico:check}}가입 없이 무료</span></div>
+      <p class="k-small" style="margin-top:12px">해 보기 <button type="button" class="k-chip" data-ex="aimarker.kr">aimarker.kr</button> <button type="button" class="k-chip" data-ex="aimarker.kr/pricing/">요금 페이지</button></p>
+      <div class="k-engines" aria-label="대상 AI 검색"><span>ChatGPT</span> <span>제미나이</span> <span>퍼플렉시티</span> <span>Claude</span> <span>네이버 AI 브리핑</span> <span>구글 AI 개요</span> <span>빙 코파일럿</span></div>
+    </div>
+    <div class="k-screen" aria-hidden="true">
+      <div class="k-screen-bar"><i></i><i></i><i></i><span>aimarker.kr/geo/ 진단 결과</span><em class="k-ex">예시</em></div>
+      <div class="k-screen-body">
+        <div class="k-geo">
+          <div class="k-geo-top"><div class="k-ring" style="--p:41"><b>41</b></div><div><b style="display:block;font-size:17px;font-weight:760">AI 검색 준비 41점</b><span class="k-small" style="color:var(--k-gray)">myshop.co.kr/product/123, 상품 페이지, 비어 있는 점수 +59</span></div></div>
+          <div class="k-bars">
+            <div class="k-bar"><span>AI 크롤러 접근</span><i><em class="lo" style="--w:50%"></em></i><b>10/20</b></div>
+            <div class="k-bar"><span>구조화 데이터</span><i><em class="lo" style="--w:8%"></em></i><b>2/25</b></div>
+            <div class="k-bar"><span>본문 가독성</span><i><em style="--w:70%"></em></i><b>14/20</b></div>
+            <div class="k-bar"><span>질문과 답</span><i><em class="lo" style="--w:2%"></em></i><b>0/10</b></div>
+          </div>
+          <div class="k-rows">
+            <div class="h"><span>고칠 거리</span><span></span><span>결과</span></div>
+            <div><b>Product 구조화 데이터, 가격, 브랜드</b><span></span><span class="k-dot ok">코드 만듦</span></div>
+            <div><b>Perplexity, Claude 검색 크롤러 허용</b><span></span><span class="k-dot ok">규칙 만듦</span></div>
+            <div><b>llms.txt, 자주 묻는 질문 틀</b><span></span><span class="k-dot ok">초안 만듦</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec k-tight k-panel" id="result" hidden>
+  <div class="k-wrap"><div class="gr6" id="gOut" aria-live="polite"></div></div>
+</section>
+
+{{inc:lp-links-b.inc}}
+
+<section class="k-sec lp-ans" id="answer" aria-labelledby="ansT">
+  <div class="k-wrap">
+    <div class="lp-ans-b">
+      <p class="lp-k">한 줄 답</p>
+      <h2 class="k-h2" id="ansT">SEO 설정 체크리스트, 한 줄로</h2>
+      <p class="k-lead">SEO 설정은 ① 검색 엔진에 사이트를 알리고(등록 · 사이트맵 · robots.txt) ② 페이지마다 무엇에 관한 글인지 분명히 하고(제목 · 설명 · 제목 단계 · 구조화 데이터) ③ 읽기 좋게(모바일 · 속도 · 내부 링크) 만드는 일입니다. 여기에 AI 크롤러 허용 · llms.txt · 질문과 답을 더하면 GEO 까지 됩니다.</p>
+      <ul class="lp-pts"><li>네이버 검색의 다섯 번에 한 번 이상은 AI 브리핑이 먼저 답합니다(CEO스코어데일리 2026.3.11). 순위만 보는 SEO 로는 이 답에 들어가지 못합니다.</li><li>구글 AI 개요는 월 20억 명이 봅니다(TechCrunch 2025.7.23). 검색 결과 1위보다 AI 개요에 인용되는 쪽이 먼저 보입니다.</li><li>AIMarker 의 1회 세팅은 SEO 기본(등록 · 사이트맵 · 제목 · 설명 · 구조화 데이터)과 GEO(크롤러 · llms.txt · FAQ · 모니터링)를 함께 합니다.</li></ul>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="checklist" aria-labelledby="ckT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="ckT">SEO 세팅 체크리스트 10가지(2026)</h2>
+      <p class="k-lead">1~7은 예전부터 하던 SEO 기본, 8~10은 2026년에 빠지면 안 되는 AI 검색 설정입니다. 진단 도구가 7영역 100점으로 재고 비어 있는 항목의 코드를 만들어 줍니다.</p>
+    </div>
+    <div class="k-tbl-w">
+      <table class="lp-tbl">
+        <thead><tr><th scope="col">#</th><th scope="col">설정</th><th scope="col">확인할 것</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>검색 엔진 등록</td><td>네이버 서치어드바이저 · 구글 서치 콘솔 · 빙 웹마스터에 사이트 등록과 소유 확인</td></tr>
+          <tr><td>2</td><td>사이트맵 · robots.txt</td><td>sitemap.xml 제출, robots.txt 에서 중요한 페이지가 막혀 있지 않은지</td></tr>
+          <tr><td>3</td><td>제목 · 설명</td><td>페이지마다 다른 제목(검색어 포함, 60자 안팎)과 설명(150자 안팎)</td></tr>
+          <tr><td>4</td><td>제목 단계 · 본문 구조</td><td>h1 하나, h2 로 나눈 구획, 첫 문단에 요약 문장</td></tr>
+          <tr><td>5</td><td>구조화 데이터</td><td>Organization · Product · FAQPage · BreadcrumbList(JSON-LD)</td></tr>
+          <tr><td>6</td><td>모바일 · 속도</td><td>휴대폰에서 가로 넘침 없음, 이미지 크기, 첫 화면 2~3초 안</td></tr>
+          <tr><td>7</td><td>내부 링크 · 표준 주소</td><td>관련 페이지끼리 연결, canonical, http → https</td></tr>
+          <tr><td>8</td><td>AI 크롤러 허용</td><td>GPTBot · ClaudeBot · PerplexityBot · Google-Extended 등 17종</td></tr>
+          <tr><td>9</td><td>llms.txt · 질문과 답</td><td>AI 용 사이트 안내문과 고객 말투의 FAQ</td></tr>
+          <tr><td>10</td><td>AI 답변 모니터링</td><td>질문 20개를 AI 네 곳에 물어 우리 이름이 나오는지 매달 기록</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="vs" aria-labelledby="vsT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="vsT">SEO 와 GEO, 무엇이 같고 무엇이 다른가</h2>
+      <p class="k-lead">같은 설정으로 둘 다 좋아지는 것이 많습니다. 다른 것은 'AI 가 가져다 쓰기 좋은 형태'를 더하는 일입니다.</p>
+    </div>
+    <div class="k-cols lp-cols">
+      <div class="k-col"><h4>같은 것</h4><p>사이트맵 · robots.txt · 제목과 설명 · 제목 단계 · 구조화 데이터 · 모바일 · 속도 · 내부 링크. SEO 기본이 안 되어 있으면 GEO 도 안 됩니다.</p></div>
+      <div class="k-col"><h4>GEO 에서 더하는 것</h4><p>AI 크롤러 허용(SEO 는 검색 크롤러만 봄), llms.txt, 질문과 답, 첫 문단 요약 문장, 출처 · 사업자 정보 같은 신뢰 신호, AI 답변 모니터링.</p></div>
+      <div class="k-col"><h4>보는 숫자</h4><p>SEO 는 순위와 클릭, GEO 는 'AI 답변에 우리 이름이 몇 번 나오나'. AIMarker 월 관리는 질문 20개를 매달 물어 이 숫자를 기록합니다.</p></div>
+      <div class="k-col"><h4>한 번에 하는 법</h4><p>AIMarker 1회 세팅은 1~10을 함께 합니다. 라이트 1,990토큰(페이지 10개), 스탠다드 4,900토큰(질문 20개 · 경쟁사 비교), 프로 14,900토큰(상품 500개 · 원격 설치).</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec k-panel" id="packages" aria-labelledby="pkTitle">
+  <div class="k-wrap">
+    <div class="k-head-row"><div class="k-head"><h2 class="k-h2" id="pkTitle">SEO 기본과 GEO 를 한 번에, 1회 세팅</h2>
+      <p class="k-lead">검색 엔진 등록과 사이트맵 제출 대행, 제목 · 설명 다듬기, 구조화 데이터, AI 크롤러 · llms.txt · FAQ 까지. 설치 뒤 다시 진단해 전후를 비교합니다.</p></div>
+      <a class="k-btn k-btn-l" href="{{root}}pricing/#rates">토큰 가격표</a></div>
+    {{tiers:geo}}
+    <h3 class="k-h3" style="margin:48px 0 16px">세팅 뒤 꾸준히, 월 관리</h3>
+    {{tiers:geocare:none}}
+    <p class="k-small" style="margin-top:14px">1토큰은 100원이고 기업 상품은 부가세 별도입니다. 결제는 토큰 또는 운영사 성균관컨설팅 결제 페이지(카드 · 간편결제 · 계좌이체 · 세금계산서)에서 합니다. AI 검색 노출 최적화는 노출 순위를 약속하지 않습니다.</p>
+  </div>
+</section>
+
+<section class="k-sec" id="faq" aria-labelledby="fTitle">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
+    <div class="k-faq">
+      <details><summary>SEO 설정을 직접 하려면 어디서부터 하나요?</summary><p>네이버 서치어드바이저와 구글 서치 콘솔에 사이트를 등록하고 sitemap.xml 을 제출하는 것이 먼저입니다. 그다음 페이지 제목 · 설명을 검색어가 들어가게 다듬고, 위 진단 도구로 구조화 데이터와 AI 크롤러 상태를 확인하세요. 비어 있는 항목은 붙여 넣을 코드를 만들어 드립니다.</p></details>
+      <details><summary>아임웹 · 카페24 · 워드프레스 사이트도 되나요?</summary><p>됩니다. 플랫폼마다 코드를 넣는 자리(머리 코드 · 푸터 코드 · robots.txt 설정)가 달라 진단 결과에서 플랫폼별 설치 자리를 안내하고, 1회 세팅에서는 저희가 함께 넣습니다.</p></details>
+      <details><summary>SEO 세팅을 하면 네이버 · 구글 1위가 되나요?</summary><p>순위는 약속할 수 없습니다. 검색 엔진과 AI 의 기준은 계속 바뀌고 경쟁 사이트도 있습니다. AIMarker 가 하는 일은 검색 엔진과 AI 가 우리 페이지를 못 읽거나 못 믿어서 빠지는 이유를 없애는 것이고, 결과는 서치 콘솔 지표와 AI 답변 언급 리포트로 확인합니다.</p></details>
+      <details><summary>블로그 · 유튜브 같은 콘텐츠 마케팅과는 어떻게 다른가요?</summary><p>SEO · GEO 설정은 '그릇'을 고치는 일이고 콘텐츠는 '담는 내용'입니다. 그릇이 깨져 있으면 좋은 글도 AI 와 검색 엔진에 닿지 않습니다. 월 관리 '성장'에는 AI 가 인용하기 좋은 글 매달 2편이 들어 있습니다.</p></details>
+      <details><summary>비용은 얼마인가요?</summary><p>1회 세팅 라이트 1,990토큰 · 스탠다드 4,900토큰 · 프로 14,900토큰(1토큰 100원, 부가세 별도), 월 관리 990토큰 · 2,900토큰. 기업 토큰을 충전해 세금계산서로 내거나 운영사 성균관컨설팅 결제 페이지에서 카드로 바로 냅니다. <a class="k-a" href="{{root}}pricing/#rates">토큰 가격표</a></p></details>
+      <details><summary>진단은 무엇을 보나요?</summary><p>AI 크롤러 접근 · 구조화 데이터 · 본문 가독성 · 메타 정보 · 질문과 답 · 이미지 · 신뢰 신호 일곱 영역을 100점으로 잽니다. 공개된 페이지만 읽고 저장하지 않으며, 같은 주소는 6시간 안에 같은 결과를 줍니다.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="k-cta" aria-labelledby="ctaT">
+  <div class="k-wrap k-cta-in">
+    <div><h2 class="k-h2" id="ctaT">SEO 점수, 주소 하나로 지금</h2><p class="k-lead">10초 안에 일곱 영역 점수와 고칠 거리가 나옵니다. 가입 없이 무료이고, 공개된 페이지만 읽고 저장하지 않습니다.</p></div>
+    <div>
+      <form class="k-url" data-goto-geo role="search" aria-label="무료 AI 검색 노출 진단">
+        <label class="k-sr" for="gUrl2">진단할 주소</label>
+        <input id="gUrl2" name="url" type="text" inputmode="url" spellcheck="false" placeholder="myshop.co.kr/product/123" maxlength="300" required>
+        <button class="k-btn k-btn-p" type="submit">무료로 진단하기</button>
+      </form>
+      <p class="k-small" style="margin-top:12px">함께 보기: <a href="{{root}}geo-setup/">GEO 세팅 · 설정</a> · <a href="{{root}}geo-marketing/">GEO 마케팅</a> · <a href="{{root}}geo/">AI 검색 노출 최적화 전체</a> · <a href="{{root}}pricing/#rates">토큰 가격표</a></p>
+    </div>
+  </div>
+</section>

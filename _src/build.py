@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261026e"
+VER = "20261026f"
 TODAY = "2026-10-26"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -448,7 +448,7 @@ MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코
                           ("pricing/#credits", "card", "토큰 충전", "상담 없이, 토큰 코드 하나로 모든 기능")])]
 B2C_MENU = [("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인"), ("ai-rate/", "AI 작성률 낮추기", "AI 패턴을 찾아 그 문장만 사람 문장으로"), ("ai-detector/", "GPT킬러 · AI 탐지기 대비", "탐지기가 보는 것과 실제로 되는 방법"), ("resume/", "자기소개서 AI 검사", "서류에서 걸러지기 전에 문항별로"), ("academic/", "레포트 · 논문 · 과제", "한글 · 워드 · PDF 그대로, 각주는 그대로"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")]
 NAV = [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("products", "기업용"), ("pricing/", "요금"), ("developers/", "개발자"), ("company/", "회사")]
-PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
+PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "geo-setup", "seo-setup", "geo-marketing", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
 NAV_KEY = {"humanize/": ["humanize", "personal", "proof", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check"], "label/": ["label", "site", "v", "mark", "mcheck", "m"], "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
 B2C_KEYS = ["humanize", "personal", "proof", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check"]   # 13.8 검색 수요 안내 페이지도 개인용 메뉴
 TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "휴머나이징", ["humanize", "personal", "proof", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check"]),
@@ -528,7 +528,7 @@ def footer(root):
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
     biz.append('<span>결제 · 세금계산서는 운영사 성균관컨설팅이 처리합니다</span>')
-    cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("site/", "설치 마법사"), ("mark/", "파일 AI 마킹"), ("geo/", "AI 검색 노출 최적화"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
+    cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("site/", "설치 마법사"), ("mark/", "파일 AI 마킹"), ("geo/", "AI 검색 노출 최적화"), ("geo-setup/", "GEO 세팅 · SEO 설정"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
             ("고객별", [("personal/", "개인 · 학생"), ("ai-rate/", "AI 작성률 낮추기"), ("resume/", "자기소개서 AI 검사"), ("academic/", "레포트 · 논문 AI 검사"), ("proof/", "AI 활용 증빙서"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "문의하기")]),
             ("개발자", [("developers/", "API와 SDK"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("m.js", "AI 마킹 스크립트(공개 코드)"), ("v/", "사이트 AI 마크 확인"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
             ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금과 토큰"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
@@ -613,6 +613,9 @@ def page(meta, body):
                 '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' % root)
     jsonld = meta.get("jsonld", "") + auto_ld(meta, body, path, title, desc)
     noindex = '<meta name="robots" content="noindex">' if meta.get("noindex") else ""
+    # 13.8 검색 엔진 소유 확인(첫 화면에만): 네이버 서치어드바이저 메타 태그(파일 naverf99735e2bba0209dec440a039d0d83ca.html 도 루트에 있음) · 구글은 파일 google67694027f26c117c.html
+    if meta.get("key") == "home":
+        noindex += '<meta name="naver-site-verification" content="66dc0527816398b550007fe72a67ac3199b59b9f"><meta name="google-site-verification" content="oJ2S4yA-g2sgLY040U_gbYuTBgjj1ve83drH1xHW5QE">'
     head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>%s</title><meta name="description" content="%s">%s<link rel="canonical" href="%s%s">'
             '<meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker"><meta property="og:title" content="%s">'
