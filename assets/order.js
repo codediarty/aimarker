@@ -39,7 +39,7 @@
     if (!it) return false;
     last = from || null;
     var hasY = !!it.y, monthly = it.per === '월', isCredit = /^credit-/.test(id), isLabel = /^label-/.test(id), saved = isCredit ? '' : fmtCode(sget('am_pass')), auto = false;   // 13.7 저장된 코드가 있어도 카드가 기본(토큰은 '다른 방법'에서, 코드는 미리 채움)
-    per = hasY && per === 'y' ? 'y' : 'm';
+    per = hasY ? (per === 'm' ? 'm' : 'y') : 'm';   // 13.8c 12개월이 있으면 12개월이 기본(정기구독 없이 선결제로 전환을 올림). 1개월은 '먼저 써 보기'
     var t0 = Date.now();
     box = document.createElement('div');
     box.className = 'k-buy';
@@ -48,12 +48,12 @@
     box.innerHTML = '<div class="k-buy-in"><button class="k-buy-x" type="button" aria-label="닫기">×</button>' +
       '<div class="k-buy-h"><small>' + esc(it.group) + '</small><h2 id="kbuyT">' + esc(it.name) + '</h2><p>' + esc(it.who) + '</p></div>' +
       '<form class="k-buy-b k-buy-s" novalidate>' +
-      (hasY ? '<div class="k-buy-per" role="radiogroup" aria-label="결제 기간"><label class="' + (per === 'm' ? 'on' : '') + '"><input type="radio" name="per" value="m"' + (per === 'm' ? ' checked' : '') + '><b>1개월</b><span>' + won(it.m) + ' / 월</span></label>' +
-        '<label class="' + (per === 'y' ? 'on' : '') + '"><input type="radio" name="per" value="y"' + (per === 'y' ? ' checked' : '') + '><b>12개월 한 번에</b><span>' + won(it.y) + ' · 10개월 요금</span></label></div>' : '') +
+      (hasY ? '<div class="k-buy-per" role="radiogroup" aria-label="결제 기간"><label class="' + (per === 'y' ? 'on' : '') + '"><input type="radio" name="per" value="y"' + (per === 'y' ? ' checked' : '') + '><b>12개월 한 번에 <em class="k-buy-rec">추천</em></b><span>' + won(it.y) + ' · 10개월 값, 2개월 값 절약</span></label>' +
+        '<label class="' + (per === 'm' ? 'on' : '') + '"><input type="radio" name="per" value="m"' + (per === 'm' ? ' checked' : '') + '><b>1개월 먼저 써 보기</b><span>' + won(it.m) + ' · 언제든 12개월로</span></label></div>' : '') +
       '<div class="k-buy-sum k-buy-sum1" aria-live="polite"></div>' +
       '<span class="k-buy-payin" hidden><input type="radio" name="pay" value="card" checked>' + (isCredit ? '' : '<input type="radio" name="pay" value="credit">') + '<input type="radio" name="pay" value="bank"></span>' +
       '<div class="k-buy-why" aria-live="polite"></div>' +
-      '<div class="k-buy-alt" hidden><p class="k-buy-alth"><b class="t"></b><button type="button" class="k-buy-back" data-pay="card">카드 · 간편결제로 돌아가기</button></p>' +
+      '<div class="k-buy-alt" hidden><p class="k-buy-alth"><b class="t"></b><button type="button" class="k-buy-back" data-pay="card">토스페이 · 카드로 돌아가기</button></p>' +
       (isCredit ? '' : '<div class="k-buy-f k-buy-cr" hidden><label><span>토큰 코드<em>필수</em></span><input type="text" name="crcode" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" placeholder="XXXX-XXXX-XXXX-XXXX" value="' + esc(saved) + '"></label>' +
         '<div class="k-buy-crb" aria-live="polite" hidden></div><p class="k-buy-crn">토큰이 없다면 <a href="' + root + 'pricing/#credits" target="_blank" rel="noopener">먼저 충전</a>하세요.</p></div>') + '</div>' +
       '<div class="k-buy-info"><div class="k-buy-f"><label><span>받을 이메일<em>필수</em></span><input type="email" name="email" autocomplete="email" maxlength="80" placeholder="name@company.co.kr"></label>' +
@@ -79,14 +79,15 @@
     var ARROW = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
     function whyHtml(direct) {   // 13.7 성균관컨설팅으로 넘어가는 까닭을 두 문장으로(이해하기 쉽고 거부감 없게)
       return '<span class="k-buy-flow2" aria-hidden="true"><b>AIMarker</b>' + ARROW + '<b class="s">성균관컨설팅</b></span>' +
-        '<p>' + (direct ? '결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 카드 · 간편결제로 결제할 수 있고, 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.'
-          : 'AIMarker 운영사 <b>성균관컨설팅</b>의 결제 링크(카드 · 간편결제, 회원가입 없음)를 영업일 하루 안에 메일로 보내 드립니다. 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.') +
+        '<p>' + (direct ? '결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 토스페이 · 카드 · 계좌이체로 결제할 수 있고, 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.'
+          : 'AIMarker 운영사 <b>성균관컨설팅</b>의 결제 링크(토스페이 · 카드 · 계좌이체, 회원가입 없음)를 영업일 하루 안에 메일로 보내 드립니다. 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.') +
         (isLabel && direct ? ' 결제 뒤 시작 안내 메일에 사이트 주소와 관리자 초대만 회신하면 설치는 저희가 합니다.' : '') + '</p>';
     }
     function paint() {
       var c = cur(), pay = (f.querySelector('input[name=pay]:checked') || {}).value, direct = pay === 'card' && !!c.idx;
       sum.innerHTML = '<div class="tot"><span>' + (pay === 'credit' ? '빠지는 토큰' : '결제 금액') + '</span><b>' + (pay === 'credit' ? tn(tokN(c.base)) + '토큰' : won(c.total)) + '</b></div>' +
-        '<small>' + (pay === 'credit' ? '상품 금액 ' + won(c.base) + ' · 100원 = 1토큰 · 부가세는 충전할 때 이미 냈습니다' : c.vat ? '부가세 포함 · 상품 금액 ' + won(c.base) + ' + 부가세 ' + won(c.vat) : '부가세 포함') + '</small>';
+        '<small>' + (pay === 'credit' ? '상품 금액 ' + won(c.base) + ' · 100원 = 1토큰 · 부가세는 충전할 때 이미 냈습니다' : c.vat ? '부가세 포함 · 상품 금액 ' + won(c.base) + ' + 부가세 ' + won(c.vat) : '부가세 포함') +
+        (hasY && c.p === 'y' && pay !== 'credit' && it.m * 12 > it.y ? '<br>1개월씩 12번 내는 것보다 ' + won(it.m * 12 - it.y) + '(부가세 별도) 적게 냅니다' : '') + '</small>';   // 13.8c 12개월 절약액을 숫자로
       go.innerHTML = pay === 'credit' ? tn(tokN(c.base)) + '토큰으로 주문하기' : pay === 'bank' ? '견적서 받기' : direct ? '<span>성균관컨설팅에서 ' + won(c.total) + ' 결제하기</span>' + ARROW : '결제 링크 받기';
       var why = f.querySelector('.k-buy-why'); if (why) { why.hidden = pay !== 'card'; why.innerHTML = pay === 'card' ? whyHtml(direct) : ''; }
       var alt = f.querySelector('.k-buy-alt'); if (alt) { alt.hidden = pay === 'card'; var t = alt.querySelector('.t'); if (t) t.textContent = pay === 'credit' ? '토큰으로 내기' : '계좌이체 · 세금계산서'; }
@@ -94,7 +95,7 @@
       if (pay === 'credit') crShow();
       var info = f.querySelector('.k-buy-info'); if (info) info.hidden = direct;
       var more = f.querySelector('.k-buy-more'); if (more) more.hidden = pay !== 'card';
-      var nt = f.querySelector('.k-buy-note .nt'); if (nt) nt.textContent = pay === 'credit' ? '주문 뒤 영업일 하루 안에 토큰을 빼고 시작 안내 메일을 드립니다.' : pay === 'bank' ? '입금이 확인되면 영업일 하루 안에 시작 안내 메일을 드립니다.' : monthly ? '결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다. 1개월 · 12개월 선결제라 자동으로 다시 결제되지 않습니다.' : '결제 뒤 영업일 하루 안에 결제할 때 적은 이메일로 시작 안내 메일을 드립니다.';
+      var nt = f.querySelector('.k-buy-note .nt'); if (nt) nt.textContent = pay === 'credit' ? '주문 뒤 영업일 하루 안에 토큰을 빼고 시작 안내 메일을 드립니다.' : pay === 'bank' ? '입금이 확인되면 영업일 하루 안에 시작 안내 메일을 드립니다.' : monthly ? '결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다. 선결제라 자동으로 다시 결제되지 않고, 끝나기 7일 전에 안내 메일을 드립니다.' : '결제 뒤 영업일 하루 안에 결제할 때 적은 이메일로 시작 안내 메일을 드립니다.';
       Array.prototype.forEach.call(f.querySelectorAll('.k-buy-per label'), function (l) { var i = l.querySelector('input'); l.classList.toggle('on', !!(i && i.checked)); });
     }
     var cr = { code: '', st: '', left: null, t: 0 };   // st: '' | wait | ok | bad | off
@@ -161,7 +162,7 @@
       var lead = AM.call ? AM.call('am.lead', { kind: 'biz', plan: c.label, name: '', org: org || site || (email.split('@')[1] || '') || '개인 주문', contact: email, site: site, memo: memo, hp: '', ms: Date.now() - t0, src: (location.pathname + location.search).slice(0, 80) + ' 결제 시트' }, 15000) : Promise.reject(new Error('no AM'));
       lead.then(function (r) {
         if (!r || !r.ok) throw new Error((r && r.message) || 'fail');
-        say('ok', pay === 'credit' ? '주문을 받았습니다' + (r.id ? '(접수번호 ' + esc(r.id) + ')' : '') + '. 영업일 하루 안에 ' + crN.toLocaleString('ko-KR') + '토큰을 빼고 <b>' + esc(email) + '</b>로 시작 안내를 보내 드립니다. 토큰이 모자라면 먼저 알려 드립니다.' : '주문 요청을 받았습니다' + (r.id ? '(접수번호 ' + esc(r.id) + ')' : '') + '. 영업일 하루 안에 <b>' + esc(email) + '</b>로 ' + (pay === 'bank' ? '견적서와 입금 안내를' : '성균관컨설팅 결제 링크(카드 · 간편결제)를') + ' 보내 드립니다.');
+        say('ok', pay === 'credit' ? '주문을 받았습니다' + (r.id ? '(접수번호 ' + esc(r.id) + ')' : '') + '. 영업일 하루 안에 ' + crN.toLocaleString('ko-KR') + '토큰을 빼고 <b>' + esc(email) + '</b>로 시작 안내를 보내 드립니다. 토큰이 모자라면 먼저 알려 드립니다.' : '주문 요청을 받았습니다' + (r.id ? '(접수번호 ' + esc(r.id) + ')' : '') + '. 영업일 하루 안에 <b>' + esc(email) + '</b>로 ' + (pay === 'bank' ? '견적서와 입금 안내를' : '성균관컨설팅 결제 링크(토스페이 · 카드)를') + ' 보내 드립니다.');
         go.textContent = '요청 완료';
         if (window.gtag) try { window.gtag('event', 'begin_checkout', { items: [{ item_id: c.sku, item_name: c.label, price: c.total }] }); } catch (eG) { /* 무시 */ }
       }).catch(function () {

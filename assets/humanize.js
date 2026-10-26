@@ -1187,7 +1187,7 @@
   function shopName(p) { return 'AIMarker ' + p.name + ' · AI 글 인간화 작업 ' + tk(p.cr) + '토큰'; }   // 13.6 성균관컨설팅 결제 페이지의 상품 이름(아임웹 상품 34~37)
   function gateHtml(p, tu, sh) {   // 13.7 간단하게: AIMarker → 성균관컨설팅 칩 + 두 문장(왜 성균관컨설팅인지 · 코드는 어떻게 오는지). 이메일 · 동의는 결제 페이지 주문서에서
     return '<div class="hz19-flow" aria-hidden="true"><span class="a">AIMarker</span>' + ico('arrow') + '<span class="s">성균관컨설팅</span></div>' +
-      '<p class="hz19-lead">결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 카드 · 간편결제로 결제하면 ' +
+      '<p class="hz19-lead">결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 토스페이 · 카드로 결제하면 ' +
       (tu ? '지금 코드에 ' + tk(p.cr) + '토큰이 더해집니다(코드를 받았던 이메일로 결제해 주세요).' : '결제할 때 적은 이메일로 영업일 하루 안에 토큰 코드가 갑니다.') +
       ' 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.</p>';
   }

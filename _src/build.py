@@ -21,7 +21,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261026f"
+VER = "20261026g"
 TODAY = "2026-10-26"
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
@@ -125,7 +125,7 @@ def tiers_html(key, root, pick=None):
         if t.get("m") and key != "credit":
             big = '%s%s토큰' % ("월 " if t.get("per") == "월" else "", format(t["m"] // TOKEN_WON, ","))
             if t.get("y"):
-                sub = '12개월 %s토큰(10개월 값)' % format(t["y"] // TOKEN_WON, ",")
+                sub = '12개월 %s토큰(10개월 값, 2개월 값 절약)' % format(t["y"] // TOKEN_WON, ",")   # 13.8c 정기구독 대신 12개월 선결제를 권함
             elif t.get("per") == "1회":
                 sub = '1회 · ' + t["note"] if t.get("note") else '1회'
             else:
@@ -140,12 +140,12 @@ def tiers_html(key, root, pick=None):
         if t.get("href"):
             btn = '<a class="k-btn %s" href="%s%s">%s</a>' % (kind, root, t["href"], t.get("cta", "자세히"))
         else:
-            btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], t.get("cta", "결제하기"))
+            btn = '<button class="k-btn %s" type="button" data-buy="%s"%s>%s</button>' % (kind, t["id"], ' data-per="y"' if t.get("y") else '', t.get("cta", "결제하기"))   # 13.8c 12개월이 있는 상품은 시트가 12개월로 열림
         out.append('<div class="k-plan%s" id="%s"><div class="hd"><h3>%s%s</h3><p class="who">%s</p></div><p class="pr"><b>%s</b>%s</p>%s%s<ul>%s</ul></div>'
                    % (" best" if t.get("best") else "", t["id"], t["name"], best, t["who"], big, per, sub, btn, feats))
     n = len(c["tiers"])
     tail = '' if key == "credit" else ' 충전해 둔 토큰으로도 냅니다(상품 금액 100원 = 1토큰).'
-    return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">1토큰은 100원, 결제 금액은 %s. 결제는 운영사 성균관컨설팅 결제 페이지에서 카드, 간편결제, 계좌이체로 합니다.%s</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"], tail)
+    return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">1토큰은 100원, 결제 금액은 %s. 결제는 운영사 성균관컨설팅 결제 페이지에서 토스페이, 카드, 계좌이체로 합니다.%s</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"], tail)
 
 
 # 12.0 토큰(AI 작성률 검사 · AI 휴머나이징). 글 검사, 요금, 개인용 페이지가 같은 칸을 씀.

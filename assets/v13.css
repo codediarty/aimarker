@@ -846,3 +846,6 @@ body .hz7-dlg .hz18-packs input:checked + span .nm, body .hz7-dlg .hz18-packs in
   .lp-tips li::before { width: 30px; height: 30px; }
   .lp-links-k { width: 100%; }
 }
+
+/* 13.8c 결제 시트 기간 고르기: 12개월 추천 표시 */
+.k-buy-per label b .k-buy-rec { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: var(--ds-blue-600); color: #fff; font-size: 11px; font-weight: 700; font-style: normal; vertical-align: 2px; }
