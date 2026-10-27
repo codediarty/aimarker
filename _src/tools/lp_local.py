@@ -18,7 +18,7 @@ IND = [
   ex=dict(q="정자역 근처 일요일에 진료하는 소아과 있어?", a="일요일 오전에 진료하는 곳으로 이런 곳이 있어요.", name="봄빛소아청소년과의원", meta="소아청소년과 · 정자역 2번 출구 3분", lines=["일요일 10:00~13:00 진료", "영유아 검진 · 예방접종", "주차 가능 · 실손 서류 바로 발급"]),
   qs=[("정자역 일요일에 진료하는 소아과", "요일별 진료 시간"), ("분당 야간 진료하는 병원", "늦게까지 진료하는 요일"), ("예약 없이 가도 되는 이비인후과", "접수 · 예약 방법"), ("영유아 검진 되는 소아과 어디야?", "주요 진료"),
       ("주차 되는 내과 알려 줘", "주차"), ("점심시간 몇 시야?", "점심시간"), ("실손 보험 서류 바로 떼 주는 병원", "실손 서류 발급"), ("공휴일에 여는 병원", "공휴일 진료")],
-  needs=[("진료 과목과 주요 진료", "'소아청소년과 진료, 영유아 검진, 예방접종'처럼 손님이 부르는 말로 적습니다."), ("요일별 진료 시간 · 점심시간", "일요일 · 야간 · 공휴일 진료는 손님이 AI에게 가장 많이 묻는 것입니다."), ("접수 · 예약 방법", "예약 없이 가도 되는지, 온라인 접수가 되는지 적습니다."),
+  needs=[("진료 과목과 주요 진료", "'소아청소년과 진료, 영유아 검진, 예방접종'처럼 손님이 부르는 말로 적습니다."), ("요일별 진료 시간 · 점심시간", "일요일 · 야간 · 공휴일 진료는 손님이 AI에게 자주 묻는 것입니다."), ("접수 · 예약 방법", "예약 없이 가도 되는지, 온라인 접수가 되는지 적습니다."),
          ("주차 · 엘리베이터", "보호자와 어르신이 꼭 묻는 것입니다."), ("위치와 찾아오는 길", "건물 이름, 몇 층, 가까운 역 출구까지."), ("사실만 쓴 소개", "효과 · 비교 · 후기 없이, 의료광고 규정에 맞게.")],
   faq=[("병원도 의료광고 심의를 받아야 하나요?", "의료광고 사전 심의는 법에서 정한 매체(신문, 옥외광고, 이용자가 많은 인터넷 매체 등)에 광고할 때 받습니다. AI 가게 페이지는 진료 과목 · 시간 · 위치 같은 사실 정보만 담고 효과 · 비교 · 후기 표현은 넣지 않습니다. 심의가 필요한지 애매하면 의료광고 자율심의기구에 확인하세요. 법률 자문은 아닙니다."),
        ("진료비 · 비급여 가격도 적어야 하나요?", "적지 않아도 됩니다. 적는다면 병원이 공개한 비급여 진료비와 같은 값만 적고 할인 · 이벤트 표현은 쓰지 않습니다. AI 가게 페이지에는 진료 내용에 따라 달라질 수 있다는 안내를 함께 붙입니다."),
@@ -42,7 +42,7 @@ IND = [
   ex=dict(q="노원역 근처 교통사고 치료 되는 한의원 어디야?", a="자동차보험으로 진료하는 곳으로 이런 곳이 있어요.", name="온결한의원", meta="한의원 · 노원역 5번 출구 1분", lines=["교통사고 진료(자동차보험)", "평일 20:30까지 · 토요일 진료", "침 · 추나요법 · 약침"]),
   qs=[("노원역 교통사고 치료 되는 한의원", "자동차보험 진료"), ("야간 진료하는 한의원", "진료 시간"), ("추나요법 하는 한의원", "주요 진료"), ("주차 되는 한의원", "주차"),
       ("토요일에 하는 한의원", "토요일 진료"), ("한약 상담 되는 곳", "주요 진료"), ("예약 없이 가도 돼?", "접수 방법"), ("실손 보험 서류 되는 한의원", "실손 서류")],
-  needs=[("주요 진료", "침, 추나요법, 약침, 한약 처방처럼."), ("자동차보험 진료 여부", "교통사고 뒤 가장 많이 묻는 것입니다."), ("진료 시간(야간 · 토요일)", "요일별로 적습니다."),
+  needs=[("주요 진료", "침, 추나요법, 약침, 한약 처방처럼."), ("자동차보험 진료 여부", "교통사고 뒤 자주 묻는 것입니다."), ("진료 시간(야간 · 토요일)", "요일별로 적습니다."),
          ("접수 방법", "예약제인지, 바로 가도 되는지."), ("주차 · 위치", "건물 주차와 찾아오는 길."), ("사실만 쓴 소개", "효과를 장담하는 말 없이.")],
   faq=[("자동차보험 진료를 적어도 되나요?", "사실이면 됩니다. 편의 항목에서 '교통사고 진료(자동차보험)'를 고르면 AI 가게 페이지와 구조화 데이터에 함께 들어갑니다. 비용을 단정하는 표현은 확인 뒤에 씁니다."),
        ("한약 효과를 소개해도 되나요?", "효과를 장담하는 말은 의료광고 규정(의료법 제56조)에 걸릴 수 있어 쓰지 않습니다. 진료 항목과 진료 방식, 시간처럼 확인할 수 있는 사실을 적습니다."),
@@ -140,7 +140,7 @@ IND = [
       ("토요일 수업 있는 학원", "수업 시간"), ("고등 내신 대비 학원", "과목 · 과정"), ("온라인 수업도 돼?", "온라인"), ("상담 예약 어떻게 해?", "예약 방법")],
   needs=[("과목 · 대상 학년 · 과정", "초등 영어, 중등 수학, 내신 대비처럼."), ("교습비", "교육청에 신고한 교습비와 같게(학원법 제15조)."), ("수업 시간", "요일별, 토요일 수업 포함."),
          ("반 정원 · 수업 방식", "소수 정원, 1:1, 온라인."), ("차량 운행 · 체험 수업", "학부모가 꼭 묻는 것입니다."), ("위치", "건물 이름과 가까운 역.")],
-  faq=[("교습비를 꼭 적어야 하나요?", "학원법은 교습비를 학습자가 보기 쉽게 알리고, 교육청에 신고한 금액과 다르게 표시하지 않도록 정하고 있습니다(제15조, 시 · 도 교육청 기준). 학부모가 가장 많이 묻는 정보이기도 해서, AI 가게 페이지에는 교육청에 신고한 교습비와 같은 값을 적습니다. 법률 자문은 아닙니다."),
+  faq=[("교습비를 꼭 적어야 하나요?", "학원법은 교습비를 학습자가 보기 쉽게 알리고, 교육청에 신고한 금액과 다르게 표시하지 않도록 정하고 있습니다(제15조, 시 · 도 교육청 기준). 학부모가 자주 묻는 정보이기도 해서, AI 가게 페이지에는 교육청에 신고한 교습비와 같은 값을 적습니다. 법률 자문은 아닙니다."),
        ("'합격률 · 1등'을 써도 되나요?", "근거가 없으면 쓰지 않습니다. 광고 표현 점검으로 과장 후보를 걸러 드립니다."),
        ("공부방 · 교습소도 되나요?", "됩니다. 교습소 · 공부방도 같은 방식으로 등록합니다. 집에서 운영한다면 집 주소 대신 동네 이름만 적는 방법을 안내합니다."),
        ("학기마다 시간표가 바뀌어요.", "1년 관리에서 학기 시간표와 교습비 변경을 월 4번까지 바로 반영합니다.")]),
@@ -151,7 +151,7 @@ IND = [
   qs=[("광교 새벽에 하는 필라테스", "운영 시간"), ("체험 수업 되는 곳", "체험 수업"), ("1:1 레슨 가격", "가격"), ("샤워실 있는 헬스장", "샤워실"),
       ("여성 전용 PT", "여성 전용"), ("주차 되는 요가원", "주차"), ("늦게까지 하는 헬스장", "운영 시간"), ("소수 정원 그룹 레슨", "정원")],
   needs=[("수업 · 회원권 가격", "1:1, 그룹, 회원권 기간별."), ("운영 시간", "새벽 · 밤 수업 포함."), ("정원 · 수업 방식", "그룹 정원, 1:1."),
-         ("체험 수업", "등록 전 가장 많이 묻는 것."), ("샤워실 · 운동복", "직장인이 꼭 묻습니다."), ("환불 기준", "기간 · 횟수와 함께.")],
+         ("체험 수업", "등록 전 자주 묻는 것."), ("샤워실 · 운동복", "직장인이 꼭 묻습니다."), ("환불 기준", "기간 · 횟수와 함께.")],
   faq=[("'한 달 10kg' 같은 후기를 넣어도 되나요?", "효과를 장담하는 말과 꾸민 후기는 넣지 않습니다. 과장 광고로 문제될 수 있고, AI도 근거 없는 주장보다 사실을 믿습니다."),
        ("회원권 환불 기준도 적나요?", "적어 두기를 권합니다. 기간 · 횟수 · 환불 기준이 분명하면 AI가 정확히 답하고 다툼도 줄어듭니다."),
        ("강사가 여러 명이에요.", "강사 이름과 수업 방식을 사장님 소개에 적으면 AI가 답에 씁니다. 경력은 확인할 수 있는 것만 적습니다."),
@@ -198,13 +198,13 @@ IND = [
   ex=dict(q="가평 반려견 동반 되는 독채 펜션 추천해 줘", a="반려견과 함께 묵을 수 있는 독채로 이런 곳이 있어요.", name="봄결스테이", meta="펜션 · 경기 가평군 청평면", lines=["독채(6인) 1박 25만 원부터", "반려견 동반 · 바비큐 · 주차", "체크인 15:00 · 체크아웃 11:00"]),
   qs=[("가평 반려견 동반 펜션", "반려동물 동반"), ("독채 펜션 가격", "요금"), ("체크인 몇 시야?", "체크인"), ("바비큐 되는 펜션", "바비큐"),
       ("수영장 있는 펜션", "수영장"), ("아이랑 가기 좋은 숙소", "아이 동반"), ("픽업 되는 숙소", "픽업"), ("예약 어떻게 해?", "예약 방법")],
-  needs=[("객실 · 인원 · 요금", "1박 기준과 주말 · 성수기 기준."), ("체크인 · 체크아웃", "가장 많이 묻는 것."), ("반려동물 · 아이 동반", "되는지 분명하게."),
+  needs=[("객실 · 인원 · 요금", "1박 기준과 주말 · 성수기 기준."), ("체크인 · 체크아웃", "자주 묻는 것."), ("반려동물 · 아이 동반", "되는지 분명하게."),
          ("시설", "바비큐, 수영장, 조식, 픽업."), ("예약 방법", "숙박 앱 · 예약 링크."), ("위치", "찾아오는 길과 주차.")],
   faq=[("성수기 요금이 달라요.", "'1박 25만 원부터(주말 · 성수기 다름)'처럼 시작 요금과 기준을 적습니다. 1년 관리에서 성수기 요금을 바로 바꿉니다."),
        ("예약은 숙박 앱으로만 받아요.", "예약 링크를 넣으면 AI 가게 페이지에 '예약하기' 단추와 예약 정보가 함께 들어갑니다."),
        ("캠핑장 · 글램핑도 되나요?", "세부 업종에서 '캠핑 · 글램핑'을 고르면 캠핑장 형식(Campground)으로 만듭니다."),
        ("사진이 중요하지 않나요?", "사진은 숙박 앱과 인스타그램에서 보여 주고, AI에게는 객실 · 요금 · 시설을 글로 정리해 줍니다. 두 곳을 연결합니다.")]),
- dict(k="shop", slug="shop", short="꽃집 · 공방 · 그 밖의 가게", n="가게", seo="꽃집 · 공방 · 사진관 · 안경원 · 동네 가게 마케팅 · AI 검색 등록",
+ dict(k="shop", slug="shop", short="꽃집 · 공방 · 그 밖의 가게", n="가게", seo="꽃집 · 공방 · 동네 가게 마케팅 · AI 검색 등록",
   h1="'당일 꽃다발 되는 꽃집'<br>AI에게 물을 때, 우리 가게가 나오게",
   lead="꽃집, 공방, 사진관, 안경원, 세탁소, 애견 미용처럼 동네 손님이 찾는 가게라면 모두 됩니다. 대표 상품과 가격, 영업시간, 예약 · 배달 여부를 정리해 AI가 읽는 곳에 올립니다.",
   ex=dict(q="합정역 근처 당일 꽃다발 되는 꽃집 있어?", a="당일 주문을 받는 곳으로 이런 곳이 있어요.", name="봄결꽃집", meta="꽃집 · 합정역 7번 출구 3분", lines=["당일 꽃다발 · 꽃 배달", "꽃다발 35,000원부터", "매일 10:00~21:00"]),
@@ -246,6 +246,10 @@ selflabel: footer
 """
 
 
+HON = {"clinic": "원장님", "dental": "원장님", "kmed": "원장님", "derma": "원장님", "vet": "원장님", "academy": "원장님",
+       "realty": "대표님", "office": "대표님", "interior": "대표님"}   # 13.10 업종별 호칭(그 밖은 사장님)
+
+
 def jong(w):
     """받침(조사 고르기). 한글은 글자로, 숫자는 읽는 소리로"""
     w = re.sub(r"[\s)\]}\"'’”.,!?·]+$", "", w)
@@ -271,17 +275,17 @@ def esc(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
-def ai_screen(ex, ind_label, rot=False):
+def ai_screen(ex, ind_label, rot=False, n="가게"):
     """AI 답변 예시 창(가상의 가게). rot 이면 첫 화면처럼 업종 예시를 돌려 보여 줌"""
     lines = "".join("<li>%s</li>" % esc(x) for x in ex["lines"])
     return ('<div class="k-screen lc-ai"%s aria-hidden="true">'
-            '<div class="k-screen-bar"><i></i><i></i><i></i><span>AI 검색 답변 예시</span><em class="k-ex">예시 · 가상의 가게</em></div>'
+            '<div class="k-screen-bar"><i></i><i></i><i></i><span>AI 검색 답변 예시</span><em class="k-ex">예시 · 가상의 %s</em></div>'
             '<div class="lc-ai-body">'
             '<p class="lc-q"><span>손님</span><b>%s</b></p>'
             '<div class="lc-a"><p class="lc-a-t"><b>AI</b><span>%s</span></p>'
-            '<div class="lc-card"><div class="ch"><b>%s</b><span>%s</span></div><ul>%s</ul><p class="src">출처 <span>가게 정보 페이지</span><span>지도 · 플레이스</span></p></div></div>'
-            '<p class="lc-ai-ft"><span class="k">%s</span>AI가 답에 쓴 시간 · 가격 · 편의는 모두 가게가 미리 정리해 둔 정보입니다.</p>'
-            '</div></div>') % (' data-rot' if rot else '', esc(ex["q"]), esc(ex["a"]), esc(ex["name"]), esc(ex["meta"]), lines, esc(ind_label))
+            '<div class="lc-card"><div class="ch"><b>%s</b><span>%s</span></div><ul>%s</ul><p class="src">출처 <span>%s 정보 페이지</span><span>지도 · 플레이스</span></p></div></div>'
+            '<p class="lc-ai-ft"><span class="k">%s</span>AI가 답에 쓴 시간 · 가격 · 편의는 모두 %s 미리 정리해 둔 정보입니다.</p>'
+            '</div></div>') % (' data-rot' if rot else '', esc(n), esc(ex["q"]), esc(ex["a"]), esc(ex["name"]), esc(ex["meta"]), lines, esc(n), esc(ind_label), esc(jo(n, "이", "가")))
 
 
 def faq_html(items):
@@ -291,13 +295,13 @@ def faq_html(items):
 TRUST = ('<ul class="lc-trust"><li>{{ico:check}}가입 없이 무료</li><li>{{ico:clock}}30초면 결과</li><li>{{ico:check}}홈페이지 없어도 됨</li><li>{{ico:lock}}입력한 정보는 서버로 보내지 않음</li></ul>')
 
 
-def start_form(ind=None, label="30초 무료 진단 시작"):
+def start_form(ind=None, label="30초 무료 진단 시작", n="가게"):
     if ind:
-        return ('<form class="lc-start one" data-lc-start data-ind="%s" role="search" aria-label="가게 AI 검색 무료 진단">'
-                '<label class="k-sr" for="sN">가게 이름</label><input class="inp" id="sN" name="name" maxlength="60" placeholder="가게 이름">'
+        return ('<form class="lc-start one" data-lc-start data-ind="%s" aria-label="가게 AI 검색 무료 진단">'
+                '<label class="k-sr" for="sN">%s 이름</label><input class="inp" id="sN" name="name" maxlength="60" placeholder="%s 이름">'
                 '<label class="k-sr" for="sA">동네 · 가까운 역</label><input class="inp" id="sA" name="area" maxlength="30" placeholder="동네 · 가까운 역">'
-                '<button class="k-btn k-btn-p" type="submit">%s{{ico:arrow}}</button></form>') % (ind, label)
-    return ('<form class="lc-start" data-lc-start role="search" aria-label="가게 AI 검색 무료 진단">'
+                '<button class="k-btn k-btn-p" type="submit">%s{{ico:arrow}}</button></form>') % (ind, esc(n), esc(n), label)
+    return ('<form class="lc-start" data-lc-start aria-label="가게 AI 검색 무료 진단">'
             '<label class="k-sr" for="sI">업종</label><select class="sel" id="sI" name="ind"></select>'
             '<label class="k-sr" for="sN">가게 이름</label><input class="inp" id="sN" name="name" maxlength="60" placeholder="가게 이름">'
             '<label class="k-sr" for="sA">동네 · 가까운 역</label><input class="inp" id="sA" name="area" maxlength="30" placeholder="동네 · 가까운 역">'
@@ -313,7 +317,7 @@ def page_industry(d):
     hero = ('<section class="k-phero k-ph2 lc-hero lc-ih" id="top" aria-labelledby="h1">\n  <div class="k-wrap">\n    <div>\n'
             '      <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}local/">가게 AI 검색 등록</a>{{ico:chev}}<span>%s</span></p>\n'
             '      <h1 class="k-h1" id="h1">%s</h1>\n      <p class="k-lead">%s</p>\n      %s\n      %s\n    </div>\n    %s\n  </div>\n</section>\n'
-            ) % (esc(d["short"]), d["h1"], d["lead"], start_form(d["k"]), TRUST, ai_screen(d["ex"], d["short"]))
+            ) % (esc(d["short"]), d["h1"], d["lead"], start_form(d["k"], n=d["n"]), TRUST, ai_screen(d["ex"], d["short"], n=d["n"]))
     ans = ('<section class="k-sec lp-ans" id="answer" aria-labelledby="ansT">\n  <div class="k-wrap">\n    <div class="lp-ans-b">\n      <p class="lp-k">한 줄 답</p>\n'
            '      <h2 class="k-h2" id="ansT">%s AI 검색 등록은 무엇을 하나요?</h2>\n'
            '      <p class="k-lead">손님이 AI에게 묻는 질문(%s)에 AI가 답할 수 있도록, 우리 %s의 사실 정보를 AI가 읽는 형식으로 만들어 검색 엔진과 지도에 올리고 서로 맞추는 일입니다.</p>\n'
@@ -330,11 +334,11 @@ def page_industry(d):
             '      <p class="k-lead">이 여섯 가지가 어디서나 같은 사실로 정리되어 있으면 AI가 답에 넣을 근거가 됩니다. 비어 있는 것은 진단 도구가 알려 드립니다.</p></div>\n'
             '    <ol class="lp-tips">%s</ol>\n  </div>\n</section>\n') % (esc(jo(d["n"], "을", "를")), tips)
     faq = d["faq"] + COMMON_FAQ[:4]
-    tail = ('<section class="k-sec" id="faq" aria-labelledby="fTitle">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="fTitle">%s 사장님이 많이 묻는 질문</h2></div>\n    <div class="k-faq">\n%s\n    </div>\n  </div>\n</section>\n'
-            % (esc(d["short"]), faq_html(faq)))
+    tail = ('<section class="k-sec" id="faq" aria-labelledby="fTitle">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="fTitle">%s %s이 자주 묻는 질문</h2></div>\n    <div class="k-faq">\n%s\n    </div>\n  </div>\n</section>\n'
+            % (esc(d["short"]), HON.get(d["k"], "사장님"), faq_html(faq)))
     cta = ('<section class="k-cta" aria-labelledby="ctaT">\n  <div class="k-wrap k-cta-in">\n    <div><h2 class="k-h2" id="ctaT">우리 %s, AI가 지금 얼마나 알까요?</h2><p class="k-lead">질문 몇 개에 누르기만 하면 30초 안에 결과가 나옵니다. 가입 없이 무료이고, 답한 내용은 서버로 보내지 않습니다.</p></div>\n'
            '    <div>%s<p class="k-small" style="margin-top:12px">다른 업종: <a href="{{root}}local/">가게 AI 검색 등록 전체</a> · <a href="{{root}}pricing/#local">요금</a></p></div>\n  </div>\n</section>\n'
-           ) % (esc(d["n"]), start_form(d["k"], "30초 무료 진단").replace('id="sN"', 'id="sN2"').replace('for="sN"', 'for="sN2"').replace('id="sA"', 'id="sA2"').replace('for="sA"', 'for="sA2"'))
+           ) % (esc(d["n"]), start_form(d["k"], "30초 무료 진단", n=d["n"]).replace('aria-label="가게 AI 검색 무료 진단"', 'aria-label="가게 AI 검색 무료 진단(페이지 끝)"').replace('id="sN"', 'id="sN2"').replace('for="sN"', 'for="sN2"').replace('id="sA"', 'id="sA2"').replace('for="sA"', 'for="sA2"'))
     body = head + hero + "\n{{inc:lc-links.inc}}\n\n" + ans + "\n" + qsec + "\n{{inc:lc-tool.inc}}\n\n" + need + "\n{{inc:lc-stats.inc}}\n\n{{inc:lc-flow.inc}}\n\n{{inc:lc-pk.inc}}\n\n" + tail + "\n" + cta
     return body
 
@@ -381,10 +385,10 @@ def page_main():
     inds = ('<section class="k-sec" id="industries" aria-labelledby="indT">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="indT">업종마다 손님이 묻는 것이 다릅니다</h2>\n'
             '      <p class="k-lead">업종을 고르면 그 업종 손님이 AI에게 자주 묻는 질문과 필요한 정보, 지켜야 할 규정까지 맞춰 진단합니다.</p></div>\n'
             '    <nav class="lc-inds" aria-label="업종별 안내">%s</nav>\n  </div>\n</section>\n') % cards
-    faq = ('<section class="k-sec" id="faq" aria-labelledby="fTitle">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="fTitle">사장님이 많이 묻는 질문</h2></div>\n    <div class="k-faq">\n%s\n    </div>\n  </div>\n</section>\n'
+    faq = ('<section class="k-sec" id="faq" aria-labelledby="fTitle">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="fTitle">사장님 · 원장님이 자주 묻는 질문</h2></div>\n    <div class="k-faq">\n%s\n    </div>\n  </div>\n</section>\n'
            % faq_html(COMMON_FAQ))
     cta = ('<section class="k-cta" aria-labelledby="ctaT">\n  <div class="k-wrap k-cta-in">\n    <div><h2 class="k-h2" id="ctaT">우리 가게, AI가 지금 얼마나 알까요?</h2><p class="k-lead">업종을 고르고 질문 몇 개에 누르기만 하면 30초 안에 결과가 나옵니다. 가입 없이 무료이고, 답한 내용은 서버로 보내지 않습니다.</p></div>\n'
-           '    <div>%s</div>\n  </div>\n</section>\n') % start_form(label="30초 무료 진단").replace('id="s', 'id="t').replace('for="s', 'for="t')
+           '    <div>%s</div>\n  </div>\n</section>\n') % start_form(label="30초 무료 진단").replace('aria-label="가게 AI 검색 무료 진단"', 'aria-label="가게 AI 검색 무료 진단(페이지 끝)"').replace('id="s', 'id="t').replace('for="s', 'for="t')
     return head + hero + "\n{{inc:lc-links.inc}}\n\n" + ans + "\n{{inc:lc-stats.inc}}\n\n" + why + "\n{{inc:lc-tool.inc}}\n\n{{inc:lc-flow.inc}}\n\n{{inc:lc-pk.inc}}\n\n" + vs + "\n" + inds + "\n" + faq + "\n" + cta
 
 

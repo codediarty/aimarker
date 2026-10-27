@@ -1,5 +1,5 @@
 /* AIMarker 자동 마킹 6.0 (2026.10)
- * 넣기 → 확인(이 브라우저에서 기록 읽기 · 서버 일괄 판정) → 표시 정하기(근거가 있으면 자동, 없으면 한 번 묻기) → 박기(일괄 발급 · 보이는 마크 ·
+ * 넣기 → 확인(이 브라우저에서 기록 읽기 · 서버 일괄 판정) → 표시 정하기(근거가 있으면 자동, 없으면 한 번 묻기) → 마크 넣기(일괄 발급 · 보이는 마크 ·
  * 파일 속 정보 · 문서 속성 · 표시본 등록) → 받기(ZIP: 표시본 · 기록 파일 · 검색 · AI 검색 꾸러미 · 관리 키).
  * 원본 파일은 서버로 보내지 않음(특징값 · 해시 · 서명 묶음만). 광고 · 글은 점검할 때만 보내고 서버에 저장하지 않음. */
 (function () {
@@ -65,7 +65,7 @@
   function addFiles(files) {
     var arr = Array.prototype.slice.call(files || []);
     if (!arr.length) return;
-    if (busy) { toast('지금 박는 중입니다. 끝난 뒤에 더 넣어 주세요.'); return; }
+    if (busy) { toast('지금 마크를 넣는 중입니다. 끝난 뒤에 더 넣어 주세요.'); return; }
     if (runStats) { runStats = null; doneBox.hidden = true; }
     arr.reduce(function (p, f) {
       return p.then(function () {
@@ -75,7 +75,7 @@
     }, Promise.resolve()).then(refresh);
   }
   function addOne(src, name, size) {
-    if (room() <= 0) { toast('한 번에 ' + MAX + '개까지 박습니다. 나머지는 이번 묶음이 끝난 뒤 넣어 주세요.'); return null; }
+    if (room() <= 0) { toast('한 번에 ' + MAX + '개까지 넣습니다. 나머지는 이번 묶음이 끝난 뒤 넣어 주세요.'); return null; }
     if (size > MAXB) { toast(name + ': 300MB보다 큰 파일은 기업용 API로 처리해 주세요.'); return null; }
     if (totalBytes() + size > MAXT) { toast('한 번에 1GB까지 처리합니다. 나머지는 이번 묶음이 끝난 뒤 넣어 주세요.'); return null; }
     var it = { id: ++seq, name: name || '파일', size: size || 0, src: src, state: 'read' };
@@ -158,7 +158,7 @@
   function fail(it, msg, retry) { if (!itemAlive(it)) return; it.state = 'err'; it.err = msg; it.retry = !!retry; paint(it); refresh(); }
 
   /* ---------- 줄(파일 하나) ---------- */
-  var ST = { unzip: ['ZIP 여는 중', 'wait'], read: ['기록 읽는 중', 'wait'], wait: ['확인 대기', 'wait'], check: ['서명 · 기록 확인 중', 'wait'], ready: ['준비됨', 'go'], ask: ['답 필요', 'ask'], issue: ['발급 중', 'wait'], stamp: ['박는 중', 'wait'], done: ['완료', 'ok'], confirm: ['확인 필요', 'ask'], conflict: ['표시 다시 고르기', 'ask'], err: ['확인 못 함', 'err'] };
+  var ST = { unzip: ['ZIP 여는 중', 'wait'], read: ['기록 읽는 중', 'wait'], wait: ['확인 대기', 'wait'], check: ['서명 · 기록 확인 중', 'wait'], ready: ['준비됨', 'go'], ask: ['답 필요', 'ask'], issue: ['발급 중', 'wait'], stamp: ['넣는 중', 'wait'], done: ['완료', 'ok'], confirm: ['확인 필요', 'ask'], conflict: ['표시 다시 고르기', 'ask'], err: ['확인 못 함', 'err'] };
   function mount(it) {
     var el = document.createElement('article'); el.className = 'au-row'; el.setAttribute('data-id', it.id);
     it.el = el; list.appendChild(el); paint(it);
@@ -171,7 +171,7 @@
     var v = A.verdict;
     if (v.ai !== 'unknown') return A.summary || '';
     if (r && r.kind === 'doc') return (r.parts && r.parts.length ? '문서 안 이미지 ' + r.parts.length + '개까지 확인했지만 AI 기록이 없습니다. ' : '') + '문서 파일은 원래 AI 기록을 담지 않습니다.';
-    if (A.signals && A.signals.some(function (s) { return s.id === 'mark.embedded'; })) return '이미 박힌 AIMarker 마크가 있습니다(발급자 신고). 같은 답이면 그 마크로 이어집니다.';
+    if (A.signals && A.signals.some(function (s) { return s.id === 'mark.embedded'; })) return '이미 들어 있는 AIMarker 마크가 있습니다(발급자 신고). 같은 답이면 그 마크로 이어집니다.';
     var cap = (A.signals || []).filter(function (s) { return s.dir === 'cap'; })[0];
     if (cap) return cap.text + ' 촬영 원본으로 확정하지 못해 한 번 묻습니다.';
     if (r && r.stripped) return '기록이 없습니다. 캡처 · 전송 · 업로드 중 지워졌을 수 있습니다.';
@@ -186,11 +186,11 @@
   }
   function extra(it) {
     if (it.state === 'err') return it.retry ? '<div class="au-act"><button type="button" class="btn btn-g btn-s" data-act="retry">다시 확인</button></div>' : '';
-    if (it.state === 'confirm') return '<div class="au-act"><button type="button" class="btn btn-p btn-s" data-act="confirm">' + (it.label === 'no_ai' ? 'AI 미사용이 맞아요' : '그대로 박기') + '</button>' + (it.related ? '<a class="btn btn-g btn-s" href="' + esc(MK.markUrl(it.related)) + '" target="_blank" rel="noopener">관련 마크 보기</a>' : '') + (it.label === 'no_ai' ? '<button type="button" class="btn btn-g btn-s" data-act="toai">AI 마크로 바꾸기</button>' : '') + '</div>';
-    if (it.state === 'conflict') return '<div class="au-act"><button type="button" class="btn btn-p btn-s" data-act="reissue">고른 표시로 다시 박기</button></div>';
+    if (it.state === 'confirm') return '<div class="au-act"><button type="button" class="btn btn-p btn-s" data-act="confirm">' + (it.label === 'no_ai' ? 'AI 미사용이 맞아요' : '이 표시로 넣기') + '</button>' + (it.related ? '<a class="btn btn-g btn-s" href="' + esc(MK.markUrl(it.related)) + '" target="_blank" rel="noopener">관련 마크 보기</a>' : '') + (it.label === 'no_ai' ? '<button type="button" class="btn btn-g btn-s" data-act="toai">AI 마크로 바꾸기</button>' : '') + '</div>';
+    if (it.state === 'conflict') return '<div class="au-act"><button type="button" class="btn btn-p btn-s" data-act="reissue">고른 표시로 다시 넣기</button></div>';
     if (it.state === 'done' && it.out) {
       var where = it.out.kind === 'embed' ? (IMG[it.fmt] ? (it.out.vis ? '화면 마크 · 파일 속 정보' : '파일 속 정보') : '문서 속성' + (it.out.notice ? ' · 표시 문장' : '')) : '기록 파일(.xmp) · 마크 카드';
-      return '<div class="au-act au-got"><span>' + esc(where) + (it.R.again ? ' · 이미 있던 마크로 이어 박음' : it.out.alt === false ? ' · 표시본 등록 못 함' : it.out.alt ? ' · 표시본 등록' : '') + (it.out.why ? ' · ' + esc(it.out.why) : '') + '</span><button type="button" class="btn btn-g btn-s" data-act="one">' + MK.esc(it.out.kind === 'embed' ? '이 파일 받기' : '기록 파일 받기') + '</button><a class="btn btn-t btn-s" href="' + esc(MK.markUrl(it.R.id)) + '" target="_blank" rel="noopener">마크 보기</a></div>';
+      return '<div class="au-act au-got"><span>' + esc(where) + (it.R.again ? ' · 이미 있던 마크에 이어 넣음' : it.out.alt === false ? ' · 표시본 등록 못 함' : it.out.alt ? ' · 표시본 등록' : '') + (it.out.why ? ' · ' + esc(it.out.why) : '') + '</span><button type="button" class="btn btn-g btn-s" data-act="one">' + MK.esc(it.out.kind === 'embed' ? '이 파일 받기' : '기록 파일 받기') + '</button><a class="btn btn-t btn-s" href="' + esc(MK.markUrl(it.R.id)) + '" target="_blank" rel="noopener">마크 보기</a></div>';
     }
     return '';
   }
@@ -255,15 +255,15 @@
     askBox.hidden = !needN || busy;
     if (needN) $('#auAskT').textContent = '기록이 없는 파일 ' + needN + '개, AI를 사용했나요?';
     var msg = '', can = false;
-    if (busy) msg = '박는 중입니다' + (prog ? ' · ' + prog.n + ' / ' + prog.total : '') + ' · 창을 닫지 마세요.';
+    if (busy) msg = '넣는 중입니다' + (prog ? ' · ' + prog.n + ' / ' + prog.total : '') + ' · 창을 닫지 마세요.';
     else if (!c.all) msg = '파일을 넣으면 시작할 수 있습니다.';
     else if (c.reading) msg = '기록을 확인하는 중입니다 · ' + (c.all - c.reading) + ' / ' + c.all;
     else if (c.need) msg = '기록이 없는 파일 ' + c.need + '개에 답해 주세요.';
-    else if (!c.todo) msg = c.done ? '모두 박았습니다. 아래에서 받으세요.' : c.hold ? '확인이 필요한 파일을 처리해 주세요.' : '박을 파일이 없습니다.';
+    else if (!c.todo) msg = c.done ? '모두 넣었습니다. 아래에서 받으세요.' : c.hold ? '확인이 필요한 파일을 처리해 주세요.' : '마크를 넣을 파일이 없습니다.';
     else if (!agree) msg = '표시 내용 확인란에 체크해 주세요.';
-    else { msg = c.todo + '개 파일에 표시를 박습니다. 파일은 서버로 가지 않습니다.'; can = true; }
+    else { msg = c.todo + '개 파일에 표시를 넣습니다. 파일은 서버로 가지 않습니다.'; can = true; }
     goBtn.disabled = !can; hint.textContent = msg;
-    $('#auGoT').textContent = busy ? '박는 중' : '자동 마킹 시작' + (c.todo && !c.reading ? ' · ' + c.todo + '개' : '');
+    $('#auGoT').textContent = busy ? '넣는 중' : '자동 마킹 시작' + (c.todo && !c.reading ? ' · ' + c.todo + '개' : '');
     bar.hidden = !c.all || $('#paneFile').hidden;
     $('#auBarT').textContent = msg; $('#auGo2').disabled = busy || !c.todo || c.reading > 0 || c.need > 0;
     rail(c);
@@ -275,7 +275,7 @@
     run();
   });
 
-  /* ---------- 박기 ---------- */
+  /* ---------- 마크 넣기 ---------- */
   function tools() { return String(O.tools || '').split(/[,·\n]/).map(function (s) { return s.trim(); }).filter(Boolean).slice(0, 6); }
   function body(it, confirm) {
     var b = { ref: String(it.id), features: it.features, label: it.label, tools: tools(), title: baseName(it.name).slice(0, 80) };
@@ -374,7 +374,7 @@
       return it.out.kind === 'embed' ? MK.sha256(it.out.bytes).then(function (h) { it.out.sha = h; }) : null;
     }).then(function () { paint(it); });
   }
-  /* 박은 파일(표시본) 해시를 마크에 한 번에 등록: 이 파일을 다시 확인하면 같은 마크로 이어짐 */
+  /* 표시를 넣은 파일(표시본) 해시를 마크에 한 번에 등록: 이 파일을 다시 확인하면 같은 마크로 이어짐 */
   function register(arr) {
     var todo = arr.filter(function (it) { return it.state === 'done' && it.key && it.out && it.out.sha; });
     var chunks = []; for (var i = 0; i < todo.length; i += BATCH) chunks.push(todo.slice(i, i + BATCH));
@@ -393,7 +393,7 @@
   function showDone() {
     if (!runStats) { doneBox.hidden = true; return; }
     var s = runStats, hold = items.filter(function (it) { return it.state === 'confirm' || it.state === 'conflict'; }).length;
-    $('#auDoneT').textContent = s.total + '개 파일에 표시를 박았습니다';
+    $('#auDoneT').textContent = s.total + '개 파일에 표시를 넣었습니다';
     $('#auDoneS').textContent = LABELS.filter(function (l) { return s.by[l]; }).map(function (l) { return MK.LABEL[l] + ' ' + s.by[l]; }).join(' · ') + (hold ? ' · 확인 필요 ' + hold : '');
     $('#auD1').textContent = s.vis ? '이미지 ' + s.vis + '개 위에 보이는 마크' + (O.ad || O.person ? '와 광고 표시' : '') : '보이는 마크 없음(설정에서 끔 또는 AI 미사용)';
     $('#auD2').textContent = '표시본 ' + s.embed + '개(이미지 정보 · 문서 속성' + (s.docs ? ' · 표시 문장' : '') + '), 나머지는 기록 파일';

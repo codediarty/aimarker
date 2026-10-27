@@ -3,9 +3,9 @@
   <div class="k-wrap">
     <div class="hz16-top">
       <div class="hz16-t">
-        <p class="hz16-k"><i></i>탐지기가 보는 것, AIMarker 도 봅니다</p>
+        <p class="hz16-k"><i></i>탐지기가 보는 것, AIMarker도 봅니다</p>
         <h2 class="k-h2" id="patT">AI 탐지기는 단어가 아니라<br>문장의 패턴을 봅니다</h2>
-        <p class="hz16-lead"><b>단어 몇 개를 바꿔도 패턴이 그대로면 그대로 걸립니다.</b> AIMarker 는 탐지기와 같은 관점으로 AI 패턴이 남은 문장을 찾아 표시하고(AI 마킹), 그 문장만 의미는 그대로 둔 채 사람 문장으로 바꿉니다.</p>
+        <p class="hz16-lead"><b>단어 몇 개를 바꿔도 패턴이 그대로면 그대로 걸립니다.</b> AIMarker는 탐지기와 같은 관점으로 AI 패턴이 남은 문장을 찾아 빨간 형광펜으로 표시하고, 그 문장만 의미는 그대로 둔 채 사람 문장으로 바꿉니다.</p>
         <div class="hz16-cta"><a class="k-btn k-btn-p k-btn-lg" href="#top" data-focus="hzText">내 글의 AI 패턴 찾기</a><span>가입 없이 무료 · 글과 파일은 저장하지 않습니다</span></div>
       </div>
       <ol class="hz16-facts" aria-label="언론에 보도된 AI 탐지 현황">
@@ -23,6 +23,6 @@
         <li><b>틀에 박힌 도입과 마무리</b><p class="hz16-ex"><mark>현대 사회에서</mark> 인공지능은 … 과정이<mark>라고 할 수 있다</mark></p><span>~에 대해 알아보겠습니다, 결론적으로</span></li>
       </ul>
     </div>
-    <p class="hz16-src">출처: 세계일보 2026.7.30 · 전자신문 2026.1.9(채용 서비스 공동 리포트, 2025년 제출 자기소개서) · 유니콘팩토리 2026.5.26(국내 한 교수자 평가용 서비스의 2026년 4월 검사 문서량). AI 패턴 이름은 AIMarker 판정 기준의 AI 문체 특성이며, 판정은 추정값입니다. AIMarker 는 특정 탐지기의 결과를 보장하지 않습니다.</p>
+    <p class="hz16-src">출처: 세계일보 2026.7.30 · 전자신문 2026.1.9(채용 서비스 공동 리포트, 2025년 제출 자기소개서) · 유니콘팩토리 2026.5.26(국내 한 교수자 평가용 서비스의 2026년 4월 검사 문서량). AI 패턴 이름은 AIMarker 판정 기준의 AI 문체 특성이며, 판정은 추정값입니다. AIMarker는 특정 탐지기의 결과를 보장하지 않습니다.</p>
   </div>
 </section>

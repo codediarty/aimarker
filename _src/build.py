@@ -14,6 +14,7 @@ scripts: assets/site.js (쉼표로 여러 개, 루트 기준)
 -->
 본문에서 {{root}} 는 루트까지의 상대 경로, {{ico:이름}} 은 아이콘, {{logo}} 는 로고로 바뀝니다.
 """
+import hashlib
 import json
 import os
 import re
@@ -21,8 +22,46 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261027b"
+VER = "20261027c"
 TODAY = "2026-10-27"
+
+# 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
+#   세 묶음(순서 그대로): assets/b-base.css = 글꼴 + am.css(모든 페이지 같음) → assets/b-<8자리>.css = (site4 · v8) + 페이지 styles(없으면 생략)
+#   → assets/b-core.css = v9 · v10 · v11 · v13(모든 페이지 같음). 같은 두 묶음은 한 번 받으면 다른 페이지에서 다시 받지 않음.
+#   CSS 를 고칠 때는 지금처럼 assets/*.css 원본을 고치고 빌드하면 묶음이 다시 만들어짐(묶음 파일은 직접 고치지 않음).
+#   글꼴 Pretendard 는 13.10 부터 우리 주소(assets/fonts/pretendard/, SIL OFL 1.1)에서 읽음(외부 CDN 연결 없음).
+CSS_BASE = ["assets/fonts/pretendard.css", "assets/am.css"]
+CSS_CORE = ["assets/v9.css", "assets/v10.css", "assets/v11.css", "assets/v13.css"]
+_BUNDLES = {}
+
+
+def css_min(src):
+    try:
+        import rcssmin
+        return rcssmin.cssmin(src, keep_bang_comments=True)
+    except Exception:
+        return src
+
+
+def css_bundle(files, name=None):
+    """루트 기준 CSS 목록 → assets/b-<이름>.css(한 번만 만듦). 묶음은 assets/ 에 있어 원본의 url(…) 이 그대로 맞음"""
+    key = tuple(files)
+    if key in _BUNDLES:
+        return _BUNDLES[key]
+    rel = "assets/b-%s.css" % (name or hashlib.md5("|".join(files).encode()).hexdigest()[:8])
+    parts = []
+    for f in files:
+        src = open(os.path.join(ROOT, f), encoding="utf-8").read()
+        if f.startswith("assets/fonts/"):
+            src = src.replace("url(pretendard/", "url(fonts/pretendard/")
+        parts.append(css_min(src).strip())
+    out = "/* AIMarker CSS 묶음(빌드가 만듦, 원본: %s) */\n" % ", ".join(f.replace("assets/", "") for f in files) + "\n".join(parts) + "\n"
+    fp = os.path.join(ROOT, rel)
+    if not os.path.exists(fp) or open(fp, encoding="utf-8").read() != out:
+        with open(fp, "w", encoding="utf-8") as fh:
+            fh.write(out)
+    _BUNDLES[key] = rel
+    return rel
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
@@ -82,7 +121,7 @@ CATALOG = {
 # 13.9(10.27) 가게 AI 검색 등록(자영업자 GEO 세팅): 병원 · 네일샵 · 카페 · 학원 · 부동산 등 모든 동네 가게. 세 가지로만(복잡하지 않게)
 CATALOG["local"] = {"name": "가게 AI 검색 등록", "vat": "부가세 별도", "tiers": [
     {"id": "local-basic", "name": "등록", "full": "가게 AI 검색 등록", "who": "가게 · 병원 · 매장 1곳, 홈페이지 없어도", "price": "99,000원", "per": "1회", "m": 99000, "note": "등록 뒤 한 달 수정 2번",
-     "feat": ["AI가 읽는 가게 페이지 1개(aimarker.kr/p/가게 이름/), 업종별 구조화 데이터", "손님이 AI에게 묻는 질문 15개와 답", "구글 · 네이버 · 빙 검색 등록, IndexNow로 네이버 · 빙에 바로 알림",
+     "feat": ["AI가 읽는 가게 페이지 1개(aimarker.kr/p/가게 이름/), 업종별 구조화 데이터", "손님이 AI에게 묻는 질문 15개와 답", "구글 · 네이버 · 빙 검색 등록, 새 페이지는 네이버 · 빙에 바로 알림",
               "네이버 플레이스 · 카카오맵 · 구글 지도 정보 맞춤 목록", "업종 광고 표현 점검(의료 · 뷰티 · 식품 · 일반 규칙)", "등록 뒤 다시 진단해 전후 비교"]},
     {"id": "local-year", "name": "등록 + 1년 관리", "full": "가게 AI 검색 등록 + 1년 관리", "who": "꾸준히 손님을 늘리고 싶은 가게", "price": "290,000원", "per": "1회", "m": 290000, "note": "1년 관리 포함", "best": "추천",
      "feat": ["등록의 모든 것", "홈페이지가 있으면 구조화 데이터 · 자주 묻는 질문 · llms.txt 설치까지", "네이버 플레이스 · 카카오맵 · 구글 비즈니스 프로필 정보 정리(사장님 계정에서 함께)",
@@ -127,6 +166,7 @@ def tiers_html(key, root, pick=None):
     pick: 그 페이지가 권하는 칸 id 끝(예: {{tiers:geo:pro}} 이면 geo-pro 를 '추천'으로, 다른 칸의 추천은 뺌)."""
     c = CATALOG[key]
     out = []
+    need_link = False
     for t0 in c["tiers"]:
         t = dict(t0)
         if pick:
@@ -155,11 +195,15 @@ def tiers_html(key, root, pick=None):
         if t.get("href"):
             btn = '<a class="k-btn %s" href="%s%s">%s</a>' % (kind, root, t["href"], t.get("cta", "자세히"))
         else:
-            btn = '<button class="k-btn %s" type="button" data-buy="%s"%s>%s</button>' % (kind, t["id"], ' data-per="y"' if t.get("y") else '', t.get("cta", "결제하기"))   # 13.8c 12개월이 있는 상품은 시트가 12개월로 열림
+            has_idx = any(SHOP_IDX.get(t["id"] + sfx) for sfx in ("", "-m", "-y"))   # 13.10 결제 페이지(아임웹 상품)가 있으면 '결제하기', 없으면 '주문하기'
+            need_link = need_link or not has_idx
+            btn = '<button class="k-btn %s" type="button" data-buy="%s"%s>%s</button>' % (kind, t["id"], ' data-per="y"' if t.get("y") else '', t.get("cta", "결제하기" if has_idx else "주문하기"))   # 13.8c 12개월이 있는 상품은 시트가 12개월로 열림
         out.append('<div class="k-plan%s" id="%s"><div class="hd"><h3>%s%s</h3><p class="who">%s</p></div><p class="pr"><b>%s</b>%s</p>%s%s<ul>%s</ul></div>'
                    % (" best" if t.get("best") else "", t["id"], t["name"], best, t["who"], big, per, sub, btn, feats))
     n = len(c["tiers"])
     tail = '' if key == "credit" else ' 충전해 둔 토큰으로도 냅니다(상품 금액 100원 = 1토큰).'
+    if need_link:
+        tail = ' 결제 페이지가 아직 없는 상품은 주문하시면 영업일 하루 안에 결제 링크를 메일로 보내 드립니다.' + tail
     return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">1토큰은 100원, 결제 금액은 %s. 결제는 운영사 성균관컨설팅 결제 페이지에서 토스페이, 카드, 계좌이체로 합니다.%s</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"], tail)
 
 
@@ -280,7 +324,9 @@ def credit_rates_html(root):
         return '%s토큰' % n, '1회' if t.get("per") == "1회" else ''
     def wont(s):   # '980,000원' → 토큰 수
         return format(int(re.sub(r"[^0-9]", "", s)) // TOKEN_WON, ",")
-    def buy(tid, label="결제하기"):
+    def buy(tid, label=None):
+        if label is None:   # 13.10 결제 페이지(아임웹 상품)가 있으면 '결제하기', 없으면 '주문하기'(시트가 결제 링크 받기로 열림)
+            label = "결제하기" if any(SHOP_IDX.get(tid + s) for s in ("", "-m", "-y")) else "주문하기"
         return '<button class="k-btn k-btn-l k-btn-s" type="button" data-buy="%s">%s</button>' % (tid, label)
     def link(h, label):
         return '<a class="k-btn k-btn-l k-btn-s" href="%s%s">%s</a>' % (root, h, label)
@@ -340,6 +386,7 @@ def products_js():
     for b in BUNDLES:
         d["items"][b["id"]] = {"name": b["name"], "group": "묶음", "who": b["who"], "m": b["m"], "y": 0, "per": "1회", "vat": "부가세 별도", "feat": b["feat"]}
     return "/* AIMarker 상품 · 요금(빌드에서 만듦: _src/build.py CATALOG) */\nwindow.AMP = " + json.dumps(d, ensure_ascii=False) + ";\n"
+
 
 # 옮긴 주소(2.0 → 3.0): 베타 → 파일럿, 작동 방식 → 제품
 REDIRECTS = [("beta/", "contact/"), ("pilot/", "contact/"), ("how/", "product/"), ("mcp/", "developers/#mcp"), ("image/", "mark/")]
@@ -439,9 +486,10 @@ LOGO = ""   # 예전 이름(쓰지 않음, {{logo}} 는 logo_img 로 바뀜)
 # 한국AI윤리위원회 상징(인증 기업 표시용, 8.0). 밝은 바탕 · 어두운 바탕 두 가지
 def kaiec_badge(dark=False, lg=False, root=""):
     """13.4f 한국AI윤리위원회 마크(2026.10.24 대표가 준 원 모양 엠블럼, 바깥은 투명 PNG 256px). 예전 저울 · 문양 SVG 는 쓰지 않음"""
-    return ('<a class="x-kaiec%s%s" href="https://kaiec.kr/" target="_blank" rel="noopener" aria-label="한국AI윤리위원회 인증 기업(위원회 누리집 새 창)">'
-            '<img src="%sassets/brand/kaiec-mark.png?v=%s" width="64" height="64" alt="" loading="lazy" decoding="async">'
-            '<span><b>한국AI윤리위원회 인증 기업</b><small>KOREA AI ETHICS COMMITTEE</small></span></a>'
+    # 13.10 접근성: 보이는 글이 그대로 접근 이름이 되게(aria-label 없이), 새 창 안내는 화면 낭독기용 글. 그림은 128px WebP(바깥 투명)
+    return ('<a class="x-kaiec%s%s" href="https://kaiec.kr/" target="_blank" rel="noopener">'
+            '<img src="%sassets/brand/kaiec-mark-128.webp?v=%s" width="64" height="64" alt="" loading="lazy" decoding="async">'
+            '<span><b>한국AI윤리위원회 인증 기업</b><small>KOREA AI ETHICS COMMITTEE</small></span><span class="k-sr">(위원회 누리집, 새 창)</span></a>'
             % (" dk" if dark else "", " lg" if lg else "", root, VER))
 
 
@@ -468,7 +516,7 @@ MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코
                           ("site/", "rocket", "설치 마법사", "AI 마킹을 무료로 설치"),
                           ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결"),
                           ("pricing/#credits", "card", "토큰 충전", "상담 없이, 토큰 코드 하나로 모든 기능")])]
-B2C_MENU = [("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인"), ("ai-rate/", "AI 작성률 낮추기", "AI 패턴을 찾아 그 문장만 사람 문장으로"), ("ai-detector/", "GPT킬러 · AI 탐지기 대비", "탐지기가 보는 것과 실제로 되는 방법"), ("resume/", "자기소개서 AI 검사", "서류에서 걸러지기 전에 문항별로"), ("academic/", "레포트 · 논문 · 과제", "한글 · 워드 · PDF 그대로, 각주는 그대로"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")]
+B2C_MENU = [("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인"), ("ai-rate/", "AI 작성률 낮추기", "AI 패턴을 찾아 그 문장만 사람 문장으로"), ("ai-detector/", "GPT킬러 · AI 탐지기 대비", "탐지기가 보는 것과 고쳐 쓰는 법"), ("resume/", "자기소개서 AI 검사", "서류에서 걸러지기 전에 문항별로"), ("academic/", "레포트 · 논문 · 과제", "한글 · 워드 · PDF 그대로, 각주는 그대로"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")]
 NAV = [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("local/", "가게 AI 검색 등록"), ("products", "기업용"), ("pricing/", "요금"), ("company/", "회사")]   # 13.9 '개발자'는 기업용 펼침 · 바닥글로, 그 자리에 가게 AI 검색 등록
 LOCAL_KEYS = ["local", "local-clinic", "local-dental", "local-kmed", "local-derma", "local-vet", "local-nail", "local-hair", "local-beauty", "local-cafe", "local-restaurant", "local-academy", "local-fitness", "local-realty", "local-office", "local-interior", "local-stay", "local-shop"]
 PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "geo-setup", "seo-setup", "geo-marketing", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
@@ -513,7 +561,13 @@ def header(root, key):
     if key == "humanize":
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#price">토큰 충전</a>' % root)
     elif key in LOCAL_KEYS:   # 13.9 가게 AI 검색 등록은 같은 페이지의 무료 진단 칸으로
-        cta = '<a class="k-btn k-btn-p k-btn-s" href="#tool">무료로 진단</a>'
+        cta = '<a class="k-btn k-btn-p k-btn-s" href="#quick" data-lq>30초 진단</a>'
+    elif key in ("geo", "geo-setup", "seo-setup", "geo-marketing"):   # 13.10 GEO 안내 페이지는 같은 페이지의 무료 진단 칸으로
+        cta = '<a class="k-btn k-btn-p k-btn-s" href="#gForm" data-focus="gUrl">무료로 진단</a>'
+    elif key == "commerce":   # 13.10 커머스는 같은 페이지의 피드 만들기 칸으로
+        cta = '<a class="k-btn k-btn-p k-btn-s" href="#top" data-focus="cUrl">무료로 만들기</a>'
+    elif key == "check":   # 13.10 광고 문구 검수는 같은 페이지의 글 칸으로
+        cta = '<a class="k-btn k-btn-p k-btn-s" href="#top" data-focus="ctext">무료로 검수</a>'
     elif key == "home":   # 12.1 첫 화면은 바로 위 검사 칸으로
         cta = '<a class="k-btn k-btn-p k-btn-s" href="#top" data-focus="hzText">무료로 검사</a>'
     elif biz:
@@ -522,11 +576,15 @@ def header(root, key):
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/">무료로 시작</a>' % root)
     # 13.0 주 단추 옆 글자 링크: 도입 상담 대신 '토큰 충전'(글 검사 화면은 주 단추가 이미 충전이라 뺌)
     side = '' if key == "humanize" else '<a class="k-hl opt cr13-hl" href="%spricing/#credits">토큰 충전</a>' % root
-    sheet = '<span class="grp">AI 글 검사와 휴머나이징</span>' + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, t, d in B2C_MENU)
-    for g, links in MENU_GROUPS[:2]:
-        sheet += '<span class="grp">%s</span>' % g + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, ic, t, d in links)
+    b2c_sheet = '<span class="grp">AI 글 검사와 휴머나이징</span>' + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, t, d in B2C_MENU)
+    biz_sheet = "".join('<span class="grp">%s</span>' % g + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, ic, t, d in links) for g, links in MENU_GROUPS[:2])
+    # 13.10 휴대폰 메뉴는 보는 페이지에 맞는 묶음을 먼저(기업 · 가게 페이지는 마킹과 검색이 위로)
+    sheet = (biz_sheet + b2c_sheet) if (biz or key in LOCAL_KEYS) else (b2c_sheet + biz_sheet)
     sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%spricing/">요금과 결제</a><a href="%sdevelopers/">개발자</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a>' % (root, root, root, root, root)
-    sheet += '<div class="ds-sheet-cta"><a href="%spricing/#credits">토큰 충전</a><a class="p" href="%s">%s</a></div>' % (root, (root + "site/") if biz else (root + "humanize/"), "무료로 시작" if biz else "무료로 시작")
+    sheet += '<button type="button" class="k-install" data-install hidden>%s<span><b>AIMarker 앱 설치</b><small>홈 화면에서 바로 열기</small></span></button>' % ico("phone")   # 13.10 설치형 웹 앱(k.js 가 설치할 수 있을 때만 보임)
+    # 13.10 휴대폰 메뉴 아래 주 단추도 머리 주 단추와 같은 곳으로(가게 페이지는 30초 진단, GEO 는 무료 진단, 글 검사 화면은 검사 칸)
+    sheet_p = '<a class="p" href="#top" data-focus="hzText">무료로 검사</a>' if key == "humanize" else cta.replace('class="k-btn k-btn-p k-btn-s"', 'class="p"')
+    sheet += '<div class="ds-sheet-cta"><a href="%spricing/#credits">토큰 충전</a>%s</div>' % (root, sheet_p)
     return ('<a class="k-skip" href="#main">본문으로 건너뛰기</a>'
             '<header class="k-hd" id="hd"><div class="k-hd-in">%s<nav class="k-nav" aria-label="주 메뉴">%s</nav>'
             '<div class="k-hd-r">%s%s'
@@ -563,13 +621,14 @@ def footer(root):
            '<span><b>서명</b>Ed25519(JWS), <a href="%s.well-known/aimarker-keys.json">공개키</a></span>'
            '<span><b>원장</b>하루치를 OpenTimestamps에 고정, <a href="%sverify/">확인하기</a></span></div>' % (root, root))
     return ('<footer class="k-ft"><div class="k-wrap"><div class="k-ft-top"><div class="k-ft-brand">%s'
-            '<p>AIMarker는 AI가 만든 이미지, 영상, 글에 AI 마크를 붙여 누구나 알아볼 수 있게 하고, AI 검색이 우리 회사를 정확히 읽고 추천하도록 돕는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
+            '<p>AIMarker는 글의 AI 작성률 검사와 휴머나이징, AI가 만든 이미지 · 영상 · 글의 AI 마크, 회사와 가게가 AI 검색에 정확히 소개되도록 돕는 GEO까지 한곳에서 하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
+            '<button type="button" class="k-install ft" data-install hidden>%s<span><b>AIMarker 앱 설치</b><small>휴대폰 · PC 홈 화면에</small></span></button>'
             '<div id="aimarker" class="ft-label"></div></div>'
             '<div class="k-ft-cols">%s</div></div>%s'
             '<div class="k-ft-biz">%s<br>'
             '<span>AIMarker 마크는 표시와 그 근거를 기록하는 것이며, 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. 광고 검수 결과는 위험 후보와 근거입니다. AI 작성률은 정해진 기준에 따른 추정이며 증명이 아닙니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
             '<span>© 2026 AIMarker</span></div></div></footer>'
-            % (brand(root), kaiec_badge(root=root), colhtml, std, "".join(biz)))
+            % (brand(root), kaiec_badge(root=root), ico("phone"), colhtml, std, "".join(biz)))
 
 
 def local_service_ld(ind, url):
@@ -660,8 +719,9 @@ def page(meta, body):
         if meta.get("layout") != "app" and meta.get("key", "") not in NOTICE_INLINE_KEYS:   # 바로 앞 m.js(지연 실행)가 읽기 전에, 본문 옆 여백이 단추보다 넓은 화면(1480px 이상)이면 떠 있는 단추로(도구 화면 · 좁은 화면은 바닥글 그대로)
             scripts += ('<script>(function(s){try{if(s&&window.matchMedia&&matchMedia("(min-width:1480px)").matches){s.setAttribute("data-style","badge");s.setAttribute("data-side","left")}}catch(e){}})(document.currentScript&&document.currentScript.previousElementSibling)</script>')
     pre = "".join('<script src="%s"></script>' % s.strip() for s in meta.get("prescripts", "").split(",") if s.strip())
-    pre += "".join('<link rel="stylesheet" href="%s%s?v=%s">' % (root, s.strip(), VER) for s in meta.get("styles", "").split(",") if s.strip())
-    pre += '<link rel="stylesheet" href="%sassets/v9.css?v=%s"><link rel="stylesheet" href="%sassets/v10.css?v=%s"><link rel="stylesheet" href="%sassets/v11.css?v=%s"><link rel="stylesheet" href="%sassets/v13.css?v=%s">' % (root, VER, root, VER, root, VER, root, VER)
+    # 13.10 CSS 두 묶음(앞: am.css + 예전 CSS + 페이지 CSS, 뒤: 글꼴 + v9 · v10 · v11 · v13). 순서는 예전과 같음
+    css_a = ([] if (meta.get("layout") == "app" or meta.get("v9")) else ["assets/site4.css", "assets/v8.css"]) + [x.strip() for x in meta.get("styles", "").split(",") if x.strip()]
+    css_links = "".join('<link rel="stylesheet" href="%s%s?v=%s">' % (root, b, VER) for b in [css_bundle(CSS_BASE, "base")] + ([css_bundle(css_a)] if css_a else []) + [css_bundle(CSS_CORE, "core")])
     if meta.get("manifest"):
         pre += ('<link rel="manifest" href="%sapp/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
                 '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' % root)
@@ -677,11 +737,9 @@ def page(meta, body):
             '<meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="%sassets/og.jpg"><meta name="theme-color" content="#FFFFFF">'
             '<link rel="icon" href="%sassets/favicon.svg" type="image/svg+xml"><link rel="icon" href="%sassets/favicon-32.png" sizes="32x32" type="image/png">'
             '<link rel="apple-touch-icon" href="%sassets/apple-touch-icon.png">'
-            '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>'
-            '<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">'
-            '<link rel="stylesheet" href="%sassets/am.css?v=%s">%s%s%s</head>'
-            % (title, desc, noindex, SITE, path, meta.get("ogtitle", title), desc, SITE, path, SITE, SITE, root, root, root, root, VER,
-               ('' if (meta.get("layout") == "app" or meta.get("v9")) else '<link rel="stylesheet" href="%sassets/site4.css?v=%s"><link rel="stylesheet" href="%sassets/v8.css?v=%s">' % (root, VER, root, VER)), jsonld, pre))
+            '%s%s%s</head>'
+            % (title, desc, noindex, SITE, path, meta.get("ogtitle", title), desc, SITE, path, SITE, SITE, root, root, root,
+               css_links, jsonld, pre))
     if meta.get("layout") != "app" and not meta.get("manifest"):   # 9.0: 휴대폰 홈 화면에 추가(웹 앱)
         head = head.replace('</head>', '<link rel="manifest" href="%smanifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
                             '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="default"></head>' % root)
@@ -894,6 +952,10 @@ def build_stores():
 def main():
     pages_dir = os.path.join(HERE, "pages")
     built = []
+    # 13.10 지난 빌드의 CSS 묶음을 지우고 이번 페이지가 쓰는 것만 다시 만듦(쓰지 않는 묶음이 남지 않게)
+    for old in os.listdir(os.path.join(ROOT, "assets")):
+        if old.startswith("b-") and old.endswith(".css"):
+            os.remove(os.path.join(ROOT, "assets", old))
     for name in sorted(os.listdir(pages_dir)):
         if not name.endswith(".html"):
             continue
@@ -934,6 +996,12 @@ def main():
         sw2 = re.sub(r"var V = 'am-app-[^']*';", "var V = 'am-app-%s';" % VER, sw)
         if sw2 != sw:
             open(swp, "w", encoding="utf-8").write(sw2)
+    # 13.10 앱(설치형 웹 앱): 서비스 워커(공유 받기 + 오프라인 화면 + 판 번호 붙은 파일 저장)와 오프라인 화면을 판마다 다시 씀
+    with open(os.path.join(ROOT, "aimarker-sw.js"), "w", encoding="utf-8") as f:
+        f.write(open(os.path.join(HERE, "app", "sw.src.js"), encoding="utf-8").read().replace("@@VER@@", VER))
+    os.makedirs(os.path.join(ROOT, "offline"), exist_ok=True)
+    with open(os.path.join(ROOT, "offline", "index.html"), "w", encoding="utf-8") as f:
+        f.write(open(os.path.join(HERE, "app", "offline.html"), encoding="utf-8").read().replace("@@VER@@", VER))
     build_ai_assets()
     if stores:   # llms.txt 끝에 등록 가게(가게가 확인한 사실 한 줄씩)
         with open(os.path.join(ROOT, "llms.txt"), "a", encoding="utf-8") as f:

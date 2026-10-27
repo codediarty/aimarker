@@ -36,7 +36,7 @@
    "url": "https://aimarker.kr/",
    "image": "https://aimarker.kr/assets/og.jpg",
    "keywords": "AI 작성률 검사, AI 작성률 낮추기, AI율 낮추기, AI 휴머나이징, AI 휴머나이저, AI 글 인간화, AI 검사기, 챗GPT 검사기, GPT킬러 대비, 자기소개서 AI 검사, 레포트 AI 검사, AI 마킹, AI 검색 노출 최적화, 가게 AI 검색 등록, 자영업자 GEO, 병원 마케팅, 네일샵 마케팅",
-   "description": "코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글을 찾아 AI 마크를 붙이는 AI 마킹(m.js), 붙여넣기 · 폴더 연결 · 휴대폰 공유하기로 생성물에 AI 마크를 넣는 도구, 서명된 마크(전자서명 · 원장 · 공개 타임스탬프), AI 검색 노출 진단과 최적화, AI 작성률 검사 · 휴머나이징, 기업용 API · MCP 로 구성된 AI 콘텐츠 신뢰 플랫폼.",
+   "description": "코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글을 찾아 AI 마크를 붙이는 AI 마킹(m.js), 붙여넣기 · 폴더 연결 · 휴대폰 공유하기로 생성물에 AI 마크를 넣는 도구, 서명된 마크(전자서명 · 원장 · 공개 타임스탬프), AI 검색 노출 진단과 최적화, AI 작성률 검사 · 휴머나이징, 기업용 API · MCP로 구성된 AI 콘텐츠 신뢰 플랫폼.",
    "featureList": [
     "AI 마킹: 코드 한 줄로 파일 속 출처 기록(C2PA · IPTC · XMP) · 운영자 규칙 · AI 도구 흔적을 읽어 AI 마크와 근거 창 자동 부착, schema.org digitalSourceType",
     "파일 AI 마킹: 붙여넣기 · 끌어 놓기 · PC 폴더 연결 · 휴대폰 공유하기로 보이는 마크와 파일 속 기록(IPTC) 넣기",

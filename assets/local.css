@@ -383,3 +383,4 @@ html.lq-on, html.lq-on body { overflow: hidden; }
 .lq-foot .k-btn { width: 100%; height: 52px; justify-content: space-between; padding: 0 18px; font-size: 16px; }
 .lq-foot .k-btn b { font-weight: 800; }
 @media (max-width: 640px) { .lq-foot { padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); } }
+.lc-lq { padding: 0; border: 0; background: none; font: inherit; color: var(--ds-blue-700); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }

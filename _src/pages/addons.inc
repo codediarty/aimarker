@@ -1,5 +1,5 @@
     <table class="x-addons ds-addons">
-      <caption>제품마다 가장 많이 더하는 옵션입니다. 값은 토큰(1토큰 100원, 기업 상품은 부가세 별도)으로 적고, 토큰으로 내거나 카드 · 계좌이체로 냅니다.</caption>
+      <caption>제품마다 먼저 볼 만한 옵션입니다. 값은 토큰(1토큰 100원, 기업 상품은 부가세 별도)으로 적고, 토큰으로 내거나 카드 · 계좌이체로 냅니다.</caption>
       <thead><tr><th scope="col">옵션</th><th scope="col">하는 일</th><th scope="col" class="pr">요금</th></tr></thead>
       <tbody>
         <tr><th>설치 대행<small>AI 마킹</small></th><td>우리 사이트에 코드 한 줄을 대신 넣고, 위치 규칙을 정하고, 점검 모드로 확인까지 끝냅니다(원격, 사이트 1개)</td><td class="pr">990토큰<small>1회</small></td></tr>
@@ -33,7 +33,7 @@
           <tr class="grp"><th colspan="3">운영과 연동</th></tr>
           <tr><th>API 유료 키</th><td>하루 1만 회, AI 작성률 검사, 휴머나이징의 전체 결과(MCP 포함). 마크 발급, 확인은 아래 사용량으로</td><td class="pr">월 990토큰</td></tr>
           <tr><th>전담 매니저, 우선 지원</th><td>영업일 당일 답변, 분기마다 점검 회의</td><td class="pr">월 1,900토큰</td></tr>
-          <tr id="usage"><th>API 사용량</th><td>마크 발급 건당 50원(0.5토큰), 확인 건당 10원(0.1토큰)부터. 플랫폼, AI 서비스가 자기 서비스 안에서 사용하는 방식이며, <a href="{{root}}developers/#key">무료 API 키</a>(하루 300회)로 먼저 연결해 볼 수 있습니다</td><td class="pr">사용한 만큼</td></tr>
+          <tr id="usage"><th>API 사용량</th><td>마크 발급 건당 0.5토큰, 확인 건당 0.1토큰부터. 플랫폼, AI 서비스가 자기 서비스 안에서 사용하는 방식이며, <a href="{{root}}developers/#key">무료 API 키</a>(하루 300회)로 먼저 연결해 볼 수 있습니다</td><td class="pr">사용한 만큼</td></tr>
           <tr><th>대량 처리</th><td>지난 콘텐츠 수만 건을 한 번에 확인, 마킹하는 일회성 작업. 200개까지는 <a href="{{root}}report/">일괄 리포트</a>로 바로 해 볼 수 있습니다</td><td class="pr">견적</td></tr>
           <tr><th>성과형(파일럿 제안)</th><td>AI 검색에서 들어온 방문, 구매가 늘어난 만큼 정산. 무엇을 셀지는 문의 뒤 함께 정하며, 노출이나 매출을 약속하지 않습니다</td><td class="pr">문의</td></tr>
         </tbody>

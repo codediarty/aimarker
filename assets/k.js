@@ -383,7 +383,56 @@
     document.fonts.ready.then(function () { setTimeout(function () { if (!moved && location.hash === h) el.scrollIntoView(); }, 60); });
   })();
 })();
-/* 휴대폰 공유하기로 이미지 받기(웹 앱 공유 대상): 공유받은 요청만 맡는 작은 서비스 워커를 둡니다 */
+/* 13.10 앱 설치(설치형 웹 앱, PWA): 크롬 · 엣지 · 삼성 인터넷은 설치 창, 아이폰 · 아이패드 사파리와 그 밖의 브라우저는 '홈 화면에 추가' 안내.
+   이미 앱으로 열었으면(standalone) 설치 단추를 숨기고 html.is-app. 설치 창은 사용자가 단추를 누를 때만 엽니다. */
+(function () {
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+  if (standalone) { document.documentElement.classList.add('is-app'); return; }
+  var ua = navigator.userAgent || '', ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var inApp = /KAKAOTALK|NAVER\(inapp|Instagram|FBAN|FBAV|Line\//i.test(ua), deferred = null, last = null, dlg = null;
+  function btns() { return Array.prototype.slice.call(document.querySelectorAll('[data-install]')); }
+  function show(on) { btns().forEach(function (b) { b.hidden = !on; }); }
+  function track(ev) { try { if (window.gtag) window.gtag('event', ev); } catch (e) { /* 무시 */ } }
+  window.addEventListener('beforeinstallprompt', function (e) { deferred = e; show(true); });
+  window.addEventListener('appinstalled', function () { deferred = null; show(false); track('app_installed'); close(); });
+  if (ios || inApp) show(true);
+  function steps() {
+    if (inApp) return ['오른쪽 위(또는 아래) 메뉴에서 <b>다른 브라우저로 열기</b>를 누르세요.', '크롬이나 사파리에서 열린 aimarker.kr 에서 다시 <b>앱 설치</b>를 누르세요.'];
+    if (ios) return ['사파리 아래(아이패드는 위)의 <b>공유</b> 단추(네모에 위 화살표)를 누르세요.', '목록을 내려 <b>홈 화면에 추가</b>를 누르세요.', '오른쪽 위 <b>추가</b>를 누르면 홈 화면에 AIMarker 앱이 생깁니다.'];
+    return ['브라우저 주소창 오른쪽의 <b>설치</b> 아이콘이나 메뉴(⋮)의 <b>앱 설치</b> · <b>홈 화면에 추가</b>를 누르세요.', '설치하면 홈 화면 · 시작 메뉴에서 AIMarker 를 앱처럼 바로 엽니다.'];
+  }
+  function close() { if (!dlg) return; dlg.remove(); dlg = null; document.removeEventListener('keydown', onKey, true); if (last && last.focus) last.focus(); }
+  function onKey(e) { if (e.key === 'Escape') { e.preventDefault(); close(); } }
+  function guide(from) {
+    last = from; close(); last = from;
+    dlg = document.createElement('div');
+    dlg.className = 'k-inst'; dlg.setAttribute('role', 'dialog'); dlg.setAttribute('aria-modal', 'true'); dlg.setAttribute('aria-labelledby', 'kInstT');
+    dlg.innerHTML = '<div class="k-inst-in"><button type="button" class="k-inst-x" aria-label="닫기">×</button>' +
+      '<img src="' + (document.body.getAttribute('data-root') || '') + 'assets/icon-192.png" width="56" height="56" alt="">' +
+      '<h2 id="kInstT">AIMarker 앱 설치</h2><p class="k-inst-l">홈 화면에서 바로 열고, 전체 화면으로 씁니다. 따로 내려받을 파일은 없고 용량도 거의 차지하지 않습니다.</p>' +
+      '<ol>' + steps().map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ol>' +
+      '<button type="button" class="k-btn k-btn-p k-inst-ok">알겠어요</button></div>';
+    document.body.appendChild(dlg);
+    document.addEventListener('keydown', onKey, true);
+    dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target.closest('.k-inst-x, .k-inst-ok')) close(); });
+    var ok = dlg.querySelector('.k-inst-ok'); if (ok) ok.focus();
+    track('app_install_guide');
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-install]');
+    if (!b) return;
+    e.preventDefault();
+    if (deferred) {
+      var d = deferred; deferred = null;
+      d.prompt();
+      if (d.userChoice) d.userChoice.then(function (c) { track(c && c.outcome === 'accepted' ? 'app_install_ok' : 'app_install_no'); if (!c || c.outcome !== 'accepted') show(false); }).catch(function () { /* 무시 */ });
+      return;
+    }
+    guide(b);
+  });
+})();
+
+/* 휴대폰 공유하기로 이미지 받기(웹 앱 공유 대상) · 13.10 앱 화면(오프라인 화면 · 자주 쓰는 파일 저장): 서비스 워커 aimarker-sw.js */
 (function () {
   if (!('serviceWorker' in navigator)) return;
   if (location.protocol !== 'https:' && !/^(127\.0\.0\.1|localhost)$/.test(location.hostname)) return;

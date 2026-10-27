@@ -1,14 +1,33 @@
 {
   "name": "AIMarker",
   "short_name": "AIMarker",
-  "description": "AI로 만든 이미지와 글에 AI 마크를 자동으로. AI 마킹, AI 마크 넣기, AI 검색 노출 진단, 글 검사를 한곳에서. 파일과 글은 저장하지 않습니다.",
+  "description": "AI 작성률 검사와 휴머나이징, 사이트 AI 마킹, 가게 AI 검색 등록을 한곳에서. 글과 파일은 서버에 저장하지 않습니다.",
   "id": "/",
   "start_url": "/?src=app",
   "scope": "/",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
   "background_color": "#FFFFFF",
   "theme_color": "#FFFFFF",
   "lang": "ko",
+  "dir": "ltr",
+  "categories": [
+    "productivity",
+    "business",
+    "education",
+    "utilities"
+  ],
+  "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": [
+      "navigate-existing",
+      "auto"
+    ]
+  },
   "icons": [
     {
       "src": "/assets/icon-192.png",
@@ -29,26 +48,84 @@
       "purpose": "maskable"
     }
   ],
+  "screenshots": [
+    {
+      "src": "/assets/app/shot-home-narrow.webp",
+      "sizes": "780x1688",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "AI 작성률 검사와 휴머나이징"
+    },
+    {
+      "src": "/assets/app/shot-local-narrow.webp",
+      "sizes": "780x1688",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "가게 AI 검색 30초 진단"
+    },
+    {
+      "src": "/assets/app/shot-label-narrow.webp",
+      "sizes": "780x1688",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "사이트 AI 마킹"
+    },
+    {
+      "src": "/assets/app/shot-home-wide.webp",
+      "sizes": "1440x900",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "AIMarker 첫 화면"
+    }
+  ],
   "shortcuts": [
     {
-      "name": "빠른 AI 마킹",
-      "short_name": "AI 마크",
-      "url": "/mark/?src=app#auto"
-    },
-    {
-      "name": "AI 마킹",
-      "short_name": "AI 마킹",
-      "url": "/label/?src=app"
-    },
-    {
-      "name": "AI 검색 노출 진단",
-      "short_name": "AI 검색",
-      "url": "/geo/?src=app"
-    },
-    {
-      "name": "글 검사와 휴머나이징",
+      "name": "AI 작성률 검사 · 휴머나이징",
       "short_name": "글 검사",
-      "url": "/humanize/?src=app"
+      "url": "/humanize/?src=app",
+      "icons": [
+        {
+          "src": "/assets/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "가게 AI 검색 30초 진단",
+      "short_name": "가게 진단",
+      "url": "/local/?src=app#quick",
+      "icons": [
+        {
+          "src": "/assets/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "빠른 AI 마킹(파일)",
+      "short_name": "AI 마크",
+      "url": "/mark/?src=app#auto",
+      "icons": [
+        {
+          "src": "/assets/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "토큰 충전",
+      "short_name": "토큰",
+      "url": "/pricing/?src=app#credits",
+      "icons": [
+        {
+          "src": "/assets/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ],
   "share_target": {

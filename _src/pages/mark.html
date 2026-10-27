@@ -77,10 +77,10 @@ selflabel: footer
           <button type="button" role="tab" id="tabText" aria-selected="false" aria-controls="paneText" tabindex="-1">{{ico:megaphone}}<span>광고, 글</span></button>
         </div>
         <ol class="au-rail" id="auRail" aria-label="진행 단계">
-          <li data-s="add"><i>1</i><span>넣기</span></li>
+          <li data-s="add"><i>1</i><span>파일 고르기</span></li>
           <li data-s="check"><i>2</i><span>확인</span></li>
           <li data-s="decide"><i>3</i><span>표시 정하기</span></li>
-          <li data-s="stamp"><i>4</i><span>박기</span></li>
+          <li data-s="stamp"><i>4</i><span>마크 넣기</span></li>
           <li data-s="get"><i>5</i><span>받기</span></li>
         </ol>
       </div>
@@ -101,10 +101,10 @@ selflabel: footer
               <button type="button" data-ans="ai_assisted"><b>AI가 조금 도왔어요</b><small>AI 보조</small></button>
               <button type="button" data-ans="no_ai"><b>AI를 사용하지 않았어요</b><small>AI 미사용</small></button>
             </div>
-            <details class="au-why"><summary>왜 기록이 없나요?</summary><p>AI 도구가 남긴 기록은 캡처, 메신저 전송, SNS 업로드, 편집 프로그램 저장 과정에서 대부분 지워지고, Word, 한글 같은 문서 파일은 처음부터 이런 기록을 담지 않습니다. AIMarker는 기록이 없을 때 추측으로 판정하지 않습니다. 이번에 박는 마크는 AIMarker 등록 기록에 남아, 다음부터는 같은 파일이나 비슷한 이미지를 넣으면 바로 찾아냅니다.</p></details>
+            <details class="au-why"><summary>왜 기록이 없나요?</summary><p>AI 도구가 남긴 기록은 캡처, 메신저 전송, SNS 업로드, 편집 프로그램 저장 과정에서 대부분 지워지고, Word, 한글 같은 문서 파일은 처음부터 이런 기록을 담지 않습니다. AIMarker는 기록이 없을 때 추측으로 판정하지 않습니다. 이번에 넣는 마크는 AIMarker 등록 기록에 남아, 다음부터는 같은 파일이나 비슷한 이미지를 넣으면 바로 찾아냅니다.</p></details>
           </div>
           <div class="au-done" id="auDone" hidden>
-            <div class="au-done-h">{{ico:check2}}<div><b id="auDoneT">표시를 박았습니다</b><span id="auDoneS"></span></div></div>
+            <div class="au-done-h">{{ico:check2}}<div><b id="auDoneT">표시를 넣었습니다</b><span id="auDoneS"></span></div></div>
             <div class="au-done-row">
               <button class="btn btn-p" type="button" id="auZip">{{ico:download}}<span>모두 받기(ZIP)</span></button>
               <button class="btn btn-g btn-s" type="button" id="auCsv">관리 키 목록(CSV)</button>
@@ -202,7 +202,7 @@ selflabel: footer
   <div class="wrap">
     <div class="sh">
       <span class="eyebrow">AIMarker 3중 마크</span>
-      <h2 class="h1x">한 번 박으면, 세 곳에 같은 표시</h2>
+      <h2 class="h1x">한 번 넣으면, 세 곳에 같은 표시</h2>
       <p class="lead">같은 근거로 화면, 파일 속, 검색 정보에 같은 표시를 넣습니다. 보는 사람, 파일을 받은 사람, 검색 엔진과 AI가 모두 같은 내용을 읽습니다.</p>
     </div>
     <div class="au-tri">
@@ -279,7 +279,7 @@ selflabel: footer
         <li>C2PA 출처 기록의 서명, 사슬, 파일 결합을 서버에서 다시 검증하고, IPTC, XMP, EXIF, 생성 설정값을 15가지 넘는 형식에서 읽기</li>
         <li>Word, PowerPoint, Excel, 한글, ODF 문서를 문서로 알아보고, 문서 안 이미지의 AI 기록까지 확인하기</li>
         <li>근거가 있으면 표시를 자동으로 정하고, AI 기록이 있는 파일에는 'AI 미사용'을 막기</li>
-        <li>JPG, PNG, WebP에 보이는 마크와 파일 속 정보를, Word, PowerPoint, Excel에 문서 속성과 표시 문장을 넣고, 박은 파일을 마크에 등록하기</li>
+        <li>JPG, PNG, WebP에 보이는 마크와 파일 속 정보를, Word, PowerPoint, Excel에 문서 속성과 표시 문장을 넣고, 표시를 넣은 파일을 마크에 등록하기</li>
         <li>ZIP을 넣으면 안의 파일을 하나씩 확인하고, 결과를 ZIP 하나로 돌려 드리기</li>
       </ul>
     </div>

@@ -3,7 +3,7 @@ path: commerce/
 key: commerce
 title: AI 커머스 엔진 | AI 상품 피드, 상품 구조화 데이터, 상품 이미지 AI 마킹 | AIMarker
 ogtitle: AI 쇼핑 답변에 우리 상품이 빠지지 않게 · AIMarker AI 커머스 엔진
-desc: 고객은 AI에게 상품을 추천받습니다. 상품 주소만 넣으면 AI 상품 피드(CSV, JSON)와 구조화 데이터를 만들고, AI로 만든 상세 이미지에는 근거에 맞는 표시를, 상세페이지 문구에는 위험 후보 검수를 붙입니다. 피드 만들기는 무료, AI 검색 노출 최적화 프로 149만 원(1회, 부가세 별도).
+desc: 고객은 AI에게 상품을 추천받습니다. 상품 주소만 넣으면 AI 상품 피드(CSV, JSON)와 구조화 데이터를 만들고, AI로 만든 상세 이미지에는 근거에 맞는 표시를, 상세페이지 문구에는 위험 후보 검수를 붙입니다. 피드 만들기는 무료, AI 검색 노출 최적화 프로 14,900토큰(1회, 1토큰 100원).
 scripts: assets/geo.js
 selflabel: footer
 -->
@@ -196,7 +196,7 @@ selflabel: footer
       <a class="k-btn k-btn-l" href="{{root}}pricing/#geo">전체 요금</a>
     </div>
     {{tiers:geo:pro}}
-    <p class="k-small" style="margin-top:14px">상품 피드 매일 갱신(월 4.9만 원), 상품 추가(500개마다 39만 원), 쇼핑몰과 채널 추가 연결(한 곳마다 29만 원) 같은 옵션은 <a href="{{root}}pricing/#addons">추가 옵션</a>에 있습니다. 상세페이지 AI 이미지에 AI 마크를 자동으로 붙이려면 <a href="{{root}}label/">AI 마킹</a>(무료부터)을 함께 쓰세요.</p>
+    <p class="k-small" style="margin-top:14px">상품 피드 매일 갱신(월 490토큰), 상품 추가(500개마다 3,900토큰), 쇼핑몰과 채널 추가 연결(한 곳마다 2,900토큰) 같은 옵션은 <a href="{{root}}pricing/#addons">추가 옵션</a>에 있습니다. 상세페이지 AI 이미지에 AI 마크를 자동으로 붙이려면 <a href="{{root}}label/">AI 마킹</a>(무료부터)을 함께 쓰세요.</p>
   </div>
 </section>
 
@@ -218,12 +218,12 @@ selflabel: footer
   <div class="k-wrap k-cta-in">
     <div><h2 class="k-h2" id="ctaT">우리 상품, AI가 읽을 준비가 됐을까요</h2><p class="k-lead">상품 주소 하나로 피드를 만들어 보세요. 대표 상품 페이지는 무료 AI 검색 노출 진단으로 고칠 거리까지 받을 수 있습니다.</p></div>
     <div>
-      <form class="k-url" data-goto-feed aria-label="AI 상품 피드 만들기">
+      <form class="k-url" data-goto-feed aria-label="AI 상품 피드 만들기(페이지 끝)">
         <label class="k-sr" for="cUrl2">상품 상세 페이지 주소</label>
         <input id="cUrl2" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="상품 상세 페이지 주소" maxlength="300" required>
         <button class="k-btn k-btn-p" type="submit">피드 만들기</button>
       </form>
-      <div class="k-acts" style="margin-top:12px"><button class="k-btn k-btn-l" type="button" data-buy="geo-pro">프로 세팅 결제하기</button><a class="k-btn k-btn-l" href="{{root}}business/">기업용 한눈에</a></div>
+      <div class="k-acts" style="margin-top:12px"><button class="k-btn k-btn-l" type="button" data-buy="geo-pro">프로 세팅 주문하기</button><a class="k-btn k-btn-l" href="{{root}}business/">기업용 한눈에</a></div>
     </div>
   </div>
 </section>

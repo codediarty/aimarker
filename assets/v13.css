@@ -852,3 +852,26 @@ body .hz7-dlg .hz18-packs input:checked + span .nm, body .hz7-dlg .hz18-packs in
 
 /* ---------- 12. 13.9 휴대폰 아래 탭 여섯 칸(홈 · 휴머나이징 · AI 마킹 · 가게 등록 · 토큰 · 메뉴) ---------- */
 @media (max-width: 760px) { .k-tab { grid-template-columns: repeat(6, minmax(0, 1fr)); } .k-tab a span, .k-tab button span { white-space: nowrap; } }
+
+/* ---------- 13. 13.10 앱 설치(설치형 웹 앱): 휴대폰 메뉴 · 바닥글 단추와 안내 창 ---------- */
+.k-install { display: flex; align-items: center; gap: 12px; width: 100%; margin: 18px 0 0; padding: 12px 14px; border: 1px solid var(--ds-blue-200); border-radius: 14px; background: var(--ds-blue-50); color: var(--ds-ink); font: inherit; text-align: left; cursor: pointer; }
+.k-install[hidden] { display: none; }
+.k-install .ico { flex: 0 0 auto; width: 22px; height: 22px; color: var(--ds-blue-700); }
+.k-install span { display: grid; gap: 1px; }
+.k-install b { font-size: 15px; font-weight: 700; }
+.k-install small { font-size: 12.5px; color: var(--ds-slate); }
+.k-install:hover, .k-install:focus-visible { border-color: var(--ds-blue-600); }
+.k-install.ft { width: auto; max-width: 300px; margin: 14px 0 0; padding: 10px 14px; }
+.k-inst { position: fixed; inset: 0; z-index: 2147482500; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(11, 23, 51, .5); }
+.k-inst-in { position: relative; width: 100%; max-width: 400px; padding: 26px 24px 22px; border-radius: 20px; background: #fff; box-shadow: 0 40px 100px rgba(8, 20, 47, .45); }
+.k-inst-in img { width: 56px; height: 56px; border-radius: 14px; }
+.k-inst-in h2 { margin: 14px 0 0; font-size: 21px; font-weight: 800; letter-spacing: -.03em; color: var(--ds-ink); }
+.k-inst-l { margin: 6px 0 0; font-size: 14px; line-height: 1.6; color: var(--ds-slate); word-break: keep-all; }
+.k-inst-in ol { margin: 16px 0 0; padding-left: 20px; display: grid; gap: 8px; font-size: 14.5px; line-height: 1.6; color: var(--ds-ink-2); word-break: keep-all; }
+.k-inst-ok { width: 100%; margin-top: 18px; justify-content: center; }
+.k-inst-x { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; border: 0; border-radius: 10px; background: none; font-size: 24px; line-height: 1; color: var(--ds-slate); cursor: pointer; }
+.k-inst-x:hover { background: var(--ds-canvas); }
+@media (max-width: 640px) { .k-inst { align-items: flex-end; padding: 0; } .k-inst-in { max-width: none; border-radius: 20px 20px 0 0; padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px)); } }
+/* 앱으로 열었을 때(홈 화면): 설치 단추 없음, 아래 탭은 안전 영역 위로 */
+.is-app .k-install { display: none; }
+.is-app .k-tab { padding-bottom: env(safe-area-inset-bottom, 0px); }

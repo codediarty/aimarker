@@ -143,7 +143,7 @@
       var q = Q[i];
       foot(false);
       bar(100 * i / (Q.length + 1));
-      body().innerHTML = '<p class="lq-n">질문 ' + (i + 1) + ' / ' + Q.length + '</p><h2 class="lq-q" id="lqT">' + esc(q.t) + '</h2><p class="lq-h">' + esc(q.h) + '</p>' +
+      body().innerHTML = '<p class="lq-n">질문 ' + (i + 1) + '</p><h2 class="lq-q" id="lqT">' + esc(q.t) + '</h2><p class="lq-h">' + esc(q.h) + '</p>' +
         '<div class="lq-o">' + q.o.map(function (o, j) { return '<button type="button" data-a="' + esc(q.k) + '" data-v="' + esc(o[0]) + '"><span class="no" aria-hidden="true">' + (j + 1) + '</span>' + esc(o[1]) + ICO.arrow + '</button>'; }).join('') + '</div>' +
         (path.length ? '<button type="button" class="lq-back" data-back>이전 질문</button>' : '');
       var first = body().querySelector('.lq-o button'); if (first) setTimeout(function () { try { first.focus({ preventScroll: true }); } catch (e) { first.focus(); } }, 30);

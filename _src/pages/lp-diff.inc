@@ -1,7 +1,7 @@
 <section class="k-sec lp-diff" id="why-aimarker" aria-labelledby="diffT">
   <div class="k-wrap">
     <div class="k-head">
-      <h2 class="k-h2" id="diffT">AIMarker 가 다른 점</h2>
+      <h2 class="k-h2" id="diffT">AIMarker가 다른 점</h2>
       <p class="k-lead">탐지기를 속이는 도구가 아니라, 글에 남은 AI 말버릇을 없애는 한국어 엔진입니다. 그래서 글이 어색해지지 않고, 뜻과 사실이 그대로 남습니다.</p>
     </div>
     <div class="k-cols lp-cols">
