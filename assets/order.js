@@ -35,6 +35,7 @@
   }
   function close() { if (box) { box.remove(); box = null; document.body.style.overflow = ''; document.removeEventListener('keydown', onKey, true); if (last && last.focus) last.focus(); } }
   function open(id, per, from) {
+    if (document.documentElement.classList.contains('is-twa')) { if (window.AMTwaNote) window.AMTwaNote(); return true; }   // 13.11 플레이 스토어 앱: 결제 시트를 열지 않음
     var it = AMP.items[id];
     if (!it) return false;
     last = from || null;

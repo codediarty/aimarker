@@ -1220,6 +1220,7 @@
   }
   function openBuy(pid, why, opt) {
     if (!buyDlg) return;
+    if (document.documentElement.classList.contains('is-twa')) { openCode(); if (window.AMTwaNote) window.AMTwaNote(); return; }   // 13.11 플레이 스토어 앱: 충전 창 대신 토큰 코드 넣기(앱 안에서는 결제하지 않음)
     opt = opt || {};
     var wantTop = pid === 'topup' || (isCr() && pid !== 'new');
     if (!prod(pid)) pid = opt.need ? packFor(Math.max(0, opt.need - (wantTop ? crLeft() : 0))).id : (prods().filter(function (p) { return p.best; })[0] || prod('c30') || PRODS[2]).id;   // 13.2 그냥 열면 추천 칸

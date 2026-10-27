@@ -191,6 +191,7 @@
         '<div class="lq-btns"><button type="button" class="k-btn k-btn-p k-btn-lg" data-buy="local-year">등록 + 1년 관리 · 2,900토큰<em>추천</em></button>' +
         '<button type="button" class="k-btn k-btn-l k-btn-lg" data-buy="local-basic">등록만 · 990토큰</button></div>' +
         '<p class="lq-fine">1토큰 100원 · 부가세 별도 · 가게 페이지를 올리기 전에는 결제일부터 7일 안에 전액 환불</p>' +
+        '<p class="lq-twa twa-only">앱에서는 신청과 결제를 받지 않습니다. 먼저 무료로 AI 가게 페이지를 만들어 보세요.</p>' +
         '<p class="lq-more"><button type="button" class="k-a" data-detail>먼저 무료로 AI 가게 페이지 만들어 보기' + ICO.arrow + '</button><button type="button" class="k-a" data-again>다시 진단하기</button></p></section>' +
         '<section class="lq-qs"><h3>손님이 AI에게 묻는 질문 ' + C.length + '개</h3><ul>' + C.map(function (c) {
           return '<li class="v' + c.v + '"><span class="m" aria-hidden="true">' + (c.v === 2 ? ICO.check : c.v === 1 ? '!' : ICO.x) + '</span><span>' + esc(c.q) + '<small>' + (c.v === 2 ? '답할 근거 있음' : c.v === 1 ? '틀리거나 빠질 수 있음' : '근거 없음 · ' + esc(word(c.need[c.need.length - 1]))) + '</small></span></li>';

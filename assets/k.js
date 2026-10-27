@@ -432,6 +432,31 @@
   });
 })();
 
+/* 13.11 플레이 스토어 앱(TWA) 안: 결제와 토큰 충전을 열지 않음(구글 플레이 결제 정책: 앱 안에서 다른 결제로 이끌지 않기).
+   머리 인라인 스크립트가 html.is-twa 를 붙이면 v13.css 14장이 결제 단추 · 결제 페이지 링크 · 충전 주소(#buy · #credits · #charge · #price)를 숨기고,
+   여기서는 남은 길(주소 · 단축키 · 스크립트)로 눌러도 열리지 않게 막고 짧게 알림. 토큰 코드 넣기와 무료 기능은 그대로 */
+(function () {
+  if (!document.documentElement.classList.contains('is-twa')) return;
+  var SEL = '[data-buy], a[href*="skkc.co.kr"], a[href*="#buy"], a[href*="#credits"], a[href*="#charge"], a[href*="#price"]';
+  var MSG = '앱에서는 결제와 토큰 충전을 하지 않습니다. 토큰 코드가 있으면 넣어서 이어서 쓰세요.', tm = 0;
+  function note() {
+    var t = document.getElementById('kTwaToast');
+    if (!t) { t = document.createElement('p'); t.id = 'kTwaToast'; t.className = 'k-twa-toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+    t.textContent = MSG; t.classList.add('on'); clearTimeout(tm); tm = setTimeout(function () { t.classList.remove('on'); }, 4200);
+  }
+  window.AMTwaNote = note;
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest(SEL); if (!a) return;
+    e.preventDefault(); e.stopImmediatePropagation(); note();
+  }, true);
+  var wo = window.open;
+  window.open = function (u) { if (/skkc\.co\.kr/.test(String(u || ''))) { note(); return null; } return wo.apply(window, arguments); };
+  Array.prototype.forEach.call(document.querySelectorAll('.k-plans, .cr13-packs, .cr13-rates'), function (el) {   // 요금 칸 · 충전 칸 · 가격표 앞에 한 줄
+    var pv = el.previousElementSibling; if (pv && pv.classList.contains('k-twa-note')) return;
+    var p = document.createElement('p'); p.className = 'k-twa-note'; p.textContent = MSG; el.parentNode.insertBefore(p, el);
+  });
+})();
+
 /* 휴대폰 공유하기로 이미지 받기(웹 앱 공유 대상) · 13.10 앱 화면(오프라인 화면 · 자주 쓰는 파일 저장): 서비스 워커 aimarker-sw.js */
 (function () {
   if (!('serviceWorker' in navigator)) return;

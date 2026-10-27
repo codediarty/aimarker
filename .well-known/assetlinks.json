@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "kr.aimarker.app",
+      "sha256_cert_fingerprints": [
+        "24:FA:A6:79:48:4C:20:E8:17:1A:1F:39:09:2D:93:A4:E3:A7:05:47:7A:56:7C:C0:1E:60:DF:F4:06:22:00:39"
+      ]
+    }
+  }
+]

@@ -875,3 +875,16 @@ body .hz7-dlg .hz18-packs input:checked + span .nm, body .hz7-dlg .hz18-packs in
 /* 앱으로 열었을 때(홈 화면): 설치 단추 없음, 아래 탭은 안전 영역 위로 */
 .is-app .k-install { display: none; }
 .is-app .k-tab { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* ==========================================================================
+   14. 13.11 플레이 스토어 앱(TWA): 앱 안에서는 결제 · 충전 화면을 열지 않음(k.js 13.11, 머리 인라인 스크립트가 html.is-twa)
+   ========================================================================== */
+.twa-only { display: none !important; }
+.is-twa .twa-only { display: revert !important; }
+.is-twa .twa-hide, .is-twa [data-buy], .is-twa a[href*="skkc.co.kr"], .is-twa a[href*="#buy"], .is-twa a[href*="#credits"], .is-twa a[href*="#charge"], .is-twa a[href*="#price"],
+.is-twa .lq-foot, .is-twa .lq-btns, .is-twa .lq-fine, .is-twa #tkGo { display: none !important; }
+.k-twa-note { margin: 0 0 14px; padding: 10px 14px; border: 1px solid var(--ds-line, #E3E5E9); border-radius: 10px; background: var(--ds-bg-2, #F6F7F9); color: var(--ds-ink-2, #3A4152); font-size: 14px; line-height: 1.55; }
+.k-twa-toast { position: fixed; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 160; max-width: min(92vw, 420px); margin: 0; padding: 12px 16px; border-radius: 12px; background: #0B1733; color: #fff; font-size: 14px; line-height: 1.5; box-shadow: 0 12px 30px -10px rgba(8, 20, 47, .5); opacity: 0; transform: translate(-50%, 12px); pointer-events: none; transition: opacity .2s, transform .2s; }
+.k-twa-toast.on { opacity: 1; transform: translate(-50%, 0); }
+.lq-twa { margin: 10px 0 0; color: var(--ds-ink-2, #3A4152); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .k-twa-toast { transition: none; } }

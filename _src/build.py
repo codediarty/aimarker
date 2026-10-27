@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261027c"
+VER = "20261027d"
 TODAY = "2026-10-27"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -67,6 +67,11 @@ BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "
 SITE = "https://aimarker.kr/"
 # 13.9 IndexNow(네이버 · 빙에 새 주소를 바로 알림) 키. 저장소 맨 위 <키>.txt 로 빌드가 만듦. 바꾸면 그 파일도 바뀜
 INDEXNOW_KEY = "1de864c48f9e9af51b7ddbb0cf4b9cfc"
+# 13.11 플레이 스토어 앱(TWA, PWABuilder 로 만든 kr.aimarker.app). 빌드가 /.well-known/assetlinks.json 을 만듦.
+#   지문은 PWABuilder 가 만든 업로드 키(signing.keystore). 플레이 콘솔에 올린 뒤 '앱 무결성 > 앱 서명 키'의 SHA-256 지문을 아래 목록에 더해야 스토어에서 받은 앱이 주소창 없이 열림.
+ANDROID_APP = {"package": "kr.aimarker.app", "sha256": [
+    "24:FA:A6:79:48:4C:20:E8:17:1A:1F:39:09:2D:93:A4:E3:A7:05:47:7A:56:7C:C0:1E:60:DF:F4:06:22:00:39",   # 업로드 키(PWABuilder, 10.27)
+]}
 
 # ---------- 10.0 상품 · 요금(한 곳에서 관리: 요금 칸 {{tiers:키}} · 결제 시트 assets/products.js) ----------
 # 결제는 공식 결제처 성균관컨설팅(skkc.co.kr) 쇼핑몰. 상품을 등록하면 SHOP_IDX 에 상품 번호를 적으세요(비어 있으면 '결제 링크 받기'로 주문 요청).
@@ -730,7 +735,10 @@ def page(meta, body):
     # 13.8 검색 엔진 소유 확인(첫 화면에만): 네이버 서치어드바이저 메타 태그(파일 naverf99735e2bba0209dec440a039d0d83ca.html 도 루트에 있음) · 구글은 파일 google67694027f26c117c.html
     if meta.get("key") == "home":
         noindex += '<meta name="naver-site-verification" content="66dc0527816398b550007fe72a67ac3199b59b9f"><meta name="google-site-verification" content="oJ2S4yA-g2sgLY040U_gbYuTBgjj1ve83drH1xHW5QE">'
-    head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+    # 13.11 플레이 스토어 앱(TWA)으로 열면 html.is-twa(앱은 /?src=twa 로 시작, 첫 화면 referrer 는 android-app://kr.aimarker.app). 탭이 살아 있는 동안 sessionStorage 로 이어 감
+    twa = ("<script>(function(){try{var s=sessionStorage;if(/[?&]src=twa(&|$)/.test(location.search)||/^android-app:\\/\\/kr\\.aimarker\\.app/.test(document.referrer))s.setItem('am_twa','1');"
+           "if(s.getItem('am_twa')==='1')document.documentElement.className+=' is-twa'}catch(e){}})()</script>")
+    head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' + twa +
             '<title>%s</title><meta name="description" content="%s">%s<link rel="canonical" href="%s%s">'
             '<meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker"><meta property="og:title" content="%s">'
             '<meta property="og:description" content="%s"><meta property="og:url" content="%s%s"><meta property="og:image" content="%sassets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
@@ -917,6 +925,11 @@ def build_ai_assets():
     with open(os.path.join(ROOT, ".well-known", "aimarker-keys.json"), "w", encoding="utf-8") as f:
         json.dump({"issuer": "https://aimarker.kr", "about": "AIMarker 마크 서명 공개키(JWS · EdDSA/Ed25519). 마크의 kid 와 같은 키로 서명을 확인하세요. https://aimarker.kr/developers/#verify",
                    "keys": MARK_KEYS}, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    # 13.11 안드로이드 앱(TWA) 연결: 이 사이트를 kr.aimarker.app 이 전체 화면으로 열어도 된다는 확인 파일
+    with open(os.path.join(ROOT, ".well-known", "assetlinks.json"), "w", encoding="utf-8") as f:
+        json.dump([{"relation": ["delegate_permission/common.handle_all_urls"],
+                    "target": {"namespace": "android_app", "package_name": ANDROID_APP["package"], "sha256_cert_fingerprints": ANDROID_APP["sha256"]}}], f, indent=2)
         f.write("\n")
 
 

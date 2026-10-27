@@ -73,7 +73,7 @@
       <div class="field"><label for="hzCodeIn">메일로 받은 16자리 코드</label><input class="inp hz7-code-in" id="hzCodeIn" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX"></div>
       <button class="btn btn-p btn-l" type="submit">코드 넣기</button>
       <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n">코드는 이 브라우저에만 저장됩니다. 다른 기기에서는 코드를 다시 넣어 주세요. 예전에 산 이용권 코드도 여기에 넣습니다. 코드가 없나요? <button type="button" class="hz7-link" data-buy="best">토큰 충전</button></p>
+      <p class="hz7-dlg-n">코드는 이 브라우저에만 저장됩니다. 다른 기기에서는 코드를 다시 넣어 주세요. 예전에 산 이용권 코드도 여기에 넣습니다.<span class="twa-hide"> 코드가 없나요? <button type="button" class="hz7-link" data-buy="best">토큰 충전</button></span><span class="twa-only"> 앱에서는 토큰을 충전하지 않습니다.</span></p>
     </form>
   </div>
 </dialog>
