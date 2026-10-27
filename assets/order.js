@@ -41,7 +41,7 @@
     var it = AMP.items[id];
     if (!it) return false;
     last = from || null;
-    var hasY = !!it.y, monthly = it.per === '월', isCredit = /^credit-/.test(id), isLabel = /^label-/.test(id), isLocal = /^local-/.test(id), saved = isCredit ? '' : fmtCode(sget('am_pass')), auto = false;   // 13.7 저장된 코드가 있어도 카드가 기본(토큰은 '다른 방법'에서, 코드는 미리 채움)
+    var hasY = !!it.y, monthly = it.per === '월', isCredit = /^credit-/.test(id), isLabel = /^label-/.test(id), isLocal = /^local-/.test(id), isGeo = /^geo(care)?-/.test(id), saved = isCredit ? '' : fmtCode(sget('am_pass')), auto = false;   // 13.7 저장된 코드가 있어도 카드가 기본(토큰은 '다른 방법'에서, 코드는 미리 채움)
     per = hasY ? (per === 'm' ? 'm' : 'y') : 'm';   // 13.8c 12개월이 있으면 12개월이 기본(정기구독 없이 선결제로 전환을 올림). 1개월은 '먼저 써 보기'
     // 13.11c 결제 페이지(아임웹 상품)가 없는 기업 상품(AI 검색 노출 최적화 세팅 · 월 관리 · AI 서비스 마킹 · 추가 옵션 · 묶음)은 원 가격 대신 토큰으로:
     // 기업 토큰(GEO 스타터 · 비즈니스 · 맥스, 아임웹 38~40)을 충전하거나(기본) 받은 토큰 코드로 주문. 원으로 받는 '결제 링크 받기'는 쓰지 않음
@@ -106,7 +106,8 @@
         '<p>' + (direct ? '결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 토스페이 · 카드 · 계좌이체로 결제할 수 있고, 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.'
           : 'AIMarker 운영사 <b>성균관컨설팅</b>의 결제 링크(토스페이 · 카드 · 계좌이체, 회원가입 없음)를 영업일 하루 안에 메일로 보내 드립니다. 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.') +
         (isLabel && direct ? ' 결제 뒤 시작 안내 메일에 사이트 주소와 관리자 초대만 회신하면 설치는 저희가 합니다.' : '') +
-        (isLocal ? ' 결제 뒤 시작 안내 메일에 무료 진단에서 받은 가게 정보 파일만 회신하면, 영업일 하루 안에 AI 가게 페이지를 올리고 등록합니다.' : '') + '</p>';
+        (isLocal ? ' 결제 뒤 시작 안내 메일에 무료 진단에서 받은 가게 정보 파일만 회신하면, 영업일 하루 안에 AI 가게 페이지를 올리고 등록합니다.' : '') +
+        (isGeo && direct ? ' 결제 뒤 시작 안내 메일에 사이트 주소만 회신하면, 영업일 하루 안에 ' + (/^geocare-/.test(id) ? '관리를' : '세팅을') + ' 시작합니다.' : '') + '</p>';   // 13.11d
     }
     function whyTok(c) {   // 13.11c 토큰으로 내는 기업 상품: 기업 토큰 충전 → 메일로 토큰 코드 → 회신하면 토큰을 빼고 시작(두 문장)
       return '<span class="k-buy-flow2" aria-hidden="true"><b>AIMarker</b>' + ARROW + '<b class="s">성균관컨설팅</b></span>' +
@@ -121,7 +122,7 @@
         go.innerHTML = pay === 'credit' ? tn(need) + '토큰으로 주문하기' : pay === 'bank' ? '견적서 받기' : '<span>성균관컨설팅에서 ' + won(c.pkTotal) + ' 결제하기</span>' + ARROW;
       } else {
         sum.innerHTML = '<div class="tot"><span>' + (pay === 'credit' ? '빠지는 토큰' : '결제 금액') + '</span><b>' + (pay === 'credit' ? tn(need) + '토큰' : won(c.total)) + '</b></div>' +
-          '<small>' + (pay === 'credit' ? '1토큰 100원 기준 · 부가세는 충전할 때 이미 냈습니다' : c.vat ? '부가세 포함 · 상품 금액 ' + won(c.base) + ' + 부가세 ' + won(c.vat) : '부가세 포함') +
+          '<small>' + (pay === 'credit' ? '1토큰 100원 기준 · 부가세는 충전할 때 이미 냈습니다' : (isCredit ? '' : tn(need) + '토큰 · ') + (c.vat ? '부가세 포함 · 상품 금액 ' + won(c.base) + ' + 부가세 ' + won(c.vat) : '부가세 포함')) +   // 13.11d 사이트에 보이는 토큰과 결제 금액을 한 줄에
           (hasY && c.p === 'y' && pay !== 'credit' && it.m * 12 > it.y ? '<br>1개월씩 12번 내는 것보다 ' + won(it.m * 12 - it.y) + '(부가세 별도) 적게 냅니다' : '') + '</small>';   // 13.8c 12개월 절약액을 숫자로
         go.innerHTML = pay === 'credit' ? tn(need) + '토큰으로 주문하기' : pay === 'bank' ? '견적서 받기' : direct ? '<span>성균관컨설팅에서 ' + won(c.total) + ' 결제하기</span>' + ARROW : '결제 링크 받기';
       }

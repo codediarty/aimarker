@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261027f"
+VER = "20261027g"
 TODAY = "2026-10-27"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -80,7 +80,8 @@ SHOP_URL = "https://skkc.co.kr/shop_view?idx=%s&kaiec_buy=1"
 SHOP_IDX = {
     # 13.7(10.26) AI 마킹 4개 등록(설치 포함 · 1개월 · 12개월 선결제, 자동 재결제 없음). 정기구독(자동 결제) 승인 뒤 월 상품을 바꿈
     "label-standard-m": "41", "label-standard-y": "42", "label-business-m": "43", "label-business-y": "44",
-    "geo-lite": "", "geo-standard": "", "geo-pro": "", "geocare-care-m": "", "geocare-grow-m": "",
+    # 13.11d(10.27) 기업 GEO 세팅 3 · 월 관리 2 를 아임웹 디지털 상품으로(가게 · AI 마킹과 같은 바로 결제, 사이트 표시는 토큰). 부가세 포함 판매가
+    "geo-lite": "84", "geo-standard": "85", "geo-pro": "86", "geocare-care-m": "87", "geocare-grow-m": "88",
     "service-starter-m": "", "bundle-trust": "",
     # 12.1 토큰(개인 c3 · c10 · c30 · c50 은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로
     # 13.5(10.24) skkc.co.kr 상품 7개 등록(카테고리 AIMarker, 디지털 상품). kaiec_buy=1 이면 바로 결제 페이지로 열림
