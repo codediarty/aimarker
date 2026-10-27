@@ -881,7 +881,7 @@ body .hz7-dlg .hz18-packs input:checked + span .nm, body .hz7-dlg .hz18-packs in
    ========================================================================== */
 .twa-only { display: none !important; }
 .is-twa .twa-only { display: revert !important; }
-.is-twa .twa-hide, .is-twa [data-buy], .is-twa a[href*="skkc.co.kr"], .is-twa a[href*="#buy"], .is-twa a[href*="#credits"], .is-twa a[href*="#charge"], .is-twa a[href*="#price"],
+.is-twa .twa-hide, .is-twa [data-buy], .is-twa a[href*="skkc.co.kr"]:not([href^="mailto:"]), .is-twa a[href*="#buy"], .is-twa a[href*="#credits"], .is-twa a[href*="#charge"], .is-twa a[href*="#price"],
 .is-twa .lq-foot, .is-twa .lq-btns, .is-twa .lq-fine, .is-twa #tkGo { display: none !important; }
 .k-twa-note { margin: 0 0 14px; padding: 10px 14px; border: 1px solid var(--ds-line, #E3E5E9); border-radius: 10px; background: var(--ds-bg-2, #F6F7F9); color: var(--ds-ink-2, #3A4152); font-size: 14px; line-height: 1.55; }
 .k-twa-toast { position: fixed; left: 50%; bottom: calc(76px + env(safe-area-inset-bottom)); z-index: 160; max-width: min(92vw, 420px); margin: 0; padding: 12px 16px; border-radius: 12px; background: #0B1733; color: #fff; font-size: 14px; line-height: 1.5; box-shadow: 0 12px 30px -10px rgba(8, 20, 47, .5); opacity: 0; transform: translate(-50%, 12px); pointer-events: none; transition: opacity .2s, transform .2s; }

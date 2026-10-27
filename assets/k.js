@@ -437,7 +437,7 @@
    여기서는 남은 길(주소 · 단축키 · 스크립트)로 눌러도 열리지 않게 막고 짧게 알림. 토큰 코드 넣기와 무료 기능은 그대로 */
 (function () {
   if (!document.documentElement.classList.contains('is-twa')) return;
-  var SEL = '[data-buy], a[href*="skkc.co.kr"], a[href*="#buy"], a[href*="#credits"], a[href*="#charge"], a[href*="#price"]';
+  var SEL = '[data-buy], a[href*="skkc.co.kr"]:not([href^="mailto:"]), a[href*="#buy"], a[href*="#credits"], a[href*="#charge"], a[href*="#price"]';   // 문의 메일(mailto)은 그대로
   var MSG = '앱에서는 결제와 토큰 충전을 하지 않습니다. 토큰 코드가 있으면 넣어서 이어서 쓰세요.', tm = 0;
   function note() {
     var t = document.getElementById('kTwaToast');
@@ -450,9 +450,11 @@
     e.preventDefault(); e.stopImmediatePropagation(); note();
   }, true);
   var wo = window.open;
-  window.open = function (u) { if (/skkc\.co\.kr/.test(String(u || ''))) { note(); return null; } return wo.apply(window, arguments); };
-  Array.prototype.forEach.call(document.querySelectorAll('.k-plans, .cr13-packs, .cr13-rates'), function (el) {   // 요금 칸 · 충전 칸 · 가격표 앞에 한 줄
-    var pv = el.previousElementSibling; if (pv && pv.classList.contains('k-twa-note')) return;
+  window.open = function (u) { if (/^https?:\/\/([a-z0-9-]+\.)?skkc\.co\.kr(\/|$)/i.test(String(u || ''))) { note(); return null; } return wo.apply(window, arguments); };
+  var seen = [];
+  Array.prototype.forEach.call(document.querySelectorAll('.k-plans, .cr13-packs, .cr13-rates'), function (el) {   // 요금 칸 · 충전 칸 · 가격표가 있는 구획마다 맨 앞에 한 줄(탭으로 나뉜 칸도 한 번만)
+    var box = el.closest('section') || el.parentNode;
+    if (seen.indexOf(box) >= 0) return; seen.push(box);
     var p = document.createElement('p'); p.className = 'k-twa-note'; p.textContent = MSG; el.parentNode.insertBefore(p, el);
   });
 })();
