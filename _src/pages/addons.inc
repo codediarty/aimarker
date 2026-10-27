@@ -1,5 +1,5 @@
     <table class="x-addons ds-addons">
-      <caption>제품마다 먼저 볼 만한 옵션입니다. 값은 토큰(1토큰 100원, 기업 상품은 부가세 별도)으로 적고, 토큰으로 내거나 카드 · 계좌이체로 냅니다.</caption>
+      <caption>제품마다 먼저 볼 만한 옵션입니다. 값은 토큰(1토큰 100원, 기업 상품은 부가세 별도)이고 기업 토큰으로 냅니다. 토큰이 없으면 주문 창에서 바로 충전합니다.</caption>
       <thead><tr><th scope="col">옵션</th><th scope="col">하는 일</th><th scope="col" class="pr">요금</th></tr></thead>
       <tbody>
         <tr><th>설치 대행<small>AI 마킹</small></th><td>우리 사이트에 코드 한 줄을 대신 넣고, 위치 규칙을 정하고, 점검 모드로 확인까지 끝냅니다(원격, 사이트 1개)</td><td class="pr">990토큰<small>1회</small></td></tr>

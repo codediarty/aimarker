@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261027e"
+VER = "20261027f"
 TODAY = "2026-10-27"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -74,7 +74,8 @@ ANDROID_APP = {"package": "kr.aimarker.app", "sha256": [
 ]}
 
 # ---------- 10.0 상품 · 요금(한 곳에서 관리: 요금 칸 {{tiers:키}} · 결제 시트 assets/products.js) ----------
-# 결제는 공식 결제처 성균관컨설팅(skkc.co.kr) 쇼핑몰. 상품을 등록하면 SHOP_IDX 에 상품 번호를 적으세요(비어 있으면 '결제 링크 받기'로 주문 요청).
+# 결제는 공식 결제처 성균관컨설팅(skkc.co.kr) 쇼핑몰. 상품을 등록하면 SHOP_IDX 에 상품 번호를 적으세요.
+# 13.11c 비어 있는 상품(기업 GEO 세팅 · 월 관리 · AI 서비스 마킹 · 옵션 · 묶음)은 원 가격 대신 토큰으로: 결제 시트가 기업 토큰 충전(credit-b10 · b30 · b100 = 아임웹 38~40)과 받은 토큰 코드로 주문을 엶(order.js tokFirst).
 SHOP_URL = "https://skkc.co.kr/shop_view?idx=%s&kaiec_buy=1"
 SHOP_IDX = {
     # 13.7(10.26) AI 마킹 4개 등록(설치 포함 · 1개월 · 12개월 선결제, 자동 재결제 없음). 정기구독(자동 결제) 승인 뒤 월 상품을 바꿈
@@ -206,10 +207,12 @@ def tiers_html(key, root, pick=None):
         out.append('<div class="k-plan%s" id="%s"><div class="hd"><h3>%s%s</h3><p class="who">%s</p></div><p class="pr"><b>%s</b>%s</p>%s%s<ul>%s</ul></div>'
                    % (" best" if t.get("best") else "", t["id"], t["name"], best, t["who"], big, per, sub, btn, feats))
     n = len(c["tiers"])
+    cls = " c4" if n == 4 else (" c2" if n == 2 else "")
+    if need_link:   # 13.11c 결제 페이지(아임웹 상품)가 없는 상품은 원 가격 · 결제 링크 대신 기업 토큰으로
+        return ('<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">1토큰은 100원이고 부가세 별도입니다. 이 상품은 기업 토큰으로 냅니다. 토큰이 없으면 주문 창에서 '
+                '기업 토큰(GEO 스타터 · 비즈니스 · 맥스)을 운영사 성균관컨설팅 결제 페이지(토스페이, 카드, 계좌이체)에서 바로 충전하고, 남는 토큰은 다른 기능에 그대로 씁니다.</p>' % (cls, "".join(out)))
     tail = '' if key == "credit" else ' 충전해 둔 토큰으로도 냅니다(상품 금액 100원 = 1토큰).'
-    if need_link:
-        tail = ' 결제 페이지가 아직 없는 상품은 주문하시면 영업일 하루 안에 결제 링크를 메일로 보내 드립니다.' + tail
-    return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">1토큰은 100원, 결제 금액은 %s. 결제는 운영사 성균관컨설팅 결제 페이지에서 토스페이, 카드, 계좌이체로 합니다.%s</p>' % (" c4" if n == 4 else (" c2" if n == 2 else ""), "".join(out), c["vat"], tail)
+    return '<div class="k-plans ds-plans%s">%s</div><p class="k-small k-vat">1토큰은 100원, 결제 금액은 %s. 결제는 운영사 성균관컨설팅 결제 페이지에서 토스페이, 카드, 계좌이체로 합니다.%s</p>' % (cls, "".join(out), c["vat"], tail)
 
 
 # 12.0 토큰(AI 작성률 검사 · AI 휴머나이징). 글 검사, 요금, 개인용 페이지가 같은 칸을 씀.
@@ -330,7 +333,7 @@ def credit_rates_html(root):
     def wont(s):   # '980,000원' → 토큰 수
         return format(int(re.sub(r"[^0-9]", "", s)) // TOKEN_WON, ",")
     def buy(tid, label=None):
-        if label is None:   # 13.10 결제 페이지(아임웹 상품)가 있으면 '결제하기', 없으면 '주문하기'(시트가 결제 링크 받기로 열림)
+        if label is None:   # 13.10 결제 페이지(아임웹 상품)가 있으면 '결제하기', 없으면 '주문하기'(13.11c 시트가 기업 토큰 충전 · 토큰 코드로 열림)
             label = "결제하기" if any(SHOP_IDX.get(tid + s) for s in ("", "-m", "-y")) else "주문하기"
         return '<button class="k-btn k-btn-l k-btn-s" type="button" data-buy="%s">%s</button>' % (tid, label)
     def link(h, label):
@@ -388,6 +391,8 @@ def products_js():
         for t in c["tiers"]:
             if t.get("m"):
                 d["items"][t["id"]] = {"name": t.get("full") or ("%s %s" % (c["name"], t["name"]) if t["name"] != c["name"] else t["name"]), "group": c["name"], "who": t["who"], "m": t["m"], "y": t.get("y", 0), "per": t.get("per", ""), "vat": c["vat"], "feat": t["feat"][:4]}
+                if t.get("cr"):
+                    d["items"][t["id"]]["cr"] = t["cr"]   # 13.11c 기업 토큰 충전 칸(결제 시트가 상품에 맞는 충전을 고름)
     for b in BUNDLES:
         d["items"][b["id"]] = {"name": b["name"], "group": "묶음", "who": b["who"], "m": b["m"], "y": 0, "per": "1회", "vat": "부가세 별도", "feat": b["feat"]}
     return "/* AIMarker 상품 · 요금(빌드에서 만듦: _src/build.py CATALOG) */\nwindow.AMP = " + json.dumps(d, ensure_ascii=False) + ";\n"

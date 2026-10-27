@@ -888,3 +888,9 @@ body .hz7-dlg .hz18-packs input:checked + span .nm, body .hz7-dlg .hz18-packs in
 .k-twa-toast.on { opacity: 1; transform: translate(-50%, 0); }
 .lq-twa { margin: 10px 0 0; color: var(--ds-ink-2, #3A4152); font-size: 14px; }
 @media (prefers-reduced-motion: reduce) { .k-twa-toast { transition: none; } }
+
+/* ==========================================================================
+   15. 13.11c 토큰으로 내는 기업 상품(결제 페이지가 없는 상품)의 결제 시트: 기업 토큰 충전 고르기(.k-buy-per 모양 그대로, order.js tokFirst)
+   ========================================================================== */
+.k-buy-pk.one { grid-template-columns: 1fr; }
+.k-buy-pk label b { font-size: 14px; }
