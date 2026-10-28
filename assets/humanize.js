@@ -1368,6 +1368,8 @@
     try { history.replaceState(null, '', location.pathname + location.search + '#price'); } catch (e) { /* 주소 그대로 */ }
   }
   window.addEventListener('hashchange', hashGo); hashGo();
+  /* 13.12 상품 주소 ?pack=c3 · c10 · c30 · c50(구글 판매자 목록 · 제품 스니펫의 충전 칸 주소): 그 칸을 고른 충전 창을 바로 엶. 결제에서 돌아온 주소 · #buy 주소는 그대로 */
+  if (Q.pack && prod(Q.pack) && !Q.pay && !(buyDlg && buyDlg.open)) openBuy(Q.pack);
 
   /* 9.0: 첫 화면 작업창에서 넘어온 글(이 브라우저 세션 저장소에만 잠깐 둠) → 바로 검사 또는 다듬기 */
   (function () {

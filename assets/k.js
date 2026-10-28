@@ -474,3 +474,19 @@
     if (a.pathname.replace(/index\.html$/, '') === cur) a.setAttribute('aria-current', 'page');
   });
 })();
+
+/* 13.12 프롬프트 예시 복사(/prompt/): 단추를 누르면 바로 위 칸의 글을 클립보드로, 안 되면 글을 골라 둠 */
+(function () {
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-copy]'); if (!b) return;
+    var box = b.closest('li'), pre = box && box.querySelector('pre'); if (!pre) return;
+    var txt = pre.textContent.replace(/\s+$/, '');
+    var done = function (ok) {
+      b.classList.toggle('ok', ok); b.textContent = ok ? '복사했습니다' : '글을 골라 두었습니다';
+      if (window.gtag) try { window.gtag('event', 'prompt_copy', { item: b.getAttribute('data-copy') || '' }); } catch (eG) { /* 무시 */ }
+      setTimeout(function () { b.classList.remove('ok'); b.textContent = '복사'; }, 2200);
+    };
+    var pick = function () { try { var r = document.createRange(); r.selectNodeContents(pre); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); } catch (eS) { /* 무시 */ } done(false); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { done(true); }, pick); else pick();
+  });
+})();

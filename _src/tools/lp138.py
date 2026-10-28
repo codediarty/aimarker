@@ -1,11 +1,14 @@
-# 13.8 검색 수요 키워드 안내 페이지 6개를 _src/pages/ 에 만듭니다.
+# 13.8 검색 수요 키워드 안내 페이지를 _src/pages/ 에 만듭니다(13.8 여섯 개 + 13.12 네 개: 카피킬러 · AI 표절률 · AI 티 · 프롬프트).
 # 쓰는 법: python3 _src/tools/lp138.py  → 그다음 python3 _src/build.py
-# 페이지 글은 lp138_a.py · lp138_b.py 에 있습니다. 공통 조각은 _src/pages/lp-*.inc 입니다.
+# 페이지 글은 lp138_a.py · lp138_b.py · lp138_c.py 에 있습니다. 공통 조각은 _src/pages/lp-*.inc 입니다.
+# 13.12 머리 주석에 crumb(빵 부스러기 이름) · updated(고친 날, 구조화 데이터 dateModified 와 '업데이트' 줄)를 넣습니다.
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from lp138_a import PAGES as A
 from lp138_b import PAGES as B
+from lp138_c import PAGES as C
+UPDATED = "2026-10-28"
 
 HEAD = """<!--
 path: {path}
@@ -14,6 +17,9 @@ v9: 1
 title: {title}
 ogtitle: {ogtitle}
 desc: {desc}
+crumb: {crumb}
+crumb_parent: humanize/|AI 휴머나이징
+updated: {updated}
 scripts: assets/textin.js, assets/humanize.js
 styles: assets/humanize.css, assets/hz12.css
 selflabel: footer
@@ -48,6 +54,7 @@ HERO = """<section class="hz12-hero hz13 hz15 lp-hero" id="top" aria-labelledby=
       <h2 class="k-h2" id="ansT">{ans_h}</h2>
       <p class="k-lead">{ans_p}</p>
       <ul class="lp-pts">{ans_pts}</ul>
+      <p class="lp-upd"><time datetime="{updated}">{updated_k}</time> 업데이트 · AIMarker 편집</p>
     </div>
   </div>
 </section>
@@ -84,9 +91,12 @@ def faq_html(items):
 
 def main():
     out = os.path.join(HERE, "..", "pages")
-    for p in A + B:
+    y, m, d = UPDATED.split("-")
+    for p in A + B + C:
+        p = dict(p, updated=p.get("updated", UPDATED))
         body = HEAD.format(**p) + HERO.format(eyebrow=p["eyebrow"], h1=p["h1"], sub=p["sub"], ans_h=p["ans_h"], ans_p=p["ans_p"],
-                                              ans_pts="".join("<li>%s</li>" % x for x in p["ans_pts"]))
+                                              ans_pts="".join("<li>%s</li>" % x for x in p["ans_pts"]), updated=p["updated"],
+                                              updated_k="%s년 %d월 %d일" % (y, int(m), int(d)))
         body += "\n" + p["mid"] + "\n\n{{inc:lp-pat.inc}}\n\n{{inc:lp-steps.inc}}\n\n{{inc:lp-diff.inc}}\n\n"
         body += FAQ.format(faq=faq_html(p["faq"]), cta_h=p["cta_h"], cta_p=p["cta_p"], rel=p["rel"])
         fn = os.path.join(out, p["key"] + ".html")

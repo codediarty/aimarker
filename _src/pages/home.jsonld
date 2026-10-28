@@ -5,7 +5,10 @@
    "@type": "Organization",
    "@id": "https://aimarker.kr/#org",
    "name": "AIMarker",
-   "alternateName": "에이아이마커",
+   "alternateName": [
+    "에이아이마커",
+    "AI마커"
+   ],
    "url": "https://aimarker.kr/",
    "logo": "https://aimarker.kr/assets/icon-512.png",
    "email": "contact@skkc.co.kr",
@@ -15,6 +18,12 @@
     "@type": "Organization",
     "name": "성균관컨설팅",
     "url": "https://www.skkc.co.kr/"
+   },
+   "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer support",
+    "email": "contact@skkc.co.kr",
+    "availableLanguage": "ko"
    }
   },
   {
@@ -25,7 +34,11 @@
    "inLanguage": "ko-KR",
    "publisher": {
     "@id": "https://aimarker.kr/#org"
-   }
+   },
+   "alternateName": [
+    "에이아이마커",
+    "AIMarker AI 작성률 검사"
+   ]
   },
   {
    "@type": "SoftwareApplication",
@@ -35,7 +48,7 @@
    "operatingSystem": "Web",
    "url": "https://aimarker.kr/",
    "image": "https://aimarker.kr/assets/og.jpg",
-   "keywords": "AI 작성률 검사, AI 작성률 낮추기, AI율 낮추기, AI 휴머나이징, AI 휴머나이저, AI 글 인간화, AI 검사기, 챗GPT 검사기, GPT킬러 대비, 자기소개서 AI 검사, 레포트 AI 검사, AI 마킹, AI 검색 노출 최적화, 가게 AI 검색 등록, 자영업자 GEO, 병원 마케팅, 네일샵 마케팅",
+   "keywords": "AI 작성률 검사, AI 작성률 낮추기, AI 휴머나이징, 휴머나이징 사이트, AI 휴머나이저 한국어, AI 글 인간화, 카피킬러 AI 작성률 낮추기, AI 표절률 낮추기, GPT 표절률, AI 티 안 나게, AI 작성률 낮추는 프롬프트, AI 검사기, 챗GPT 검사기, GPT킬러 대비, 자기소개서 AI 검사, 레포트 AI 검사, AI 마킹, AI 검색 노출 최적화, 가게 AI 검색 등록",
    "description": "코드 한 줄로 사이트 속 AI 이미지 · 영상 · 글을 찾아 AI 마크를 붙이는 AI 마킹(m.js), 붙여넣기 · 폴더 연결 · 휴대폰 공유하기로 생성물에 AI 마크를 넣는 도구, 서명된 마크(전자서명 · 원장 · 공개 타임스탬프), AI 검색 노출 진단과 최적화, AI 작성률 검사 · 휴머나이징, 기업용 API · MCP로 구성된 AI 콘텐츠 신뢰 플랫폼.",
    "featureList": [
     "AI 마킹: 코드 한 줄로 파일 속 출처 기록(C2PA · IPTC · XMP) · 운영자 규칙 · AI 도구 흔적을 읽어 AI 마크와 근거 창 자동 부착, schema.org digitalSourceType",
@@ -116,28 +129,28 @@
      "name": "AIMarker 휴머나이징 체험 · AI 글 인간화 작업 30토큰",
      "price": "3000",
      "priceCurrency": "KRW",
-     "description": "개인 토큰 30토큰 · 1토큰 100원 · 쓴 만큼 빠짐(검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰) · 유효기간 5년 · 부가세 포함"
+     "description": "개인 토큰 30토큰 · 1토큰 100원 · 쓴 만큼 빠짐(검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰) · 남은 토큰은 사라지지 않고 이어서 사용 · 부가세 포함"
     },
     {
      "@type": "Offer",
      "name": "AIMarker 휴머나이징 라이트 · AI 글 인간화 작업 150토큰",
      "price": "10000",
      "priceCurrency": "KRW",
-     "description": "개인 토큰 100토큰 + 50토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰) · 유효기간 5년 · 부가세 포함"
+     "description": "개인 토큰 100토큰 + 50토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰) · 남은 토큰은 사라지지 않고 이어서 사용 · 부가세 포함"
     },
     {
      "@type": "Offer",
      "name": "AIMarker 휴머나이징 프로 · AI 글 인간화 작업 500토큰",
      "price": "30000",
      "priceCurrency": "KRW",
-     "description": "개인 토큰 300토큰 + 200토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰) · 유효기간 5년 · 부가세 포함"
+     "description": "개인 토큰 300토큰 + 200토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰) · 남은 토큰은 사라지지 않고 이어서 사용 · 부가세 포함"
     },
     {
      "@type": "Offer",
      "name": "AIMarker 휴머나이징 프리미엄 · AI 글 인간화 작업 1,100토큰",
      "price": "50000",
      "priceCurrency": "KRW",
-     "description": "개인 토큰 500토큰 + 600토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰) · 유효기간 5년 · 부가세 포함"
+     "description": "개인 토큰 500토큰 + 600토큰 더 · 1토큰 100원 · 쓴 만큼 빠짐(검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰) · 남은 토큰은 사라지지 않고 이어서 사용 · 부가세 포함"
     }
    ]
   }

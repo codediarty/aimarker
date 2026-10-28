@@ -894,3 +894,42 @@ body .hz7-dlg .hz18-packs input:checked + span .nm, body .hz7-dlg .hz18-packs in
    ========================================================================== */
 .k-buy-pk.one { grid-template-columns: 1fr; }
 .k-buy-pk label b { font-size: 14px; }
+
+/* ==========================================================================
+   16. 13.12 검색어 안내: 고친 날짜 줄 · 안내 모음(/humanize/) · AI 티 전후 예시 · 프롬프트 복사 칸 · 바닥글 안내 줄
+   ========================================================================== */
+.lp-upd { margin: 12px 0 0; font-size: 12.5px; color: var(--ds-mist); }
+.lp-upd time { font-variant-numeric: tabular-nums; }
+.lp-hub-l { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.lp-hub-l a { display: flex; flex-direction: column; gap: 4px; height: 100%; padding: 14px 16px; border: 1px solid var(--ds-line); border-radius: 12px; background: #fff; text-decoration: none !important; transition: border-color .12s; }   /* v11 본문 링크 밑줄(:is(li …) a) 대신 카드 테두리로 링크임을 보임 */
+.lp-hub-l a:hover { border-color: var(--ds-blue-600); }
+.lp-hub-l b { font-size: 15.5px; font-weight: 650; color: var(--ds-ink); word-break: keep-all; }
+.lp-hub-l span { font-size: 13.5px; line-height: 1.55; color: var(--ds-slate); word-break: keep-all; }
+.lp-ba { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; counter-reset: ba; }
+.lp-ba li { display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border: 1px solid var(--ds-line); border-radius: 12px; background: #fff; counter-increment: ba; }
+.lp-ba b { font-size: 15.5px; font-weight: 650; color: var(--ds-ink); word-break: keep-all; }
+.lp-ba b::before { content: counter(ba) ". "; color: var(--ds-blue-700); }
+.lp-ba p { margin: 0; padding: 10px 12px 10px 44px; position: relative; border-radius: 8px; font-size: 14.5px; line-height: 1.6; word-break: keep-all; }
+.lp-ba p::before { position: absolute; left: 10px; top: 10px; font-size: 11.5px; font-weight: 700; line-height: 24px; }
+.lp-ba .bf { background: var(--ds-canvas); color: var(--ds-ink-2); }
+.lp-ba .bf::before { content: "전"; color: var(--ds-red-ink); }
+.lp-ba .af { background: var(--ds-green-bg); color: var(--ds-ink); }
+.lp-ba .af::before { content: "후"; color: var(--ds-green-ink); }
+.lp-ba p mark { background: var(--ds-red-bg); color: var(--ds-red-ink); padding: 0 2px; border-radius: 3px; }
+.lp-ba span { font-size: 13.5px; line-height: 1.6; color: var(--ds-slate); word-break: keep-all; }
+.lp-pr { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.lp-pr li { padding: 16px 18px; border: 1px solid var(--ds-line); border-radius: 12px; background: #fff; }
+.lp-pr .hd { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.lp-pr .hd b { font-size: 15.5px; font-weight: 650; color: var(--ds-ink); word-break: keep-all; }
+.lp-pr pre { margin: 10px 0 8px; padding: 12px 14px; border-radius: 8px; background: var(--ds-canvas); font-family: var(--k-font); font-size: 14px; line-height: 1.7; color: var(--ds-ink-2); white-space: pre-wrap; word-break: keep-all; overflow-wrap: anywhere; }
+.lp-pr span { display: block; font-size: 13.5px; line-height: 1.6; color: var(--ds-slate); word-break: keep-all; }
+.lp-cp { flex: none; height: 32px; padding: 0 12px; border: 1px solid var(--ds-line); border-radius: 8px; background: #fff; font: inherit; font-size: 13px; font-weight: 600; color: var(--ds-ink-2); cursor: pointer; }
+.lp-cp:hover { border-color: var(--ds-blue-600); color: var(--ds-blue-700); }
+.lp-cp.ok { border-color: var(--ds-green); color: var(--ds-green-ink); }
+.lp-note { margin: 14px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--ds-mist); word-break: keep-all; }
+.k-ft-gd { margin-top: 14px; padding-top: 14px; }
+.k-ft-gd span { line-height: 1.9; }
+@media (max-width: 720px) {
+  .lp-hub-l, .lp-ba { grid-template-columns: 1fr; }
+  .lp-pr li, .lp-ba li { padding: 14px; }
+}

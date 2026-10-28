@@ -1,0 +1,118 @@
+<!--
+path: prompt/
+key: prompt
+v9: 1
+title: AI 작성률 낮추는 프롬프트, 휴머나이징 프롬프트 예시와 한계 | AIMarker
+ogtitle: AI 작성률 낮추는 프롬프트, 그래도 남는 문장은 검사로 | AIMarker
+desc: AI 작성률 낮추는 프롬프트와 휴머나이징 프롬프트 예시 다섯 가지를 복사해 쓰세요. 내 자료부터 주기, 쓰지 말 표현 정하기, 말투와 길이 정하기, 구체적으로 바꾸기, 문장 짜임 바꾸기. 프롬프트만으로는 모델의 문장 습관이 남으니, 쓴 뒤 무료 검사로 남은 문장을 찾아 고치는 순서까지 정리했습니다.
+crumb: AI 작성률 낮추는 프롬프트
+crumb_parent: humanize/|AI 휴머나이징
+updated: 2026-10-28
+scripts: assets/textin.js, assets/humanize.js
+styles: assets/humanize.css, assets/hz12.css
+selflabel: footer
+-->
+<section class="hz12-hero hz13 hz15 lp-hero" id="top" aria-labelledby="h1">
+  <div class="hz13-bg" aria-hidden="true"><i class="g1"></i><i class="g2"></i><i class="g3"></i><span class="grid"></span><span class="fade"></span></div>
+  <div class="k-wrap">
+    <div class="hz15-grid" id="hzHero">
+      <div class="hz15-l" id="tool">
+        <div class="hz12-hd hz15-hd">
+          <p class="hz12-k">{{ico:fingerprint}}AI 작성률 낮추는 프롬프트 · 휴머나이징 프롬프트 · AI 티 안 나게 프롬프트</p>
+          <h1 class="hz12-h1" id="h1">프롬프트만으로는<br>AI 패턴이 <span class="hz13-mk">남습니다</span></h1>
+          <p class="lp-sub">좋은 프롬프트는 초안을 낫게 만듭니다. 그래도 남는 문장은 검사로 찾아 고쳐야 합니다.</p>
+        </div>
+{{inc:hz-tool.inc}}
+      </div>
+      <div class="hz15-r">
+{{inc:hz-stage.inc}}
+      </div>
+    </div>
+  </div>
+</section>
+
+{{inc:lp-links.inc}}
+
+<section class="k-sec lp-ans" id="answer" aria-labelledby="ansT">
+  <div class="k-wrap">
+    <div class="lp-ans-b">
+      <p class="lp-k">한 줄 답</p>
+      <h2 class="k-h2" id="ansT">AI 작성률 낮추는 프롬프트, 효과가 있나요?</h2>
+      <p class="k-lead">있습니다. 다만 한계가 분명합니다. 내 자료를 주고, 쓰지 말 표현을 정하고, 말투와 길이를 정하면 초안의 AI 티가 줄어듭니다. 그래도 모델이 문장을 고르는 습관은 그대로라, 접속어와 수식을 피해도 문장 짜임에 패턴이 남습니다. 프롬프트로 초안을 만들고, 검사로 남은 문장을 찾아, 그 문장만 고치는 순서가 좋습니다.</p>
+      <ul class="lp-pts"><li>프롬프트는 무엇을 쓸지(내용)에 강하고, 어떻게 쓰는지(문장 습관)에는 약합니다.</li><li>'사람처럼 써 줘' 한 줄은 효과가 작습니다. 구체적인 자료와 쓰지 말 표현이 효과가 큽니다.</li><li>아래 예시는 그대로 복사해 쓰되, 결과는 꼭 검사해 보세요.</li></ul>
+      <p class="lp-upd"><time datetime="2026-10-28">2026년 10월 28일</time> 업데이트 · AIMarker 편집</p>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="prompts" aria-labelledby="prT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="prT">복사해 쓰는 프롬프트 다섯 가지</h2>
+      <p class="k-lead">챗GPT, 제미나이, 클로드 어디에나 넣을 수 있습니다. [ ] 안은 내 내용으로 바꾸세요.</p>
+    </div>
+    <ol class="lp-pr">
+      <li><div class="hd"><b>1. 내 자료부터 주기</b><button type="button" class="lp-cp" data-copy="material">복사</button></div><pre>아래 메모만 사용해서 글을 써 줘. 메모에 없는 사실, 숫자, 사례는 만들지 마.
+[메모]
+- 내가 한 일:
+- 기간과 숫자:
+- 내가 느낀 점:</pre><span>AI가 지어내는 일반론 대신 내 경험이 문장을 채웁니다. AI 티를 줄이는 데 효과가 큰 방법입니다.</span></li>
+      <li><div class="hd"><b>2. 쓰지 말 표현 정하기</b><button type="button" class="lp-cp" data-copy="ban">복사</button></div><pre>다음 표현은 쓰지 마: 또한, 따라서, 뿐만 아니라, 결론적으로, ~에 있어서, ~을 통해, ~함으로써, 다양한, 효과적인, 핵심적인, 중요한 역할, ~라고 할 수 있다.
+접속어 없이 문장을 이어 줘.</pre><span>탐지기와 사람이 먼저 보는 말버릇을 미리 막습니다.</span></li>
+      <li><div class="hd"><b>3. 말투와 길이 정하기</b><button type="button" class="lp-cp" data-copy="tone">복사</button></div><pre>한다체로, 문장은 40자 안팎으로 짧게 써 줘. 한 문단은 세 문장을 넘기지 마. 굵은 글씨, 제목, 글머리 기호, 이모지는 쓰지 마.</pre><span>대화창 서식과 긴 만연체를 막습니다. 말투는 제출처에 맞춰 해요체, 습니다체로 바꾸세요.</span></li>
+      <li><div class="hd"><b>4. 구체적으로 바꾸기</b><button type="button" class="lp-cp" data-copy="concrete">복사</button></div><pre>아래 글에서 누구나 쓸 수 있는 문장을 찾아, 언제, 어디서, 무엇을, 얼마나가 들어간 문장으로 바꿔 줘. 내가 준 정보로 채울 수 없으면 [확인 필요]라고 표시해.
+[글]</pre><span>빈말 문장을 찾아 표시하게 합니다. [확인 필요]는 직접 채우세요.</span></li>
+      <li><div class="hd"><b>5. 문장 짜임 바꾸기</b><button type="button" class="lp-cp" data-copy="rewrite">복사</button></div><pre>아래 글을 다시 써 줘. 뜻, 숫자, 고유명사, 인용은 바꾸지 마. 첫 문장은 큰 이야기 대신 구체적인 장면으로 시작하고, 마지막 문장은 일반론 대신 내 판단으로 끝내.
+[글]</pre><span>틀에 박힌 도입과 마무리를 바꿉니다. 다시 쓴 글도 같은 AI의 습관이 남으니 검사해 보세요.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="k-sec k-panel" id="limit" aria-labelledby="lmT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="lmT">프롬프트로 안 되는 것</h2>
+      <p class="k-lead">프롬프트는 초안을 낫게 만드는 도구입니다. 아래는 검사와 마무리가 맡아야 합니다.</p>
+    </div>
+    <div class="k-cols lp-cols">
+      <div class="k-col"><h4>모델의 문장 습관</h4><p>같은 모델은 비슷한 짜임을 즐겨 고릅니다. 금지어를 피해도 같은 구조가 되풀이되기 쉽습니다.</p></div>
+      <div class="k-col"><h4>긴 글 한 번에</h4><p>글이 길어질수록 앞에서 정한 규칙이 흐려집니다. 문단 단위로 나눠 쓰고, 문단마다 확인하세요.</p></div>
+      <div class="k-col"><h4>결과 확인</h4><p>프롬프트는 결과를 재지 못합니다. 다듬기 전과 뒤를 같은 기준으로 재야 정말 줄었는지 압니다.</p></div>
+      <div class="k-col"><h4>탐지기 결과 보장</h4><p>'GPT킬러 안 걸리는 프롬프트'는 없습니다. 탐지기는 계속 바뀌고, AIMarker도 특정 탐지기의 결과를 보장하지 않습니다.</p></div>
+    </div>
+  </div>
+</section>
+
+{{inc:lp-pat.inc}}
+
+{{inc:lp-steps.inc}}
+
+{{inc:lp-diff.inc}}
+
+<section class="k-sec" id="faq" aria-labelledby="fTitle">
+  <div class="k-wrap">
+    <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
+    <div class="k-faq">
+      <details><summary>GPT킬러 안 걸리는 프롬프트가 있나요?</summary><p>없습니다. 탐지기마다 모델과 기준이 다르고 계속 바뀌어서, 어떤 프롬프트도 결과를 보장하지 못합니다. 프롬프트로 초안을 낫게 만들고, 검사로 남은 문장을 확인해 고치는 것이 현실적인 방법입니다.</p></details>
+      <details><summary>휴머나이징 프롬프트와 휴머나이저는 무엇이 다른가요?</summary><p>휴머나이징 프롬프트는 같은 생성 AI에게 다시 쓰게 하는 것이라 그 AI의 문장 습관이 다시 들어갑니다. AIMarker 휴머나이저는 생성 AI를 호출하지 않고, 사람이 쓴 한국어 글의 통계로 만든 엔진이 AI 말버릇만 바꾸며 숫자, 이름, 인용을 지킵니다. <a class="k-a" href="{{root}}humanizer/">한국어 AI 휴머나이저</a></p></details>
+      <details><summary>챗GPT 말고 클로드, 제미나이에도 되나요?</summary><p>됩니다. 위 예시는 특정 AI에 맞춘 것이 아니라 어떤 AI에도 넣을 수 있는 지시입니다. 다만 AI마다 문장 습관이 달라 남는 패턴도 다릅니다.</p></details>
+      <details><summary>영어로 쓰게 한 뒤 번역하면 더 낫지 않나요?</summary><p>번역을 거치면 번역투가 생겨 한국어 글에서는 오히려 AI 패턴이 늘기 쉽습니다. 처음부터 한국어로 쓰게 하세요.</p></details>
+      <details><summary>프롬프트로 쓴 글은 어떻게 검사하나요?</summary><p>위 검사 칸에 붙여 넣으면 가입 없이 6,000자까지 무료로 AI 작성률과 AI 패턴이 남은 문장을 보여 드립니다. 글 전체의 모든 문장을 보려면 1,000자 2토큰, 휴머나이징은 1,000자 4토큰입니다(1토큰 100원).</p></details>
+      <details><summary>AI 사용이 금지된 과제에도 써도 되나요?</summary><p>AIMarker는 AI 사용을 숨기는 도구가 아닙니다. 제출처의 규칙이 먼저입니다. AI 사용이 금지된 과제와 시험에는 AI를 사용하지 말고, 허용된 범위에서는 글을 자연스럽게 다듬는 데 쓰세요. AI 사용을 밝혀야 하면 <a class="k-a" href="{{root}}proof/">AI 활용 증빙서</a>를 무료로 만들어 함께 내세요.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="k-cta" aria-labelledby="cTitle">
+  <div class="k-wrap ds-cta2">
+    <div class="ds-cta-b">
+      <h2 class="k-h2" id="cTitle">프롬프트로 쓴 글, 남은 문장을 확인하세요</h2>
+      <p class="k-lead">붙여 넣으면 몇 초 안에 AI 작성률과 AI 패턴이 남은 문장을 보여 드립니다. 가입 없이 무료이고, 글은 저장하지 않습니다.</p>
+      <div class="k-acts"><a class="k-btn k-btn-p k-btn-lg" href="#top" data-focus="hzText">AI 작성률 무료 검사</a><a class="k-btn k-btn-l k-btn-lg" href="{{root}}pricing/#credits">토큰 충전 보기</a></div>
+    </div>
+    <div class="ds-cta-c">
+      <p class="k-prod-k">{{ico:fingerprint}}함께 보면 좋은 안내</p>
+      <p class="k-p"><a class="k-a" href="{{root}}ai-tone/">AI 티 안 나게 하는 법</a> · <a class="k-a" href="{{root}}humanizer/">한국어 AI 휴머나이저</a> · <a class="k-a" href="{{root}}ai-rate/">AI 작성률 낮추기</a> · <a class="k-a" href="{{root}}ai-detector/">GPT킬러 · AI 탐지기 대비</a></p>
+    </div>
+  </div>
+</section>

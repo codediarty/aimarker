@@ -22,8 +22,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261027g"
-TODAY = "2026-10-27"
+VER = "20261028a"
+TODAY = "2026-10-28"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
 #   세 묶음(순서 그대로): assets/b-base.css = 글꼴 + am.css(모든 페이지 같음) → assets/b-<8자리>.css = (site4 · v8) + 페이지 styles(없으면 생략)
@@ -527,20 +527,47 @@ MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코
                           ("site/", "rocket", "설치 마법사", "AI 마킹을 무료로 설치"),
                           ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결"),
                           ("pricing/#credits", "card", "토큰 충전", "상담 없이, 토큰 코드 하나로 모든 기능")])]
-B2C_MENU = [("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인"), ("ai-rate/", "AI 작성률 낮추기", "AI 패턴을 찾아 그 문장만 사람 문장으로"), ("ai-detector/", "GPT킬러 · AI 탐지기 대비", "탐지기가 보는 것과 고쳐 쓰는 법"), ("resume/", "자기소개서 AI 검사", "서류에서 걸러지기 전에 문항별로"), ("academic/", "레포트 · 논문 · 과제", "한글 · 워드 · PDF 그대로, 각주는 그대로"), ("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")]
+# 13.12(10.28) 검색어 안내 페이지(맨 위 검사 도구 + 한 줄 답 + 자주 묻는 질문). '이런 검색으로 오셨나요?' 칩 · 휴대폰 메뉴 · 바닥글 · /humanize/ 안내 모음이 모두 이 목록을 씀.
+#   (주소, key, 이름, 한 줄 설명, 휴대폰 메뉴에 넣을지, 칩 이름). 글은 _src/tools/lp138_a.py · lp138_b.py · lp138_c.py
+GUIDES = [("ai-rate/", "ai-rate", "AI 작성률 낮추기", "AI 패턴을 찾아 그 문장만 사람 문장으로", True, "AI 작성률 낮추기"),
+          ("copykiller/", "copykiller", "카피킬러 AI 작성률 낮추기", "표절률과 AI 작성률을 나눠 고치는 순서", True, "카피킬러 AI 작성률"),
+          ("ai-detector/", "ai-detector", "GPT킬러 · AI 탐지기 대비", "탐지기가 보는 패턴과 고쳐 쓰는 법", True, "GPT킬러 · AI 탐지기"),
+          ("ai-plagiarism/", "ai-plagiarism", "AI 표절률 낮추기", "GPT 표절률이 출처로 안 내려가는 까닭", True, "AI 표절률 낮추기"),
+          ("ai-tone/", "ai-tone", "AI 티 안 나게 하는 법", "한국어 글의 AI 티 7가지와 고친 예", True, "AI 티 안 나게"),
+          ("humanizer/", "humanizer", "한국어 AI 휴머나이저", "뜻은 그대로, AI 말버릇만 바꿉니다", False, "AI 휴머나이저"),
+          ("prompt/", "prompt", "AI 작성률 낮추는 프롬프트", "복사해 쓰는 예시 다섯 가지와 한계", True, "휴머나이징 프롬프트"),
+          ("resume/", "resume", "자기소개서 AI 검사", "서류에서 걸러지기 전에 문항별로", True, "자기소개서 AI 검사"),
+          ("academic/", "academic", "레포트 · 논문 AI 검사", "한글 · 워드 · PDF 그대로, 각주는 그대로", True, "레포트 · 논문 · 과제"),
+          ("ai-check/", "ai-check", "AI 검사기 무료", "가입 없이 6,000자, 문장마다 표시", False, "AI 검사기 무료")]
+GUIDE_KEYS = [g[1] for g in GUIDES]
+B2C_MENU = ([("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인")] + [(g[0], g[2], g[3]) for g in GUIDES if g[4]] +
+            [("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")])
 NAV = [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("local/", "가게 AI 검색 등록"), ("products", "기업용"), ("pricing/", "요금"), ("company/", "회사")]   # 13.9 '개발자'는 기업용 펼침 · 바닥글로, 그 자리에 가게 AI 검색 등록
 LOCAL_KEYS = ["local", "local-clinic", "local-dental", "local-kmed", "local-derma", "local-vet", "local-nail", "local-hair", "local-beauty", "local-cafe", "local-restaurant", "local-academy", "local-fitness", "local-realty", "local-office", "local-interior", "local-stay", "local-shop"]
 PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "geo-setup", "seo-setup", "geo-marketing", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
-NAV_KEY = {"humanize/": ["humanize", "personal", "proof", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check"], "label/": ["label", "site", "v", "mark", "mcheck", "m"], "local/": LOCAL_KEYS, "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
-B2C_KEYS = ["humanize", "personal", "proof", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check"]   # 13.8 검색 수요 안내 페이지도 개인용 메뉴
-TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "휴머나이징", ["humanize", "personal", "proof", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check"]),
+B2C_KEYS = ["humanize", "personal", "proof"] + GUIDE_KEYS   # 13.8 검색 수요 안내 페이지도 개인용 메뉴
+NAV_KEY = {"humanize/": B2C_KEYS, "label/": ["label", "site", "v", "mark", "mcheck", "m"], "local/": LOCAL_KEYS, "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
+TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "휴머나이징", B2C_KEYS),
         ("label/", "fingerprint", "AI 마킹", ["label", "site", "v", "mark", "mcheck", "m"]),
         ("local/", "store", "가게 등록", LOCAL_KEYS),
         ("pricing/", "card", "토큰", ["pricing"])]
 
 
 # 13.0 우리 사이트의 'AI 마킹' 단추: 소개 페이지는 넓은 화면에서 왼쪽 아래에 떠 있고, 입력 · 도구 화면은 가리지 않게 바닥글 안에 둠
-NOTICE_INLINE_KEYS = set(LOCAL_KEYS) | {"humanize", "ai-rate", "ai-detector", "humanizer", "resume", "academic", "ai-check", "mark", "mcheck", "m", "site", "check", "scan", "report", "proof", "v", "verify", "contact", "adminpass", "approve", "app", "404", "terms", "privacy"}
+NOTICE_INLINE_KEYS = set(LOCAL_KEYS) | set(GUIDE_KEYS) | {"humanize", "mark", "mcheck", "m", "site", "check", "scan", "report", "proof", "v", "verify", "contact", "adminpass", "approve", "app", "404", "terms", "privacy"}
+
+
+def guide_chips(root):
+    """13.12 '이런 검색으로 오셨나요?' 칩(첫 화면 · /humanize/ · 안내 페이지 머리 아래). 지금 페이지 칩은 k.js 가 aria-current 로 어둡게"""
+    return ('<nav class="lp-links" aria-label="검색으로 많이 찾는 안내"><div class="k-wrap"><p class="lp-links-k">이런 검색으로 오셨나요?</p><div class="lp-chips">%s</div></div></nav>'
+            % "".join('<a href="%s%s">%s</a>' % (root, g[0], g[5]) for g in GUIDES))
+
+
+def guide_hub(root):
+    """13.12 /humanize/ 안내 모음: 검색어별 안내 페이지를 한 줄 설명과 함께(내부 링크 · AI 검색이 읽는 목차)"""
+    return ('<section class="k-sec lp-hub" id="guides" aria-labelledby="gdT"><div class="k-wrap"><div class="k-head"><h2 class="k-h2" id="gdT">AI 작성률 · 휴머나이징 안내 모음</h2>'
+            '<p class="k-lead">많이 찾는 질문마다 한 페이지로 정리했습니다. 페이지마다 맨 위에 같은 무료 검사 도구가 있습니다.</p></div><ul class="lp-hub-l">%s</ul></div></section>'
+            % "".join('<li><a href="%s%s"><b>%s</b><span>%s</span></a></li>' % (root, g[0], g[2], g[3]) for g in GUIDES))
 
 
 def ico(name, cls="ico"):
@@ -579,7 +606,7 @@ def header(root, key):
         cta = '<a class="k-btn k-btn-p k-btn-s" href="#top" data-focus="cUrl">무료로 만들기</a>'
     elif key == "check":   # 13.10 광고 문구 검수는 같은 페이지의 글 칸으로
         cta = '<a class="k-btn k-btn-p k-btn-s" href="#top" data-focus="ctext">무료로 검수</a>'
-    elif key == "home":   # 12.1 첫 화면은 바로 위 검사 칸으로
+    elif key == "home" or key in GUIDE_KEYS:   # 12.1 첫 화면은 바로 위 검사 칸으로(13.12 검색어 안내 페이지도 같은 페이지 맨 위 검사 칸으로)
         cta = '<a class="k-btn k-btn-p k-btn-s" href="#top" data-focus="hzText">무료로 검사</a>'
     elif biz:
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%ssite/">무료로 시작</a>' % root)
@@ -631,6 +658,9 @@ def footer(root):
     std = ('<div class="k-ft-std"><span><b>표준</b>C2PA, IPTC, XMP, schema.org, llms.txt</span>'
            '<span><b>서명</b>Ed25519(JWS), <a href="%s.well-known/aimarker-keys.json">공개키</a></span>'
            '<span><b>원장</b>하루치를 OpenTimestamps에 고정, <a href="%sverify/">확인하기</a></span></div>' % (root, root))
+    # 13.12 AI 글 검사 안내 페이지 줄(모든 페이지에서 검색어 안내로 이어지게)
+    std += ('<div class="k-ft-std k-ft-gd"><span><b>AI 글 검사 안내</b>%s</span></div>'
+            % ", ".join('<a href="%s%s">%s</a>' % (root, g[0], g[2]) for g in GUIDES))
     return ('<footer class="k-ft"><div class="k-wrap"><div class="k-ft-top"><div class="k-ft-brand">%s'
             '<p>AIMarker는 글의 AI 작성률 검사와 휴머나이징, AI가 만든 이미지 · 영상 · 글의 AI 마크, 회사와 가게가 AI 검색에 정확히 소개되도록 돕는 GEO까지 한곳에서 하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
             '<button type="button" class="k-install ft" data-install hidden>%s<span><b>AIMarker 앱 설치</b><small>휴대폰 · PC 홈 화면에</small></span></button>'
@@ -666,8 +696,100 @@ def local_service_ld(ind, url):
             "offers": offers}
 
 
+# 13.12(10.28) 구글 판매자 목록 · 제품 스니펫(Search Console '판매자 목록 구조화된 데이터 문제' 메일 대응).
+#   반품(환불) 정책은 회사 단위로 한 번 적고 상품마다 @id 로 가리킴(구글 권장). 배송은 디지털 상품이라 이메일로 코드(배송비 0원).
+RETURN_POLICY_ID = SITE + "#return-policy"
+TOKEN_PRODUCT_ID = SITE + "humanize/#tokens"
+
+
+def return_policy_ld():
+    """이용약관 제7조의3: 충전한 날부터 7일 안에는 쓰고 남은 유료 토큰을 공제 없이 환불(하나도 쓰지 않았다면 전액).
+    디지털 상품이라 돌려보낼 물건이 없으므로 returnMethod(우편 · 매장 반품)는 적지 않음"""
+    return {"@type": "MerchantReturnPolicy", "@id": RETURN_POLICY_ID, "name": "토큰 · 디지털 상품 환불 기준(이용약관 제7조의3)",
+            "applicableCountry": "KR", "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow", "merchantReturnDays": 7,
+            "returnFees": "https://schema.org/FreeReturn", "refundType": "https://schema.org/FullRefund", "merchantReturnLink": SITE + "terms/#pass"}
+
+
+def org_ld():
+    return {"@type": "Organization", "@id": SITE + "#org", "name": "AIMarker", "alternateName": ["에이아이마커", "AI마커"], "url": SITE,
+            "logo": SITE + "assets/icon-512.png", "email": BIZ["mail"],
+            "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "email": BIZ["mail"], "availableLanguage": "ko"},
+            "parentOrganization": {"@type": "Organization", "name": BIZ["name"], "url": "https://www.skkc.co.kr/"},
+            "hasMerchantReturnPolicy": return_policy_ld()}
+
+
+def ship_ld():
+    """디지털 상품: 결제가 확인되면 영업일 하루 안에 이메일로 토큰 코드(배송비 0원, 대한민국)"""
+    return {"@type": "OfferShippingDetails", "shippingRate": {"@type": "MonetaryAmount", "value": 0, "currency": "KRW"},
+            "shippingDestination": {"@type": "DefinedRegion", "addressCountry": "KR"},
+            "deliveryTime": {"@type": "ShippingDeliveryTime",
+                             "handlingTime": {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY"},
+                             "transitTime": {"@type": "QuantitativeValue", "minValue": 0, "maxValue": 0, "unitCode": "DAY"}}}
+
+
+def token_product_ld():
+    """13.12 개인 토큰(AI 작성률 검사 · AI 휴머나이징)을 구글 판매자 목록 · 제품 스니펫 형식으로: 묶음(ProductGroup) 하나 + 충전 칸 4개(변형, 크기 = 토큰 수).
+    칸마다 주소 /humanize/?pack=c10 이 그 칸을 고른 충전 창을 바로 엶(humanize.js). 값은 CREDITS(부가세 포함) = 아임웹 34~37 판매가.
+    그림은 assets/product/tokens-*.jpg(1:1 · 4:3 · 16:9, 토큰만 표기). 후기 · 별점은 실제로 받은 것이 생기기 전에는 넣지 않음"""
+    img = lambda k: [SITE + "assets/product/%s-%s.jpg" % (k, r) for r in ("1x1", "4x3", "16x9")]
+    desc = ("AI 작성률 검사와 AI 휴머나이징(AI 글 인간화)에 쓰는 AIMarker 토큰입니다. 글이나 한글 · 워드 · PDF 파일을 넣으면 AI 작성률과 AI 패턴이 남은 문장을 보여 드리고, "
+            "뜻은 그대로 둔 채 사람 문장으로 다듬습니다. 검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰(1토큰 100원). "
+            "결제가 확인되면 영업일 하루 안에 16자리 토큰 코드를 이메일로 보내 드리고, 남은 토큰은 사라지지 않고 이어서 씁니다.")
+    variants = []
+    for c in CREDITS:
+        more = c["cr"] - c["base"]
+        crs = format(c["cr"], ",")
+        variants.append({"@type": "Product", "@id": TOKEN_PRODUCT_ID + "-" + c["id"], "sku": "AIM-TK-%d" % c["cr"], "inProductGroupWithID": "AIM-TK",
+                         "name": "AIMarker 휴머나이징 토큰 %s %s토큰" % (c["name"], crs), "size": crs + "토큰", "image": img("tokens-" + c["id"]),
+                         "description": "%s토큰%s. %s" % (crs, ("(%s토큰 + %s토큰 더)" % (format(c["base"], ","), format(more, ","))) if more else "", desc),
+                         "brand": {"@type": "Brand", "name": "AIMarker"},
+                         "offers": {"@type": "Offer", "url": SITE + "humanize/?pack=" + c["id"], "price": c["price"], "priceCurrency": "KRW",
+                                    "priceSpecification": {"@type": "UnitPriceSpecification", "price": c["price"], "priceCurrency": "KRW", "valueAddedTaxIncluded": True},
+                                    "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition",
+                                    "seller": {"@id": SITE + "#org"}, "shippingDetails": ship_ld(), "hasMerchantReturnPolicy": {"@id": RETURN_POLICY_ID}}})
+    return {"@type": "ProductGroup", "@id": TOKEN_PRODUCT_ID, "name": "AIMarker 휴머나이징 토큰(AI 작성률 검사 · AI 글 인간화)", "productGroupID": "AIM-TK",
+            "url": SITE + "humanize/", "description": desc, "image": img("tokens"), "brand": {"@type": "Brand", "name": "AIMarker"},
+            "variesBy": ["https://schema.org/size"], "hasVariant": variants}
+
+
+def pricing_ld():
+    """13.12 /pricing/ 은 여러 상품을 한 페이지에 나열하므로 Product(판매자 목록 대상)가 아니라 OfferCatalog 로(구글: 제품 리치 결과는 한 상품을 다루는 페이지만).
+    개인 토큰은 /humanize/ 의 상품 변형을 가리키고, 기업 상품은 Service 로. 값은 CATALOG · CREDITS · BUNDLES 그대로"""
+    anchor = {"label": "label", "service": "service", "geo": "geo", "geocare": "geo", "local": "local", "credit": "credit", "addon": "addons"}
+    cats = [{"@type": "OfferCatalog", "name": "개인 토큰(AI 작성률 검사 · AI 휴머나이징, 부가세 포함)", "itemListElement": [
+        {"@type": "Offer", "name": "%s %s토큰" % (c["name"], format(c["cr"], ",")), "price": c["price"], "priceCurrency": "KRW", "url": SITE + "humanize/?pack=" + c["id"],
+         "itemOffered": {"@id": TOKEN_PRODUCT_ID + "-" + c["id"]}} for c in CREDITS]}]
+    for key in ("label", "service", "geo", "geocare", "local", "credit", "addon"):
+        c, offers = CATALOG[key], []
+        for t in c["tiers"]:
+            if not t.get("m"):
+                continue
+            nm = t.get("full") or ("%s %s" % (c["name"], t["name"]))
+            offers.append({"@type": "Offer", "name": nm, "price": t["m"], "priceCurrency": "KRW", "url": SITE + "pricing/#" + anchor[key],
+                           "priceSpecification": {"@type": "UnitPriceSpecification", "price": t["m"], "priceCurrency": "KRW", "valueAddedTaxIncluded": False, "unitText": t.get("per") or "1회"},
+                           "itemOffered": {"@type": "Service", "name": nm, "provider": {"@id": SITE + "#org"}}})
+        if offers:
+            cats.append({"@type": "OfferCatalog", "name": "%s(%s)" % (c["name"], c["vat"]), "itemListElement": offers})
+    for b in BUNDLES:
+        cats.append({"@type": "OfferCatalog", "name": "묶음(부가세 별도)", "itemListElement": [{"@type": "Offer", "name": b["name"], "price": b["m"], "priceCurrency": "KRW", "url": SITE + "pricing/#geo",
+                     "priceSpecification": {"@type": "UnitPriceSpecification", "price": b["m"], "priceCurrency": "KRW", "valueAddedTaxIncluded": False, "unitText": "1회"},
+                     "itemOffered": {"@type": "Service", "name": b["name"], "description": " · ".join(b["feat"]), "provider": {"@id": SITE + "#org"}}}]})
+    return {"@type": "OfferCatalog", "@id": SITE + "pricing/#catalog", "name": "AIMarker 요금과 토큰", "url": SITE + "pricing/", "itemListElement": cats}
+
+
+def crumb_ld(meta, url):
+    """13.12 빵 부스러기(검색 결과의 경로 표시): 머리 주석 crumb(이 페이지 이름) · crumb_parent('주소|이름', 없으면 생략)"""
+    items = [("AIMarker", SITE)]
+    if meta.get("crumb_parent"):
+        h, n = meta["crumb_parent"].split("|", 1)
+        items.append((n.strip(), SITE + h.strip()))
+    items.append((meta["crumb"], url))
+    return {"@type": "BreadcrumbList", "@id": url + "#crumb", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(items)]}
+
+
 def auto_ld(meta, body, path, title, desc):
-    """8.0: 모든 쪽에 구조화 데이터(운영 조직 · 이 페이지 · 자주 묻는 질문)를 자동으로. 우리 사이트도 GEO 기준을 지키게"""
+    """8.0: 모든 쪽에 구조화 데이터(운영 조직 · 이 페이지 · 자주 묻는 질문)를 자동으로. 우리 사이트도 GEO 기준을 지키게.
+    13.12: 조직에 환불 기준, 페이지에 고친 날짜 · 빵 부스러기, product: tokens 페이지(/humanize/)에 상품, catalog: 1 페이지(/pricing/)에 요금 목록"""
     import html as _h
     if meta.get("layout") == "app" or meta.get("noindex"):
         return ""
@@ -675,11 +797,24 @@ def auto_ld(meta, body, path, title, desc):
     own = meta.get("jsonld", "")
     graph = []
     if not own:
-        graph.append({"@type": "Organization", "@id": SITE + "#org", "name": "AIMarker", "alternateName": "에이아이마커", "url": SITE,
-                      "logo": SITE + "assets/icon-512.png", "email": "contact@skkc.co.kr",
-                      "parentOrganization": {"@type": "Organization", "name": "성균관컨설팅", "url": "https://www.skkc.co.kr/"}})
-        graph.append({"@type": "WebPage", "@id": url + "#page", "url": url, "name": title, "description": desc, "inLanguage": "ko-KR",
-                      "isPartOf": {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": "AIMarker"}, "publisher": {"@id": SITE + "#org"}})
+        graph.append(org_ld())
+        wp = {"@type": "WebPage", "@id": url + "#page", "url": url, "name": title, "description": desc, "inLanguage": "ko-KR",
+              "isPartOf": {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": "AIMarker"}, "publisher": {"@id": SITE + "#org"}}
+        if meta.get("updated"):
+            wp["dateModified"] = meta["updated"]
+        if meta.get("published"):
+            wp["datePublished"] = meta["published"]
+        if meta.get("crumb"):
+            wp["breadcrumb"] = {"@id": url + "#crumb"}
+        graph.append(wp)
+        if meta.get("crumb"):
+            graph.append(crumb_ld(meta, url))
+        if meta.get("product") == "tokens":
+            graph.append(token_product_ld())
+            wp["mainEntity"] = {"@id": TOKEN_PRODUCT_ID}
+        if meta.get("catalog"):
+            graph.append(pricing_ld())
+            wp["mainEntity"] = {"@id": SITE + "pricing/#catalog"}
     tx = lambda s: re.sub(r"\s+", " ", _h.unescape(re.sub(r"<[^>]+>", "", s))).strip()
     qa = []
     for m in re.finditer(r"<details[^>]*>\s*<summary[^>]*>((?:(?!</summary>|<details).)*?)</summary>\s*<p>((?:(?!</details>|<details).)*?)</p>\s*</details>", body, re.S):
@@ -703,6 +838,10 @@ def page(meta, body):
     for _ in range(3):   # 13.4 조각 안의 조각(hz-hero.inc → hz-tool.inc · hz-stage.inc)까지, 세 단계까지만
         if "{{inc:" not in body: break
         body = re.sub(r"\{\{inc:([\w.\-]+)\}\}", lambda m: open(os.path.join(HERE, "pages", m.group(1)), encoding="utf-8").read(), body)
+    # 13.12 첫 화면 · /humanize/ 머리(hz-hero.inc)의 눈썹 줄과 h1 을 페이지마다(머리 주석 hero_k · hero_h1, 없으면 첫 화면 문구)
+    body = body.replace("{{hero_k}}", meta.get("hero_k") or "AI 작성률 검사 · AI 작성률 낮추기 · AI 휴머나이징(AI 글 인간화)")
+    body = body.replace("{{hero_h1}}", meta.get("hero_h1") or 'AI로 작성된 글은<br>검사기에 <span class="hz13-mk">필터링</span>됩니다')
+    body = body.replace("{{guide_chips}}", guide_chips("{{root}}")).replace("{{guide_hub}}", guide_hub("{{root}}"))   # 13.12 검색어 안내 칩 · 안내 모음
     body = body.replace("{{root}}", root).replace("{{ver}}", VER).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge(root=root)).replace("{{kaiec_lg}}", kaiec_badge(lg=True, root=root)).replace("{{kaiec_dk}}", kaiec_badge(dark=True, root=root))
     body = body.replace("{{lc_ind}}", meta.get("lc_ind", ""))   # 13.9 가게 진단 도구의 업종(업종 페이지)
     body = re.sub(r"\{\{tiers:([a-z]+)(?::([a-z]+))?\}\}", lambda m: tiers_html(m.group(1), root, m.group(2)), body)
@@ -737,7 +876,8 @@ def page(meta, body):
         pre += ('<link rel="manifest" href="%sapp/manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">'
                 '<meta name="apple-mobile-web-app-title" content="AIMarker"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' % root)
     jsonld = meta.get("jsonld", "") + auto_ld(meta, body, path, title, desc)
-    noindex = '<meta name="robots" content="noindex">' if meta.get("noindex") else ""
+    # 13.12 색인하는 페이지는 큰 그림 미리보기 · 글 미리보기 길이 제한 없음(구글 · 빙, AI 개요에 인용될 때도)
+    noindex = '<meta name="robots" content="noindex">' if meta.get("noindex") else '<meta name="robots" content="max-image-preview:large, max-snippet:-1">'
     # 13.8 검색 엔진 소유 확인(첫 화면에만): 네이버 서치어드바이저 메타 태그(파일 naverf99735e2bba0209dec440a039d0d83ca.html 도 루트에 있음) · 구글은 파일 google67694027f26c117c.html
     if meta.get("key") == "home":
         noindex += '<meta name="naver-site-verification" content="66dc0527816398b550007fe72a67ac3199b59b9f"><meta name="google-site-verification" content="oJ2S4yA-g2sgLY040U_gbYuTBgjj1ve83drH1xHW5QE">'
@@ -778,7 +918,11 @@ def parse(src):
         src = src[m.end():]
     if "jsonld_file" in meta:
         with open(os.path.join(HERE, "pages", meta["jsonld_file"]), encoding="utf-8") as f:
-            meta["jsonld"] = '<script type="application/ld+json">' + json.dumps(json.load(f), ensure_ascii=False) + '</script>'
+            data = json.load(f)
+        for n in (data.get("@graph") or [data]):   # 13.12 파일로 적은 조직(첫 화면 home.jsonld)에도 같은 환불 기준
+            if n.get("@type") == "Organization" and n.get("@id") == SITE + "#org":
+                n.setdefault("hasMerchantReturnPolicy", return_policy_ld())
+        meta["jsonld"] = '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False).replace("</", "<\\/") + '</script>'
     return meta, src
 
 
