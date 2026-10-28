@@ -779,7 +779,7 @@
       '<ul>' + li.map(function (x) { return '<li>' + ico('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></div>' +
       '<div class="r"><button class="btn btn-p btn-l" type="button" data-act="humall">' + ico('pen') + '<span>글 전체 휴머나이징 · ' + tk(cost) + '토큰</span></button><p class="price">' + price + '</p>' +
       (S.pass ? '' : '<button class="btn btn-g" type="button" data-act="humfree">' + freeTaste(t).part + ' 무료로 먼저 보기</button><button type="button" class="hz7-link" data-code data-intent="hum">토큰 코드가 있어요</button>') +
-      '<p class="fine">다른 검사기의 결과를 약속하지 않습니다. AI 사용을 밝혀야 하는 글이면 규정대로 밝히세요.</p></div></section>';
+      '<p class="fine">AI 사용을 밝혀야 하는 글이면 규정대로 밝히세요.</p></div></section>';
   }
   function fullHtml(M) {   // 무료: 모든 문장의 위치와 이유 · 구간별 분석 · 결과상세내역서는 토큰으로(전체 검사)
     if (M.full) return '';
@@ -1126,7 +1126,7 @@
       facts + (!pro && F.fallback ? '<p class="hz7-fineprint">' + (F.fallback === 'off' ? '지금은 말투까지 바꾸는 엔진을 쓸 수 없어 남은 검사 횟수로 기본 엔진(표현 고치기)으로 바꿨습니다. 말투와 문장 흐름까지 바꾸려면 잠시 뒤 다시 휴머나이징해 주세요.' : '휴머나이징 횟수를 다 써서 남은 검사 횟수로 기본 엔진(표현 고치기)으로 바꿨습니다. 말투와 문장 흐름까지 바꾸려면 휴머나이징 횟수가 필요합니다.') + '</p>' : '') + (changes === 0 ? '<p class="hz7-fineprint">AI 말버릇으로 볼 만한 곳이 거의 없어 원문을 그대로 두었습니다.</p>' : '') + (F.toneNote ? '<p class="hz7-fineprint">' + esc(F.toneNote) + '</p>' : F.toneMiss ? '<p class="hz7-fineprint">말투를 바꾸지 못한 문장 ' + n2(F.toneMiss) + '개는 원래 말투로 두었습니다(인용, 물음, 뜻이 갈리는 끝맺음). 바뀐 곳 탭에서 확인해 주세요.</p>' : '') +
       fileBar(F) +
       '<div class="hz7-acts"><button class="btn btn-g" type="button" data-act="usefix">' + btnL + '</button><button class="btn btn-g" type="button" data-act="copyfix">' + lbl + ' 복사</button>' + (pro ? '<button class="btn btn-g" type="button" data-act="proagain">다른 버전으로' + (isCr() ? ' · ' + tk(humCost(chunk(F.src).parts)) + '토큰' : '(휴머나이징 1회)') + '</button>' : '') + (S.res ? '<button class="btn btn-g" type="button" data-act="backres">검사 결과로 돌아가기</button>' : '') + '</div>' +
-      '<p class="hz7-fineprint">“' + btnL + '”는 ' + lbl + '의 판정 결과를 그대로 보여 주므로 ' + (isCr() ? '토큰이 더 빠지지 않습니다' : '이용권 횟수를 더 쓰지 않습니다') + '. AI 작성률과 판정은 추정값이며, 다른 검사기의 결과를 약속하지 않습니다.</p></div>';
+      '<p class="hz7-fineprint">“' + btnL + '”는 ' + lbl + '의 판정 결과를 그대로 보여 주므로 ' + (isCr() ? '토큰이 더 빠지지 않습니다' : '이용권 횟수를 더 쓰지 않습니다') + '. AI 작성률과 판정은 추정값입니다.</p></div>';
     stat(h2 + '. ' + (sub || ''));
   }
   out.addEventListener('click', function (e) {

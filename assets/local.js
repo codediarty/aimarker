@@ -196,7 +196,7 @@
         '<section class="lq-qs"><h3>손님이 AI에게 묻는 질문 ' + C.length + '개</h3><ul>' + C.map(function (c) {
           return '<li class="v' + c.v + '"><span class="m" aria-hidden="true">' + (c.v === 2 ? ICO.check : c.v === 1 ? '!' : ICO.x) + '</span><span>' + esc(c.q) + '<small>' + (c.v === 2 ? '답할 근거 있음' : c.v === 1 ? '틀리거나 빠질 수 있음' : '근거 없음 · ' + esc(word(c.need[c.need.length - 1]))) + '</small></span></li>';
         }).join('') + '</ul></section>' +
-        '<p class="lq-note">사장님이 답한 내용으로 계산한 결과이며, 실제 AI 답변을 조회한 것이 아닙니다. AI 답변에 나오는지와 순위는 약속하지 않습니다. 답한 내용은 서버로 보내지 않습니다.</p>';
+        '<p class="lq-note">사장님이 답한 내용으로 계산한 결과이며, 실제 AI 답변을 조회한 것이 아닙니다. 답한 내용은 서버로 보내지 않습니다.</p>';
       var b = body(); b.scrollTop = 0;
       foot(true);
       try { b.focus({ preventScroll: true }); } catch (e) { b.focus(); }
@@ -426,7 +426,7 @@
           (q.st === 'miss' ? '<small>빠진 정보: ' + q.miss.map(function (k) { return '<button type="button" class="lc-lk" data-go="' + esc(L.needField(k)) + '">' + esc(L.needName(k)) + '</button>'; }).join(', ') + '</small>' : q.st === 'no' ? '<small>정보가 있어 \'아니요\'로 정확히 답합니다</small>' : '<small>지금 정보로 답할 수 있음</small>') + '</span></li>';
       }).join('') + '</ul></div>' +
       '<div class="lc-cta"><a class="k-btn k-btn-p" href="#packages">' + (t >= 70 ? '이대로 AI 검색에 등록하기' : 'AI 검색 등록 맡기기') + ICO.arrow + '</a><button type="button" class="k-btn k-btn-l" data-show-out>만들어진 결과 보기</button></div>' +
-      '<p class="lc-note">점수는 입력한 정보로 계산한 준비 상태이며, AI 답변에 나오는 것을 약속하지 않습니다. 입력한 내용은 이 브라우저 안에서만 계산합니다.</p>';
+      '<p class="lc-note">점수는 입력한 정보로 계산한 준비 상태입니다. 입력한 내용은 이 브라우저 안에서만 계산합니다.</p>';
     /* 같은 내용이면 다시 그리지 않음: 칸을 떠날 때(change) 다시 그리면 누르려던 단추가 사라져 눌리지 않음 */
     if (html !== lastSide) { side.innerHTML = html; lastSide = html; }
     if (pill) { pill.hidden = false; pill.className = 'lc-pill g-' + gradeCls(t); pill.innerHTML = '<span>AI 검색 준비도</span><b>' + t + '점</b><span class="q">질문 ' + okN + '/' + QS.length + '</span>'; }

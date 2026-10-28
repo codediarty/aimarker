@@ -545,7 +545,7 @@
     return { list: A.slice(0, 15), miss: miss };
   }
 
-  /* ---------- AI 검색 준비도(100점, 입력한 정보로 계산하는 준비 상태. 노출을 약속하지 않음) ---------- */
+  /* ---------- AI 검색 준비도(100점, 입력한 정보로 계산하는 준비 상태) ---------- */
   function score(s) {
     var I = ind(s), F = facts(s), hf = F._hf, parts = [];
     function part(k, name, max, got, tips) { parts.push({ k: k, name: name, max: max, got: Math.max(0, Math.min(max, Math.round(got))), tips: tips.filter(Boolean) }); }

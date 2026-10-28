@@ -94,7 +94,7 @@ selflabel: footer
       <div><span class="ic">{{ico:eye}}</span><b>AI 답변 언급 모니터링</b><span>ChatGPT, 제미나이, 퍼플렉시티, 네이버에 매달 같은 질문을 물어 기록</span></div>
       <div><span class="ic">{{ico:fingerprint}}</span><b>AI 투명성 신호</b><span>AI 생성물에 AI 마크를 붙여 AI 사용을 투명하게 밝힙니다</span></div>
     </div>
-    <p class="k-small" style="margin-top:18px">AI 서비스가 어떤 답을 내놓을지는 각 회사가 정하므로, 노출 순위나 매출을 약속하지는 않습니다. 대신 AI가 우리를 찾고, 읽고, 믿을 수 있는 조건을 빠짐없이 갖추고 그 변화를 전후 리포트로 보여 드립니다.</p>
+    <p class="k-small" style="margin-top:18px">AI가 우리를 찾고, 읽고, 믿을 수 있는 조건을 빠짐없이 갖추고 그 변화를 전후 리포트로 보여 드립니다.</p>
   </div>
 </section>
 
@@ -121,7 +121,7 @@ selflabel: footer
       <p class="k-lead">AI 검색은 페이지를 읽을 수 있어야 하고, 내용을 구조로 알아볼 수 있어야 하고, 믿을 만하다고 판단해야 인용합니다. 진단은 이 세 가지를 일곱 영역 100점으로 나눠 보고, 영역마다 고칠 거리를 만듭니다.</p>
     </div>
     <table class="x-addons">
-      <caption>점수 기준과 크롤러 목록은 AIMarker 서버에만 두고 계속 고칩니다. 점수는 준비 상태를 보는 지표이고, 노출을 약속하지 않습니다.</caption>
+      <caption>점수 기준과 크롤러 목록은 AIMarker 서버에만 두고 계속 고칩니다. 점수는 AI 검색이 읽을 준비가 되었는지 보는 지표입니다.</caption>
       <tbody>
         <tr><th>AI 크롤러 접근</th><td>ChatGPT, Claude, Perplexity, Google, Bing, 네이버 검색 크롤러가 robots.txt에 막혀 있지 않은지, 본문이 자바스크립트 없이도 보이는지</td><td class="pr">20점</td></tr>
         <tr><th>구조화 데이터</th><td>상품, 회사, 글에 맞는 schema.org 정보(JSON-LD)가 있는지, 이름, 이미지, 가격, 브랜드 같은 핵심 항목이 채워졌는지</td><td class="pr">25점</td></tr>
@@ -157,7 +157,7 @@ selflabel: footer
     <div class="k-head"><h2 class="k-h2" id="fqTitle">AI 검색 노출 최적화, 이것이 궁금합니다</h2></div>
     <div class="k-faq">
       <details><summary>GEO가 무엇인가요?</summary><p>GEO(생성형 엔진 최적화)는 ChatGPT, Gemini, Perplexity 같은 AI 검색, 답변 엔진이 우리 페이지를 읽고, 이해하고, 믿고 인용하기 쉽게 만드는 일입니다. 크롤러가 들어올 수 있게 열고, 내용을 구조화 데이터, 질문과 답으로 정리하고, 출처와 AI 사용 표시 같은 신뢰 정보를 갖춥니다.</p></details>
-      <details><summary>점수가 높으면 AI 검색에 꼭 나오나요?</summary><p>아니요. 어떤 페이지를 보여 줄지는 각 AI 서비스가 정합니다. AIMarker 점수는 AI 검색이 읽고 이해할 준비가 되어 있는지 보는 지표이고, 노출이나 순위를 약속하지 않습니다.</p></details>
+      <details><summary>진단 점수는 무엇을 뜻하나요?</summary><p>AIMarker 점수는 AI 검색이 우리 페이지를 읽고 이해할 준비가 되어 있는지 보는 지표입니다. 점수가 낮은 영역부터 고치면 AI가 읽고 인용하기 좋은 조건이 갖춰집니다.</p></details>
       <details><summary>네이버 스마트스토어도 진단되나요?</summary><p>스마트스토어처럼 외부에서 페이지를 읽지 못하게 막아 둔 곳은 진단이 되지 않을 수 있습니다. 이때는 상품 이미지 자동 마킹(대체 텍스트, AI 마크)과 상품 피드 만들기를 먼저 쓰세요.</p></details>
       <details><summary>진단한 페이지 내용이 저장되나요?</summary><p>진단할 때만 공개된 페이지와 robots.txt, llms.txt, sitemap.xml을 읽고, 결과는 같은 주소로 다시 물을 때를 위해 6시간만 서버 캐시에 둡니다. 페이지 내용을 따로 보관하지 않습니다.</p></details>
       <details><summary>AI 학습 크롤러도 허용해야 하나요?</summary><p>아니요. AI 검색, 답변에 나오려면 검색용 크롤러(OAI-SearchBot, PerplexityBot, Claude-SearchBot 등)가 들어올 수 있어야 하고, 학습용 크롤러(GPTBot, Google-Extended 등) 허용은 회사가 따로 정할 일입니다. 진단은 둘을 나눠 보여 드립니다.</p></details>

@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261028a"
+VER = "20261028b"
 TODAY = "2026-10-28"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -690,7 +690,7 @@ def local_service_ld(ind, url):
                        "priceSpecification": {"@type": "UnitPriceSpecification", "price": t["m"], "priceCurrency": "KRW", "valueAddedTaxIncluded": False, "unitText": t.get("per", "1회")}})
     return {"@type": "Service", "@id": SITE + "local/#service", "name": "가게 AI 검색 등록", "alternateName": ["자영업자 GEO 세팅", "가게 AI 검색 노출", "로컬 GEO"],
             "serviceType": "AI 검색 등록(GEO) · 가게 구조화 데이터", "url": SITE + "local/",
-            "description": "손님이 ChatGPT · 제미나이 · 네이버 AI 브리핑 · 구글 AI 개요에 가게를 물을 때 AI가 정확한 정보를 읽도록, AI가 읽는 가게 페이지와 업종별 구조화 데이터를 만들어 구글 · 네이버 · 빙에 등록하고 지도 정보와 맞춥니다. 무료 진단, 홈페이지가 없어도 됩니다. AI 답변 노출과 순위는 약속하지 않습니다.",
+            "description": "손님이 ChatGPT · 제미나이 · 네이버 AI 브리핑 · 구글 AI 개요에 가게를 물을 때 AI가 정확한 정보를 읽도록, AI가 읽는 가게 페이지와 업종별 구조화 데이터를 만들어 구글 · 네이버 · 빙에 등록하고 지도 정보와 맞춥니다. 무료 진단, 홈페이지가 없어도 됩니다.",
             "provider": {"@id": SITE + "#org"}, "areaServed": {"@type": "Country", "name": "대한민국"},
             "audience": {"@type": "BusinessAudience", "audienceType": (who + " 운영자") if who else "자영업자 · 소상공인(병원 · 치과 · 한의원 · 네일샵 · 미용실 · 카페 · 음식점 · 학원 · 부동산 등)"},
             "offers": offers}
