@@ -560,7 +560,7 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
 .hz15-bar .hu-replay[hidden] { display: none; }
 .hz15-body { display: grid; gap: 12px; padding: 14px 18px 16px; background: #fff; }
 /* 상태 줄 + 알약 줄은 늘 두 줄 자리를 잡아 둠(단계가 바뀌어도 창 높이가 변하지 않게) */
-.hz15-st { display: grid; grid-template-rows: 24px 32px; align-items: center; justify-items: start; gap: 6px; }
+.hz15-st { display: grid; grid-template-rows: 24px 32px; align-content: start; align-items: center; justify-items: start; gap: 6px; }
 .hz15-st .hz15-badge[hidden] { display: inline-flex; visibility: hidden; }
 .hz15 .hu-st { font-size: 13.5px; white-space: normal; }
 .hz15 .hu-st .dot.run { animation: hz14-pulse 1.2s ease-in-out infinite; }
@@ -575,22 +575,53 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
 .hz15-paper-w { position: relative; padding: 14px 16px; border: 1px solid var(--ds-line); border-radius: 12px; background: var(--ds-canvas); overflow: hidden; }
 .hz15 .hu-paper { margin: 0; padding: 0; border: 0; background: none; }
 .hz15 .hu-doc { font-size: 14.5px; line-height: 1.95; color: var(--ds-ink); }
-.hz15 .hu-doc .hu-s.ai { background: linear-gradient(rgba(255, 88, 95, .2), rgba(255, 88, 95, .2)) 0 40% / 100% 86% no-repeat, linear-gradient(#D62B32, #D62B32) 0 100% / 100% 2px no-repeat; }
-.hz15 .hu-doc .hu-s.ai::after { content: "AI 패턴"; display: inline-block; margin: 0 3px 0 5px; padding: 0 6px; border-radius: 999px; background: #D62B32; color: #fff; font-size: 10px; font-weight: 700; line-height: 1.6; vertical-align: 2px; animation: ds-fade .25s var(--ease) both; }
-.hz15 .hu-doc .hu-s.ok::after, .hz15 .hu-doc .hu-s.out::after, .hz15 .hu-doc .hu-s.now::after { display: none; }
-.hz15 .hu-doc .hu-s.ai2 { background: linear-gradient(rgba(217, 122, 6, .14), rgba(217, 122, 6, .14)) 0 40% / 100% 86% no-repeat, linear-gradient(#C97A06, #C97A06) 0 100% / 100% 2px no-repeat; }
-.hz15 .hu-doc .hu-s.ai2::after { content: "AI 패턴 남음"; display: inline-block; margin: 0 3px 0 5px; padding: 0 6px; border-radius: 999px; background: #C97A06; color: #fff; font-size: 10px; font-weight: 700; line-height: 1.6; vertical-align: 2px; animation: ds-fade .25s var(--ease) both; }
-.hz15 .hu-doc mark.hu-c { background: rgba(11, 99, 246, .1); box-shadow: inset 0 -2px 0 var(--ds-blue-600); color: inherit; }
-.hz15 .hu-doc .hu-s.now { color: var(--ds-slate); }
-.hz15 .hu-doc .hu-s.out { opacity: .35; }
-.hz15-demo.scanning .hz15-paper-w::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, rgba(11, 99, 246, 0), var(--ds-blue-600) 30%, var(--ds-blue-600) 70%, rgba(11, 99, 246, 0)); box-shadow: 0 0 18px 4px rgba(11, 99, 246, .35); animation: hz14-scan 1.15s cubic-bezier(.4, 0, .2, 1) infinite; pointer-events: none; }
+/* 13.13 예시 창 움직임(k.js): 글자를 하나씩 치지 않음. 원문은 문장마다 흐림에서 또렷하게, 검출 표시는 형광펜처럼 왼쪽부터 칠해짐,
+   다듬는 문장은 파란 표시 → 흐려지며 사라졌다가 다듬은 문장이 또렷하게(교차 전환). 칠하기 색은 아래 두 값을 바꿔 부드럽게 넘어감(지원하지 않는 브라우저는 바로 바뀜) */
+@property --hz-hl { syntax: "<color>"; inherits: false; initial-value: rgba(0, 0, 0, 0); }
+@property --hz-ul { syntax: "<color>"; inherits: false; initial-value: rgba(0, 0, 0, 0); }
+.hz15 .hu-doc .hu-s { --hz-hl: rgba(0, 0, 0, 0); --hz-ul: rgba(0, 0, 0, 0); background: linear-gradient(var(--hz-hl), var(--hz-hl)) 0 40% / 0% 86% no-repeat, linear-gradient(var(--hz-ul), var(--hz-ul)) 0 100% / 0% 2px no-repeat; box-shadow: none; -webkit-box-decoration-break: slice; box-decoration-break: slice; transition: background-size .55s var(--ease), --hz-hl .3s var(--ease), --hz-ul .3s var(--ease), color .3s var(--ease), opacity .17s cubic-bezier(.4, 0, 1, 1), filter .17s cubic-bezier(.4, 0, 1, 1); }
+.hz15 .hu-doc .hu-s.ai { --hz-hl: rgba(255, 88, 95, .2); --hz-ul: #D62B32; background-size: 100% 86%, 100% 2px; }
+.hz15 .hu-doc .hu-s.ai::after { content: "AI 패턴"; display: inline-block; margin: 0 3px 0 5px; padding: 0 6px; border-radius: 999px; background: #D62B32; color: #fff; font-size: 10px; font-weight: 700; line-height: 1.6; vertical-align: 2px; animation: hz15-chip .28s var(--ease) .06s both; }
+.hz15 .hu-doc .hu-s.now { --hz-hl: rgba(11, 99, 246, .08); --hz-ul: rgba(11, 99, 246, .45); background-size: 100% 86%, 100% 2px; color: var(--ds-slate); }
+.hz15 .hu-doc .hu-s.now::after, .hz15 .hu-doc .hu-s.out::after { animation: hz15-chip-out .2s var(--ease) both; }
+.hz15 .hu-doc .hu-s.out { opacity: 0; filter: blur(4px); }
+.hz15 .hu-doc .hu-s.ok { background-size: 100% 86%, 100% 2px; }
+.hz15 .hu-doc .hu-s.ok::after { display: none; }
+.hz15 .hu-doc .hu-s.in { transition: color .3s var(--ease); animation: hz15-swap .42s var(--ease) both; }
+.hz15 .hu-doc .hu-s.ai2 { --hz-hl: rgba(217, 122, 6, .14); --hz-ul: #C97A06; background-size: 100% 86%, 100% 2px; }
+.hz15 .hu-doc .hu-s.ai2::after { content: "AI 패턴 남음"; display: inline-block; margin: 0 3px 0 5px; padding: 0 6px; border-radius: 999px; background: #C97A06; color: #fff; font-size: 10px; font-weight: 700; line-height: 1.6; vertical-align: 2px; animation: hz15-chip .28s var(--ease) .06s both; }
+.hz15 .hu-doc mark.hu-c { background: linear-gradient(rgba(11, 99, 246, .1), rgba(11, 99, 246, .1)) 0 0 / 100% 100% no-repeat, linear-gradient(var(--ds-blue-600), var(--ds-blue-600)) 0 100% / 100% 2px no-repeat; box-shadow: none; color: inherit; }
+.hz15 .hu-doc .hu-s.in mark.hu-c { animation: hz15-mark .4s var(--ease) .12s both; }
+/* 원문이 나타남: 문단은 살짝 떠오르고 문장은 차례로(지연은 k.js). 처음에는 HTML 의 흐린 원문(.hu-ghost)에서 그대로 또렷해짐 */
+.hz15 .hu-doc.rise { animation: hz15-rise .9s var(--ease) both; }
+.hz15 .hu-doc.rise .hu-s { animation: hz15-in .6s var(--ease) both; }
+.hz15 .hu-doc.rise.g { animation: none; }
+.hz15 .hu-doc.rise.g .hu-s { animation-name: hz15-in-g; }
+.hz15 .hu-doc.hu-ghost { padding-bottom: 1.95em; padding-bottom: 1lh; opacity: .38; filter: blur(2.5px); }   /* 검출 칩이 붙으면 한 줄 늘어나는 자리를 처음부터 잡아 둠 */
+.hz15 .hu-paper.hz-calc .hu-s, .hz15 .hu-paper.hz-calc mark { transition: none !important; }
+@keyframes hz15-in { from { opacity: 0; filter: blur(4px); } }
+@keyframes hz15-in-g { from { opacity: .38; filter: blur(2.5px); } }
+@keyframes hz15-swap { from { opacity: 0; filter: blur(3px); } }
+@keyframes hz15-rise { from { transform: translateY(8px); } }
+@keyframes hz15-chip { from { opacity: 0; transform: translateY(2px) scale(.92); } }
+@keyframes hz15-chip-out { to { opacity: 0; } }
+@keyframes hz15-mark { from { background-size: 0% 100%, 0% 2px; } }
+/* 검사 중: 옅은 빛 띠가 위에서 아래로 훑음(앞머리만 가는 선) */
+.hz15-demo.scanning .hz15-paper-w::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 99, 246, 0) calc(100% - 120px), rgba(11, 99, 246, .045) calc(100% - 56px), rgba(11, 99, 246, .12) calc(100% - 13px), rgba(11, 99, 246, .62) calc(100% - 12px), rgba(11, 99, 246, .62) calc(100% - 10.5px), rgba(11, 99, 246, .1) calc(100% - 8px), rgba(11, 99, 246, 0) 100%); transform: translateY(-100%); animation: hz15-scan 1.3s cubic-bezier(.45, 0, .25, 1) infinite; pointer-events: none; }
+@keyframes hz15-scan { 0% { transform: translateY(-100%); opacity: 0; } 14% { opacity: 1; } 84% { opacity: 1; } 100% { transform: translateY(0); opacity: 0; } }
+/* 상태 줄: 단계가 바뀔 때 새 문구가 살짝 떠오름 · 다시 돌기 직전(.exit) 결과가 흐려짐 */
+.hz15-demo[data-scene] .hu-st > span:last-child { animation: hz15-say .34s var(--ease) both; }
+@keyframes hz15-say { from { opacity: 0; transform: translateY(3px); } }
+.hz15-demo .hu-st, .hz15 .hu-m b, .hz15 .hu-m .bn { transition: opacity .3s var(--ease); }
+.hz15-demo.exit .hu-st, .hz15-demo.exit .hu-m b, .hz15-demo.exit .hu-m .bn, .hz15-demo.exit .hu-m .tr i, .hz15-demo.exit .hz15-badge { opacity: 0; transition: opacity .34s var(--ease); }
+.hz15-demo.exit .hu-paper { opacity: 0; filter: blur(3px); transition: opacity .34s var(--ease), filter .34s var(--ease); }
 .hz15-meter { display: grid; gap: 10px; }
 .hz15 .hu-meter { margin: 0; }
 .hz15 .hu-mh b { font-size: 13px; }
 .hz15 .hu-ms { margin-top: 6px; }
 .hz15 .hu-m { padding: 9px 12px; }
 .hz15 .hu-m b { display: block; min-height: 1.2em; line-height: 1.2; font-size: 27px; }
-.hz15 .hu-m .bn { display: block; min-height: 1.45em; margin: 3px 0 0; font-size: 12.5px; font-weight: 650; }
+.hz15 .hu-m .bn { display: block; min-height: 1.45em; margin: 3px 0 0; font-size: 12.5px; font-weight: 650; line-height: 1.45; }
 .hz15 .hu-m.bad b { color: #C5242B; } .hz15 .hu-m.mid b { color: #B45309; } .hz15 .hu-m.ok b { color: #0B7A48; }
 .hz15 .hu-why { min-height: 0; margin: 0; }
 .hz15 .hu-why:empty { display: none; }
@@ -624,6 +655,7 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
   .hz15 .hu-st { font-size: 13px; }
   .hz15-paper-w { padding: 12px 13px; }
   .hz15 .hu-doc { font-size: 14px; line-height: 1.8; }
+  .hz15 .hu-doc.hu-ghost { padding-bottom: 1.8em; padding-bottom: 1lh; }
   .hz15 .hu-m { padding: 8px 10px; }
   .hz15 .hu-m b { font-size: 24px; }
   .hz15 .hu-m .bn { font-size: 12px; }
@@ -633,7 +665,12 @@ body .hz7-dlg .consent span { font-size: 12.5px; line-height: 1.6; }
   .hz15-bar .k-ex { font-size: 11px; }
 }
 .am-still .hz15-demo.scanning .hz15-paper-w::after, .am-still .hz15 .hu-st .dot.run { animation: none; }
-@media (prefers-reduced-motion: reduce) { .hz15-demo.scanning .hz15-paper-w::after, .hz15 .hu-st .dot.run, .hz15 .hu-doc .hu-s.ai::after, .hz15 .hu-doc .hu-s.ai2::after { animation: none; } .hz15-badge { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .hz15-demo.scanning .hz15-paper-w::after, .hz15 .hu-st .dot.run, .hz15 .hu-doc .hu-s.ai::after, .hz15 .hu-doc .hu-s.ai2::after { animation: none; } .hz15-badge { transition: none; }
+  .hz15 .hu-doc .hu-s, .hz15 .hu-doc .hu-s.in, .hz15 .hu-doc.rise, .hz15 .hu-doc.rise .hu-s, .hz15 .hu-doc .hu-s.now::after, .hz15 .hu-doc .hu-s.out::after, .hz15 .hu-doc .hu-s.in mark.hu-c,
+  .hz15-demo[data-scene] .hu-st > span:last-child, .hz15-demo .hu-st, .hz15 .hu-m b, .hz15 .hu-m .bn, .hz15-demo.exit .hu-paper { animation: none; transition: none; }
+  .hz15 .hu-doc.hu-ghost { opacity: 1; filter: none; }
+}
 
 /* 13.4 첫 화면 아래 '검사기는 그 패턴을 찾아냅니다'(불안 → 해법). 13.4d(12:11): 사실은 세로 목록, AI 패턴은 검사기 표시처럼 */
 .hz16 { position: relative; overflow: hidden; background: linear-gradient(180deg, #0E1F47 0, #0A1636 100%); color: #fff; }

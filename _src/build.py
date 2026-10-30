@@ -22,8 +22,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261028b"
-TODAY = "2026-10-28"
+VER = "20261031a"
+TODAY = "2026-10-31"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
 #   세 묶음(순서 그대로): assets/b-base.css = 글꼴 + am.css(모든 페이지 같음) → assets/b-<8자리>.css = (site4 · v8) + 페이지 styles(없으면 생략)
@@ -83,9 +83,10 @@ SHOP_IDX = {
     # 13.11d(10.27) 기업 GEO 세팅 3 · 월 관리 2 를 아임웹 디지털 상품으로(가게 · AI 마킹과 같은 바로 결제, 사이트 표시는 토큰). 부가세 포함 판매가
     "geo-lite": "84", "geo-standard": "85", "geo-pro": "86", "geocare-care-m": "87", "geocare-grow-m": "88",
     "service-starter-m": "", "bundle-trust": "",
-    # 12.1 토큰(개인 c3 · c10 · c30 · c50 은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로
-    # 13.5(10.24) skkc.co.kr 상품 7개 등록(카테고리 AIMarker, 디지털 상품). kaiec_buy=1 이면 바로 결제 페이지로 열림
-    "c3": "34", "c10": "35", "c30": "36", "c50": "37", "credit-b10": "38", "credit-b30": "39", "credit-b100": "40",
+    # 12.1 토큰(개인은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로. kaiec_buy=1 이면 바로 결제 페이지로 열림
+    # 13.13(10.31) 개인 토큰은 스탠다드 t10 · 프로 t40(추천) · 프리미엄 t80 = 아임웹 89 · 90 · 91(결제하면 서버가 바로 코드 메일).
+    # 예전 34~37(c3 · c10 · c30 · c50)은 카피휴먼 결제용으로 아임웹에 남겨 두고 이 사이트에서는 팔지 않음. 기업 38~40 은 그대로
+    "t10": "89", "t40": "90", "t80": "91", "credit-b10": "38", "credit-b30": "39", "credit-b100": "40",
     # 13.9(10.27) 가게 AI 검색 등록(자영업자 GEO 세팅) 2개. skkc.co.kr 디지털 상품 81(108,900원) · 82(319,000원), 부가세 포함 금액
     "local-basic": "81", "local-year": "82",
 }
@@ -220,12 +221,12 @@ def tiers_html(key, root, pick=None):
 # 13.2 단위 1토큰 = 100원. 서버 PASS 1.2 는 1크레딧 = 10원이라 여기 값 = 서버 PASS_.PRODUCTS · PASS_.CR 값 ÷ 10(사이트 am.js 가 서버 숫자를 바꿔 보여 줌)
 TOKEN_WON = 100
 CREDIT_COST = {"unit": (100, 0.2, 1), "pro": (100, 0.4, 2)}   # (글자 수 단위, 토큰, 최소). 600자 이하 검사 · 도우미는 0
-# 13.5(10.24) 개인 토큰 4종: 체험 · 라이트 · 프로(추천) · 프리미엄(가장 큰 혜택). base = 값 ÷ 100(유료 토큰), 나머지는 더 드리는 토큰
+# 13.13(10.31) 개인 토큰 3종: 스탠다드 · 프로(추천, 기본) · 프리미엄(가장 큰 혜택). base = 값 ÷ 100(유료 토큰), 나머지는 더 드리는 토큰.
+# 서버 PASS 1.3.1 t10 · t40 · t80 · assets/humanize.js PRODS · assets/tok.js PK 와 같게
 CREDITS = [
-    {"id": "c3", "name": "체험", "cr": 30, "base": 30, "price": 3000, "who": "처음 한 편을 확인하고 다듬을 때"},
-    {"id": "c10", "name": "라이트", "cr": 150, "base": 100, "price": 10000, "who": "과제 · 자기소개서 시즌"},
-    {"id": "c30", "name": "프로", "cr": 500, "base": 300, "price": 30000, "who": "보고서 · 논문, 한 학기 내내", "tag": "추천"},
-    {"id": "c50", "name": "프리미엄", "cr": 1100, "base": 500, "price": 50000, "who": "자주 쓰는 분 · 함께 쓰는 팀", "tag": "가장 큰 혜택"},
+    {"id": "t10", "name": "스탠다드", "cr": 110, "base": 99, "price": 9900, "who": "자기소개서 · 과제 한두 편"},
+    {"id": "t40", "name": "프로", "cr": 500, "base": 399, "price": 39900, "who": "레포트 · 논문, 한 학기 내내", "tag": "추천"},
+    {"id": "t80", "name": "프리미엄", "cr": 1200, "base": 799, "price": 79900, "who": "논문 여러 편 · 함께 쓰는 팀", "tag": "가장 큰 혜택"},
 ]
 
 
@@ -282,7 +283,7 @@ def credits_html(mode, root):
     """토큰 충전 칸 네 개(13.2 요금 페이지와 같은 칸). mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
     feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "남은 토큰은 사라지지 않고 이어서, 모자라면 같은 코드에 충전"]
     allf = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in feat)
-    return ('<p class="tk-unitl"><b>1토큰 = 100원</b><span>레포트(3,000자) 한 편 검사와 휴머나이징 %s토큰</span></p><div class="cr13-packs cr-plans">%s</div>'
+    return ('<p class="tk-unitl"><b>1토큰 = 100원</b><span>레포트(3,000자) 한 편 검사와 휴머나이징 %s토큰</span></p><div class="cr13-packs cr-plans n3">%s</div>'
             '<div class="cr-all"><b>어느 충전이든 똑같이 열립니다</b><ul>%s</ul></div>') % (tk(report_cost()), "".join(pack_html(t, root, mode=mode) for t in CREDITS), allf)
 
 
@@ -292,7 +293,7 @@ def credit_cost_html():
         ("AI 작성률 전체 검사", "모든 문장의 색과 이유, 구간별 분석, 결과상세내역서", "1,000자 %s토큰 · 100자 단위 · 600자 이하는 0토큰" % tk(u[1] * 1000 / u[0]), credit_cost("unit", 3000)),
         ("AI 휴머나이징", "글 전체, 바꾼 이유, 다른 버전, 바꾸기 전후 AI 작성률", "1,000자 %s토큰 · 100자 단위, 최소 %s토큰" % (tk(pr[1] * 1000 / pr[0]), tk(pr[2])), credit_cost("pro", 3000)),
         ("문장 도우미 · 짧은 다시 검사", "600자 이하 문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "빠지지 않음(토큰이 남아 있을 때)", 0),
-        ("무료 맛보기", "앞 6,000자 AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "코드 없이 무료", 0),
+        ("무료 검사", "글 전체(5만 자까지) AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "코드 없이 무료", 0),
     ]
     tr = "".join('<tr><th scope="row">%s<small>%s</small></th><td data-h="빠지는 토큰">%s</td><td data-h="3,000자 글이면">%s</td></tr>'
                  % (a, b, c, ("%s토큰" % tk(d)) if d else "0토큰") for a, b, c, d in rows)
@@ -315,7 +316,7 @@ def credit_packs_html(root):
     return ('<div class="tk-seg" role="tablist" aria-label="누가 쓰나요">'
             '<button type="button" role="tab" id="tkTabMe" aria-controls="tkPanMe" aria-selected="true"><b>개인 · 학생</b><small>누구나 · 부가세 포함</small></button>'
             '<button type="button" role="tab" id="tkTabBiz" aria-controls="tkPanBiz" aria-selected="false"><b>회사 · 기관 · 학교</b><small>세금계산서 · 팀이 한 코드로</small></button></div>'
-            '<div class="cr13-packs tk-pan" id="tkPanMe" role="tabpanel" aria-labelledby="tkTabMe">%s</div>'
+            '<div class="cr13-packs tk-pan n3" id="tkPanMe" role="tabpanel" aria-labelledby="tkTabMe">%s</div>'
             '<div class="cr13-packs tk-pan" id="tkPanBiz" role="tabpanel" aria-labelledby="tkTabBiz">%s</div>') % (me, "".join(biz))
 
 
@@ -347,10 +348,10 @@ def credit_rates_html(root):
                     % (name, ('<small>%s</small>' % sub) if sub else '', what, " free" if free else "", cr, ('<small>%s</small>' % crsub) if crsub else '', go))
     u, pr = CREDIT_COST["unit"], CREDIT_COST["pro"]
     grp("글 검사와 다듬기")
-    row("AI 작성률 전체 검사", "레포트, 논문, 자기소개서, 원고 · 무료 맛보기 다음", "모든 문장의 AI 검출과 이유, 구간별 분석, 결과상세내역서", "1,000자 %s토큰" % tk(u[1] * 1000 / u[0]), "3,000자 글이면 %s토큰 · 600자 이하는 0토큰" % tk(credit_cost("unit", 3000)), link("humanize/", "검사하기"))
+    row("AI 작성률 전체 검사", "레포트, 논문, 자기소개서, 원고 · 무료 검사 다음", "모든 문장의 AI 검출과 이유, 구간별 분석, 결과상세내역서", "1,000자 %s토큰" % tk(u[1] * 1000 / u[0]), "3,000자 글이면 %s토큰 · 600자 이하는 0토큰" % tk(credit_cost("unit", 3000)), link("humanize/", "검사하기"))
     row("AI 휴머나이징", "글 전체를 자연스럽게", "바꾼 곳과 이유, 다른 버전, 바꾸기 전후 AI 작성률, 같은 형식 파일로 받기", "1,000자 %s토큰" % tk(pr[1] * 1000 / pr[0]), "3,000자 글이면 %s토큰 · 최소 %s토큰" % (tk(credit_cost("pro", 3000)), tk(pr[2])), link("humanize/", "다듬기"))
     row("문장 도우미, 짧은 다시 검사", "600자 이하", "문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "0토큰", "토큰이 남아 있을 때", "", True)
-    row("무료 맛보기", "가입 없이", "앞 6,000자 AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "무료", "", link("humanize/", "무료로 검사"), True)
+    row("무료 검사", "가입 없이", "글 전체(5만 자까지) AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "무료", "", link("humanize/", "무료로 검사"), True)
     grp("AI 마킹")
     row("사이트 AI 마킹", "사이트 1개", "코드 한 줄로 자동 AI 마크, 근거 창, AI 마킹 안내 창, 점검 모드", "무료", "", link("site/", "설치하기"), True)
     t = tier("label", "label-standard"); a, b = crs(t)
@@ -528,17 +529,21 @@ MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코
                           ("developers/", "code", "API · SDK · MCP", "서비스와 AI 에이전트에 연결"),
                           ("pricing/#credits", "card", "토큰 충전", "상담 없이, 토큰 코드 하나로 모든 기능")])]
 # 13.12(10.28) 검색어 안내 페이지(맨 위 검사 도구 + 한 줄 답 + 자주 묻는 질문). '이런 검색으로 오셨나요?' 칩 · 휴대폰 메뉴 · 바닥글 · /humanize/ 안내 모음이 모두 이 목록을 씀.
-#   (주소, key, 이름, 한 줄 설명, 휴대폰 메뉴에 넣을지, 칩 이름). 글은 _src/tools/lp138_a.py · lp138_b.py · lp138_c.py
+#   (주소, key, 이름, 한 줄 설명, 휴대폰 메뉴에 넣을지, 칩 이름). 글은 _src/tools/lp138_a.py · lp138_b.py · lp138_c.py · lp138_d.py
+#   13.12c(10.30) 지피티킬러 낮추기 · 직접 쓴 글이 AI로 나왔을 때 · AI 검사기 우회 대신 고쳐 쓰기를 더함(우회 안내는 휴대폰 메뉴에 넣지 않음)
 GUIDES = [("ai-rate/", "ai-rate", "AI 작성률 낮추기", "AI 패턴을 찾아 그 문장만 사람 문장으로", True, "AI 작성률 낮추기"),
-          ("copykiller/", "copykiller", "카피킬러 AI 작성률 낮추기", "표절률과 AI 작성률을 나눠 고치는 순서", True, "카피킬러 AI 작성률"),
+          ("copykiller/", "copykiller", "카피킬러 표절률 · AI 작성률 낮추기", "표절률과 AI 작성률을 나눠 고치는 순서", True, "카피킬러 낮추기"),
+          ("gptkiller/", "gptkiller", "지피티킬러 낮추기", "GPT킬러 점수, 잡힌 문장만 다시 쓰는 순서", True, "지피티킬러 낮추기"),
           ("ai-detector/", "ai-detector", "GPT킬러 · AI 탐지기 대비", "탐지기가 보는 패턴과 고쳐 쓰는 법", True, "GPT킬러 · AI 탐지기"),
-          ("ai-plagiarism/", "ai-plagiarism", "AI 표절률 낮추기", "GPT 표절률이 출처로 안 내려가는 까닭", True, "AI 표절률 낮추기"),
+          ("ai-plagiarism/", "ai-plagiarism", "AI 표절률 낮추기", "챗GPT 표절률이 출처로 안 내려가는 까닭", True, "AI 표절률 낮추기"),
           ("ai-tone/", "ai-tone", "AI 티 안 나게 하는 법", "한국어 글의 AI 티 7가지와 고친 예", True, "AI 티 안 나게"),
-          ("humanizer/", "humanizer", "한국어 AI 휴머나이저", "뜻은 그대로, AI 말버릇만 바꿉니다", False, "AI 휴머나이저"),
+          ("humanizer/", "humanizer", "AI 휴머나이저 · AI 글 인간화", "뜻은 그대로, AI 말버릇만 바꿉니다", False, "AI 휴머나이저"),
+          ("false-positive/", "false-positive", "직접 쓴 글이 AI로 나왔을 때", "GPT킬러 오탐, 이력 챙기기와 고쳐 쓰기", True, "직접 쓴 글 오탐"),
+          ("ai-bypass/", "ai-bypass", "AI 검사기 우회 대신 고쳐 쓰기", "우회 꼼수가 남기는 흔적과 AI 패턴 줄이기", False, "AI 검사기 우회"),
           ("prompt/", "prompt", "AI 작성률 낮추는 프롬프트", "복사해 쓰는 예시 다섯 가지와 한계", True, "휴머나이징 프롬프트"),
           ("resume/", "resume", "자기소개서 AI 검사", "서류에서 걸러지기 전에 문항별로", True, "자기소개서 AI 검사"),
           ("academic/", "academic", "레포트 · 논문 AI 검사", "한글 · 워드 · PDF 그대로, 각주는 그대로", True, "레포트 · 논문 · 과제"),
-          ("ai-check/", "ai-check", "AI 검사기 무료", "가입 없이 6,000자, 문장마다 표시", False, "AI 검사기 무료")]
+          ("ai-check/", "ai-check", "AI 검사기 무료", "가입 없이 글 전체, 뚜렷한 문장부터", False, "AI 검사기 무료")]
 GUIDE_KEYS = [g[1] for g in GUIDES]
 B2C_MENU = ([("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인")] + [(g[0], g[2], g[3]) for g in GUIDES if g[4]] +
             [("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")])
@@ -560,7 +565,10 @@ NOTICE_INLINE_KEYS = set(LOCAL_KEYS) | set(GUIDE_KEYS) | {"humanize", "mark", "m
 def guide_chips(root):
     """13.12 '이런 검색으로 오셨나요?' 칩(첫 화면 · /humanize/ · 안내 페이지 머리 아래). 지금 페이지 칩은 k.js 가 aria-current 로 어둡게"""
     return ('<nav class="lp-links" aria-label="검색으로 많이 찾는 안내"><div class="k-wrap"><p class="lp-links-k">이런 검색으로 오셨나요?</p><div class="lp-chips">%s</div></div></nav>'
-            % "".join('<a href="%s%s">%s</a>' % (root, g[0], g[5]) for g in GUIDES))
+            % "".join('<a href="%s%s">%s</a>' % (root, g[0], g[5]) for g in GUIDES if g[1] not in CHIP_SKIP))
+
+
+CHIP_SKIP = {"ai-bypass"}   # 13.13 '우회' 칩은 첫 화면 · 도구 위에는 두지 않음(우회 도구로 읽히지 않게). 안내 모음 · 바닥글 · /ai-detector/ 에서 이어짐
 
 
 def guide_hub(root):
@@ -719,7 +727,7 @@ def org_ld():
 
 
 def ship_ld():
-    """디지털 상품: 결제가 확인되면 영업일 하루 안에 이메일로 토큰 코드(배송비 0원, 대한민국)"""
+    """디지털 상품: 결제하면 바로 이메일로 토큰 코드(13.13 서버 자동 발송, 배송비 0원, 대한민국). 처리 시간은 넉넉히 0~1일로 둠"""
     return {"@type": "OfferShippingDetails", "shippingRate": {"@type": "MonetaryAmount", "value": 0, "currency": "KRW"},
             "shippingDestination": {"@type": "DefinedRegion", "addressCountry": "KR"},
             "deliveryTime": {"@type": "ShippingDeliveryTime",
@@ -729,12 +737,12 @@ def ship_ld():
 
 def token_product_ld():
     """13.12 개인 토큰(AI 작성률 검사 · AI 휴머나이징)을 구글 판매자 목록 · 제품 스니펫 형식으로: 묶음(ProductGroup) 하나 + 충전 칸 4개(변형, 크기 = 토큰 수).
-    칸마다 주소 /humanize/?pack=c10 이 그 칸을 고른 충전 창을 바로 엶(humanize.js). 값은 CREDITS(부가세 포함) = 아임웹 34~37 판매가.
+    칸마다 주소 /humanize/?pack=t40 이 그 칸을 고른 충전 창을 바로 엶(humanize.js, 예전 ?pack=c30 은 새 칸으로). 값은 CREDITS(부가세 포함) = 아임웹 89~91 판매가.
     그림은 assets/product/tokens-*.jpg(1:1 · 4:3 · 16:9, 토큰만 표기). 후기 · 별점은 실제로 받은 것이 생기기 전에는 넣지 않음"""
     img = lambda k: [SITE + "assets/product/%s-%s.jpg" % (k, r) for r in ("1x1", "4x3", "16x9")]
     desc = ("AI 작성률 검사와 AI 휴머나이징(AI 글 인간화)에 쓰는 AIMarker 토큰입니다. 글이나 한글 · 워드 · PDF 파일을 넣으면 AI 작성률과 AI 패턴이 남은 문장을 보여 드리고, "
             "뜻은 그대로 둔 채 사람 문장으로 다듬습니다. 검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰(1토큰 100원). "
-            "결제가 확인되면 영업일 하루 안에 16자리 토큰 코드를 이메일로 보내 드리고, 남은 토큰은 사라지지 않고 이어서 씁니다.")
+            "결제하면 바로 16자리 토큰 코드를 이메일로 보내 드리고, 남은 토큰은 사라지지 않고 이어서 씁니다.")
     variants = []
     for c in CREDITS:
         more = c["cr"] - c["base"]

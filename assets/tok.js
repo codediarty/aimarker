@@ -6,7 +6,7 @@
   var root = document.body.getAttribute('data-root') || '';
   var TW = 100, CHUNK = 6000, HELP = 600, MAXC = 50000;
   var U = { per: 100, cr: 0.2, min: 1 }, H = { per: 100, cr: 0.4, min: 2 };
-  var PK = [{ id: 'c3', nm: '체험', price: 3000, cr: 30 }, { id: 'c10', nm: '라이트', price: 10000, cr: 150 }, { id: 'c30', nm: '프로', price: 30000, cr: 500, best: 1 }, { id: 'c50', nm: '프리미엄', price: 50000, cr: 1100 }];   // 13.5 표(humanize.js PRODS · build.py CREDITS 와 같게)
+  var PK = [{ id: 't10', nm: '스탠다드', price: 9900, cr: 110 }, { id: 't40', nm: '프로', price: 39900, cr: 500, best: 1 }, { id: 't80', nm: '프리미엄', price: 79900, cr: 1200 }];   // 13.13 표(humanize.js PRODS · build.py CREDITS 와 같게)
   function $(s, r) { return (r || document).querySelector(s); }
   function r1(x) { return Math.round(x * 10) / 10; }
   function n2(x) { return Math.round(x).toLocaleString('ko-KR'); }
@@ -31,8 +31,9 @@
       set('tkC1', (many ? '약 ' : '') + tk(c1) + '토큰'); set('tkW1', c1 ? '' : '600자 이하는 0토큰');
       set('tkC2', (many ? '약 ' : '') + tk(c2) + '토큰'); set('tkW2', '');
       set('tkC3', (many ? '약 ' : '') + tk(c3) + '토큰'); set('tkW3', '');
-      var pick = null;
-      PK.forEach(function (p) { var k = c3 > 0 ? Math.floor(r1(p.cr / c3) + 1e-9) : 0; if (!pick && k >= 1) pick = p; });
+      var pick = null, best = PK.filter(function (p) { return p.best; })[0];   // 13.13 기본은 추천 칸(프로), 이 글에 모자라면 덮는 칸
+      if (best && (c3 <= 0 || best.cr >= c3)) pick = best;
+      else PK.forEach(function (p) { var k = c3 > 0 ? Math.floor(r1(p.cr / c3) + 1e-9) : 0; if (!pick && k >= 1) pick = p; });
       pick = pick || PK[PK.length - 1];
       if (lad) lad.innerHTML = PK.map(function (p) {   // 고른 칸(단추와 같은 칸)을 강조, 칸마다 충전 창으로
         var k = c3 > 0 ? Math.floor(r1(p.cr / c3) + 1e-9) : 0;

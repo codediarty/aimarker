@@ -1191,3 +1191,6 @@ main { flex: 1 0 auto; }
   .p3-add > div { flex-direction: column; align-items: flex-start; } .p3-add .pr { text-align: left; }
 }
 @media (prefers-reduced-motion: reduce) { .hx-flt, .pipe::after, .wheel::before { animation: none !important; } .bar i { transition: none; } }
+/* 13.13 개인 토큰 충전 칸 셋(요금 · 개인용 · 글 검사 페이지) */
+.cr13-packs.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 760px) { .cr13-packs.n3 { grid-template-columns: minmax(0, 1fr); } }

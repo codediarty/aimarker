@@ -1,14 +1,17 @@
-# 13.8 검색 수요 키워드 안내 페이지를 _src/pages/ 에 만듭니다(13.8 여섯 개 + 13.12 네 개: 카피킬러 · AI 표절률 · AI 티 · 프롬프트).
+# 13.8 검색 수요 키워드 안내 페이지를 _src/pages/ 에 만듭니다(13.8 여섯 개 + 13.12 네 개: 카피킬러 · AI 표절률 · AI 티 · 프롬프트
+#   + 13.12c 세 개: 지피티킬러 낮추기 · AI 검사기 우회 대신 고쳐 쓰기 · 직접 쓴 글이 AI로 나왔을 때).
 # 쓰는 법: python3 _src/tools/lp138.py  → 그다음 python3 _src/build.py
-# 페이지 글은 lp138_a.py · lp138_b.py · lp138_c.py 에 있습니다. 공통 조각은 _src/pages/lp-*.inc 입니다.
+# 페이지 글은 lp138_a.py · lp138_b.py · lp138_c.py · lp138_d.py 에 있습니다. 공통 조각은 _src/pages/lp-*.inc 입니다.
 # 13.12 머리 주석에 crumb(빵 부스러기 이름) · updated(고친 날, 구조화 데이터 dateModified 와 '업데이트' 줄)를 넣습니다.
+# 새 페이지를 더하면 _src/build.py 의 GUIDES 에도 한 줄 넣습니다(칩 · 안내 모음 · 바닥글 · 휴대폰 메뉴).
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from lp138_a import PAGES as A
 from lp138_b import PAGES as B
 from lp138_c import PAGES as C
-UPDATED = "2026-10-28"
+from lp138_d import PAGES as D
+UPDATED = "2026-10-31"
 
 HEAD = """<!--
 path: {path}
@@ -92,7 +95,7 @@ def faq_html(items):
 def main():
     out = os.path.join(HERE, "..", "pages")
     y, m, d = UPDATED.split("-")
-    for p in A + B + C:
+    for p in A + B + C + D:
         p = dict(p, updated=p.get("updated", UPDATED))
         body = HEAD.format(**p) + HERO.format(eyebrow=p["eyebrow"], h1=p["h1"], sub=p["sub"], ans_h=p["ans_h"], ans_p=p["ans_p"],
                                               ans_pts="".join("<li>%s</li>" % x for x in p["ans_pts"]), updated=p["updated"],

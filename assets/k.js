@@ -164,12 +164,23 @@
     var st = $('#huSt'), paper = $('#huPaper'), meter = $('#huMeter'), why = $('#huWhy'), foot = $('#huFoot'), live = $('#huLive'), replay = $('#huReplay'), badge = $('#huStamp'), hero = $('#hzHero');
     var plays = 0, LOOPS = 3;   // 끝나면 잠시 뒤 다시(세 번까지), 그다음은 '다시 보기'
     function badgeShow(kind, a, b) { if (!badge) return; badge.className = 'hz15-badge ' + kind; badge.querySelector('b').textContent = a; badge.querySelector('span').textContent = b; badge.hidden = false; void badge.offsetWidth; badge.classList.add('on'); }
-    function badgeHide() { if (!badge) return; badge.classList.remove('on'); badge.hidden = true; }
+    function badgeHide(soft) {   // soft: 살짝 흐려지며 사라진 뒤 숨김(장면이 바뀔 때)
+      if (!badge) return; badge.classList.remove('on');
+      if (soft && !RM) later(function () { if (!badge.classList.contains('on')) badge.hidden = true; }, 260); else badge.hidden = true;
+    }
     function scene(k) { stage.setAttribute('data-scene', k); }
-    var MF = $('.hu-m.from', meter), MT = $('.hu-m.to', meter), FOOT0 = foot ? foot.innerHTML : '';
+    var MF = $('.hu-m.from', meter), MT = $('.hu-m.to', meter), FOOT0 = foot ? foot.innerHTML : '', TOP = st.parentNode;
     var played = false, T = [];
-    function stop() { T.forEach(clearTimeout); T = []; }
-    function say(k, t) { st.innerHTML = (k === 'spin' ? '<span class="ds-spin" aria-hidden="true"></span>' : '<span class="dot' + (k ? ' ' + k : '') + '"></span>') + '<span>' + esc(t) + '</span>'; }
+    function stop() {   // 멈출 때 흐려져 있던 문장 · 결과는 다시 보이게
+      T.forEach(clearTimeout); T = []; stage.classList.remove('exit');
+      $$('.hu-s.out', paper).forEach(function (x) { x.classList.remove('out'); });
+    }
+    function stHtml(k, t) { return (k === 'spin' ? '<span class="ds-spin" aria-hidden="true"></span>' : '<span class="dot' + (k ? ' ' + k : '') + '"></span>') + '<span>' + esc(t) + '</span>'; }
+    function say(k, t) {   // 13.13 단계가 바뀔 때만 새 문구가 살짝 떠오름(v13.css). '문장 3/10'처럼 끝 숫자만 바뀌면 글자만 바꿈
+      var cur = st.lastElementChild, stem = function (s) { return String(s || '').replace(/[\d\s\/]+$/, ''); };
+      if (cur && st.getAttribute('data-k') === (k || '') && stem(cur.textContent) === stem(t)) { cur.textContent = t; return; }
+      st.setAttribute('data-k', k || ''); st.innerHTML = stHtml(k, t);
+    }
     function later(fn, ms) { var id = setTimeout(function () { T = T.filter(function (x) { return x !== id; }); fn(); }, ms); T.push(id); }
     function focusTool() {   // '내 글로 해 보기': 검사 칸으로(결과가 나와 칸이 접혀 있으면 펼침)
       var t = document.getElementById('hzText'); if (!t) { location.href = ROOT + 'humanize/'; return; }
@@ -222,42 +233,39 @@
     }
     function sshow(x) { x.el.className = 'hu-s ok' + (x.a === x.b ? ' same' : ''); x.el.innerHTML = sentHtml(x.a, x.b); }
     function sfinish(P) { P.S.forEach(sshow); }
-    function shold(P) {   // 원문 · 검출 표시(칩) · 끝 모양 가운데 가장 큰 높이를 미리 잡아 둠(도는 동안 창 높이가 변하지 않게)
+    function shold(P, pre) {   // 원문 · 검출 표시(칩) · 끝 모양 가운데 가장 큰 높이를 미리 잡아 둠(도는 동안 창 높이가 변하지 않게). 처음 자리(pre)보다 줄지도 않게
+      paper.classList.add('hz-calc');   // 재는 동안에는 칠하기 · 흐림 전환이 일어나지 않게(v13.css)
       paper.style.minHeight = ''; sfinish(P); var h1 = paper.offsetHeight;
       P.S.forEach(function (x) { x.el.className = 'hu-s'; x.el.textContent = x.a; }); var h2 = paper.offsetHeight;
       (DEMO && DEMO.ai || []).forEach(function (i) { if (P.S[i]) P.S[i].el.classList.add('ai'); }); var h3 = paper.offsetHeight;
       P.S.forEach(function (x) { x.el.className = 'hu-s'; });
-      paper.style.minHeight = Math.max(h1, h2, h3) + 'px';
+      paper.style.minHeight = Math.max(h1, h2, h3, pre || 0) + 'px';
+      void paper.offsetHeight; paper.classList.remove('hz-calc');
     }
-    function stype(P, done) {
-      var all = P.S.map(function (x) { return x.a; }), total = all.join('').length, k = 0;
-      P.S.forEach(function (x) { x.el.textContent = ''; });
-      P.p.classList.add('typing');
-      var step = Math.max(3, Math.ceil(total / 64));   // 약 1.4초에 다 씀
-      (function tick() {
-        var left = step;
-        while (left > 0 && k < P.S.length) {
-          var full = all[k], cur = P.S[k].el.textContent.length, take = Math.min(left, full.length - cur);
-          P.S[k].el.textContent = full.slice(0, cur + take); left -= take;
-          if (P.S[k].el.textContent.length >= full.length) k++;
-        }
-        if (k < P.S.length) later(tick, 22); else { P.p.classList.remove('typing'); done(); }
-      })();
+    /* 13.13 움직임은 글자 단위 타자가 아니라 흐림 · 교차 전환으로만(사용자 2026.10.31: 글자가 하나씩 써지는 효과 대신 고급스러운 전환). 모양은 v13.css 8장 */
+    var STAG = 80, RISE = 600;   // 원문: 문장마다 0.08초씩 늦게, 0.6초 동안 흐림에서 또렷하게
+    function sreveal(P, done) {   // 붙여 넣은 글이 스며들듯: 문단은 살짝 떠오르고 문장은 차례로 또렷해짐(약 1.4초, 예전 타자와 같은 길이). 처음(P.g)은 흐린 원문에서 그대로
+      P.S.forEach(function (x, i) { x.el.style.animationDelay = (i * STAG) + 'ms'; });
+      P.p.classList.add('rise'); if (P.g) P.p.classList.add('g');
+      later(function () {
+        P.p.classList.remove('rise', 'g'); P.S.forEach(function (x) { x.el.style.animationDelay = ''; });
+        done();
+      }, (P.S.length - 1) * STAG + RISE + 60);
     }
-    function sflag(P, idx, gap, done) {   // 판정 기준으로 AI 검출 문장 표시
+    function sflag(P, idx, gap, done) {   // 판정 기준으로 AI 검출 문장 표시(형광펜처럼 왼쪽부터 칠해지고 'AI 패턴' 칩이 뒤따름)
       var i = 0;
       (function next() { if (i >= idx.length) return done(); var x = P.S[idx[i++]]; if (x) x.el.classList.add('ai'); later(next, gap); })();
     }
-    function srewrite(P, gap, each, done) {   // 한 문장씩: 살짝 흐려졌다가 다듬은 문장으로
+    function srewrite(P, gap, each, done) {   // 한 문장씩: 파란 표시가 문장에 앉고 → 바뀌거나 검출된 문장은 흐려지며 사라졌다가 다듬은 문장이 또렷하게(교차 전환). 그대로인 문장은 표시만 지나감
       var i = 0;
       (function next() {
         if (i >= P.S.length) return done();
-        var x = P.S[i++], n = i;
+        var x = P.S[i++], n = i, sw = x.a !== x.b || x.el.classList.contains('ai');
         if (each) each(n, P.S.length);
         x.el.classList.add('now');
         later(function () {
-          x.el.classList.add('out');
-          later(function () { sshow(x); x.el.classList.add('in'); later(next, Math.round(gap * 0.45)); }, 170);
+          if (sw) x.el.classList.add('out');
+          later(function () { sshow(x); if (sw) x.el.classList.add('in'); later(next, Math.round(gap * 0.45)); }, 170);
         }, Math.round(gap * 0.4));
       })();
     }
@@ -293,27 +301,58 @@
     if (DEMO && !DEMO.sents) DEMO = null;   // 예전 모양의 예시 데이터는 쓰지 않음
     function afterCls() { return DEMO.after.rate >= 40 ? 'bad' : DEMO.after.n > 0 || DEMO.after.rate >= 20 ? 'mid' : 'ok'; }   // 남은 AI 문장이 있으면 판정 기준대로 '일부 검출'(호박색)
     function leftNote() { var k = (DEMO.aiAfter || []).length; return k ? '남은 AI 패턴 문장 ' + k + '개는 다른 버전으로 다시 다듬거나 직접 고칩니다. 바꾼 이유는 토큰 결과에서 보여 드려요.' : '바꾼 이유와 다른 버전은 글 전체 휴머나이징 결과에서 보여 드려요.'; }
+    /* 상태 줄 · 판정 배지 문구(예시가 돌 때와 높이를 미리 잴 때 같이 씀) */
+    function aiIdx() { return DEMO.ai || DEMO.sents.map(function (x, i) { return i; }); }
+    function msgType() { return 'AI가 작성한 ' + DEMO.label.replace(/^예시 · /, '') + ' · 붙여 넣는 중'; }
+    function msgFlag() { return DEMO.before.band + ' · AI 패턴 문장 ' + aiIdx().length + '/' + DEMO.sents.length; }
+    function msgRun(n, all) { return '의미는 그대로, AI 패턴만 다듬는 중 · 문장 ' + n + '/' + all; }
+    function msgDone() { return '휴머나이징 완료 · ' + DEMO.after.band + ' · 바꾼 곳 ' + DEMO.n + '곳'; }
+    function badBadge() { return 'AI 작성률 ' + DEMO.before.rate + '% · 검사기 필터링 대상'; }
+    function okBadge() { return 'AI 작성률 ' + DEMO.before.rate + '% → ' + DEMO.after.rate + '% · 의미와 문맥은 그대로'; }
+    function shtop(grow) {   // 13.13 위 칸(상태 줄 + 판정 배지)도 가장 높은 모양만큼 미리 잡아 둠: 휴대폰에서 배지가 나오고 들어가거나 두 줄이 돼도 창 높이가 그대로. grow: 지금보다 줄이지 않음(예시가 시작될 때)
+      if (!DEMO || !TOP || !badge || !TOP.offsetParent) return;   // 예시 창이 숨어 있으면(검사 결과가 나와 한 단일 때) 재지 않음
+      var keep = st.innerHTML, k0 = st.getAttribute('data-k'), b0 = badge.className, h = grow ? TOP.getBoundingClientRect().height : 0, all = DEMO.sents.length;
+      TOP.style.minHeight = '';
+      [['', msgType()], ['run', 'AI 패턴 검사 중'], ['warn', msgFlag(), 'bad', DEMO.before.band, badBadge()], ['run', msgRun(all, all)], ['ok', msgDone(), 'ok', DEMO.after.band, okBadge()]].forEach(function (c) {
+        st.innerHTML = stHtml(c[0], c[1]);
+        if (c[2]) { badge.className = 'hz15-badge ' + c[2]; badge.querySelector('b').textContent = c[3]; badge.querySelector('span').textContent = c[4]; badge.hidden = false; } else badge.hidden = true;
+        h = Math.max(h, TOP.getBoundingClientRect().height);
+      });
+      st.innerHTML = keep; if (k0 == null) st.removeAttribute('data-k'); else st.setAttribute('data-k', k0);
+      badge.className = b0; badge.hidden = !badge.classList.contains('on');
+      TOP.style.minHeight = Math.ceil(h) + 'px';
+      [[MF, DEMO.before.band], [MT, DEMO.after.band]].forEach(function (c) {   // AI 작성률 칸: 아주 좁은 화면에서 판정 이름이 두 줄로 접혀도 칸 높이가 그대로
+        var bn = c[0] && $('.bn', c[0]); if (!bn) return;
+        var t0 = bn.textContent, hb = grow ? bn.getBoundingClientRect().height : 0;
+        bn.style.minHeight = ''; bn.textContent = c[1]; hb = Math.max(hb, bn.getBoundingClientRect().height); bn.textContent = t0;
+        bn.style.minHeight = hb + 'px';
+      });
+    }
     function demoEnd(P) {
       var left = DEMO.aiAfter || [];
-      say('ok', '휴머나이징 완료 · ' + DEMO.after.band + ' · 바꾼 곳 ' + DEMO.n + '곳');
+      say('ok', msgDone());
       setM(MT, DEMO.after.rate, DEMO.after.band, DEMO.before.rate, afterCls());
       why.innerHTML = '';   // 13.4b 갈래 칩 · 잠금 안내는 예시 창에 넣지 않음(사용자 10.24 11:53: 글이 많아 가독성이 떨어짐). 바꾼 곳 · 갈래는 결과 화면에서
       left.forEach(function (i) { if (P.S[i]) P.S[i].el.classList.add('ai2'); });
-      badgeShow(left.length ? 'mid' : 'ok', DEMO.after.band, 'AI 작성률 ' + DEMO.before.rate + '% → ' + DEMO.after.rate + '% · 의미와 문맥은 그대로');
+      badgeShow(left.length ? 'mid' : 'ok', DEMO.after.band, okBadge());
       replay.hidden = false;
       stage.classList.remove('scanning'); stage.classList.add('done'); scene('done');
-      if (!RM && plays < LOOPS) later(function () { if (plays < LOOPS) demo(); }, 6000);
+      if (!RM && plays < LOOPS) {
+        later(function () { if (plays < LOOPS) stage.classList.add('exit'); }, 5620);   // 13.13 다시 돌기 직전: 결과가 부드럽게 흐려짐(그사이 들여다보면 다시 또렷하게)
+        later(function () { if (plays < LOOPS) demo(); else stage.classList.remove('exit'); }, 6000);
+      }
       P.S.forEach(function (x) { x.el.classList.remove('now', 'in'); });
       live.textContent = '예시: ' + DEMO.label.replace(/^예시 · /, '') + '. AI 패턴 문장 ' + (DEMO.ai || []).length + '개 가운데 ' + ((DEMO.ai || []).length - left.length) + '개를 의미는 그대로 두고 다듬어 ' + DEMO.n + '곳을 바꿨습니다. AI 작성률(추정)은 ' + DEMO.before.rate + '%에서 ' + DEMO.after.rate + '%가 되었습니다.';
     }
     function demoBase() {
       stop(); played = true; plays++;
+      var pre = paper.offsetHeight, g = !!$('.hu-ghost', paper);   // 지금 종이 높이(처음에는 HTML 의 흐린 원문 자리). 이보다 줄이지 않음
       badgeHide(); stage.classList.remove('done', 'scanning'); scene('type');
       replay.hidden = true; meter.hidden = false; why.innerHTML = ''; if (foot) foot.innerHTML = FOOT0;
       stage.classList.remove('is-user'); stage.classList.add('is-demo');
       setM(MF, null); setM(MT, null);
-      var P = sbuild(DEMO.sents);
-      shold(P); return P;
+      var P = sbuild(DEMO.sents); P.g = g;
+      shold(P, pre); shtop(true); return P;
     }
     function still() {   // 움직이지 않는 예시(끝 모양)
       if (!DEMO) return;
@@ -324,31 +363,42 @@
     function demo() {
       if (!DEMO) return;
       if (RM) { still(); return; }
-      var P = demoBase(), ai = DEMO.ai || P.S.map(function (x, i) { return i; });
-      say('', 'AI가 작성한 ' + DEMO.label.replace(/^예시 · /, '') + ' · 붙여 넣는 중');
-      stype(P, function () {
+      var P = demoBase(), ai = aiIdx();
+      say('', msgType());
+      sreveal(P, function () {
         later(function () {
           stage.classList.add('scanning'); scene('scan'); say('run', 'AI 패턴 검사 중');
           later(function () {
             scene('flag');
             setM(MF, DEMO.before.rate, DEMO.before.band, 0);
-            say('warn', DEMO.before.band + ' · AI 패턴 문장 ' + ai.length + '/' + P.S.length);
+            say('warn', msgFlag());
             sflag(P, ai, 240, function () {
               stage.classList.remove('scanning');
-              badgeShow('bad', DEMO.before.band, 'AI 작성률 ' + DEMO.before.rate + '% · 검사기 필터링 대상');
+              badgeShow('bad', DEMO.before.band, badBadge());
               later(function () {
-                badgeHide(); scene('rewrite'); say('run', '의미와 문맥은 그대로, AI 패턴만 다듬는 중');
-                srewrite(P, 700, function (n, all) { say('run', '의미는 그대로, AI 패턴만 다듬는 중 · 문장 ' + n + '/' + all); }, function () { later(function () { demoEnd(P); }, 260); });
+                badgeHide(true); scene('rewrite'); say('run', '의미와 문맥은 그대로, AI 패턴만 다듬는 중');
+                srewrite(P, 700, function (n, all) { say('run', msgRun(n, all)); }, function () { later(function () { demoEnd(P); }, 260); });
               }, 1700);
             });
           }, 950);
         }, 380);
       });
     }
-    replay.addEventListener('click', function () { plays = 0; demo(); });
+    replay.addEventListener('click', function () {   // 끝 모양이 살짝 흐려진 뒤 처음부터
+      plays = 0; if (RM) { demo(); return; }
+      stop(); stage.classList.add('exit'); later(demo, 300);
+    });
     stage.addEventListener('pointerenter', function () { plays = LOOPS; }, { passive: true });   // 들여다보면 되풀이를 멈춤(끝 모양에서)
-    window.addEventListener('resize', function () { if (!T.length) paper.style.minHeight = ''; });
+    var lastW = window.innerWidth;
+    window.addEventListener('resize', function () {   // 창 폭이 바뀌면 잡아 둔 높이를 다시: 시작 전이면 새로 재고, 끝나서 쉬는 동안이면 풀어 둠(도는 중에는 그대로). 휴대폰 주소창이 접히며 높이만 바뀔 때는 그대로
+      if (window.innerWidth === lastW) return; lastW = window.innerWidth;
+      if (!played) { shtop(); return; }
+      if (T.length) return; paper.style.minHeight = '';
+      if (TOP) TOP.style.minHeight = ''; $$('.bn', meter).forEach(function (x) { x.style.minHeight = ''; });
+    });
     if (DEMO) {
+      shtop();   // 예시가 시작되기 전에(휴대폰에서는 보통 화면 밖일 때) 위 칸 · AI 작성률 칸 자리를 잡아 둠
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (!played) shtop(); });   // 웹 글꼴이 들어와 줄이 바뀌면 다시
       if (!('IntersectionObserver' in window)) demo();
       else {
         var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.disconnect(); later(function () { if (!played) demo(); }, 400); } }); }, { threshold: 0.35 });

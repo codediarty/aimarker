@@ -214,3 +214,9 @@
 }
 @media (hover: none), (pointer: coarse) { .hz12-empty .dnd { display: none; } }
 @media (prefers-reduced-motion: reduce) { .hz12-drop, .hz12-up, .hz12-more > summary::after { transition: none; } }
+/* 13.13 무료 검사: 글 전체를 봤다는 한 줄(판정 머리 아래) */
+.hz12-verdict .hz13-all { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; font-weight: 600; color: var(--ds-ink-2); }
+.hz12-verdict .hz13-all .ico { width: 15px; height: 15px; flex: none; fill: none; stroke: #0e9a6a; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+/* 13.13 충전 칸 셋(스탠다드 · 프로(추천) · 프리미엄): 넓으면 한 줄에 셋, 좁으면 위아래로 */
+body .hz7-dlg.hz18-dlg .hz18-packs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 560px) { body .hz7-dlg.hz18-dlg .hz18-packs { grid-template-columns: minmax(0, 1fr); } }

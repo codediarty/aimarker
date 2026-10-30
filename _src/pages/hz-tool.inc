@@ -21,7 +21,7 @@
       <div class="hz12-bar">
         <div class="hz12-file" id="hzFileChip" hidden></div>
         <div class="hz12-ex" id="hzEx" role="group" aria-label="예시 글로 해 보기"><span>예시</span><button type="button" data-ex="thesis">논문</button><button type="button" data-ex="journal">학술지</button><button type="button" data-ex="report">대학 과제</button><button type="button" data-ex="grad">대학원 과제</button><button type="button" data-ex="essay">자기소개서</button></div>
-        <span class="hz12-cnt"><b id="hzCount">0</b>자<span class="lim" id="hzLimit"> / 무료 6,000자</span></span>
+        <span class="hz12-cnt"><b id="hzCount">0</b>자<span class="lim" id="hzLimit"> / 무료 검사 5만 자까지</span></span>
       </div>
     </div>
     <div class="hz12-sum" id="hzSum" hidden></div>
@@ -40,16 +40,15 @@
   <form method="dialog" class="hz7-dlg-x"><button type="submit" aria-label="닫기">{{ico:x}}</button></form>
   <div class="hz7-dlg-b" id="hzBuyBody">
     <p class="hz18-k">{{ico:fingerprint}}AIMarker 토큰 충전</p>
-    <h2 id="hzBuyT">필요한 만큼만 충전하세요</h2>
+    <h2 id="hzBuyT">AI 휴머나이징 토큰 충전</h2>
     <p class="hz13-unit"><b>1토큰 = 100원</b><span>쓴 만큼만 빠지고, 남은 토큰은 사라지지 않습니다</span></p>
     <p class="hz12-need" id="hzBuyNeed" hidden></p>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>
       <fieldset class="hz7-prod hz18-packs"><legend class="sr">충전할 토큰</legend>
-        <label><input type="radio" name="product" value="c3"><span><b class="nm">휴머나이징 체험</b><b class="tk">30<small>토큰</small></b><small class="ds">레포트(3,000자) 약 1편</small></span></label>
-        <label><input type="radio" name="product" value="c10"><span><b class="nm">휴머나이징 라이트</b><b class="tk">150<small>토큰</small><i class="bn">+50</i></b><small class="ds">레포트(3,000자) 약 8편</small></span></label>
-        <label class="best"><input type="radio" name="product" value="c30" checked><span><i class="tg">추천</i><b class="nm">휴머나이징 프로</b><b class="tk">500<small>토큰</small><i class="bn">+200</i></b><small class="ds">레포트(3,000자) 약 27편</small></span></label>
-        <label class="top"><input type="radio" name="product" value="c50"><span><i class="tg top">가장 큰 혜택</i><b class="nm">휴머나이징 프리미엄</b><b class="tk">1,100<small>토큰</small><i class="bn">+600</i></b><small class="ds">레포트(3,000자) 약 61편</small></span></label>
+        <label><input type="radio" name="product" value="t10"><span><b class="nm">스탠다드</b><b class="tk">110<small>토큰</small><i class="bn">+11</i></b><small class="ds">레포트(3,000자) 약 6편</small></span></label>
+        <label class="best"><input type="radio" name="product" value="t40" checked><span><i class="tg">추천</i><b class="nm">프로</b><b class="tk">500<small>토큰</small><i class="bn">+101</i></b><small class="ds">레포트(3,000자) 약 27편</small></span></label>
+        <label class="top"><input type="radio" name="product" value="t80"><span><i class="tg top">가장 큰 혜택</i><b class="nm">프리미엄</b><b class="tk">1,200<small>토큰</small><i class="bn">+401</i></b><small class="ds">레포트(3,000자) 약 66편</small></span></label>
       </fieldset>
       <div class="hz19-gate" id="hzBuyPay"></div>
       <div class="hz19-fb" id="hzBuyFb" hidden>
