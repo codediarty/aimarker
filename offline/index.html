@@ -17,5 +17,5 @@ h2{margin:22px 0 6px;font-size:14px;color:var(--mist)}ul{margin:0;padding:0;list
 <script>
 (function(){if(!('caches'in window))return;caches.open('am-page').then(function(c){return c.keys()}).then(function(ks){var l=document.getElementById('l'),n=0;ks.slice(-12).reverse().forEach(function(k){var u=new URL(k.url);if(u.pathname.indexOf('/offline/')===0)return;var a=document.createElement('a');a.href=u.pathname;a.textContent=decodeURIComponent(u.pathname)==='/'?'첫 화면':decodeURIComponent(u.pathname);var li=document.createElement('li');li.appendChild(a);l.appendChild(li);n++});if(n)document.getElementById('t').hidden=false}).catch(function(){});window.addEventListener('online',function(){location.reload()})})();
 </script>
-<!-- 판 20261031d -->
+<!-- 판 20261031e -->
 </body></html>
