@@ -5,6 +5,15 @@
     {
       "kty": "OKP",
       "crv": "Ed25519",
+      "x": "f8ScGR_YTCKQif8XsQfKf3X8rw50AQBoVmkDHTf3DA4",
+      "kid": "amk1-9cd86d9e6324",
+      "use": "sig",
+      "alg": "EdDSA",
+      "since": "2026-10-31"
+    },
+    {
+      "kty": "OKP",
+      "crv": "Ed25519",
       "x": "XdbkQ_O_R4Aq19ugDnJVpMcCX5OYPAV1NobuLhL-AEA",
       "kid": "amk1-f4e2e03c4c04",
       "use": "sig",

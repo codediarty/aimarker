@@ -1,8 +1,8 @@
-/* AIMarker 앱 서비스 워커 2.0(13.10, 판 20261031b). 원본은 _src/app/sw.src.js, 빌드가 판 번호를 넣어 /aimarker-sw.js 로 씁니다(그 파일을 직접 고치지 마세요).
+/* AIMarker 앱 서비스 워커 2.0(13.10, 판 20261031c). 원본은 _src/app/sw.src.js, 빌드가 판 번호를 넣어 /aimarker-sw.js 로 씁니다(그 파일을 직접 고치지 마세요).
    ① 공유 받기: 휴대폰 공유하기 → AIMarker 로 받은 이미지를 잠시 맡아 두었다가 파일 AI 마킹 화면(/mark/)으로 넘깁니다(이 기기 안에만, 서버로 보내지 않음).
    ② 페이지는 늘 네트워크에서 먼저 받습니다(최신). 인터넷이 끊겼을 때만 이 기기에 남은 사본이나 오프라인 화면을 보여 줍니다.
    ③ 판 번호(?v=)가 붙은 CSS · JS 와 글꼴은 한 번 받으면 이 기기에서 바로 엽니다. 다른 주소(점검 서버 · 결제 · 분석)는 건드리지 않습니다. */
-var V = '20261031b';
+var V = '20261031c';
 var PRE = 'am-pre-' + V, ASSET = 'am-asset-' + V, PAGE = 'am-page', IMG = 'am-img', FONT = 'am-font-1';
 var BASE = self.registration.scope;
 var OFFLINE = new URL('offline/', BASE).href;

@@ -47,7 +47,7 @@ AI 에이전트는 이미지 · 영상 · 글을 사용자에게 넘기거나 �
 - [API · AI 연동 안내](https://aimarker.kr/developers/): 30초 시작, MCP 설정(Claude · Cursor · VS Code · Codex · Gemini CLI), 함수 호출, SDK, 서명 확인
 - [API 전체 설명(한 파일)](https://aimarker.kr/llms-full.txt): 모든 동작의 입력 · 출력 · 오류 · 예시와 에이전트 사용 지침
 - [OpenAPI 3.1 명세](https://aimarker.kr/developers/openapi.json)
-- [MCP 서버 파일](https://aimarker.kr/mcp/aimarker-mcp.mjs): Node.js 18+, 의존성 없음, 출처 판독기 내장. npx 꾸러미: https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz
+- [MCP 서버 파일](https://aimarker.kr/mcp/aimarker-mcp.mjs): Node.js 18+, 의존성 없음, 출처 판독기 내장. npx 꾸러미: https://aimarker.kr/mcp/aimarker-mcp-2.4.1.tgz
 - [함수 호출 도구 정의 · OpenAI](https://aimarker.kr/developers/tools/openai.json) · [Claude](https://aimarker.kr/developers/tools/anthropic.json) · [Gemini](https://aimarker.kr/developers/tools/gemini.json) · [도구 실행기](https://aimarker.kr/sdk/aimarker-tools.mjs)
 - [JavaScript SDK](https://aimarker.kr/sdk/aimarker.mjs) · [Python SDK](https://aimarker.kr/sdk/aimarker.py)
 - [출처 판독기 aim-extract](https://aimarker.kr/lib/aim-extract.js): 브라우저 · Node 공용, 파일을 기기 밖으로 보내지 않고 C2PA · XMP · EXIF · 생성 기록을 읽음

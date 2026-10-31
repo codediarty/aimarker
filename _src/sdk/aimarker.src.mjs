@@ -21,7 +21,7 @@
  *
  * 마크는 표시와 근거를 기록하고 서명한 것이며 법적 인증이 아닙니다. 광고 검수(부가 기능)는 위험 후보와 근거이며 법률 자문이 아닙니다.
  */
-const DEFAULT_URL = 'https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec';
+const DEFAULT_URL = 'https://script.google.com/macros/s/AKfycby6Mo_qORon9V0ZnMeN4xUFx-yzD1gOh5xBbyZJl25vBsHbF6aealbLYs3gWGqeMrsr7Q/exec';
 const KEYS_URL = 'https://aimarker.kr/.well-known/aimarker-keys.json';
 export const LABELS = ['ai_generated', 'ai_edited', 'ai_assisted', 'no_ai'];
 export const LABEL_KO = { ai_generated: 'AI 생성', ai_edited: 'AI 편집 · 합성', ai_assisted: 'AI 보조', no_ai: 'AI 미사용' };

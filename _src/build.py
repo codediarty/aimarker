@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261031b"
+VER = "20261031c"
 TODAY = "2026-10-31"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -403,7 +403,8 @@ def products_js():
 # 옮긴 주소(2.0 → 3.0): 베타 → 파일럿, 작동 방식 → 제품
 REDIRECTS = [("beta/", "contact/"), ("pilot/", "contact/"), ("how/", "product/"), ("mcp/", "developers/#mcp"), ("image/", "mark/")]
 # 마크 서명 공개키(서버 am.pubkey 와 같은 값. 서버가 스스로 만든 키, 비밀 키는 서버 밖으로 나오지 않음)
-MARK_KEYS = [{"kty": "OKP", "crv": "Ed25519", "x": "XdbkQ_O_R4Aq19ugDnJVpMcCX5OYPAV1NobuLhL-AEA", "kid": "amk1-f4e2e03c4c04", "use": "sig", "alg": "EdDSA", "since": "2026-10-16"}]
+MARK_KEYS = [{"kty": "OKP", "crv": "Ed25519", "x": "f8ScGR_YTCKQif8XsQfKf3X8rw50AQBoVmkDHTf3DA4", "kid": "amk1-9cd86d9e6324", "use": "sig", "alg": "EdDSA", "since": "2026-10-31"},   # 2026.10.31 AIMarker 서버 분리(moistener22) 뒤 새 서명 키
+             {"kty": "OKP", "crv": "Ed25519", "x": "XdbkQ_O_R4Aq19ugDnJVpMcCX5OYPAV1NobuLhL-AEA", "kid": "amk1-f4e2e03c4c04", "use": "sig", "alg": "EdDSA", "since": "2026-10-16"}]   # 그 전 마크(옛 서버 키, 계속 확인)
 
 ICONS = {
     "share": '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98"/><path d="m15.41 6.51-6.82 3.98"/>',
@@ -897,7 +898,8 @@ def page(meta, body):
             '<meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker(에이아이마커)"><meta property="og:title" content="%s">'
             '<meta property="og:description" content="%s"><meta property="og:url" content="%s%s"><meta property="og:image" content="%sassets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
             '<meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="%sassets/og.jpg"><meta name="theme-color" content="#FFFFFF">'
-            '<link rel="icon" href="%sassets/favicon.svg" type="image/svg+xml"><link rel="icon" href="%sassets/favicon-32.png" sizes="32x32" type="image/png">'
+            # 13.15 구글 검색 결과 아이콘(지구본 → 지문): 구글은 SVG 아이콘을 쓰지 않음(PNG · ICO 등). 그래서 PNG(192, 투명 바탕) · ICO 를 앞에 두고 SVG 는 뺌
+            '<link rel="icon" href="%sassets/favicon-192.png" type="image/png" sizes="192x192"><link rel="icon" href="%sfavicon.ico" sizes="16x16 32x32 48x48">'
             '<link rel="apple-touch-icon" href="%sassets/apple-touch-icon.png">'
             '%s%s%s</head>'
             % (title, desc, noindex, SITE, path, meta.get("ogtitle", title), desc, SITE, path, SITE, SITE, root, root, root,
@@ -935,7 +937,7 @@ def parse(src):
 
 
 # ---------- AI 연동 자료(4.0): MCP 서버 · SDK · 함수 호출 도구 정의 · llms.txt ----------
-MCP_VER = "2.4.0"
+MCP_VER = "2.4.1"
 _IND = {"type": "string", "enum": ["auto", "gen", "food", "hfood", "cos", "med", "fin"],
         "description": "업종 규칙 팩. auto(글로 자동 판별) · gen 일반 상품 · food 일반식품 · hfood 건강기능식품 · cos 화장품 · med 의료 · fin 금융. 모르면 auto."}
 _FLAGS = {"type": "object", "description": "콘텐츠 정보(모르면 비움).", "properties": {

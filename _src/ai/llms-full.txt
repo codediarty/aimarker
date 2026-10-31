@@ -24,7 +24,7 @@ AIMarker(에이아이마커)는 콘텐츠의 AI 사용 여부를 파일 속 근�
 
 ## 2. 접속
 
-- 주소(POST): https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec
+- 주소(POST): https://script.google.com/macros/s/AKfycby6Mo_qORon9V0ZnMeN4xUFx-yzD1gOh5xBbyZJl25vBsHbF6aealbLYs3gWGqeMrsr7Q/exec
 - 본문: JSON 문자열, Content-Type: text/plain. 모든 동작은 같은 주소로 보내고 본문의 action 으로 고릅니다.
 - 응답: JSON. 성공이면 ok: true, 실패면 ok: false · code · message(동작에 따라 allowed · reasons · related 를 더함).
 - 넘겨주기: 서버가 302 로 결과 주소를 알려 줍니다. 리다이렉트를 따라가세요(curl -L · fetch redirect: 'follow' · requests 기본값). POST 를 GET 으로 바꿔 따라가는 것이 정상입니다.
@@ -219,11 +219,11 @@ ok:false 와 code: KEY(API 키 · 관리 키 오류) · QUOTA(오늘 한도 초�
 
 ## 7. MCP 서버 2.3
 
-- 실행: AIMARKER_KEY=amk_… npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz (Node.js 18+, 의존성 없음, stdio, 출처 판독기 내장. sharp 가 있으면 지각 해시도 만듦)
+- 실행: AIMARKER_KEY=amk_… npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.1.tgz (Node.js 18+, 의존성 없음, stdio, 출처 판독기 내장. sharp 가 있으면 지각 해시도 만듦)
 - 파일 하나: https://aimarker.kr/mcp/aimarker-mcp.mjs → node aimarker-mcp.mjs
-- Claude Desktop · Cursor · Gemini CLI: {"mcpServers":{"aimarker":{"command":"npx","args":["-y","https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz"],"env":{"AIMARKER_KEY":"amk_…"}}}}
+- Claude Desktop · Cursor · Gemini CLI: {"mcpServers":{"aimarker":{"command":"npx","args":["-y","https://aimarker.kr/mcp/aimarker-mcp-2.4.1.tgz"],"env":{"AIMARKER_KEY":"amk_…"}}}}
 - 토큰 코드(2.3, 선택): env 에 "AIMARKER_PASS":"K7Q4-F9XD-2MTA-8PLW" 를 넣거나 aimarker_detect_text 에 pass 를 주면 문장별 · 구간별 전체를 받습니다. 없으면 무료 맛보기(판정 · 수치는 같은 값, 문장 위치는 2개만)입니다. 2.4 부터 판정(안전 · 고위험 · 부적합)과 판정 근거 · 문체 특성 · 종합 의견을 함께 보여 줍니다.
-- Claude Code: claude mcp add aimarker -e AIMARKER_KEY=amk_… -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz
+- Claude Code: claude mcp add aimarker -e AIMARKER_KEY=amk_… -- npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.1.tgz
 - 핵심 도구: aimarker_analyze_file · aimarker_analyze_text · aimarker_analyze_folder(폴더째 20건씩 확인 · 리포트 HTML · CSV 저장 · declared_csv 로 지금 표시와 비교) · aimarker_mark(write_copy 로 표시본 저장 · 등록) · aimarker_mark_batch · aimarker_mark_info · aimarker_verify_mark · aimarker_find_marks · aimarker_edit_mark · aimarker_anchor(save_dir 로 원장 글 · .ots 저장)
 - GEO · 글 도구(2.2 · 2.3): aimarker_geo_check(주소 하나로 AI 검색 준비 점수 · 고칠 코드 · AI 상품 피드) · aimarker_detect_text(AI 작성 추정률 · AI 패턴이 몰린 문장, 추정이며 판정 아님, 글은 저장하지 않음, 2.3부터 pass)
 - 부가 도구: aimarker_check · aimarker_auto_fix · aimarker_check_batch · aimarker_label · aimarker_scan_site · aimarker_request_approval · aimarker_approval_status · aimarker_stamp · aimarker_verify

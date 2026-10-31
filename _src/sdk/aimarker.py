@@ -35,7 +35,7 @@ import subprocess
 import unicodedata
 import urllib.request
 
-DEFAULT_URL = "https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec"
+DEFAULT_URL = "https://script.google.com/macros/s/AKfycby6Mo_qORon9V0ZnMeN4xUFx-yzD1gOh5xBbyZJl25vBsHbF6aealbLYs3gWGqeMrsr7Q/exec"
 KEYS_URL = "https://aimarker.kr/.well-known/aimarker-keys.json"
 MCP_PKG = "https://aimarker.kr/mcp/aimarker-mcp-2.3.0.tgz"
 LABELS = ("ai_generated", "ai_edited", "ai_assisted", "no_ai")

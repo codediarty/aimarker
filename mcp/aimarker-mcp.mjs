@@ -9,7 +9,7 @@
  * - 마크 서명(Ed25519 · JWS)은 이 컴퓨터에서 공개키로 확인합니다.
  * - 부가 기능: 광고 문구 검수 · 자동 수정 · 표시 문구 · 사이트 진단 · 광고주 승인 링크 · 증거 원장.
  *
- * 실행: AIMARKER_KEY=amk_... npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz
+ * 실행: AIMARKER_KEY=amk_... npx -y https://aimarker.kr/mcp/aimarker-mcp-2.4.1.tgz
  * 또는:  AIMARKER_KEY=amk_... node aimarker-mcp.mjs
  * 필요: Node.js 18 이상. 의존성 없음(sharp 가 있으면 비슷한 이미지 찾기용 지각 해시도 만듭니다). 표준 입출력(stdio) MCP.
  *
@@ -22,8 +22,8 @@ import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 
-const VERSION = '2.4.0';
-const API = process.env.AIMARKER_URL || 'https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec';
+const VERSION = '2.4.1';
+const API = process.env.AIMARKER_URL || 'https://script.google.com/macros/s/AKfycby6Mo_qORon9V0ZnMeN4xUFx-yzD1gOh5xBbyZJl25vBsHbF6aealbLYs3gWGqeMrsr7Q/exec';
 const SITE = 'https://aimarker.kr';
 const KEYS_URL = process.env.AIMARKER_KEYS_URL || SITE + '/.well-known/aimarker-keys.json';
 const KEY = String(process.env.AIMARKER_KEY || '').trim();

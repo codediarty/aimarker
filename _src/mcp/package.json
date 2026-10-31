@@ -1,6 +1,6 @@
 {
   "name": "aimarker-mcp",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "AIMarker MCP server: AI 에이전트가 이미지 · 영상 · 오디오 · 글의 AI 사용 여부를 파일 속 근거로 확인하고, 근거에 맞는 서명된 AIMarker 마크를 발급 · 확인하게 합니다. 부가 기능으로 광고 문구 검수 · 승인 · 증거 원장.",
   "type": "module",
   "bin": { "aimarker-mcp": "aimarker-mcp.mjs" },

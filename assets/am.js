@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var AM = window.AM = window.AM || {};
-  AM.API = 'https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY/exec';
+  AM.API = 'https://script.google.com/macros/s/AKfycby6Mo_qORon9V0ZnMeN4xUFx-yzD1gOh5xBbyZJl25vBsHbF6aealbLYs3gWGqeMrsr7Q/exec';
   AM.MAIL = 'contact@skkc.co.kr';
   AM.root = document.body.getAttribute('data-root') || '';
 

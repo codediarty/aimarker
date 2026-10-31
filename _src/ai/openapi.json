@@ -4,7 +4,7 @@
   "title": "AIMarker API",
   "version": "2026.10.17-5.3",
   "summary": "AI 사용 확인 · 서명된 마크 발급 · 마크 확인 · 공개 앵커 API(부가: 광고 문구 검수)",
-  "description": "AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 근거에 맞는 표시를 서명된 디지털 마크로 발급 · 관리하는 AI 콘텐츠 투명성 플랫폼입니다.\n\n- 모든 요청은 같은 주소(/exec)로 POST 하고 본문의 action 으로 동작을 고릅니다. 본문은 JSON 문자열, Content-Type: text/plain.\n- 서버가 302 로 결과 주소를 알려 주므로 리다이렉트를 따라가세요(POST → GET).\n- 파일 원본은 받지 않습니다. 출처 판독기 aim-extract(https://aimarker.kr/lib/aim-extract.js)가 만든 features(특징값) · pack(서명 검증용 조각)만 보냅니다.\n- 마크 서명(cred)은 JWS(EdDSA · Ed25519). 공개키: am.pubkey · https://aimarker.kr/.well-known/aimarker-keys.json\n- 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지 · 표시본에 AI 마크가 있으면 CONFIRM(사용자 확인 뒤 confirm: true).\n- 마크는 표시와 근거의 기록이며 법적 인증이 아닙니다. 광고 문구 검수(부가 기능)는 위험 후보와 근거이며 법률 자문이 아닙니다.\n- AI 에이전트용: MCP 서버 https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz · 한 파일 설명서 https://aimarker.kr/llms-full.txt",
+  "description": "AIMarker는 콘텐츠의 AI 사용 여부를 파일 속 근거로 확인하고, 근거에 맞는 표시를 서명된 디지털 마크로 발급 · 관리하는 AI 콘텐츠 투명성 플랫폼입니다.\n\n- 모든 요청은 같은 주소(/exec)로 POST 하고 본문의 action 으로 동작을 고릅니다. 본문은 JSON 문자열, Content-Type: text/plain.\n- 서버가 302 로 결과 주소를 알려 주므로 리다이렉트를 따라가세요(POST → GET).\n- 파일 원본은 받지 않습니다. 출처 판독기 aim-extract(https://aimarker.kr/lib/aim-extract.js)가 만든 features(특징값) · pack(서명 검증용 조각)만 보냅니다.\n- 마크 서명(cred)은 JWS(EdDSA · Ed25519). 공개키: am.pubkey · https://aimarker.kr/.well-known/aimarker-keys.json\n- 근거와 맞지 않는 표시는 CONFLICT, 비슷한 이미지 · 표시본에 AI 마크가 있으면 CONFIRM(사용자 확인 뒤 confirm: true).\n- 마크는 표시와 근거의 기록이며 법적 인증이 아닙니다. 광고 문구 검수(부가 기능)는 위험 후보와 근거이며 법률 자문이 아닙니다.\n- AI 에이전트용: MCP 서버 https://aimarker.kr/mcp/aimarker-mcp-2.4.1.tgz · 한 파일 설명서 https://aimarker.kr/llms-full.txt",
   "contact": {
    "name": "AIMarker",
    "email": "contact@skkc.co.kr",
@@ -17,7 +17,7 @@
  },
  "servers": [
   {
-   "url": "https://script.google.com/macros/s/AKfycbw3ZPLXHv92tfNVs7caH-Bf1OvMesqh0RfR8y4LCsT5DaE3otEbGWhyFLIY6FqoBEY",
+   "url": "https://script.google.com/macros/s/AKfycby6Mo_qORon9V0ZnMeN4xUFx-yzD1gOh5xBbyZJl25vBsHbF6aealbLYs3gWGqeMrsr7Q",
    "description": "운영 서버(302 넘겨주기를 따라가야 함)"
   }
  ],
@@ -2897,7 +2897,7 @@
   }
  },
  "x-aimarker": {
-  "mcp": "https://aimarker.kr/mcp/aimarker-mcp-2.4.0.tgz",
+  "mcp": "https://aimarker.kr/mcp/aimarker-mcp-2.4.1.tgz",
   "llms": "https://aimarker.kr/llms-full.txt",
   "tools": {
    "openai": "https://aimarker.kr/developers/tools/openai.json",
