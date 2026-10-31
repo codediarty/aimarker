@@ -111,7 +111,7 @@
     }
     function whyTok(c) {   // 13.11c 토큰으로 내는 기업 상품: 기업 토큰 충전 → 메일로 토큰 코드 → 회신하면 토큰을 빼고 시작(두 문장)
       return '<span class="k-buy-flow2" aria-hidden="true"><b>AIMarker</b>' + ARROW + '<b class="s">성균관컨설팅</b></span>' +
-        '<p>충전은 운영사 <b>성균관컨설팅</b> 결제 페이지에서 회원가입 없이 하고, 결제하면 바로 토큰 코드가 메일로 갑니다. ' +
+        '<p>충전은 운영사 <b>성균관컨설팅</b> 결제 페이지에서 회원가입 없이 하고, 결제하면 바로 token@aimarker.kr 에서 토큰 코드가 메일로 갑니다. ' +
         '그 메일에 사이트 주소와 고른 상품 이름(' + esc(it.name) + ')만 회신하면 토큰을 빼고 바로 시작합니다.</p>';
     }
     function paint() {
@@ -133,7 +133,7 @@
       if (pay === 'credit') crShow();
       var info = f.querySelector('.k-buy-info'); if (info) info.hidden = direct;
       var more = f.querySelector('.k-buy-more'); if (more) more.hidden = pay !== 'card';
-      var nt = f.querySelector('.k-buy-note .nt'); if (nt) nt.textContent = pay === 'credit' ? '주문 뒤 영업일 하루 안에 토큰을 빼고 시작 안내 메일을 드립니다.' : pay === 'bank' ? (tokFirst ? '입금이 확인되면 영업일 하루 안에 토큰 코드와 시작 안내 메일을 드립니다.' : '입금이 확인되면 영업일 하루 안에 시작 안내 메일을 드립니다.') : tokFirst ? '충전 결제 뒤 영업일 하루 안에 결제할 때 적은 이메일로 토큰 코드를 보내 드립니다.' : monthly ? '결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다. 선결제라 자동으로 다시 결제되지 않고, 끝나기 7일 전에 안내 메일을 드립니다.' : '결제 뒤 영업일 하루 안에 결제할 때 적은 이메일로 시작 안내 메일을 드립니다.';
+      var nt = f.querySelector('.k-buy-note .nt'); if (nt) nt.textContent = pay === 'credit' ? '주문 뒤 영업일 하루 안에 토큰을 빼고 시작 안내 메일을 드립니다.' : pay === 'bank' ? (tokFirst ? '입금이 확인되면 영업일 하루 안에 토큰 코드와 시작 안내 메일을 드립니다.' : '입금이 확인되면 영업일 하루 안에 시작 안내 메일을 드립니다.') : tokFirst ? '충전 결제하면 바로(보통 5분 안) 결제할 때 적은 이메일로 token@aimarker.kr 에서 토큰 코드가 갑니다. 그 메일에 회신하면 시작합니다.' : monthly ? '결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다. 선결제라 자동으로 다시 결제되지 않고, 끝나기 7일 전에 안내 메일을 드립니다.' : '결제 뒤 영업일 하루 안에 결제할 때 적은 이메일로 시작 안내 메일을 드립니다.';
       Array.prototype.forEach.call(f.querySelectorAll('.k-buy-per label'), function (l) { var i = l.querySelector('input'); l.classList.toggle('on', !!(i && i.checked)); });
     }
     var cr = { code: '', st: '', left: null, t: 0 };   // st: '' | wait | ok | bad | off

@@ -1277,7 +1277,7 @@
   function gateHtml(p, tu, sh) {   // 13.7 간단하게: AIMarker → 성균관컨설팅 칩 + 두 문장(왜 성균관컨설팅인지 · 코드는 어떻게 오는지). 이메일 · 동의는 결제 페이지 주문서에서
     return '<div class="hz19-flow" aria-hidden="true"><span class="a">AIMarker</span>' + ico('arrow') + '<span class="s">성균관컨설팅</span></div>' +
       '<p class="hz19-lead">결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 토스페이 · 카드로 결제하면 ' +
-      (tu ? '지금 코드에 ' + tk(p.cr) + '토큰이 더해집니다(코드를 받았던 이메일로 결제해 주세요).' : '바로, 결제할 때 적은 이메일로 16자리 토큰 코드가 갑니다.') +
+      (tu ? '지금 코드에 ' + tk(p.cr) + '토큰이 더해집니다(코드를 받았던 이메일로 결제해 주세요).' : '바로(보통 5분 안), 결제할 때 적은 이메일로 token@aimarker.kr 에서 16자리 토큰 코드가 갑니다.') +
       ' 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.</p>';
   }
   function shopLink(pid) {   // 12.1 공식 결제처 성균관컨설팅 결제 페이지(서버 AM_BUY_LINKS 또는 사이트 SHOP_IDX 에 상품 번호가 있을 때)
@@ -1369,7 +1369,7 @@
         var tail = to ? String(S.pass).replace(/[^0-9A-Za-z]/g, '').slice(-4) : '';
         buyBody.innerHTML = '<h2 id="hzBuyT" tabindex="-1">' + (win ? '성균관컨설팅 결제 페이지를 새 창으로 열었습니다' : '성균관컨설팅 결제 페이지에서 결제해 주세요') + '</h2><div class="hz7-done hz18-go">' +
           '<p class="sum"><b>' + esc(pk.name) + ' · ' + tk(pk.cr) + '토큰' + (pk.bonus ? ' <i>+' + tk(pk.bonus) + ' 포함</i>' : '') + '</b><span>' + n2(pk.price) + '원 · 부가세 포함' + (to ? ' · 지금 코드(끝 ' + esc(tail) + ')에 충전' : '') + '</span></p>' +
-          '<p class="hz7-dlg-n">' + (to ? '코드를 받았던 이메일로 결제해 주세요. 결제가 확인되면 지금 코드에 ' + tk(pk.cr) + '토큰이 더해집니다.' : '회원가입 없이 결제하면 바로, 결제할 때 적은 이메일로 16자리 토큰 코드가 갑니다. ' + (S.job ? '메일의 ‘AI 휴머나이징 바로 쓰기’를 누르거나 이 창에 코드를 넣으면 하던 일을 이어서 합니다(글은 이 브라우저에만 잠시 보관). ' : '') + '메일이 안 보이면 스팸함을 확인하고, 그래도 없으면 contact@skkc.co.kr 로 주문 번호를 보내 주세요.') + '</p>' +
+          '<p class="hz7-dlg-n">' + (to ? '코드를 받았던 이메일로 결제해 주세요. 결제가 확인되면 지금 코드에 ' + tk(pk.cr) + '토큰이 더해집니다.' : '회원가입 없이 결제하면 바로(보통 5분 안), 결제할 때 적은 이메일로 token@aimarker.kr 에서 16자리 토큰 코드가 갑니다. ' + (S.job ? '메일의 ‘AI 휴머나이징 바로 쓰기’를 누르거나 이 창에 코드를 넣으면 하던 일을 이어서 합니다(글은 이 브라우저에만 잠시 보관). ' : '') + '메일이 안 보이면 스팸함을 확인하고, 그래도 없으면 contact@skkc.co.kr 로 주문 번호를 보내 주세요.') + '</p>' +
           '<a class="btn btn-p btn-l" href="' + esc(shop) + '" target="_blank" rel="noopener">' + ico('open') + '<span>' + (win ? '결제 페이지가 안 보이면 다시 열기' : '결제 페이지 열기') + '</span></a>' +
           (to ? '' : '<button class="btn btn-g" type="button" data-code>코드를 받았어요 · 코드 넣기</button>') + '</div>';
         var hL = $('#hzBuyT'); if (hL) { try { hL.focus({ preventScroll: true }); } catch (eF2) { hL.focus(); } }
