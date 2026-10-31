@@ -586,7 +586,7 @@ def ico(name, cls="ico"):
 
 def brand(root):
     h = 30
-    return ('<a class="k-logo" href="%s" aria-label="AIMarker 홈"><img src="%sassets/brand/aimarker-logo.svg?v=%s" alt="AIMarker" width="%d" height="%d"></a>'
+    return ('<a class="k-logo" href="%s" aria-label="AIMarker(에이아이마커) 홈"><img src="%sassets/brand/aimarker-logo.svg?v=%s" alt="AIMarker 에이아이마커" width="%d" height="%d"></a>'
             % (root or "./", root, VER, round(h * LOGO_W / LOGO_H), h))
 
 
@@ -670,13 +670,13 @@ def footer(root):
     std += ('<div class="k-ft-std k-ft-gd"><span><b>AI 글 검사 안내</b>%s</span></div>'
             % ", ".join('<a href="%s%s">%s</a>' % (root, g[0], g[2]) for g in GUIDES))
     return ('<footer class="k-ft"><div class="k-wrap"><div class="k-ft-top"><div class="k-ft-brand">%s'
-            '<p>AIMarker는 글의 AI 작성률 검사와 휴머나이징, AI가 만든 이미지 · 영상 · 글의 AI 마크, 회사와 가게가 AI 검색에 정확히 소개되도록 돕는 GEO까지 한곳에서 하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
+            '<p>AIMarker(에이아이마커)는 글의 AI 작성률 검사와 휴머나이징, AI가 만든 이미지 · 영상 · 글의 AI 마크, 회사와 가게가 AI 검색에 정확히 소개되도록 돕는 GEO까지 한곳에서 하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
             '<button type="button" class="k-install ft" data-install hidden>%s<span><b>AIMarker 앱 설치</b><small>휴대폰 · PC 홈 화면에</small></span></button>'
             '<div id="aimarker" class="ft-label"></div></div>'
             '<div class="k-ft-cols">%s</div></div>%s'
             '<div class="k-ft-biz">%s<br>'
             '<span>AIMarker 마크는 표시와 그 근거를 기록하는 것이며, 법률 자문을 대신하거나 개별 콘텐츠의 적법성을 보증하지 않습니다. 광고 검수 결과는 위험 후보와 근거입니다. AI 작성률은 정해진 기준에 따른 추정이며 증명이 아닙니다. AI 표시 문구는 <a href="https://kaiec.kr/" target="_blank" rel="noopener">한국AI윤리위원회</a> 기준을 따릅니다.</span><br>'
-            '<span>© 2026 AIMarker</span></div></div></footer>'
+            '<span>© 2026 AIMarker(에이아이마커)</span></div></div></footer>'
             % (brand(root), kaiec_badge(root=root), ico("phone"), colhtml, std, "".join(biz)))
 
 
@@ -807,7 +807,7 @@ def auto_ld(meta, body, path, title, desc):
     if not own:
         graph.append(org_ld())
         wp = {"@type": "WebPage", "@id": url + "#page", "url": url, "name": title, "description": desc, "inLanguage": "ko-KR",
-              "isPartOf": {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": "AIMarker"}, "publisher": {"@id": SITE + "#org"}}
+              "isPartOf": {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": "AIMarker", "alternateName": ["에이아이마커", "AI마커"]}, "publisher": {"@id": SITE + "#org"}}
         if meta.get("updated"):
             wp["dateModified"] = meta["updated"]
         if meta.get("published"):
@@ -894,7 +894,7 @@ def page(meta, body):
            "if(s.getItem('am_twa')==='1')document.documentElement.className+=' is-twa'}catch(e){}})()</script>")
     head = ('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' + twa +
             '<title>%s</title><meta name="description" content="%s">%s<link rel="canonical" href="%s%s">'
-            '<meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker"><meta property="og:title" content="%s">'
+            '<meta property="og:type" content="website"><meta property="og:site_name" content="AIMarker(에이아이마커)"><meta property="og:title" content="%s">'
             '<meta property="og:description" content="%s"><meta property="og:url" content="%s%s"><meta property="og:image" content="%sassets/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
             '<meta property="og:locale" content="ko_KR"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="%sassets/og.jpg"><meta name="theme-color" content="#FFFFFF">'
             '<link rel="icon" href="%sassets/favicon.svg" type="image/svg+xml"><link rel="icon" href="%sassets/favicon-32.png" sizes="32x32" type="image/png">'
