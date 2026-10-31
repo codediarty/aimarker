@@ -133,7 +133,7 @@
       if (pay === 'credit') crShow();
       var info = f.querySelector('.k-buy-info'); if (info) info.hidden = direct;
       var more = f.querySelector('.k-buy-more'); if (more) more.hidden = pay !== 'card';
-      var nt = f.querySelector('.k-buy-note .nt'); if (nt) nt.textContent = pay === 'credit' ? '주문 뒤 영업일 하루 안에 토큰을 빼고 시작 안내 메일을 드립니다.' : pay === 'bank' ? (tokFirst ? '입금이 확인되면 영업일 하루 안에 토큰 코드와 시작 안내 메일을 드립니다.' : '입금이 확인되면 영업일 하루 안에 시작 안내 메일을 드립니다.') : tokFirst ? '충전 결제하면 바로(보통 5분 안) 결제할 때 적은 이메일로 token@aimarker.kr 에서 토큰 코드가 갑니다. 그 메일에 회신하면 시작합니다.' : monthly ? '결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다. 선결제라 자동으로 다시 결제되지 않고, 끝나기 7일 전에 안내 메일을 드립니다.' : '결제 뒤 영업일 하루 안에 결제할 때 적은 이메일로 시작 안내 메일을 드립니다.';
+      var nt = f.querySelector('.k-buy-note .nt'); if (nt) nt.textContent = pay === 'credit' ? '주문 뒤 영업일 하루 안에 토큰을 빼고 시작 안내 메일을 드립니다.' : pay === 'bank' ? (tokFirst ? '입금이 확인되면 영업일 하루 안에 토큰 코드와 시작 안내 메일을 드립니다.' : '입금이 확인되면 영업일 하루 안에 시작 안내 메일을 드립니다.') : tokFirst ? '충전 결제하면 바로(보통 1분 안) 결제할 때 적은 이메일로 token@aimarker.kr 에서 토큰 코드가 갑니다. 그 메일에 회신하면 시작합니다.' : monthly ? '결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다. 선결제라 자동으로 다시 결제되지 않고, 끝나기 7일 전에 안내 메일을 드립니다.' : '결제 뒤 영업일 하루 안에 결제할 때 적은 이메일로 시작 안내 메일을 드립니다.';
       Array.prototype.forEach.call(f.querySelectorAll('.k-buy-per label'), function (l) { var i = l.querySelector('input'); l.classList.toggle('on', !!(i && i.checked)); });
     }
     var cr = { code: '', st: '', left: null, t: 0 };   // st: '' | wait | ok | bad | off
@@ -184,6 +184,7 @@
       if (pay === 'card' && (tokFirst ? c.pkIdx : c.idx)) {   // 13.6 KAIEC 처럼 바로: 묻는 것 없이 성균관컨설팅 결제 페이지로(이름 · 이메일 · 동의는 그곳 주문서에서). 사이트 쪽 주문 기록은 남기지 않음(결제 내역이 기준). 13.11c 토큰으로 내는 상품은 고른 기업 토큰 충전 페이지로
         go.disabled = true; say('ok', '운영사 성균관컨설팅 결제 페이지로 이동합니다. 회원가입 없이 비회원 주문서에서 결제하면 되고, 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.');
         if (window.gtag) try { window.gtag('event', 'begin_checkout', { items: [tokFirst ? { item_id: c.pk.id, item_name: c.pk.nm + ' · ' + c.label, price: c.pkTotal } : { item_id: c.sku, item_name: c.label, price: c.total }] }); } catch (eG0) { /* 무시 */ }
+        if (AM.payWatch) AM.payWatch();   // 13.18 결제 뒤 바로 확인(서버 지켜보기, keepalive 라 페이지를 떠나도 감)
         location.href = tokFirst ? shopUrl({ idx: c.pkIdx }) : shopUrl(c);
         return;
       }

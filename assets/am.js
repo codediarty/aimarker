@@ -80,6 +80,26 @@
     });
   };
 
+  /* 13.18 결제 뒤 바로 확인(2026.10.31 대표 '고객에게 최대한 빨리 토큰이 가도록'): 서버(am.ordpoke)가 그 자리에서 아임웹 주문을
+     확인해 토큰 코드 메일을 보냄. 주문 · 개인정보는 보내지 않고 답도 읽지 않음(keepalive 라 페이지를 떠나도 감).
+     AM.payWatch(): 결제 페이지를 연 때 '지켜보기'(서버 예약 작업이 20분 동안 1분마다)를 켜고, 30분 동안 이 창으로 돌아오면 바로 ·
+     보이는 동안 20초마다(최대 40번) 확인을 부름. 아임웹 결제 완료 화면도 같은 확인을 부름(아임웹 공통 코드) */
+  AM.poke = function (from) {
+    try { fetch(AM.API, { method: 'POST', mode: 'no-cors', keepalive: true, credentials: 'omit', body: JSON.stringify({ action: 'am.ordpoke', from: from || 'wait', _o: location.hostname }) }).catch(function () {}); } catch (e) { /* 무시 */ }
+  };
+  var PW = { until: 0, at: 0, n: 0, on: 0 };
+  AM.payWatch = function () {
+    PW.until = Date.now() + 18e5; AM.poke('open');
+    if (PW.on) return; PW.on = 1;
+    function back() { if (document.visibilityState !== 'visible' || Date.now() > PW.until || PW.n >= 40 || Date.now() - PW.at < 8000) return; PW.at = Date.now(); PW.n++; AM.poke('wait'); }
+    document.addEventListener('visibilitychange', back); window.addEventListener('focus', back);
+    var iv = setInterval(function () { if (Date.now() > PW.until || PW.n >= 40) { clearInterval(iv); return; } back(); }, 20000);
+  };
+  document.addEventListener('click', function (e) {   // 결제 페이지(성균관컨설팅 상품) 링크를 누르면 지켜보기
+    var a = e.target && e.target.closest && e.target.closest('a[href*="skkc.co.kr/shop_view"]');
+    if (a && !e.defaultPrevented) AM.payWatch();
+  });
+
   /* 머리글 그림자 */
   var hd = document.getElementById('hd');
   function onScroll() { if (hd) hd.classList.toggle('on', window.scrollY > 8); }

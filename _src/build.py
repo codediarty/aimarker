@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261031f"
+VER = "20261031g"
 TODAY = "2026-10-31"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -318,7 +318,7 @@ def credit_guide_html():
     return ('<div class="tk17-guide"><div class="gd-t"><h3 class="k-h3">한 번 충전하고, 원하는 때 자유롭게 사용하세요</h3>'
             '<p>별도의 월 구독료 없이 충전한 토큰으로 AI 작성률 검사와 AI 휴머나이징을 이용할 수 있습니다. 충전 금액이 높을수록 토큰당 이용 가격이 낮아져 더욱 합리적으로 이용할 수 있습니다.</p></div>'
             '<ol class="gd-s"><li><b>1</b><span><strong>고르고 결제</strong>성균관컨설팅 결제 페이지에서 회원가입 없이 토스페이 · 카드</span></li>'
-            '<li><b>2</b><span><strong>메일로 코드</strong>보통 5분 안에 token@aimarker.kr 에서 16자리 코드</span></li>'
+            '<li><b>2</b><span><strong>메일로 코드</strong>보통 1분 안에 token@aimarker.kr 에서 16자리 코드</span></li>'
             '<li><b>3</b><span><strong>바로 이어서</strong>메일의 단추를 누르면 코드가 들어간 채로 열리고, 쓴 만큼만 빠집니다</span></li></ol></div>')
 
 

@@ -1,5 +1,5 @@
 /* AIMarker AI 작성률 검사 · 휴머나이징 12.1 (2026.10.21 오후) → 13.13 (2026.10.31)
-   - 13.17 요금(월 구독 없이 한 번 충전): 라이트 100 · 플러스 300 · 프로 750(BEST 추천, 기본) · 맥스 1,500토큰(아임웹 96 · 97 · 98 · 99, 결제하면 서버가 5분 안에 코드 메일).
+   - 13.17 요금(월 구독 없이 한 번 충전): 라이트 100 · 플러스 300 · 프로 750(BEST 추천, 기본) · 맥스 1,500토큰(아임웹 96 · 97 · 98 · 99, 결제하면 서버가 바로 확인해 보통 1분 안에 코드 메일, 13.18).
      무료 검사는 글 전체(5만 자까지, 6,000자 조각마다 같은 기준)를 한 번에 보고, 가장 뚜렷한 문장 2개만 열어 둠(나머지는 결제 뒤).
      결제하러 가는 동안 하던 일(글 · 올린 파일)을 이 브라우저에만 24시간 맡겨 두고(localStorage am_hz_job + IndexedDB), 메일 단추로 연 새 창이나
      이 창에 코드가 들어오면 한 창에서만 이어서 함(am_hz_job_run). 다른 창에서 코드가 들어오면 이 창도 코드를 받음(storage 이벤트)
@@ -1281,7 +1281,7 @@
   function gateHtml(p, tu, sh) {   // 13.7 간단하게: AIMarker → 성균관컨설팅 칩 + 두 문장(왜 성균관컨설팅인지 · 코드는 어떻게 오는지). 이메일 · 동의는 결제 페이지 주문서에서
     return '<div class="hz19-flow" aria-hidden="true"><span class="a">AIMarker</span>' + ico('arrow') + '<span class="s">성균관컨설팅</span></div>' +
       '<p class="hz19-lead">결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 토스페이 · 카드로 결제하면 ' +
-      (tu ? '지금 코드에 ' + tk(p.cr) + '토큰이 더해집니다(코드를 받았던 이메일로 결제해 주세요).' : '바로(보통 5분 안), 결제할 때 적은 이메일로 token@aimarker.kr 에서 16자리 토큰 코드가 갑니다.') +
+      (tu ? '지금 코드에 ' + tk(p.cr) + '토큰이 더해집니다(코드를 받았던 이메일로 결제해 주세요).' : '바로(보통 1분 안), 결제할 때 적은 이메일로 token@aimarker.kr 에서 16자리 토큰 코드가 갑니다.') +
       ' 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.</p>';
   }
   function shopLink(pid) {   // 12.1 공식 결제처 성균관컨설팅 결제 페이지(서버 AM_BUY_LINKS 또는 사이트 SHOP_IDX 에 상품 번호가 있을 때)
@@ -1369,11 +1369,12 @@
       var shop = !payReady() && shopLink(pid), pk = prod(pid);
       if (shop && pk) {   // 13.6 결제 페이지가 있으면 KAIEC 처럼 바로: 묻는 것 없이 새 창으로 성균관컨설팅 결제 페이지(이름 · 이메일 · 동의는 그곳 주문서에서). 사이트 쪽 주문 기록은 남기지 않음(결제 내역이 기준)
         btn.disabled = true;
-        var win = true; try { window.open(shop, '_blank', 'noopener'); } catch (eW) { win = false; }   // noopener 면 창 객체가 안 돌아오므로 열었다고 보고, 막혔을 때를 위해 '다시 열기' 단추를 둠
+        var win = true; try { window.open(shop, '_blank', 'noopener'); } catch (eW) { win = false; }
+        if (AM.payWatch) AM.payWatch();   // 13.18 결제 뒤 바로 확인(돌아오면 서버가 그 자리에서 주문을 보고 코드 메일)   // noopener 면 창 객체가 안 돌아오므로 열었다고 보고, 막혔을 때를 위해 '다시 열기' 단추를 둠
         var tail = to ? String(S.pass).replace(/[^0-9A-Za-z]/g, '').slice(-4) : '';
         buyBody.innerHTML = '<h2 id="hzBuyT" tabindex="-1">' + (win ? '성균관컨설팅 결제 페이지를 새 창으로 열었습니다' : '성균관컨설팅 결제 페이지에서 결제해 주세요') + '</h2><div class="hz7-done hz18-go">' +
           '<p class="sum"><b>' + esc(pk.name) + ' · ' + tk(pk.cr) + '토큰' + (pk.bonus ? ' <i>+' + tk(pk.bonus) + ' 포함</i>' : '') + '</b><span>' + n2(pk.price) + '원 · 부가세 포함' + (to ? ' · 지금 코드(끝 ' + esc(tail) + ')에 충전' : '') + '</span></p>' +
-          '<p class="hz7-dlg-n">' + (to ? '코드를 받았던 이메일로 결제해 주세요. 결제가 확인되면 지금 코드에 ' + tk(pk.cr) + '토큰이 더해집니다.' : '회원가입 없이 결제하면 바로(보통 5분 안), 결제할 때 적은 이메일로 token@aimarker.kr 에서 16자리 토큰 코드가 갑니다. ' + (S.job ? '메일의 ‘AI 휴머나이징 바로 쓰기’를 누르거나 이 창에 코드를 넣으면 하던 일을 이어서 합니다(글은 이 브라우저에만 잠시 보관). ' : '') + '메일이 안 보이면 스팸함을 확인하고, 그래도 없으면 contact@skkc.co.kr 로 주문 번호를 보내 주세요.') + '</p>' +
+          '<p class="hz7-dlg-n">' + (to ? '코드를 받았던 이메일로 결제해 주세요. 결제가 확인되면 지금 코드에 ' + tk(pk.cr) + '토큰이 더해집니다.' : '회원가입 없이 결제하면 바로(보통 1분 안), 결제할 때 적은 이메일로 token@aimarker.kr 에서 16자리 토큰 코드가 갑니다. ' + (S.job ? '메일의 ‘AI 휴머나이징 바로 쓰기’를 누르거나 이 창에 코드를 넣으면 하던 일을 이어서 합니다(글은 이 브라우저에만 잠시 보관). ' : '') + '메일이 안 보이면 스팸함을 확인하고, 그래도 없으면 contact@skkc.co.kr 로 주문 번호를 보내 주세요.') + '</p>' +
           '<a class="btn btn-p btn-l" href="' + esc(shop) + '" target="_blank" rel="noopener">' + ico('open') + '<span>' + (win ? '결제 페이지가 안 보이면 다시 열기' : '결제 페이지 열기') + '</span></a>' +
           (to ? '' : '<button class="btn btn-g" type="button" data-code>코드를 받았어요 · 코드 넣기</button>') + '</div>';
         var hL = $('#hzBuyT'); if (hL) { try { hL.focus({ preventScroll: true }); } catch (eF2) { hL.focus(); } }
