@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261031e"
+VER = "20261031f"
 TODAY = "2026-10-31"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -84,9 +84,9 @@ SHOP_IDX = {
     "geo-lite": "84", "geo-standard": "85", "geo-pro": "86", "geocare-care-m": "87", "geocare-grow-m": "88",
     "service-starter-m": "", "bundle-trust": "",
     # 12.1 토큰(개인은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로. kaiec_buy=1 이면 바로 결제 페이지로 열림
-    # 13.13(10.31) 개인 토큰은 스탠다드 t10 · 프로 t40(추천) · 프리미엄 t80 = 아임웹 89 · 90 · 91(결제하면 서버가 바로 코드 메일).
-    # 예전 34~37(c3 · c10 · c30 · c50)은 카피휴먼 결제용으로 아임웹에 남겨 두고 이 사이트에서는 팔지 않음. 기업 38~40 은 그대로
-    "t10": "89", "t40": "90", "t80": "91", "credit-b10": "38", "credit-b30": "39", "credit-b100": "40",
+    # 13.17(10.31) 개인 토큰 새 요금(대표): 라이트 lt · 플러스 pl · 프로 pr(BEST 추천) · 맥스 mx(최고 혜택) = 아임웹 96 · 97 · 98 · 99(결제하면 서버가 바로 코드 메일).
+    # 예전 t10 · t40 · t80(89~91)과 34~37 은 이 사이트에서 팔지 않음(예전 링크로 산 주문도 코드는 그대로 나감). 기업 38~40 은 그대로
+    "lt": "96", "pl": "97", "pr": "98", "mx": "99", "credit-b10": "38", "credit-b30": "39", "credit-b100": "40",
     # 13.9(10.27) 가게 AI 검색 등록(자영업자 GEO 세팅) 2개. skkc.co.kr 디지털 상품 81(108,900원) · 82(319,000원), 부가세 포함 금액
     "local-basic": "81", "local-year": "82",
 }
@@ -221,12 +221,13 @@ def tiers_html(key, root, pick=None):
 # 13.2 단위 1토큰 = 100원. 서버 PASS 1.2 는 1크레딧 = 10원이라 여기 값 = 서버 PASS_.PRODUCTS · PASS_.CR 값 ÷ 10(사이트 am.js 가 서버 숫자를 바꿔 보여 줌)
 TOKEN_WON = 100
 CREDIT_COST = {"unit": (100, 0.2, 1), "pro": (100, 0.4, 2)}   # (글자 수 단위, 토큰, 최소). 600자 이하 검사 · 도우미는 0
-# 13.13(10.31) 개인 토큰 3종: 스탠다드 · 프로(추천, 기본) · 프리미엄(가장 큰 혜택). base = 값 ÷ 100(유료 토큰), 나머지는 더 드리는 토큰.
-# 서버 PASS 1.3.1 t10 · t40 · t80 · assets/humanize.js PRODS · assets/tok.js PK 와 같게
+# 13.17(10.31) 개인 토큰 새 요금(대표): 월 구독 없이 한 번 충전, 많이 충전할수록 토큰당 가격이 낮아짐(더 드리는 토큰 없음, cr = base).
+# 서버 AM서버.gs 1.2.0 lt · pl · pr · mx · assets/humanize.js PRODS · assets/tok.js PK 와 같게. save = 플러스(토큰당 약 66원)보다 토큰당 절약(%)
 CREDITS = [
-    {"id": "t10", "name": "스탠다드", "cr": 110, "base": 99, "price": 9900, "who": "자기소개서 · 과제 한두 편"},
-    {"id": "t40", "name": "프로", "cr": 500, "base": 399, "price": 39900, "who": "레포트 · 논문, 한 학기 내내", "tag": "추천"},
-    {"id": "t80", "name": "프리미엄", "cr": 1200, "base": 799, "price": 79900, "who": "논문 여러 편 · 함께 쓰는 팀", "tag": "가장 큰 혜택"},
+    {"id": "lt", "name": "라이트", "cr": 100, "base": 100, "price": 9900, "per": "99원", "who": "간단한 문장 수정"},
+    {"id": "pl", "name": "플러스", "cr": 300, "base": 300, "price": 19900, "per": "약 66원", "who": "일반적인 문서 작업"},
+    {"id": "pr", "name": "프로", "cr": 750, "base": 750, "price": 39900, "per": "약 53원", "who": "넉넉한 토큰, 더 높은 가성비", "tag": "BEST 추천", "save": 20},
+    {"id": "mx", "name": "맥스", "cr": 1500, "base": 1500, "price": 69900, "per": "약 47원", "who": "최대 토큰 제공", "tag": "최고 혜택", "save": 30},
 ]
 
 
@@ -279,12 +280,54 @@ def pack_html(t, root, mode="link", biz=False):
                tk(t["cr"]), bn, use, btn))
 
 
+def pack17_html(t, root, mode="link"):
+    """13.17 개인 충전 칸(새 요금): 배지 → 이름 · 쓰임 → 토큰 → 가격 · 토큰당 → 절약 → 레포트 몇 편 → 충전.
+    프로(BEST 추천)는 파란 테두리, 맥스(최고 혜택)는 남색 테두리. mode 'buy': 그 자리에서 충전 창, 'link': 글 검사 페이지의 충전 창으로"""
+    tag = t.get("tag", "")
+    cls = " best" if tag.startswith("BEST") else (" top" if tag else "")
+    n = int(t["cr"] // report_cost())
+    kind = "k-btn-p" if cls == " best" else "k-btn-l"
+    label = "%s 충전하기" % t["name"]
+    if mode == "buy":
+        btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], label)
+    else:
+        btn = '<a class="k-btn %s" href="%shumanize/#buy-%s">%s</a>' % (kind, root, t["id"], label)
+    sv = ('<p class="tk17-sv">플러스보다 토큰당 <b>약 %d%% 절약</b></p>' % t["save"]) if t.get("save") else ''
+    return ('<article class="tk17-pack%s" id="pk-%s">%s<p class="nm"><b>%s</b><span>%s</span></p>'
+            '<p class="tk"><b>%s</b><small>토큰</small></p><p class="pr"><b>%s원</b><span>토큰당 %s</span></p>%s'
+            '<p class="use">레포트(3,000자) 검사와 휴머나이징 <b>약 %s편</b></p>%s</article>'
+            % (cls, t["id"], ('<span class="tag">%s</span>' % tag) if tag else "", t["name"], t["who"],
+               tk(t["cr"]), format(t["price"], ","), t["per"], sv, format(n, ","), btn))
+
+
+def credit_table_html():
+    """13.17 상품별 구성(대표가 준 표): 상품 · 가격 · 제공 토큰 · 토큰당 가격 · 이용 안내"""
+    rows = []
+    for t in CREDITS:
+        tag = t.get("tag", "")
+        sv = ('<small class="tk17-sv">플러스보다 약 %d%% 절약</small>' % t["save"]) if t.get("save") else ''
+        rows.append('<tr%s><th scope="row">%s%s</th><td data-h="가격">%s원</td><td data-h="제공 토큰">%s토큰</td><td data-h="토큰당 가격"><span>%s%s</span></td><td data-h="이용 안내">%s</td></tr>'
+                    % (' class="best"' if tag.startswith("BEST") else (' class="top"' if tag else ''), t["name"], (' <em>%s</em>' % tag) if tag else '',
+                       format(t["price"], ","), tk(t["cr"]), t["per"], sv, t["who"]))
+    return ('<div class="tk17-cmp"><h3 class="k-h3">상품별 구성</h3><table class="tk17-tbl"><thead><tr><th scope="col">상품</th><th scope="col">가격</th>'
+            '<th scope="col">제공 토큰</th><th scope="col">토큰당 가격</th><th scope="col">이용 안내</th></tr></thead><tbody>%s</tbody></table></div>') % "".join(rows)
+
+
+def credit_guide_html():
+    """13.17 이용 안내(대표 문구) + 쓰는 법 세 단계"""
+    return ('<div class="tk17-guide"><div class="gd-t"><h3 class="k-h3">한 번 충전하고, 원하는 때 자유롭게 사용하세요</h3>'
+            '<p>별도의 월 구독료 없이 충전한 토큰으로 AI 작성률 검사와 AI 휴머나이징을 이용할 수 있습니다. 충전 금액이 높을수록 토큰당 이용 가격이 낮아져 더욱 합리적으로 이용할 수 있습니다.</p></div>'
+            '<ol class="gd-s"><li><b>1</b><span><strong>고르고 결제</strong>성균관컨설팅 결제 페이지에서 회원가입 없이 토스페이 · 카드</span></li>'
+            '<li><b>2</b><span><strong>메일로 코드</strong>보통 5분 안에 token@aimarker.kr 에서 16자리 코드</span></li>'
+            '<li><b>3</b><span><strong>바로 이어서</strong>메일의 단추를 누르면 코드가 들어간 채로 열리고, 쓴 만큼만 빠집니다</span></li></ol></div>')
+
+
 def credits_html(mode, root):
-    """토큰 충전 칸 네 개(13.2 요금 페이지와 같은 칸). mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
+    """토큰 충전 칸 네 개(13.17 새 요금, 요금 페이지와 같은 칸). mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
     feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "남은 토큰은 사라지지 않고 이어서, 모자라면 같은 코드에 충전"]
     allf = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in feat)
-    return ('<p class="tk-unitl"><b>1토큰 = 100원</b><span>레포트(3,000자) 한 편 검사와 휴머나이징 %s토큰</span></p><div class="cr13-packs cr-plans n3">%s</div>'
-            '<div class="cr-all"><b>어느 충전이든 똑같이 열립니다</b><ul>%s</ul></div>') % (tk(report_cost()), "".join(pack_html(t, root, mode=mode) for t in CREDITS), allf)
+    return ('<p class="tk17-unit"><b>월 구독 없이 한 번 충전</b><span>많이 충전할수록 토큰당 가격이 낮아집니다 · 레포트(3,000자) 한 편 검사와 휴머나이징 %s토큰</span></p><div class="tk17-packs">%s</div>'
+            '<div class="cr-all"><b>어느 충전이든 똑같이 열립니다</b><ul>%s</ul></div>') % (tk(report_cost()), "".join(pack17_html(t, root, mode=mode) for t in CREDITS), allf)
 
 
 def credit_cost_html():
@@ -298,14 +341,14 @@ def credit_cost_html():
     tr = "".join('<tr><th scope="row">%s<small>%s</small></th><td data-h="빠지는 토큰">%s</td><td data-h="3,000자 글이면">%s</td></tr>'
                  % (a, b, c, ("%s토큰" % tk(d)) if d else "0토큰") for a, b, c, d in rows)
     return ('<table class="k-table cr-cost"><thead><tr><th scope="col">하는 일</th><th scope="col">빠지는 토큰</th><th scope="col">3,000자 글이면</th></tr></thead><tbody>%s</tbody></table>'
-            '<p class="k-small cr-note">1토큰은 100원입니다. 글자 수(공백 포함)만큼 100자 단위로 빠지고, 처리하지 못한 요청은 빠지지 않습니다. 남은 토큰은 사라지지 않고 다음에 이어서 쓰며, 모자라면 같은 코드에 충전합니다. '
-            '충전한 날부터 7일 안에는 쓰고 남은 유료 토큰을 그대로, 그 뒤에는 10%%를 빼고 환불해 드립니다(<a href="{{root}}terms/#pass">이용약관 제7조의3</a>).</p>') % tr
+            '<p class="k-small cr-note">글자 수(공백 포함)만큼 100자 단위로 빠지고, 처리하지 못한 요청은 빠지지 않습니다. 남은 토큰은 사라지지 않고 다음에 이어서 쓰며, 모자라면 같은 코드에 충전합니다. '
+            '이용 조건은 <a href="{{root}}terms/#pass">이용약관</a>을 따릅니다.</p>') % tr
 
 
 def credit_packs_html(root):
     """13.2 토큰 충전 칸: [개인 · 학생 | 회사 · 기관 · 학교] 탭(assets/tok.js). 스크립트가 없으면 두 묶음이 모두 보임.
     개인: 부가세 포함, 글 검사 페이지 충전 창. 회사: 부가세 별도, 세금계산서, 결제 시트"""
-    me = "".join(pack_html(t, root) for t in CREDITS)
+    me = '<div class="tk17-packs">%s</div>%s%s' % ("".join(pack17_html(t, root) for t in CREDITS), credit_table_html(), credit_guide_html())   # 13.17 새 요금 칸 + 상품별 구성 + 이용 안내
     biz = []
     for t in CATALOG["credit"]["tiers"]:
         if not t.get("m"):
@@ -316,7 +359,7 @@ def credit_packs_html(root):
     return ('<div class="tk-seg" role="tablist" aria-label="누가 쓰나요">'
             '<button type="button" role="tab" id="tkTabMe" aria-controls="tkPanMe" aria-selected="true"><b>개인 · 학생</b><small>누구나 · 부가세 포함</small></button>'
             '<button type="button" role="tab" id="tkTabBiz" aria-controls="tkPanBiz" aria-selected="false"><b>회사 · 기관 · 학교</b><small>세금계산서 · 팀이 한 코드로</small></button></div>'
-            '<div class="cr13-packs tk-pan n3" id="tkPanMe" role="tabpanel" aria-labelledby="tkTabMe">%s</div>'
+            '<div class="tk-pan tk17-pan" id="tkPanMe" role="tabpanel" aria-labelledby="tkTabMe">%s</div>'
             '<div class="cr13-packs tk-pan" id="tkPanBiz" role="tabpanel" aria-labelledby="tkTabBiz">%s</div>') % (me, "".join(biz))
 
 
@@ -383,7 +426,7 @@ def credit_rates_html(root):
     for t in CATALOG["addon"]["tiers"]:
         a, b = crs(t)
         row(t["name"], t["who"], ", ".join(t["feat"]), a, b, buy(t["id"], "주문하기"))
-    return ('<table class="cr13-rates"><caption>1토큰은 100원입니다. 기업 상품은 부가세 별도 금액을 100원에 1토큰으로 셉니다(9,900원 = 99토큰). 토큰으로 내면 충전할 때 더 받은 토큰만큼 덜 냅니다. 대량 처리, 기관 계약 같은 맞춤은 견적으로 합니다.</caption>'
+    return ('<table class="cr13-rates"><caption>기업 상품은 부가세 별도 금액 100원을 1토큰으로 셉니다(9,900원 = 99토큰). 개인 충전은 많이 충전할수록 토큰당 가격이 낮아집니다. 대량 처리, 기관 계약 같은 맞춤은 견적으로 합니다.</caption>'
             '<thead><tr><th scope="col">기능</th><th scope="col">받는 것</th><th scope="col">토큰</th><th scope="col"><span class="k-sr">바로 하기</span></th></tr></thead><tbody>%s</tbody></table>') % "".join(rows)
 
 
@@ -738,11 +781,11 @@ def ship_ld():
 
 def token_product_ld():
     """13.12 개인 토큰(AI 작성률 검사 · AI 휴머나이징)을 구글 판매자 목록 · 제품 스니펫 형식으로: 묶음(ProductGroup) 하나 + 충전 칸 4개(변형, 크기 = 토큰 수).
-    칸마다 주소 /humanize/?pack=t40 이 그 칸을 고른 충전 창을 바로 엶(humanize.js, 예전 ?pack=c30 은 새 칸으로). 값은 CREDITS(부가세 포함) = 아임웹 89~91 판매가.
+    칸마다 주소 /humanize/?pack=pr 이 그 칸을 고른 충전 창을 바로 엶(humanize.js, 예전 ?pack=t40 · c30 은 새 칸으로). 값은 CREDITS(부가세 포함) = 아임웹 96~99 판매가.
     그림은 assets/product/tokens-*.jpg(1:1 · 4:3 · 16:9, 토큰만 표기). 후기 · 별점은 실제로 받은 것이 생기기 전에는 넣지 않음"""
     img = lambda k: [SITE + "assets/product/%s-%s.jpg" % (k, r) for r in ("1x1", "4x3", "16x9")]
     desc = ("AI 작성률 검사와 AI 휴머나이징(AI 글 인간화)에 쓰는 AIMarker 토큰입니다. 글이나 한글 · 워드 · PDF 파일을 넣으면 AI 작성률과 AI 패턴이 남은 문장을 보여 드리고, "
-            "뜻은 그대로 둔 채 사람 문장으로 다듬습니다. 검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰(1토큰 100원). "
+            "뜻은 그대로 둔 채 사람 문장으로 다듬습니다. 검사 1,000자 2토큰, 휴머나이징 1,000자 4토큰. 월 구독 없이 한 번 충전하고, 많이 충전할수록 토큰당 가격이 낮아집니다(라이트 100토큰 9,900원부터, 맥스 1,500토큰 69,900원). "
             "결제하면 바로 16자리 토큰 코드를 이메일로 보내 드리고, 남은 토큰은 사라지지 않고 이어서 씁니다.")
     variants = []
     for c in CREDITS:

@@ -41,14 +41,15 @@
   <div class="hz7-dlg-b" id="hzBuyBody">
     <p class="hz18-k">{{ico:fingerprint}}AIMarker 토큰 충전</p>
     <h2 id="hzBuyT">AI 휴머나이징 토큰 충전</h2>
-    <p class="hz13-unit"><b>1토큰 = 100원</b><span>쓴 만큼만 빠지고, 남은 토큰은 사라지지 않습니다</span></p>
+    <p class="hz13-unit"><b>월 구독 없이 한 번 충전</b><span>많이 충전할수록 토큰당 가격이 낮아지고, 남은 토큰은 사라지지 않습니다</span></p>
     <p class="hz12-need" id="hzBuyNeed" hidden></p>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>
       <fieldset class="hz7-prod hz18-packs"><legend class="sr">충전할 토큰</legend>
-        <label><input type="radio" name="product" value="t10"><span><b class="nm">스탠다드</b><b class="tk">110<small>토큰</small><i class="bn">+11</i></b><small class="ds">레포트(3,000자) 약 6편</small></span></label>
-        <label class="best"><input type="radio" name="product" value="t40" checked><span><i class="tg">추천</i><b class="nm">프로</b><b class="tk">500<small>토큰</small><i class="bn">+101</i></b><small class="ds">레포트(3,000자) 약 27편</small></span></label>
-        <label class="top"><input type="radio" name="product" value="t80"><span><i class="tg top">가장 큰 혜택</i><b class="nm">프리미엄</b><b class="tk">1,200<small>토큰</small><i class="bn">+401</i></b><small class="ds">레포트(3,000자) 약 66편</small></span></label>
+        <label><input type="radio" name="product" value="lt"><span><b class="nm">라이트</b><b class="tk">100<small>토큰</small></b><b class="pr">9,900원<small>토큰당 99원</small></b><small class="ds">간단한 문장 수정 · 레포트(3,000자) 약 5편</small></span></label>
+        <label><input type="radio" name="product" value="pl"><span><b class="nm">플러스</b><b class="tk">300<small>토큰</small></b><b class="pr">19,900원<small>토큰당 약 66원</small></b><small class="ds">일반적인 문서 작업 · 레포트(3,000자) 약 16편</small></span></label>
+        <label class="best"><input type="radio" name="product" value="pr" checked><span><i class="tg">BEST 추천</i><b class="nm">프로</b><b class="tk">750<small>토큰</small></b><b class="pr">39,900원<small>토큰당 약 53원</small></b><i class="hz17-sv">플러스보다 토큰당 약 20% 절약</i><small class="ds">레포트(3,000자) 약 41편</small></span></label>
+        <label class="top"><input type="radio" name="product" value="mx"><span><i class="tg top">최고 혜택</i><b class="nm">맥스</b><b class="tk">1,500<small>토큰</small></b><b class="pr">69,900원<small>토큰당 약 47원</small></b><i class="hz17-sv">플러스보다 토큰당 약 30% 절약</i><small class="ds">레포트(3,000자) 약 83편</small></span></label>
       </fieldset>
       <div class="hz19-gate" id="hzBuyPay"></div>
       <div class="hz19-fb" id="hzBuyFb" hidden>
@@ -59,7 +60,7 @@
       <input class="hp" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button class="btn btn-p btn-l hz19-go" type="submit"><span>성균관컨설팅에서 결제하기</span>{{ico:arrow}}</button>
       <p class="msg" role="status"></p>
-      <p class="hz7-dlg-n hz19-legal"><span id="hzBuyAmt"></span>운영 성균관컨설팅(사업자등록번호 272-32-01885) · <a href="{{root}}terms/#pass" target="_blank" rel="noopener">환불 안내</a> · 문의 contact@skkc.co.kr</p>
+      <p class="hz7-dlg-n hz19-legal"><span id="hzBuyAmt"></span>운영 성균관컨설팅(사업자등록번호 272-32-01885) · <a href="{{root}}terms/#pass" target="_blank" rel="noopener">이용약관</a> · 문의 contact@skkc.co.kr</p>
     </form>
   </div>
 </dialog>

@@ -1,5 +1,5 @@
 /* AIMarker AI 작성률 검사 · 휴머나이징 12.1 (2026.10.21 오후) → 13.13 (2026.10.31)
-   - 13.13 요금 · 무료 검사 · 이어 하기: 충전은 스탠다드 110 · 프로 500(추천, 기본) · 프리미엄 1,200토큰(아임웹 89 · 90 · 91, 결제하면 바로 코드 메일).
+   - 13.17 요금(월 구독 없이 한 번 충전): 라이트 100 · 플러스 300 · 프로 750(BEST 추천, 기본) · 맥스 1,500토큰(아임웹 96 · 97 · 98 · 99, 결제하면 서버가 5분 안에 코드 메일).
      무료 검사는 글 전체(5만 자까지, 6,000자 조각마다 같은 기준)를 한 번에 보고, 가장 뚜렷한 문장 2개만 열어 둠(나머지는 결제 뒤).
      결제하러 가는 동안 하던 일(글 · 올린 파일)을 이 브라우저에만 24시간 맡겨 두고(localStorage am_hz_job + IndexedDB), 메일 단추로 연 새 창이나
      이 창에 코드가 들어오면 한 창에서만 이어서 함(am_hz_job_run). 다른 창에서 코드가 들어오면 이 창도 코드를 받음(storage 이벤트)
@@ -43,12 +43,13 @@
   /* 판정 기준 AMJ-1.2(서버 detect.js와 같은 숫자 · 같은 문장 틀). 여러 조각(6,000자씩)을 합칠 때만 사이트에서 다시 계산 */
   var J = { HI: 85, MID: 65, SHORT: 60, SEG_AI: 20, UNFIT_RATE: 40, RISK_RATE: 20, UNFIT_SEG: 50,
     B: { unfit: ['부적합', '부적합 · 개선 필요'], risk: ['고위험', '고위험 · 수정 권고'], safe: ['안전', '안전 · AI 패턴 적음'], short: ['판단 보류', '판단 보류 · 글이 짧음'] } };
-  var PRODS = [   // 13.13(10.31) 토큰 충전 칸: 스탠다드 · 프로(추천, 기본) · 프리미엄 = 아임웹 89 · 90 · 91(build.py CREDITS 와 같게. 서버 products 는 결제 페이지 주소만 가져옴)
-    { id: 't10', name: '스탠다드', price: 9900, cr: 110, base: 99, who: '자기소개서 · 과제 한두 편' },
-    { id: 't40', name: '프로', price: 39900, cr: 500, base: 399, best: 1, who: '레포트 · 논문, 한 학기 내내' },
-    { id: 't80', name: '프리미엄', price: 79900, cr: 1200, base: 799, top: 1, who: '논문 여러 편 · 함께 쓰는 팀' }
+  var PRODS = [   // 13.17(10.31) 새 요금(대표): 라이트 · 플러스 · 프로(BEST 추천, 기본) · 맥스(최고 혜택) = 아임웹 96 · 97 · 98 · 99(build.py CREDITS 와 같게. 서버 products 는 결제 페이지 주소만 가져옴)
+    { id: 'lt', name: '라이트', price: 9900, cr: 100, base: 100, per: '99원', who: '간단한 문장 수정' },
+    { id: 'pl', name: '플러스', price: 19900, cr: 300, base: 300, per: '약 66원', who: '일반적인 문서 작업' },
+    { id: 'pr', name: '프로', price: 39900, cr: 750, base: 750, per: '약 53원', save: 20, badge: 'BEST 추천', best: 1, who: '넉넉한 토큰, 더 높은 가성비' },
+    { id: 'mx', name: '맥스', price: 69900, cr: 1500, base: 1500, per: '약 47원', save: 30, badge: '최고 혜택', top: 1, who: '최대 토큰 제공' }
   ];
-  var OLD_ID = { c3: 't40', c10: 't40', c30: 't40', c50: 't80', s1: 't40', d1: 't40', m1: 't40', q1: 't40' };   // 13.13 예전 칸 주소(#buy-c10 · ?pack=c30)는 새 칸으로
+  var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
   var CR0 = { unit: { per: 100, cr: 0.2, min: 1 }, pro: { per: 100, cr: 0.4, min: 2 } }, ASK = 10;   // 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
@@ -748,7 +749,7 @@
     if (lockDoc) { var d0 = $('#hzDoc'), s0 = d0 && d0.querySelector('.hz-s.ai:not(.lk)'); if (s0) d0.scrollTop = Math.max(0, s0.offsetTop - d0.offsetTop - 48); }
   }
   function packFor(need) {   // 13.13 기본은 추천 칸(프로). 이 글에 모자라면 그 글을 덮는 칸, 그래도 모자라면 가장 큰 칸(작은 충전으로 이끌지 않음)
-    var L = prods().slice().sort(function (a, b) { return a.cr - b.cr; }), best = L.filter(function (p) { return p.best; })[0] || L[Math.min(1, L.length - 1)] || PRODS[1];
+    var L = prods().slice().sort(function (a, b) { return a.cr - b.cr; }), best = L.filter(function (p) { return p.best; })[0] || L[Math.min(2, L.length - 1)] || PRODS[2];
     if (!(need > 0) || best.cr >= need) return best;
     for (var i = 0; i < L.length; i++) if (L[i].cr >= need) return L[i];
     return L[L.length - 1] || best;
@@ -1261,13 +1262,16 @@
   function dlgOpen(d) { if (!d) return; if (typeof d.showModal === 'function') { if (!d.open) d.showModal(); } else d.setAttribute('open', ''); }
   function dlgClose(d) { if (d && d.open) { try { d.close(); } catch (e) { d.removeAttribute('open'); } } }
   var buyDlg = $('#hzBuy'), buyBody = $('#hzBuyBody'), buyTpl = buyBody ? buyBody.innerHTML : '', t0 = 0;
-  function prodsHtml(sel, noBest, need) {   // 13.5 칸: 이름 · 토큰(더 받는 것) · 값 · 쓰임, 이 글이 있으면 '이 글 N번'
+  function prodsHtml(sel, noBest, need) {   // 13.17 칸: 배지 · 이름 · 토큰 · 가격(토큰당) · 절약, 이 글이 있으면 '이 글 N번'
     return prods().map(function (p) {
       var best = p.best && !noBest, k = need > 0 ? Math.floor(r1(p.cr / need) + 1e-9) : 0;
-      var sm = need > 0 ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : p.desc;
+      var sm = need > 0 ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : (p.save ? p.desc : (p.who ? p.who + ' · ' : '') + p.desc);
       return '<label' + (best ? ' class="best"' : p.top ? ' class="top"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span>' +
-        (best ? '<i class="tg">추천</i>' : p.top ? '<i class="tg top">가장 큰 혜택</i>' : '') +
-        '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b><small class="ds">' + esc(sm) + '</small></span></label>';
+        (best ? '<i class="tg">' + esc(p.badge || '추천') + '</i>' : p.top ? '<i class="tg top">' + esc(p.badge || '최고 혜택') + '</i>' : '') +
+        '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b>' +
+        (p.price ? '<b class="pr">' + n2(p.price) + '원' + (p.per ? '<small>토큰당 ' + esc(p.per) + '</small>' : '') + '</b>' : '') +
+        (p.save ? '<i class="hz17-sv">플러스보다 토큰당 약 ' + p.save + '% 절약</i>' : '') +
+        '<small class="ds">' + esc(sm) + '</small></span></label>';
     }).join('');
   }
   function stepsHtml() {   // 바로 결제도, 결제 페이지도 없을 때(주문 → 결제 안내 메일): 결제 순서를 미리
@@ -1289,12 +1293,12 @@
   function topupOn() { var f = $('#hzBuyForm'), r = f && f.querySelector('input[name="to"]:checked'); return !!(r && r.value === 'this' && isCr()); }
   function buyBtnLabel() {   // 13.6 결제 페이지가 있으면(지금은 상품 34~37 모두) KAIEC 식 안내 + 단추 하나. 이메일 칸은 바로 결제(토스)나 결제 페이지가 없을 때만
     var f = $('#hzBuyForm'); if (!f) return;
-    var id = (f.querySelector('input[name="product"]:checked') || {}).value || 't40', p = prod(id) || PRODS[1], b = f.querySelector('button[type="submit"]'), tu = topupOn();
+    var id = (f.querySelector('input[name="product"]:checked') || {}).value || 'pr', p = prod(id) || PRODS[2], b = f.querySelector('button[type="submit"]'), tu = topupOn();
     var sh = !payReady() && shopLink(id), gate = $('#hzBuyPay'), fb = $('#hzBuyFb');
     needLine(p, tu);
     if (gate) { gate.innerHTML = sh ? gateHtml(p, tu, sh) : ''; gate.hidden = !sh; }
     if (fb) { fb.hidden = !!sh; var ml = fb.querySelector('label[for="hzBuyMail"]'); if (ml) ml.innerHTML = (payReady() ? '영수증을 받을 이메일' : tu ? '결제 안내를 받을 이메일' : '토큰 코드와 결제 안내를 받을 이메일') + ' <em>필수</em>'; }
-    if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : sh ? '<span>성균관컨설팅에서 ' + n2(p.price) + '원 결제하기</span>' + ico('arrow') : '<span>' + n2(p.price) + '원 주문하기</span>';
+    if (b) b.innerHTML = payReady() ? ico('card') + '<span>' + n2(p.price) + '원 결제하기</span>' : sh ? '<span>' + esc(p.name) + ' ' + tk(p.cr) + '토큰 · ' + n2(p.price) + '원 결제하기</span>' + ico('arrow') : '<span>' + n2(p.price) + '원 주문하기</span>';
     var am = $('#hzBuyAmt'); if (am) am.textContent = tk(p.cr) + '토큰 ' + n2(p.price) + '원(부가세 포함) · ';
     var n = $('#hzBuyNote'); if (n) n.innerHTML = sh ? '' : payReady() ? (tu ? '카드나 간편결제로 바로 결제합니다. 승인되면 지금 코드에 ' + tk(p.cr) + '토큰이 바로 더해집니다.' : '카드나 간편결제로 바로 결제합니다. 승인되면 이 화면에서 바로 토큰이 열리고, 코드는 메일로도 보내 드립니다.') : stepsHtml() + '<span class="hz19-nt">' + (tu ? '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 지금 코드에 ' + tk(p.cr) + '토큰을 더해 드립니다.' : '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 토큰 코드를 메일로 보내 드립니다.') + '</span>';
   }
@@ -1360,7 +1364,7 @@
     var f = e.target;
     if (f.id === 'hzBuyForm') {
       e.preventDefault();
-      var msg = f.querySelector('.msg'), mail = (f.querySelector('[name="contact"]') || {}).value, pid = (f.querySelector('input[name="product"]:checked') || {}).value || 't40', btn = f.querySelector('button[type="submit"]'), to = topupOn() ? S.pass : '';
+      var msg = f.querySelector('.msg'), mail = (f.querySelector('[name="contact"]') || {}).value, pid = (f.querySelector('input[name="product"]:checked') || {}).value || 'pr', btn = f.querySelector('button[type="submit"]'), to = topupOn() ? S.pass : '';
       mail = String(mail || '').trim();
       var shop = !payReady() && shopLink(pid), pk = prod(pid);
       if (shop && pk) {   // 13.6 결제 페이지가 있으면 KAIEC 처럼 바로: 묻는 것 없이 새 창으로 성균관컨설팅 결제 페이지(이름 · 이메일 · 동의는 그곳 주문서에서). 사이트 쪽 주문 기록은 남기지 않음(결제 내역이 기준)
@@ -1452,7 +1456,7 @@
   if (Q.pay === 'ok' && Q.paymentKey && Q.orderId) payReturn();
   else if (Q.pay === 'fail') payFail();
 
-  /* 다른 페이지에서 바로 여는 주소: #buy · #buy-t10 · #buy-t40 · #buy-t80(예전 #buy-c3 · c10 · c30 · c50 도 새 칸으로) · #charge(지금 코드에 충전) · #code. 예전 #buy-s1 등은 토큰 창으로 */
+  /* 다른 페이지에서 바로 여는 주소: #buy · #buy-lt · #buy-pl · #buy-pr · #buy-mx(예전 #buy-t10 · t40 · t80 · c3 · c10 · c30 · c50 도 새 칸으로) · #charge(지금 코드에 충전) · #code. 예전 #buy-s1 등은 토큰 창으로 */
   function hashGo() {
     var h = (location.hash || '').slice(1), m = /^buy(?:-(\w+))?$/.exec(h);
     if (m) openBuy(m[1] && prod(m[1]) ? (OLD_ID[m[1]] || m[1]) : 'best'); else if (h === 'charge') openBuy('topup'); else if (h === 'code') openCode(); else return;

@@ -1,12 +1,12 @@
 /* AIMarker 13.2 요금 페이지: '내 글은 얼마?' 계산기 · 토큰 충전 탭(개인 · 학생 | 회사 · 기관 · 학교)
-   1토큰 = 100원. 셈은 글 검사 화면(assets/humanize.js)과 같은 식: 글자 수(공백 포함)를 6,000자씩 나눠 조각마다
+   13.17 새 요금(라이트 · 플러스 · 프로 · 맥스). 셈은 글 검사 화면(assets/humanize.js)과 같은 식: 글자 수(공백 포함)를 6,000자씩 나눠 조각마다
    100자 단위로 검사 0.2토큰(최소 1, 600자 이하는 0) · 휴머나이징 0.4토큰(최소 2). 값은 서버 PASS 단가 ÷ 10 */
 (function () {
   'use strict';
   var root = document.body.getAttribute('data-root') || '';
   var TW = 100, CHUNK = 6000, HELP = 600, MAXC = 50000;
   var U = { per: 100, cr: 0.2, min: 1 }, H = { per: 100, cr: 0.4, min: 2 };
-  var PK = [{ id: 't10', nm: '스탠다드', price: 9900, cr: 110 }, { id: 't40', nm: '프로', price: 39900, cr: 500, best: 1 }, { id: 't80', nm: '프리미엄', price: 79900, cr: 1200 }];   // 13.13 표(humanize.js PRODS · build.py CREDITS 와 같게)
+  var PK = [{ id: 'lt', nm: '라이트', price: 9900, cr: 100 }, { id: 'pl', nm: '플러스', price: 19900, cr: 300 }, { id: 'pr', nm: '프로', price: 39900, cr: 750, best: 1 }, { id: 'mx', nm: '맥스', price: 69900, cr: 1500 }];   // 13.17 표(humanize.js PRODS · build.py CREDITS 와 같게)
   function $(s, r) { return (r || document).querySelector(s); }
   function r1(x) { return Math.round(x * 10) / 10; }
   function n2(x) { return Math.round(x).toLocaleString('ko-KR'); }
