@@ -6,8 +6,11 @@
    "@id": "https://aimarker.kr/#org",
    "name": "AIMarker",
    "alternateName": [
+    "AI Marker",
     "에이아이마커",
-    "AI마커"
+    "AI마커",
+    "AI 마커",
+    "에이아이 마커"
    ],
    "url": "https://aimarker.kr/",
    "logo": "https://aimarker.kr/assets/icon-512.png",
@@ -36,15 +39,19 @@
     "@id": "https://aimarker.kr/#org"
    },
    "alternateName": [
+    "AI Marker",
     "에이아이마커",
-    "AI마커",
-    "AIMarker AI 작성률 검사"
+    "AI마커"
    ]
   },
   {
    "@type": "SoftwareApplication",
    "@id": "https://aimarker.kr/#app",
    "name": "AIMarker",
+   "alternateName": [
+    "AI Marker",
+    "에이아이마커"
+   ],
    "applicationCategory": "BusinessApplication",
    "operatingSystem": "Web",
    "url": "https://aimarker.kr/",

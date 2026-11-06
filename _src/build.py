@@ -23,7 +23,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 VER = "20261031g"
-TODAY = "2026-10-31"
+TODAY = "2026-11-06"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
 #   세 묶음(순서 그대로): assets/b-base.css = 글꼴 + am.css(모든 페이지 같음) → assets/b-<8자리>.css = (site4 · v8) + 페이지 styles(없으면 생략)
@@ -65,6 +65,10 @@ def css_bundle(files, name=None):
 # 운영사 정보(skkc.co.kr 바닥글과 같게, 비어 있는 칸은 표시하지 않음)
 BIZ = {"name": "성균관컨설팅", "ceo": "이채연", "no": "272-32-01885", "addr": "연구실 경기도 수원시 장안구 서부로 2066 성균관대학교 브릿지팩토리", "mail": "contact@skkc.co.kr", "tel": "", "ecom": "제2026-경기송탄-0622"}
 SITE = "https://aimarker.kr/"
+# 13.20 브랜드 이름 변형: 띄어 쓴 'ai marker' · '에이아이마커' · 'AI 마커' 로 찾아도 이 사이트가 나오게(검색 엔진 · AI 검색이 같은 이름으로 알아보도록)
+#   BRAND_ALT = 회사(Organization) 별칭, SITE_ALT = 사이트(WebSite) 별칭(구글 사이트 이름은 name 'AIMarker' 를 먼저 쓰고 별칭은 순서대로 참고). 제목 · 설명 · 바닥글 · 로고 대체 글은 'AIMarker(AI Marker · 에이아이마커)'
+BRAND_ALT = ["AI Marker", "에이아이마커", "AI마커", "AI 마커", "에이아이 마커"]
+SITE_ALT = ["AI Marker", "에이아이마커", "AI마커"]
 # 13.9 IndexNow(네이버 · 빙에 새 주소를 바로 알림) 키. 저장소 맨 위 <키>.txt 로 빌드가 만듦. 바꾸면 그 파일도 바뀜
 INDEXNOW_KEY = "1de864c48f9e9af51b7ddbb0cf4b9cfc"
 # 13.11 플레이 스토어 앱(TWA, PWABuilder 로 만든 kr.aimarker.app). 빌드가 /.well-known/assetlinks.json 을 만듦.
@@ -630,7 +634,7 @@ def ico(name, cls="ico"):
 
 def brand(root):
     h = 30
-    return ('<a class="k-logo" href="%s" aria-label="AIMarker(에이아이마커) 홈"><img src="%sassets/brand/aimarker-logo.svg?v=%s" alt="AIMarker 에이아이마커" width="%d" height="%d"></a>'
+    return ('<a class="k-logo" href="%s" aria-label="AIMarker(AI Marker · 에이아이마커) 홈"><img src="%sassets/brand/aimarker-logo.svg?v=%s" alt="AIMarker(AI Marker · 에이아이마커)" width="%d" height="%d"></a>'
             % (root or "./", root, VER, round(h * LOGO_W / LOGO_H), h))
 
 
@@ -714,7 +718,7 @@ def footer(root):
     std += ('<div class="k-ft-std k-ft-gd"><span><b>AI 글 검사 안내</b>%s</span></div>'
             % ", ".join('<a href="%s%s">%s</a>' % (root, g[0], g[2]) for g in GUIDES))
     return ('<footer class="k-ft"><div class="k-wrap"><div class="k-ft-top"><div class="k-ft-brand">%s'
-            '<p>AIMarker(에이아이마커)는 글의 AI 작성률 검사와 휴머나이징, AI가 만든 이미지 · 영상 · 글의 AI 마크, 회사와 가게가 AI 검색에 정확히 소개되도록 돕는 GEO까지 한곳에서 하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
+            '<p>AIMarker(AI Marker · 에이아이마커)는 글의 AI 작성률 검사와 휴머나이징, AI가 만든 이미지 · 영상 · 글의 AI 마크, 회사와 가게가 AI 검색에 정확히 소개되도록 돕는 GEO까지 한곳에서 하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
             '<button type="button" class="k-install ft" data-install hidden>%s<span><b>AIMarker 앱 설치</b><small>휴대폰 · PC 홈 화면에</small></span></button>'
             '<div id="aimarker" class="ft-label"></div></div>'
             '<div class="k-ft-cols">%s</div></div>%s'
@@ -763,7 +767,7 @@ def return_policy_ld():
 
 
 def org_ld():
-    return {"@type": "Organization", "@id": SITE + "#org", "name": "AIMarker", "alternateName": ["에이아이마커", "AI마커"], "url": SITE,
+    return {"@type": "Organization", "@id": SITE + "#org", "name": "AIMarker", "alternateName": BRAND_ALT, "url": SITE,
             "logo": SITE + "assets/icon-512.png", "email": BIZ["mail"],
             "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "email": BIZ["mail"], "availableLanguage": "ko"},
             "parentOrganization": {"@type": "Organization", "name": BIZ["name"], "url": "https://www.skkc.co.kr/"},
@@ -851,7 +855,7 @@ def auto_ld(meta, body, path, title, desc):
     if not own:
         graph.append(org_ld())
         wp = {"@type": "WebPage", "@id": url + "#page", "url": url, "name": title, "description": desc, "inLanguage": "ko-KR",
-              "isPartOf": {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": "AIMarker", "alternateName": ["에이아이마커", "AI마커"]}, "publisher": {"@id": SITE + "#org"}}
+              "isPartOf": {"@type": "WebSite", "@id": SITE + "#site", "url": SITE, "name": "AIMarker", "alternateName": SITE_ALT}, "publisher": {"@id": SITE + "#org"}}
         if meta.get("updated"):
             wp["dateModified"] = meta["updated"]
         if meta.get("published"):
