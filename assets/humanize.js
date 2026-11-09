@@ -342,13 +342,14 @@
   function subLine(M) {
     var k = M.band.key, n = nAi(M);
     if (k === 'short') return '글이 ' + n2(M.chars) + '자로 짧아 판단하지 않았습니다. ' + J.SHORT + '자 이상 넣어 주세요.';
-    if (!M.aiChars) return M.chat ? 'AI 작성 패턴이 검출된 문장은 없지만, AI 대화창에서 복사한 흔적이 ' + M.chat + '곳 있습니다.' : M.sigN ? '판별 모델은 AI 작성 패턴을 찾지 못했지만, AI처럼 읽히는 표현이 ' + n2(M.sigN) + '곳 있어 검사기에 걸릴 수 있습니다.' : n2(M.n) + '문장에서 AI 작성 패턴을 찾지 못했습니다. 검사한 범위의 결과이며, 다른 검사기는 다르게 볼 수 있습니다.';
+    if (!fChars(M)) return M.chat ? 'AI 작성 패턴이 검출된 문장은 없지만, AI 대화창에서 복사한 흔적이 ' + M.chat + '곳 있습니다.' : M.sigN ? '판별 모델은 AI 작성 패턴을 찾지 못했지만, AI처럼 읽히는 표현이 ' + n2(M.sigN) + '곳 있어 검사기에 걸릴 수 있습니다.' : n2(M.n) + '문장에서 AI 작성 패턴을 찾지 못했습니다. 검사한 범위의 결과이며, 다른 검사기는 다르게 볼 수 있습니다.';
     return n2(M.n) + '문장 가운데 ' + n2(n) + '문장에서 AI 작성 패턴이 검출되었습니다.';
   }
+  function fChars(o) { return o.flagChars != null ? o.flagChars : (o.aiChars || 0); }   // 2.1 AI 로 검출된 문장의 글자(서버 HUM 2.1 부터 aiChars 는 문장 AI 점수 × 글자 수)
   function opinion(o) {
     var L = [], b = o.band.key, f = o.feat || [], n = nAi(o);
     if (b === 'short') return ['글이 ' + n2(o.chars) + '자로 짧아 판단하지 않았습니다.'];
-    L.push(o.aiChars ? '검사한 글 ' + n2(o.chars) + '자 가운데 ' + n2(o.aiChars) + '자(' + o.rate + '%)가 AI가 쓴 글과 비슷한 문장으로 검출되었습니다.' : '검사한 글 ' + n2(o.chars) + '자, ' + n2(o.n) + '문장에서 AI가 쓴 글과 비슷한 문장은 검출되지 않았습니다.');
+    L.push(fChars(o) ? '검사한 글 ' + n2(o.chars) + '자 가운데 ' + n2(fChars(o)) + '자(' + (o.chars ? Math.round(fChars(o) / o.chars * 100) : 0) + '%)가 AI가 쓴 글과 비슷한 문장으로 검출되었고, 문장마다 AI 점수를 글자 수만큼 반영한 AI 작성률은 ' + o.rate + '%입니다.' : '검사한 글 ' + n2(o.chars) + '자, ' + n2(o.n) + '문장에서 AI가 쓴 글과 비슷한 문장은 검출되지 않았습니다.');
     if (o.segAi) L.push(o.segN === 1 ? '글 전체(1구간)에서 AI 작성 패턴이 뚜렷합니다.' : o.segN + '개 구간 가운데 ' + o.segAi + '개 구간(' + Math.round(o.segAi / o.segN * 100) + '%)에서 AI 작성 패턴이 뚜렷합니다.');
     else if (o.segN) L.push((o.segN > 1 ? o.segN + '개 구간 모두' : '글 전체(1구간)가') + ' AI 검출 구간 기준(구간 글자의 ' + J.SEG_AI + '% 이상)에 미치지 않았습니다.');
     if (f.length >= 2) L.push('가장 많이 나온 AI 문체 특성은 ‘' + f[0].name + '’' + josa(f[0].name, '과', '와') + ' ‘' + f[1].name + '’입니다.');
@@ -387,7 +388,7 @@
       (d.segs || []).forEach(function (g) { M.segs.push({ no: M.segs.length + 1, s: g.s + soff, e: Math.min(g.e, Math.max(0, ss.length - 1)) + soff, c: g.c, a: g.a, share: g.share, ai: g.ai, hi: g.hi, mid: g.mid, low: g.low, feat: g.feat || [] }); });
       poff += maxp + 1; soff += ss.length;
       if ((d.n || 0) > ss.length) M.trunc = true;
-      M.chars += d.chars || 0; M.aiChars += d.aiChars || 0; M.aiN += d.aiN || 0; M.n += d.n || 0;
+      M.chars += d.chars || 0; M.aiChars += d.aiChars || 0; M.flagChars = (M.flagChars || 0) + (d.flagChars != null ? d.flagChars : (d.aiChars || 0)); M.aiN += d.aiN || 0; M.n += d.n || 0;   // 2.1 aiChars 는 문장 AI 점수 × 글자 수, flagChars 는 AI 로 검출된 문장의 글자
       if (d.lv) { M.lv.hi += d.lv.hi || 0; M.lv.mid += d.lv.mid || 0; M.lv.low += d.lv.low || 0; }
       M.segN += d.segN || 0; M.segAi += d.segAi || 0; M.segLock += d.segLock || 0; M.chat += d.chat || 0; M.opDetailN += d.opDetailN || 0;
       (d.chatList || []).forEach(function (c) { var o = chatM[c.name] = chatM[c.name] || { name: c.name, n: 0, t: c.t }; o.n += c.n; });
@@ -553,7 +554,7 @@
   function statsHtml(M) {
     var pct = function (a, b) { return b ? Math.round(a / b * 100) : 0; }, n = nAi(M), segN = M.segN || 0;
     var cell = function (lb, a, b, unit, p) { return '<div' + (a ? ' class="on"' : '') + '><dt>' + lb + '</dt><dd><b>' + n2(a) + '</b><span>/ ' + n2(b) + unit + '</span><em>' + p + '%</em></dd><dd class="hz9-bar" aria-hidden="true"><i style="width:' + p + '%"></i></dd></div>'; };
-    return '<dl class="hz9-stats">' + cell('AI 검출 글자(공백 제외)', M.aiChars, M.chars, '자', M.rate) + cell('AI 검출 문장', n, M.n, '문장', pct(n, M.n)) + cell('AI 검출 구간', M.segAi, segN, '구간', pct(M.segAi, segN)) + '</dl>';
+    return '<dl class="hz9-stats">' + cell('AI 검출 글자(공백 제외)', fChars(M), M.chars, '자', pct(fChars(M), M.chars)) + cell('AI 검출 문장', n, M.n, '문장', pct(n, M.n)) + cell('AI 검출 구간', M.segAi, segN, '구간', pct(M.segAi, segN)) + '</dl>';
   }
   function headHtml(M) {   // 11.0 보고서 머리: 판정 알약과 검사 정보 → 판정 글 · 근거 | 작성률 막대 → 수치 → 추정값 안내
     var b = M.band;
@@ -1242,7 +1243,7 @@
     var docName = S.docName ? esc(S.docName) : '붙여 넣은 글';
     el.innerHTML = '<div class="rp8"><header class="rp8-top"><div><small>AIMarker · aimarker.kr</small><h1>AI 작성률 검사 결과상세내역서</h1></div><dl><div><dt>검사 번호</dt><dd>' + esc(M.cn) + '</dd></div><div><dt>발행일</dt><dd>' + esc(stamp(new Date())) + '</dd></div><div><dt>판정 기준</dt><dd>' + esc(M.critName || 'AIMarker 판정 기준 1.2') + '</dd></div><div><dt>판별 모델</dt><dd>' + esc(M.model || 'det') + '</dd></div></dl></header>' +
       '<section class="rp8-sum ' + bandCls(b.key) + '"><div class="g">' + gauge(M.rate, b, { chars: M.chars }) + '</div><div class="j"><p class="hz9-hl">' + stIco(b.key) + '<span>' + esc(headOf(b)) + '</span></p><p class="sub">' + esc(subLine(M)) + '</p><div class="hz9-row"><span class="hz9-lbl">판정</span>' + chip(b) + '</div>' + scaleFor(M) + whyHtml(b) + '</div></section>' +
-      '<table class="rp8-kv"><tr><th>검사한 글</th><td>' + docName + ' · ' + n2(M.chars) + '자(공백 제외) · ' + n2(M.n) + '문장</td><th>' + (isCr() ? '토큰 코드' : '이용권') + '</th><td>' + esc(S.ps ? (S.ps.credit ? (S.ps.biz ? '기업 토큰' : '토큰') : S.ps.name) : '토큰') + '</td></tr><tr><th>AI 검출 글자 수</th><td>' + n2(M.aiChars) + ' / ' + n2(M.chars) + '자(본문의 ' + M.rate + '%)</td><th>AI 검출 구간 수</th><td>' + M.segAi + ' / ' + segN + '구간(' + pct(M.segAi, segN) + '%)</td></tr><tr><th>AI 검출 문장 수</th><td>' + n + ' / ' + n2(M.n) + '문장(' + pct(n, M.n) + '%)</td><th>AI 대화창 흔적</th><td>' + (M.chat ? M.chatList.map(function (c) { return esc(c.name) + ' ' + c.n + '곳'; }).join(', ') : '없음') + '</td></tr></table>' +
+      '<table class="rp8-kv"><tr><th>검사한 글</th><td>' + docName + ' · ' + n2(M.chars) + '자(공백 제외) · ' + n2(M.n) + '문장</td><th>' + (isCr() ? '토큰 코드' : '이용권') + '</th><td>' + esc(S.ps ? (S.ps.credit ? (S.ps.biz ? '기업 토큰' : '토큰') : S.ps.name) : '토큰') + '</td></tr><tr><th>AI 검출 글자 수</th><td>' + n2(fChars(M)) + ' / ' + n2(M.chars) + '자(본문의 ' + (M.chars ? Math.round(fChars(M) / M.chars * 100) : 0) + '%, AI 작성률 ' + M.rate + '%)</td><th>AI 검출 구간 수</th><td>' + M.segAi + ' / ' + segN + '구간(' + pct(M.segAi, segN) + '%)</td></tr><tr><th>AI 검출 문장 수</th><td>' + n + ' / ' + n2(M.n) + '문장(' + pct(n, M.n) + '%)</td><th>AI 대화창 흔적</th><td>' + (M.chat ? M.chatList.map(function (c) { return esc(c.name) + ' ' + c.n + '곳'; }).join(', ') : '없음') + '</td></tr></table>' +
       '<h2>종합 분석 의견</h2><ul class="rp8-op">' + M.opinion.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul><p class="rp8-adv ' + bandCls(b.key) + '"><b>' + ({ unfit: '개선 필요', risk: '수정 권고' }[b.key] || '참고') + '</b>' + esc(ADV[b.key] || ADV.short) + '</p>' + (M.opDetail.length ? '<ul class="rp8-fix">' + M.opDetail.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
       (tiles ? '<h2>구간별 검출 현황</h2><div class="rp8-tiles">' + tiles + '</div>' : '') +
       (featRows ? '<h2>01 · AI 문체 특성 프로파일</h2><div class="rp8-bars">' + bars + '</div><table class="rp8-t"><thead><tr><th>특성</th><th>구간 수</th><th>비중</th><th>건수</th><th>예시 표현</th></tr></thead><tbody>' + featRows + '</tbody></table>' : '') +
