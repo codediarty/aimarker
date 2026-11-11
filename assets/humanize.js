@@ -9,7 +9,7 @@
      무료일 때는 파일을 올리거나 글을 붙여 넣거나 예시를 고르면 바로 검사(토큰이 있을 때는 누를 때만, 토큰이 빠지므로).
      결과는 판정 · AI 검출 문장 · ③ 다듬기 안내를 먼저, 판정 근거와 자세한 분석은 펼쳐 보기로. 수치는 언제나 서버가 낸 실제 값.
      다듬기를 누르면 이 글에 드는 토큰을 보여 주고, 토큰이 없으면 모자라지 않는 가장 작은 충전을 골라 둔 채 충전 창을 엶.
-     코드를 넣거나 결제하고 돌아오면 같은 글을 바로 휴머나이징. 다듬은 글은 올린 파일 형식(.docx · .hwpx)이나 새 워드 파일로 받음
+     코드를 넣거나 결제하고 돌아오면 같은 글을 바로 휴머나이징. 다듬은 글은 올린 파일 형식 그대로 받음(13.23: .hwp · .hwpx · .docx 는 원본에서 바뀐 문단만, .pdf 는 새로 조판, .txt · .md 는 같은 텍스트). 붙여 넣은 글은 새 워드 파일
    - 13.2 토큰: 1토큰 = 100원(서버 PASS 1.2 는 아직 1크레딧 = 10원이라 am.js 가 숫자를 토큰으로 바꿔 줌). 글자 수만큼 빠짐
      (AI 작성률 검사 1,000자 2토큰 · 100자 단위 0.2 · 최소 1, AI 휴머나이징 1,000자 4토큰 · 100자 단위 0.4 · 최소 2, 600자 이하 도우미 · 짧은 다시 검사는 0).
      값은 돈으로 먼저(이 글 360원), 토큰은 소수 한 자리까지. 10토큰(1,000원) 이상이면 한 번 묻고, 모자라면 같은 코드에 충전.
@@ -20,7 +20,7 @@
      문장 표시는 한 가지(AI 검출, 빨간 형광펜). 높음 · 중간 · 낮음 3단계 표시는 쓰지 않음(판정 기준 숫자는 그대로)
    - 8.1: 인간화 엔진 HUM(서버 1.27.0, 생성 AI 없이). 무료 맛보기(첫 문단) · 이용권은 6,000자씩 나눠 전체 · 다른 버전 ·
      말투 자동(보고서 · 과제는 한다체) · 한다체 · 해요체 · 습니다체 · 다시 쓴 문장 후보 2개(도우미)
-   - 판정 기준 AMJ-1.2: AI 작성률 · 판정(안전 · 고위험 · 부적합)과 판정 근거 · 구간(문단)별 검출 · AI 문체 특성 · 종합 분석 의견
+   - 판정 기준 AMJ-1.5: AI 작성률 · 판정(안전 · 고위험 · 부적합)과 판정 근거 · 구간(문단)별 검출 · AI 문체 특성 · 종합 분석 의견
    - 무료 맛보기(앞 6,000자, 이용권 첫 조각과 같은 범위 · 같은 값): 작성률 · 판정 · 근거 · 글자 수 · 구간 수 · 특성 이름 · 의견과 가장 뚜렷한 문장 2개.
      위치(AI 검출 문장 · 구간) · 특성 예시 · 먼저 고칠 문장 · 결과상세내역서는 결제 뒤에 열림
    - 결제: 토스페이먼츠 바로 결제(서버가 키를 켰을 때) → 돌아오면 서버 승인 → 이용권 코드 → 같은 글을 바로 다시 검사 → 결과상세내역서.
@@ -40,7 +40,7 @@
   var CAT = { 0: '말투', 1: '번역투', 2: '상투적 연결어', 3: '빈말 · 과장 수식', 4: '틀에 박힌 도입 · 마무리', 5: '대화창 복사 흔적', 6: '문장 리듬', 7: '딱딱한 어휘' };
   var ROOT = document.body.getAttribute('data-root') || '/';
   var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  /* 판정 기준 AMJ-1.2(서버 detect.js와 같은 숫자 · 같은 문장 틀). 여러 조각(6,000자씩)을 합칠 때만 사이트에서 다시 계산 */
+  /* 판정 기준 AMJ-1.5(서버 detect.js와 같은 숫자 · 같은 문장 틀). 여러 조각(6,000자씩)을 합칠 때만 사이트에서 다시 계산 */
   var J = { HI: 85, MID: 65, SHORT: 60, SEG_AI: 20, UNFIT_RATE: 40, RISK_RATE: 20, UNFIT_SEG: 50,
     B: { unfit: ['부적합', '부적합 · 개선 필요'], risk: ['고위험', '고위험 · 수정 권고'], safe: ['안전', '안전 · AI 패턴 적음'], short: ['판단 보류', '판단 보류 · 글이 짧음'] } };
   var PRODS = [   // 13.17(10.31) 새 요금(대표): 라이트 · 플러스 · 프로(BEST 추천, 기본) · 맥스(최고 혜택) = 아임웹 96 · 97 · 98 · 99(build.py CREDITS 와 같게. 서버 products 는 결제 페이지 주소만 가져옴)
@@ -394,7 +394,7 @@
       (d.chatList || []).forEach(function (c) { var o = chatM[c.name] = chatM[c.name] || { name: c.name, n: 0, t: c.t }; o.n += c.n; });
       (d.feat || []).forEach(function (f) { var o = fagg[f.cat] = fagg[f.cat] || { cat: f.cat, name: f.name, segs: 0, n: 0, tags: [], why: f.why, lock: 0 }; o.segs += f.segs; o.n += f.n; if (f.lock) o.lock = 1; (f.tags || []).forEach(function (t) { if (o.tags.indexOf(t) < 0 && o.tags.length < 3) o.tags.push(t); }); });
       if (d.cn) M.cns.push(d.cn);
-      M.model = d.model || M.model; M.crit = d.crit || M.crit; M.critName = d.critName || M.critName; M.note = d.note || M.note; M.verse = M.verse || !!d.verse;
+      M.model = d.model || M.model; M.crit = d.crit || M.crit; M.critName = d.critName || M.critName; if (d.note && (d.ck || !M.ck)) M.note = d.note; if (d.ck) M.ck = 1;   // 13.23 논문 기준으로 잰 조각이 하나라도 있으면 그 안내를 보여 줌 M.verse = M.verse || !!d.verse;
       ((r.before && r.before.cats) || d.cats || []).forEach(function (c) { var o = M.cats[c.cat] = M.cats[c.cat] || { name: c.name, n: 0, ex: [] }; o.n += c.n; });
       (r.paragraphs || []).forEach(function (p) { (p.signals || []).forEach(function (g) { if (g.t) M.sigs.push({ k: k, t: g.t, why: g.why, catKo: g.catKo, cat: g.cat }); }); });
       (r.left || []).forEach(function (g) { if (g.t) M.sigs.push({ k: k, t: g.t, why: g.why, catKo: g.catKo }); });
@@ -432,7 +432,7 @@
   function prog(label, i, n) {
     var pct = n ? Math.round(i / n * 100) : 30;
     var el = $('.hz7-prog', out);
-    if (!el) { out.innerHTML = '<div class="hz7-prog"><b></b><i><em></em></i><p>문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고, AIMarker 판정 기준 1.2로 판정합니다. 표지 · 목차 · 참고문헌 같은 줄은 빼고 본문 문장만 셉니다. 같은 글은 언제나 같은 결과가 나옵니다.</p></div>'; el = $('.hz7-prog', out); stat(label); }
+    if (!el) { out.innerHTML = '<div class="hz7-prog"><b></b><i><em></em></i><p>문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고, AIMarker 판정 기준 1.5로 판정합니다. 표지 · 목차 · 참고문헌 같은 줄은 빼고 본문 문장만 셉니다. 같은 글은 언제나 같은 결과가 나옵니다.</p></div>'; el = $('.hz7-prog', out); stat(label); }
     $('b', el).textContent = label + (n > 1 ? ' ' + i + ' / ' + n : ''); $('em', el).style.width = Math.max(6, pct) + '%';
     el.classList.toggle('ind', n <= 1 && i < n);   // 한 번에 끝나는 검사는 흐르는 막대로
   }
@@ -549,7 +549,7 @@
   }
   function metaHtml(M) {
     return '<dl class="hz9-meta">' + (M.full ? '' : '<div class="free"><dt class="k-sr">보기 범위</dt><dd>무료 맛보기</dd></div>') +
-      '<div><dt>검사 번호</dt><dd>' + esc(M.cn || '-') + '</dd></div><div><dt>검사 시각</dt><dd>' + esc(stamp(M.at)) + '</dd></div><div><dt>판정 기준</dt><dd>' + esc(M.crit || 'AMJ-1.2') + '</dd></div></dl>';
+      '<div><dt>검사 번호</dt><dd>' + esc(M.cn || '-') + '</dd></div><div><dt>검사 시각</dt><dd>' + esc(stamp(M.at)) + '</dd></div><div><dt>판정 기준</dt><dd>' + esc(M.crit || 'AMJ-1.5') + '</dd></div></dl>';
   }
   function statsHtml(M) {
     var pct = function (a, b) { return b ? Math.round(a / b * 100) : 0; }, n = nAi(M), segN = M.segN || 0;
@@ -766,6 +766,10 @@
     return o.length < p0.length ? { text: o, part: '앞부분' } : { text: t.slice(0, HUM_MAX), part: '첫 문단' };
   }
   function keepFile() { return !!(S.src && S.src.hasDoc && srcLike(cur())); }
+  function outKind(t) {   // 13.23 내려받을 형식: 올린 확장자 그대로(.hwp · .hwpx · .docx 는 원본 위에, .pdf · .txt · .md 는 같은 형식의 새 파일), 붙여 넣은 글은 워드
+    var s = S.src; if (!s || !srcLike(t)) return 'docx';
+    return s.hasDoc ? s.kind : /^(pdf|txt|md)$/.test(s.kind) ? s.kind : 'docx';
+  }
   function srcLike(t) {   // 이 글이 올린 파일에서 나온 글인지(고치거나 다듬었어도 문단을 맞출 만큼 비슷하면)
     var s = S.src; if (!s || !t) return false;
     if (t === s.text) return true;
@@ -789,7 +793,7 @@
   function nextHtml(M) {
     var k = M.band.key; if (k === 'short') return '';
     var t = M.src || cur(), cost = humCost(chunk(t).parts), pk = packFor(cost), hot = k !== 'safe', n = nAi(M);
-    var li = ['말투는 원문에 맞춰 자동으로, 숫자와 이름, 인용은 그대로', '다듬기 전후 AI 작성률을 같은 기준으로 비교', keepFile() ? '올린 ' + S.src.kindKo + ' 파일 서식 그대로 받기' : '다듬은 글을 워드 파일로 받기'];
+    var li = ['말투는 원문에 맞춰 자동으로, 숫자와 이름, 인용은 그대로', '다듬기 전후 AI 작성률을 같은 기준으로 비교', keepFile() ? '올린 ' + S.src.kindKo + ' 파일 서식 그대로 받기' : outKind(cur()) === 'pdf' ? '다듬은 글을 PDF 파일로 받기' : /^(txt|md)$/.test(outKind(cur())) ? '다듬은 글을 텍스트 파일로 받기' : '다듬은 글을 워드 파일로 받기'];
     var sig = !hot && M.sigN > 0;   // 13.2b 안전인데 AI처럼 읽히는 표현이 있을 때
     var title = hot ? 'AI 문장 패턴을 자연스럽게 다듬어 드려요' : sig ? 'AI처럼 읽히는 표현 ' + n2(M.sigN) + '곳을 자연스럽게 다듬어 드려요' : '지금은 손볼 곳이 거의 없어요';
     var sub = hot ? (n ? 'AI로 보이는 문장 ' + n2(n) + '개를 포함해 ' : '') + '글 전체의 AI 말버릇과 번역투를 사람 말투에 가깝게 다듬습니다.' : sig ? '번역투, 빈말, 틀에 박힌 연결어를 사람 말투에 가깝게 바꾸고, 바꾸기 전후를 같은 기준으로 비교합니다. 사람이 쓴 글도 이런 표현 때문에 의심받을 수 있습니다.' : 'AI 작성 패턴도, AI처럼 읽히는 표현도 찾지 못했습니다. 그래도 말투와 흐름을 더 다듬고 싶다면 글 전체 휴머나이징을 할 수 있습니다.';
@@ -1165,31 +1169,45 @@
       (band ? '<p class="hz9-hl xs">' + stIco(band.key) + '<span>' + esc(headOf(band)) + '</span></p>' + chip(band) : '<p class="hz9-mute">AI 작성률</p>') +
       '<i class="hz9-bar" aria-hidden="true"><i style="width:' + Math.max(0, Math.min(100, rate)) + '%"></i></i></div>';
   }
-  /* 12.1 다듬은 글을 파일로: 올린 .docx · .hwpx 는 바뀐 문단만 갈아 끼워 같은 형식으로, 그 밖은 새 워드 파일 · 텍스트 */
+  /* 13.23 다듬은 글을 파일로: 올린 확장자 그대로. .hwp · .hwpx · .docx 는 원본에서 바뀐 문단만 갈아 끼우고, .pdf 는 새로 조판, .txt · .md 는 같은 텍스트. 붙여 넣은 글은 새 워드 파일 */
+  var OUT_LBL = { hwp: '한글 파일로 받기(.hwp)', hwpx: '한글 파일로 받기(.hwpx)', docx: '워드 파일로 받기(.docx)', pdf: 'PDF 파일로 받기(.pdf)', txt: '텍스트 파일로 받기(.txt)', md: '텍스트 파일로 받기(.md)' };
   function fileBar(F) {
     if (!F || !F.text || !window.AMTextIn) return '';
-    var same = !!(S.src && S.src.hasDoc && srcLike(F.src)), k = same ? S.src.kind : 'docx';
-    var main = same ? (k === 'hwpx' ? '한글 파일로 받기(.hwpx)' : '워드 파일로 받기(.docx)') : '워드 파일로 받기(.docx)';
-    var note = same ? '올린 “' + S.src.name + '”의 서식, 표, 그림, 각주는 그대로 두고 바뀐 문단의 글만 바꿨습니다.' + (S.src.cut ? ' 앞 ' + n2(S.src.cutAt) + '자까지 다듬었고, 뒤쪽은 원래 글 그대로입니다.' : '') :
-      S.src && (S.src.kind === 'hwp' || S.src.kind === 'pdf') && srcLike(F.src) ? S.src.kindKo + ' 파일은 같은 형식으로 다시 만들 수 없어 워드 파일로 드립니다(한글에서도 열립니다).' :
-      S.src && S.src.hasDoc ? '글이 많이 바뀌어 올린 파일과 문단을 맞출 수 없어 새 워드 파일로 드립니다.' : '';
-    return '<div class="hz12-files">' + ico('download') + '<div class="t"><b>다듬은 글 받기</b>' + (note ? '<span>' + esc(note) + '</span>' : '') + '</div><div class="b"><button class="btn btn-p btn-s" type="button" data-act="getfile" data-kind="' + k + '">' + esc(main) + '</button><button class="btn btn-g btn-s" type="button" data-act="getfile" data-kind="txt">텍스트(.txt)</button></div></div>';
+    var s = S.src, k = outKind(F.src), same = !!(s && s.hasDoc && k === s.kind && srcLike(F.src)), mine = !!(s && k === s.kind && srcLike(F.src));
+    var cutN = mine && s.cut ? ' 앞 ' + n2(s.cutAt) + '자까지 다듬었고, 뒤쪽은 원래 글 그대로입니다.' : '';
+    var note = same ? '올린 “' + s.name + '”의 서식, 표, 그림, 각주는 그대로 두고 바뀐 문단의 글만 바꿨습니다.' + cutN :
+      k === 'pdf' ? 'PDF는 글자 자리가 고정된 형식이라 그림과 표 배치는 옮기지 못합니다. 다듬은 글을 새로 조판한 PDF로 드립니다. 서식까지 그대로 받으려면 원본 한글이나 워드 파일을 올려 주세요.' + cutN :
+      k === 'txt' || k === 'md' ? '올린 파일과 같은 텍스트 형식(.' + k + ')으로 드립니다.' + cutN :
+      s && s.hasDoc ? '글이 많이 바뀌어 올린 파일과 문단을 맞출 수 없어 새 워드 파일로 드립니다.' : '';
+    var more = k === 'txt' || k === 'md' ? '<button class="btn btn-g btn-s" type="button" data-act="getfile" data-kind="docx">워드(.docx)</button>' :
+      (k === 'pdf' ? '<button class="btn btn-g btn-s" type="button" data-act="getfile" data-kind="docx">워드(.docx)</button>' : '') + '<button class="btn btn-g btn-s" type="button" data-act="getfile" data-kind="txt">텍스트(.txt)</button>';
+    return '<div class="hz12-files">' + ico('download') + '<div class="t"><b>다듬은 글 받기</b>' + (note ? '<span>' + esc(note) + '</span>' : '') + '</div><div class="b"><button class="btn btn-p btn-s" type="button" data-act="getfile" data-kind="' + k + '">' + esc(OUT_LBL[k] || OUT_LBL.docx) + '</button>' + more + '</div></div>';
   }
   function baseName() { var n = (S.src && (!S.src.edited || srcLike(cur())) && S.src.name) || 'AIMarker'; return n.replace(/\.[^.]+$/, '').slice(0, 60) || 'AIMarker'; }
   function getFile(kind) {
     var F = S.fx; if (!F || !F.text || !window.AMTextIn) return;
-    var name = baseName() + '_휴머나이징';
-    if (kind === 'txt') { AMTextIn.save(new Blob([F.text.replace(/\n/g, '\r\n')], { type: 'text/plain;charset=utf-8' }), name + '.txt'); stat('텍스트 파일을 내려받았습니다'); return; }
-    var same = !!(S.src && S.src.hasDoc && srcLike(F.src)) && (kind === 'hwpx' || kind === 'docx');
-    var p = same ? AMTextIn.read(S.src.file).then(function (src) { return AMTextIn.exportSame(src, F.text, { cutAt: S.src.cut ? S.src.cutAt : 0 }); }) : Promise.resolve(null);   // 원본을 새로 읽어 그 위에(여러 번 받아도 같은 결과)
+    var name = baseName() + '_휴머나이징', s = S.src, mine = !!(s && srcLike(F.src));
     var tell = function (m) { var t0 = out.querySelector('.hz12-files .t'); if (!t0) return; var o = t0.querySelector('.more'); if (!o) { o = document.createElement('span'); o.className = 'more'; t0.appendChild(o); } o.textContent = m; };
+    var fail = function (e) { stat('파일을 만들지 못했습니다'); tell(''); var m = out.querySelector('.hz12-files .t'); if (m) m.insertAdjacentHTML('beforeend', '<span class="bad">' + esc((e && e.code && e.message) || '파일을 만들지 못했어요. 텍스트로 받거나 복사해 쓰세요.') + '</span>'); };
+    var KO = { hwp: '한글', hwpx: '한글', docx: '워드', pdf: 'PDF', txt: '텍스트', md: '텍스트' };
+    var done = function (blob, ext) { AMTextIn.save(blob, name + '.' + ext); stat((KO[ext] || '') + ' 파일을 내려받았습니다'); };
+    // 5만 자에서 잘라 넣은 파일이면 뒤쪽 원래 글을 이어 붙임(.txt · .md · .pdf. 한글 · 워드는 exportSame 이 원본 위에서 처리)
+    var whole = function () { return mine && s.cut && s.file && s.kind === kind ? AMTextIn.read(s.file).then(function (r) { return F.text + r.text.slice(s.cutAt); }, function () { return F.text; }) : Promise.resolve(F.text); };
+    if (kind === 'txt' || kind === 'md') { whole().then(function (t) { done(new Blob([t.replace(/\n/g, '\r\n')], { type: 'text/plain;charset=utf-8' }), kind); }).catch(fail); return; }
+    if (kind === 'pdf') {
+      tell('PDF를 만드는 중입니다. 글꼴을 처음 받을 때는 조금 걸립니다.');
+      whole().then(function (t) { return AMTextIn.newPdf(t, baseName()); }).then(function (b) { tell(''); done(b, 'pdf'); }).catch(fail);
+      return;
+    }
+    var same = !!(mine && s.hasDoc && s.file) && kind === s.kind && (kind === 'hwpx' || kind === 'docx' || kind === 'hwp');
+    var p = same ? AMTextIn.read(s.file).then(function (src) { return AMTextIn.exportSame(src, F.text, { cutAt: s.cut ? s.cutAt : 0 }); }).catch(function () { return null; }) : Promise.resolve(null);   // 원본을 새로 읽어 그 위에(여러 번 받아도 같은 결과)
     p.then(function (r) {
       if (r) { if (r.kept) tell('각주나 링크, 인용 필드의 글이 바뀐 문단 ' + n2(r.kept) + '개는 원래 글 그대로 두었어요. 그 문단은 화면의 바꾼 글을 보고 직접 고쳐 주세요.'); return r; }
       if (same) tell('올린 파일과 문단을 맞추지 못해 새 워드 파일로 드렸어요.');
       return AMTextIn.newDocx(F.text, baseName()).then(function (b) { return { blob: b, ext: 'docx' }; });
     })
-      .then(function (r) { AMTextIn.save(r.blob, name + '.' + r.ext); stat((r.ext === 'hwpx' ? '한글' : '워드') + ' 파일을 내려받았습니다'); })
-      .catch(function (e) { stat('파일을 만들지 못했습니다'); var m = out.querySelector('.hz12-files .t'); if (m) m.insertAdjacentHTML('beforeend', '<span class="bad">' + esc((e && e.message) || '파일을 만들지 못했어요. 텍스트로 받거나 복사해 쓰세요.') + '</span>'); });
+      .then(function (r) { done(r.blob, r.ext); })
+      .catch(fail);
   }
   function renderFix() {
     setStep(3, true); collapse(true); outShown();
@@ -1241,7 +1259,7 @@
     var bars = (M.feat || []).map(function (f) { return '<div class="rb"><span>' + esc(f.name) + '</span><i><em style="width:' + Math.max(2, f.share) + '%"></em></i><b>' + f.share + '%</b></div>'; }).join('');
     var tiles = M.segs.map(function (g) { return '<span class="rt' + (g.ai ? ' ai' : '') + '"><b>' + pad3(g.no) + '</b>' + g.share + '%</span>'; }).join('');
     var docName = S.docName ? esc(S.docName) : '붙여 넣은 글';
-    el.innerHTML = '<div class="rp8"><header class="rp8-top"><div><small>AIMarker · aimarker.kr</small><h1>AI 작성률 검사 결과상세내역서</h1></div><dl><div><dt>검사 번호</dt><dd>' + esc(M.cn) + '</dd></div><div><dt>발행일</dt><dd>' + esc(stamp(new Date())) + '</dd></div><div><dt>판정 기준</dt><dd>' + esc(M.critName || 'AIMarker 판정 기준 1.2') + '</dd></div><div><dt>판별 모델</dt><dd>' + esc(M.model || 'det') + '</dd></div></dl></header>' +
+    el.innerHTML = '<div class="rp8"><header class="rp8-top"><div><small>AIMarker · aimarker.kr</small><h1>AI 작성률 검사 결과상세내역서</h1></div><dl><div><dt>검사 번호</dt><dd>' + esc(M.cn) + '</dd></div><div><dt>발행일</dt><dd>' + esc(stamp(new Date())) + '</dd></div><div><dt>판정 기준</dt><dd>' + esc(M.critName || 'AIMarker 판정 기준 1.5') + '</dd></div><div><dt>판별 모델</dt><dd>' + esc(M.model || 'det') + '</dd></div></dl></header>' +
       '<section class="rp8-sum ' + bandCls(b.key) + '"><div class="g">' + gauge(M.rate, b, { chars: M.chars }) + '</div><div class="j"><p class="hz9-hl">' + stIco(b.key) + '<span>' + esc(headOf(b)) + '</span></p><p class="sub">' + esc(subLine(M)) + '</p><div class="hz9-row"><span class="hz9-lbl">판정</span>' + chip(b) + '</div>' + scaleFor(M) + whyHtml(b) + '</div></section>' +
       '<table class="rp8-kv"><tr><th>검사한 글</th><td>' + docName + ' · ' + n2(M.chars) + '자(공백 제외) · ' + n2(M.n) + '문장</td><th>' + (isCr() ? '토큰 코드' : '이용권') + '</th><td>' + esc(S.ps ? (S.ps.credit ? (S.ps.biz ? '기업 토큰' : '토큰') : S.ps.name) : '토큰') + '</td></tr><tr><th>AI 검출 글자 수</th><td>' + n2(fChars(M)) + ' / ' + n2(M.chars) + '자(본문의 ' + (M.chars ? Math.round(fChars(M) / M.chars * 100) : 0) + '%, AI 작성률 ' + M.rate + '%)</td><th>AI 검출 구간 수</th><td>' + M.segAi + ' / ' + segN + '구간(' + pct(M.segAi, segN) + '%)</td></tr><tr><th>AI 검출 문장 수</th><td>' + n + ' / ' + n2(M.n) + '문장(' + pct(n, M.n) + '%)</td><th>AI 대화창 흔적</th><td>' + (M.chat ? M.chatList.map(function (c) { return esc(c.name) + ' ' + c.n + '곳'; }).join(', ') : '없음') + '</td></tr></table>' +
       '<h2>종합 분석 의견</h2><ul class="rp8-op">' + M.opinion.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul><p class="rp8-adv ' + bandCls(b.key) + '"><b>' + ({ unfit: '개선 필요', risk: '수정 권고' }[b.key] || '참고') + '</b>' + esc(ADV[b.key] || ADV.short) + '</p>' + (M.opDetail.length ? '<ul class="rp8-fix">' + M.opDetail.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') +
@@ -1250,7 +1268,7 @@
       '<h2>02 · 통합 원문 전문 분석</h2>' + legendHtml() + legendNote() + '<div class="rp8-doc">' + docH + '</div>' +
       (rows ? '<h2>03 · AI 검출 구간 요약</h2><table class="rp8-t"><thead><tr><th>구간</th><th>글자 수</th><th>AI 글자</th><th>비중</th><th>AI 검출 문장</th><th>주요 특성</th><th>권고</th></tr></thead><tbody>' + rows + '</tbody></table>' : '') +
       '<h2>04 · 문장 판정 분포</h2><div class="rp8-dist"><div class="rd"><i class="ai" style="width:' + pct(n, M.n) + '%"></i></div><p><span><i class="ai"></i>AI 검출 문장 <b>' + n + '문장</b>(' + pct(n, M.n) + '%)</span><span><i></i>표시 없음 <b>' + Math.max(0, M.n - n) + '문장</b></span></p></div>' +
-      '<h2>05 · 판정 기준(' + esc(M.critName || 'AIMarker 판정 기준 1.2') + ')</h2><ul class="rp8-crit"><li><b>AI 검출 문장</b> 판별 모델이 앞뒤 문장과 함께 보고 매긴 AI 점수가 ' + J.MID + ' 이상인 문장, 또는 ' + J.MID + ' 미만이어도 앞뒤 문맥까지 본 구간 판정에서 AI로 검출된 문장. 결과에는 한 가지 표시(AI 검출)로 나타냄</li><li><b>AI 작성률</b> AI 검출 문장의 글자 수 ÷ 전체 글자 수(공백 제외)</li><li><b>구간</b> 문단 단위(30자 미만은 다음 문단과 합치고 1,000자를 넘으면 문장 경계에서 나눔). 구간 글자의 ' + J.SEG_AI + '% 이상이 AI 검출 문장이면 검출 구간</li><li><b>부적합(AI 검출됨)</b> 작성률 ' + J.UNFIT_RATE + '% 이상, 또는 검출 구간이 전체의 절반 이상(2구간 이상일 때), 또는 AI 대화창 흔적 1곳 이상</li><li><b>고위험(AI 일부 검출)</b> 작성률 ' + J.RISK_RATE + '% 이상, 또는 검출 구간 1곳 이상, 또는 AI 점수 ' + J.MID + ' 이상 문장 1개 이상</li><li><b>안전(AI 검출 안 됨)</b> 위에 해당하지 않음 · ' + J.SHORT + '자 미만은 판단 보류</li></ul>' +
+      '<h2>05 · 판정 기준(' + esc(M.critName || 'AIMarker 판정 기준 1.5') + ')</h2><ul class="rp8-crit"><li><b>AI 검출 문장</b> 판별 모델이 앞뒤 문장과 함께 보고 매긴 AI 점수가 ' + J.MID + ' 이상인 문장, 또는 ' + J.MID + ' 미만이어도 앞뒤 문맥까지 본 구간 판정에서 AI로 검출된 문장. 결과에는 한 가지 표시(AI 검출)로 나타냄</li><li><b>AI 작성률</b> 문장마다 AI 점수에 따른 AI 가능성(7~92%)을 글자 수(공백 제외)만큼 반영해 더한 값</li>' + (M.ck ? '<li><b>논문 · 연구 글</b> 다른 AI 검사기의 실제 결과확인서와 대조해 맞춘 엄격 기준으로 문장 점수를 매김. 본문 문장만 세므로 목차 · 표 · 참고문헌까지 넣어 나누는 검사기의 수치보다 높게 나올 수 있음</li>' : '') + '<li><b>구간</b> 문단 단위(30자 미만은 다음 문단과 합치고 1,000자를 넘으면 문장 경계에서 나눔). 구간 글자의 ' + J.SEG_AI + '% 이상이 AI 검출 문장이면 검출 구간</li><li><b>부적합(AI 검출됨)</b> 작성률 ' + J.UNFIT_RATE + '% 이상, 또는 검출 구간이 전체의 절반 이상(2구간 이상일 때), 또는 AI 대화창 흔적 1곳 이상</li><li><b>고위험(AI 일부 검출)</b> 작성률 ' + J.RISK_RATE + '% 이상, 또는 검출 구간 1곳 이상, 또는 AI 점수 ' + J.MID + ' 이상 문장 1개 이상</li><li><b>안전(AI 검출 안 됨)</b> 위에 해당하지 않음 · ' + J.SHORT + '자 미만은 판단 보류</li></ul>' +
       '<footer class="rp8-note">본 결과상세내역서는 참고용 분석 자료이며, 최종 판단은 제출처의 기준과 심사자의 판단에 따릅니다. AI 작성률과 판정은 판별 모델과 정해진 판정 기준으로 계산한 추정값이며 증명이 아니고, 법률 자문이 아닙니다. AI를 사용하지 않았다는 증명서가 아닙니다. 사람이 쓴 글도 높게, AI가 쓴 글도 낮게 나올 수 있으며 다른 검사기와 결과가 다를 수 있습니다. 같은 글을 다시 넣으면 같은 검사 번호와 같은 결과가 나옵니다. 결과만으로 다른 사람을 판단하지 마세요. 글은 저장하지 않으며 이 결과상세내역서는 이용자의 브라우저에서 만들어졌습니다. AIMarker(aimarker.kr) · 운영 성균관컨설팅</footer></div>';
     var done = function () { document.body.classList.remove('hz7-printing'); window.removeEventListener('afterprint', done); };
     window.addEventListener('afterprint', done);
