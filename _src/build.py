@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261112a"
+VER = "20261112b"
 TODAY = "2026-11-06"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -228,11 +228,14 @@ CREDIT_COST = {"unit": (100, 0.2, 1), "pro": (100, 0.4, 2)}   # (글자 수 단�
 # 13.17(10.31) 개인 토큰 새 요금(대표): 월 구독 없이 한 번 충전, 많이 충전할수록 토큰당 가격이 낮아짐(더 드리는 토큰 없음, cr = base).
 # 서버 AM서버.gs 1.2.0 lt · pl · pr · mx · assets/humanize.js PRODS · assets/tok.js PK 와 같게. save = 플러스(토큰당 약 66원)보다 토큰당 절약(%)
 CREDITS = [
-    {"id": "lt", "name": "라이트", "cr": 100, "base": 100, "price": 9900, "per": "99원", "who": "간단한 문장 수정"},
-    {"id": "pl", "name": "플러스", "cr": 300, "base": 300, "price": 19900, "per": "약 66원", "who": "일반적인 문서 작업"},
-    {"id": "pr", "name": "프로", "cr": 750, "base": 750, "price": 39900, "per": "약 53원", "who": "넉넉한 토큰, 더 높은 가성비", "tag": "BEST 추천", "save": 20},
-    {"id": "mx", "name": "맥스", "cr": 1500, "base": 1500, "price": 69900, "per": "약 47원", "who": "최대 토큰 제공", "tag": "최고 혜택", "save": 30},
+    {"id": "lt", "name": "라이트", "cr": 100, "base": 100, "price": 9900, "per": "99원", "who": "간단한 문장 수정", "doc": "레포트", "pg": 10},
+    {"id": "pl", "name": "플러스", "cr": 300, "base": 300, "price": 19900, "per": "약 66원", "who": "일반적인 문서 작업", "doc": "레포트", "pg": 30},
+    {"id": "pr", "name": "프로", "cr": 750, "base": 750, "price": 39900, "per": "약 53원", "who": "넉넉한 토큰, 더 높은 가성비", "tag": "BEST 추천", "save": 20, "doc": "논문", "pg": 80},
+    {"id": "mx", "name": "맥스", "cr": 1500, "base": 1500, "price": 69900, "per": "약 47원", "who": "최대 토큰 제공", "tag": "최고 혜택", "save": 30, "doc": "논문", "pg": 200},
 ]
+# 13.24(11.12 대표) 충전 칸 쓰임은 '레포트 몇 편' 대신 '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 몇 페이지'(doc · pg, 대표가 정한 값).
+# 기준: 1페이지 약 1,200자(공백 포함)를 전체 검사하고 휴머나이징하면 7.2토큰 → 셈한 값(13 · 41 · 104 · 208쪽)보다 적거나 같게 적음. assets/humanize.js PRODS doc · pg · PG_CHARS 와 같게
+PAGE_CHARS = 1200
 
 
 def credit_cost(kind, n):
@@ -257,6 +260,20 @@ def report_cost():
     return round(credit_cost("unit", 3000) + credit_cost("pro", 3000), 1)
 
 
+def page_cost():
+    """13.24 1페이지(PAGE_CHARS 자): 검사와 휴머나이징"""
+    return round(credit_cost("unit", PAGE_CHARS) + credit_cost("pro", PAGE_CHARS), 1)
+
+
+def use_html(t):
+    """13.24 충전 칸 쓰임 한 줄: pg 가 있으면 레포트 · 논문(doc) 약 몇 페이지, 없으면 레포트 몇 편. 적은 쪽수가 셈한 값을 넘으면 빌드를 멈춤(과장 막기)"""
+    if t.get("pg"):
+        if t["pg"] > t["cr"] / page_cost() + 1e-9:
+            raise SystemExit("CREDITS %s: pg %s 가 셈한 쪽수(%.1f)보다 큽니다" % (t["id"], t["pg"], t["cr"] / page_cost()))
+        return '%s 검사와 휴머나이징 <b>약 %s페이지</b>' % (t.get("doc", "논문"), format(t["pg"], ","))
+    return '레포트(3,000자) 검사와 휴머나이징 <b>약 %s편</b>' % format(int(t["cr"] // report_cost()), ",")
+
+
 def pack_html(t, root, mode="link", biz=False):
     """13.2 충전 칸 → 13.7: 값(원)은 적지 않고 토큰만. 이름 → 토큰(더 받는 토큰) → 쓰임 → 충전. 금액은 결제 단계(충전 창 · 결제 시트)에서 한 번만 보임.
     개인은 글 검사 페이지 충전 창, 기업은 결제 시트(성균관컨설팅 결제 페이지로)"""
@@ -276,7 +293,7 @@ def pack_html(t, root, mode="link", biz=False):
         use = t.get("use") or ('AI 마킹 스탠다드 <b>약 %s개월</b> 또는 레포트(3,000자) 검사와 휴머나이징 약 %s편' % (format(int(t["cr"] // (9900 // TOKEN_WON)), ","), format(n, ",")))
         nm = t["name"]
     else:
-        use = '레포트(3,000자) 검사와 휴머나이징 <b>약 %s편</b>' % format(n, ",")
+        use = use_html(t)
         nm = "휴머나이징 " + t["name"]
     return ('<article class="cr13-pack%s" id="pk-%s">%s<p class="nm">%s</p><h3>%s<small>토큰</small></h3>%s'
             '<p class="use">%s</p>%s</article>'
@@ -299,9 +316,9 @@ def pack17_html(t, root, mode="link"):
     sv = ('<p class="tk17-sv">플러스보다 토큰당 <b>약 %d%% 절약</b></p>' % t["save"]) if t.get("save") else ''
     return ('<article class="tk17-pack%s" id="pk-%s">%s<p class="nm"><b>%s</b><span>%s</span></p>'
             '<p class="tk"><b>%s</b><small>토큰</small></p><p class="pr"><b>%s원</b><span>토큰당 %s</span></p>%s'
-            '<p class="use">레포트(3,000자) 검사와 휴머나이징 <b>약 %s편</b></p>%s</article>'
+            '<p class="use">%s</p>%s</article>'
             % (cls, t["id"], ('<span class="tag">%s</span>' % tag) if tag else "", t["name"], t["who"],
-               tk(t["cr"]), format(t["price"], ","), t["per"], sv, format(n, ","), btn))
+               tk(t["cr"]), format(t["price"], ","), t["per"], sv, use_html(t), btn))
 
 
 def credit_table_html():
@@ -330,8 +347,8 @@ def credits_html(mode, root):
     """토큰 충전 칸 네 개(13.17 새 요금, 요금 페이지와 같은 칸). mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
     feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "남은 토큰은 사라지지 않고 이어서, 모자라면 같은 코드에 충전"]
     allf = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in feat)
-    return ('<p class="tk17-unit"><b>월 구독 없이 한 번 충전</b><span>많이 충전할수록 토큰당 가격이 낮아집니다 · 레포트(3,000자) 한 편 검사와 휴머나이징 %s토큰</span></p><div class="tk17-packs">%s</div>'
-            '<div class="cr-all"><b>어느 충전이든 똑같이 열립니다</b><ul>%s</ul></div>') % (tk(report_cost()), "".join(pack17_html(t, root, mode=mode) for t in CREDITS), allf)
+    return ('<p class="tk17-unit"><b>월 구독 없이 한 번 충전</b><span>많이 충전할수록 토큰당 가격이 낮아집니다 · 1페이지(약 %s자) 검사와 휴머나이징 %s토큰</span></p><div class="tk17-packs">%s</div>'
+            '<div class="cr-all"><b>어느 충전이든 똑같이 열립니다</b><ul>%s</ul></div>') % (format(PAGE_CHARS, ","), tk(page_cost()), "".join(pack17_html(t, root, mode=mode) for t in CREDITS), allf)
 
 
 def credit_cost_html():
@@ -352,7 +369,8 @@ def credit_cost_html():
 def credit_packs_html(root):
     """13.2 토큰 충전 칸: [개인 · 학생 | 회사 · 기관 · 학교] 탭(assets/tok.js). 스크립트가 없으면 두 묶음이 모두 보임.
     개인: 부가세 포함, 글 검사 페이지 충전 창. 회사: 부가세 별도, 세금계산서, 결제 시트"""
-    me = '<div class="tk17-packs">%s</div>%s%s' % ("".join(pack17_html(t, root) for t in CREDITS), credit_table_html(), credit_guide_html())   # 13.17 새 요금 칸 + 상품별 구성 + 이용 안내
+    pgn = '<p class="k-small tk17-pgn">페이지 수는 1페이지 약 %s자(공백 포함)를 전체 검사하고 휴머나이징할 때(1페이지 %s토큰)를 기준으로 여유 있게 적었습니다. 토큰은 넣은 글자 수만큼만 빠집니다.</p>' % (format(PAGE_CHARS, ","), tk(page_cost()))   # 13.24
+    me = '<div class="tk17-packs">%s</div>%s%s%s' % ("".join(pack17_html(t, root) for t in CREDITS), pgn, credit_table_html(), credit_guide_html())   # 13.17 새 요금 칸 + 상품별 구성 + 이용 안내
     biz = []
     for t in CATALOG["credit"]["tiers"]:
         if not t.get("m"):

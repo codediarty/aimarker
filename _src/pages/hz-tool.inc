@@ -46,10 +46,11 @@
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>
       <fieldset class="hz7-prod hz18-packs"><legend class="sr">충전할 토큰</legend>
-        <label><input type="radio" name="product" value="lt"><span><b class="nm">라이트</b><b class="tk">100<small>토큰</small></b><b class="pr">9,900원<small>토큰당 99원</small></b><small class="ds">간단한 문장 수정 · 레포트(3,000자) 약 5편</small></span></label>
-        <label><input type="radio" name="product" value="pl"><span><b class="nm">플러스</b><b class="tk">300<small>토큰</small></b><b class="pr">19,900원<small>토큰당 약 66원</small></b><small class="ds">일반적인 문서 작업 · 레포트(3,000자) 약 16편</small></span></label>
-        <label class="best"><input type="radio" name="product" value="pr" checked><span><i class="tg">BEST 추천</i><b class="nm">프로</b><b class="tk">750<small>토큰</small></b><b class="pr">39,900원<small>토큰당 약 53원</small></b><i class="hz17-sv">플러스보다 토큰당 약 20% 절약</i><small class="ds">레포트(3,000자) 약 41편</small></span></label>
-        <label class="top"><input type="radio" name="product" value="mx"><span><i class="tg top">최고 혜택</i><b class="nm">맥스</b><b class="tk">1,500<small>토큰</small></b><b class="pr">69,900원<small>토큰당 약 47원</small></b><i class="hz17-sv">플러스보다 토큰당 약 30% 절약</i><small class="ds">레포트(3,000자) 약 83편</small></span></label>
+        <label><input type="radio" name="product" value="lt"><span><b class="nm">라이트</b><b class="tk">100<small>토큰</small></b><b class="pr">9,900원<small>토큰당 99원</small></b><small class="ds">레포트 검사와 휴머나이징 약 10페이지</small></span></label>
+        <label><input type="radio" name="product" value="pl"><span><b class="nm">플러스</b><b class="tk">300<small>토큰</small></b><b class="pr">19,900원<small>토큰당 약 66원</small></b><small class="ds">레포트 검사와 휴머나이징 약 30페이지</small></span></label>
+        <label class="best"><input type="radio" name="product" value="pr" checked><span><i class="tg">BEST 추천</i><b class="nm">프로</b><b class="tk">750<small>토큰</small></b><b class="pr">39,900원<small>토큰당 약 53원</small></b><i class="hz17-sv">플러스보다 토큰당 약 20% 절약</i><small class="ds">논문 검사와 휴머나이징 약 80페이지</small></span></label>
+        <label class="top"><input type="radio" name="product" value="mx"><span><i class="tg top">최고 혜택</i><b class="nm">맥스</b><b class="tk">1,500<small>토큰</small></b><b class="pr">69,900원<small>토큰당 약 47원</small></b><i class="hz17-sv">플러스보다 토큰당 약 30% 절약</i><small class="ds">논문 검사와 휴머나이징 약 200페이지</small></span></label>
+        <p class="hz20-pg">페이지 수는 1페이지 약 1,200자 기준</p>
       </fieldset>
       <div class="hz19-gate" id="hzBuyPay"></div>
       <div class="hz19-fb" id="hzBuyFb" hidden>

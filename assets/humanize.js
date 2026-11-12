@@ -1,4 +1,7 @@
 /* AIMarker AI 작성률 검사 · 휴머나이징 12.1 (2026.10.21 오후) → 13.13 (2026.10.31)
+   - 13.24(2026.11.12 밤): ③ 다듬기 칸 머리 문구를 'AI 작성률에 필터링되는 문장을 인간화(휴머나이징)해 드립니다'로(예전 머리 문구는 설명 첫 문장으로, nextHtml).
+     넣은 글이 없을 때 안내는 파일 먼저 + 그 자리 '파일 올리기'(need · data-act pick). 예시 창 'AI 패턴 줄이기'(k.js focusTool)는 #hzCheck 를 누른 것과 같음.
+     충전 칸 설명은 '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 N페이지'(PRODS doc · pg = 대표가 정한 값, 1페이지 약 1,200자로 셈한 값보다 적거나 같게. build.py CREDITS 와 같게)
    - 13.17 요금(월 구독 없이 한 번 충전): 라이트 100 · 플러스 300 · 프로 750(BEST 추천, 기본) · 맥스 1,500토큰(아임웹 96 · 97 · 98 · 99, 결제하면 서버가 바로 확인해 보통 1분 안에 코드 메일, 13.18).
      무료 검사는 글 전체(5만 자까지, 6,000자 조각마다 같은 기준)를 한 번에 보고, 가장 뚜렷한 문장 2개만 열어 둠(나머지는 결제 뒤).
      결제하러 가는 동안 하던 일(글 · 올린 파일)을 이 브라우저에만 24시간 맡겨 두고(localStorage am_hz_job + IndexedDB), 메일 단추로 연 새 창이나
@@ -44,11 +47,12 @@
   var J = { HI: 85, MID: 65, SHORT: 60, SEG_AI: 20, UNFIT_RATE: 40, RISK_RATE: 20, UNFIT_SEG: 50,
     B: { unfit: ['부적합', '부적합 · 개선 필요'], risk: ['고위험', '고위험 · 수정 권고'], safe: ['안전', '안전 · AI 패턴 적음'], short: ['판단 보류', '판단 보류 · 글이 짧음'] } };
   var PRODS = [   // 13.17(10.31) 새 요금(대표): 라이트 · 플러스 · 프로(BEST 추천, 기본) · 맥스(최고 혜택) = 아임웹 96 · 97 · 98 · 99(build.py CREDITS 와 같게. 서버 products 는 결제 페이지 주소만 가져옴)
-    { id: 'lt', name: '라이트', price: 9900, cr: 100, base: 100, per: '99원', who: '간단한 문장 수정' },
-    { id: 'pl', name: '플러스', price: 19900, cr: 300, base: 300, per: '약 66원', who: '일반적인 문서 작업' },
-    { id: 'pr', name: '프로', price: 39900, cr: 750, base: 750, per: '약 53원', save: 20, badge: 'BEST 추천', best: 1, who: '넉넉한 토큰, 더 높은 가성비' },
-    { id: 'mx', name: '맥스', price: 69900, cr: 1500, base: 1500, per: '약 47원', save: 30, badge: '최고 혜택', top: 1, who: '최대 토큰 제공' }
-  ];
+    { id: 'lt', name: '라이트', price: 9900, cr: 100, base: 100, per: '99원', who: '간단한 문장 수정', doc: '레포트', pg: 10 },
+    { id: 'pl', name: '플러스', price: 19900, cr: 300, base: 300, per: '약 66원', who: '일반적인 문서 작업', doc: '레포트', pg: 30 },
+    { id: 'pr', name: '프로', price: 39900, cr: 750, base: 750, per: '약 53원', save: 20, badge: 'BEST 추천', best: 1, who: '넉넉한 토큰, 더 높은 가성비', doc: '논문', pg: 80 },
+    { id: 'mx', name: '맥스', price: 69900, cr: 1500, base: 1500, per: '약 47원', save: 30, badge: '최고 혜택', top: 1, who: '최대 토큰 제공', doc: '논문', pg: 200 }
+  ];   // 13.24 doc · pg = '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 몇 페이지'(대표가 정한 값. 1페이지 약 1,200자로 셈한 값보다 적거나 같음: build.py CREDITS 와 같게)
+  var PG_CHARS = 1200;
   var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
   var CR0 = { unit: { per: 100, cr: 0.2, min: 1 }, pro: { per: 100, cr: 0.4, min: 2 } }, ASK = 10;   // 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음
 
@@ -68,10 +72,10 @@
   function ssset(k, v) { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 저장 없이 */ } }
   function tone() { return 'auto'; }   // 12.1 말투는 늘 자동(올린 글을 보고 서버가 정함, 정한 말투는 결과에 표시)
   function toneFor() { var t = tone(); return t === 'auto' && S.toneUsed ? S.toneUsed : t; }   // 문장 도우미는 글 전체에서 정한 말투로
-  function withDesc(p) {   // 13.5 설명: 레포트(3,000자) 검사와 휴머나이징 몇 편 · 누구에게
+  function withDesc(p) {   // 13.5 설명: 레포트(3,000자) 검사와 휴머나이징 몇 편 · 누구에게 → 13.24 레포트 · 논문 검사와 휴머나이징 약 몇 페이지(pg 가 있는 칸)
     if (!p || !p.cr) return p;
     var cyc = r1(costOf('unit', 3000) + costOf('pro', 3000)), k = cyc ? Math.floor(r1(p.cr / cyc) + 1e-9) : 0, bn = r1(p.cr - (p.base || p.cr));
-    return Object.assign({}, p, { bonus: bn > 0 ? bn : 0, desc: k ? '레포트(3,000자) 약 ' + n2(k) + '편' : (p.who || '') });   // 13.7 짧게(값 · 대상 없이)
+    return Object.assign({}, p, { bonus: bn > 0 ? bn : 0, desc: p.pg ? (p.doc || '논문') + ' 검사와 휴머나이징 약 ' + n2(p.pg) + '페이지' : k ? '레포트(3,000자) 약 ' + n2(k) + '편' : (p.who || '') });   // 13.7 짧게(값 · 대상 없이)
   }
   function prodList() {   // 13.5 칸은 사이트 표(PRODS)가 기준. 서버 am.passinfo products 는 결제 페이지 주소(link)만 가져옴
     var L = (S.info && S.info.products) || [];
@@ -109,7 +113,7 @@
     stat('서버 응답이 늦어 한 번 더 보냈습니다');
   }
   function ico(name) {
-    var P = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', check: '<path d="M20 6 9 17l-5-5"/>', alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>', back: '<path d="M15 18l-6-6 6-6"/>', file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>', clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>', pen: '<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>', shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>', open: '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>' };
+    var P = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', check: '<path d="M20 6 9 17l-5-5"/>', alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>', back: '<path d="M15 18l-6-6 6-6"/>', file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>', clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>', upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>', pen: '<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>', shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>', open: '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>' };
     return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + (P[name] || '') + '</svg>';
   }
 
@@ -450,7 +454,15 @@
     out.innerHTML = '<div class="hz7-err"><b>' + (code === 'PASS_NEED' ? '토큰이 필요해요' : code === 'PASS_USED' && isCr() ? '토큰이 모자라요' : slow ? (e.name === 'TypeError' ? '연결하지 못했어요' : '응답이 늦어요') : '처리하지 못했어요') + '</b><span>' + esc(m) + '</span>' + (acts ? '<div class="row">' + acts + '</div>' : '') + '</div>'; stat(m);
     S.retry = retry || null; S.redo = redo || null;
   }
-  function need(t) { if (!String(t).replace(/\s+/g, '')) { collapse(false); try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); } out.innerHTML = '<div class="hz7-err">검사할 글을 먼저 넣어 주세요. 글을 붙여 넣거나 파일을 올리면 바로 검사합니다.</div>'; return false; } return true; }
+  function need(t) {   // 13.24 넣은 글이 없으면: 파일 먼저(올리기 단추를 안내 안에), 터치 화면은 글 칸에 커서를 두지 않음(자판이 안내를 가림)
+    if (String(t).replace(/\s+/g, '')) return true;
+    collapse(false);
+    out.innerHTML = '<div class="hz7-err hz20-need"><b>검사할 파일을 먼저 넣어 주세요</b><span>한글, 워드, PDF 파일을 올리거나 글을 붙여 넣으면 바로 검사합니다.</span>' + (fileIn ? '<div class="row"><button class="btn btn-p btn-s" type="button" data-act="pick">' + ico('upload') + '<span>파일 올리기</span></button></div>' : '') + '</div>';
+    stat('검사할 파일을 먼저 넣어 주세요. 파일을 올리거나 글을 붙여 넣으면 바로 검사합니다.');
+    var touch = window.matchMedia && matchMedia('(hover: none), (pointer: coarse)').matches, el = (touch && out.querySelector('[data-act="pick"]')) || ta;
+    try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
+    return false;
+  }
   function toOut() {   // 12.1 결과가 나오면 진행 단계부터 화면 위쪽에(접힌 글 · 판정이 한눈에)
     try {
       var tgt = stepsEl || out, r = tgt.getBoundingClientRect();
@@ -795,13 +807,13 @@
     var t = M.src || cur(), cost = humCost(chunk(t).parts), pk = packFor(cost), hot = k !== 'safe', n = nAi(M);
     var li = ['말투는 원문에 맞춰 자동으로, 숫자와 이름, 인용은 그대로', '다듬기 전후 AI 작성률을 같은 기준으로 비교', keepFile() ? '올린 ' + S.src.kindKo + ' 파일 서식 그대로 받기' : outKind(cur()) === 'pdf' ? '다듬은 글을 PDF 파일로 받기' : /^(txt|md)$/.test(outKind(cur())) ? '다듬은 글을 텍스트 파일로 받기' : '다듬은 글을 워드 파일로 받기'];
     var sig = !hot && M.sigN > 0;   // 13.2b 안전인데 AI처럼 읽히는 표현이 있을 때
-    var title = hot ? 'AI 문장 패턴을 자연스럽게 다듬어 드려요' : sig ? 'AI처럼 읽히는 표현 ' + n2(M.sigN) + '곳을 자연스럽게 다듬어 드려요' : '지금은 손볼 곳이 거의 없어요';
+    var title = hot ? 'AI 작성률에 필터링되는 문장을 인간화(휴머나이징)해 드립니다' : sig ? 'AI처럼 읽히는 표현 ' + n2(M.sigN) + '곳을 자연스럽게 다듬어 드려요' : '지금은 손볼 곳이 거의 없어요';
     var sub = hot ? (n ? 'AI로 보이는 문장 ' + n2(n) + '개를 포함해 ' : '') + '글 전체의 AI 말버릇과 번역투를 사람 말투에 가깝게 다듬습니다.' : sig ? '번역투, 빈말, 틀에 박힌 연결어를 사람 말투에 가깝게 바꾸고, 바꾸기 전후를 같은 기준으로 비교합니다. 사람이 쓴 글도 이런 표현 때문에 의심받을 수 있습니다.' : 'AI 작성 패턴도, AI처럼 읽히는 표현도 찾지 못했습니다. 그래도 말투와 흐름을 더 다듬고 싶다면 글 전체 휴머나이징을 할 수 있습니다.';
     var price;
     if (isCr()) price = crLeft() >= cost ? '남은 ' + tkw(crLeft()) + '에서 ' + tk(cost) + '토큰이 빠집니다.' : '남은 ' + tkw(crLeft()) + '으로는 모자라요. 같은 코드에 충전하면 이어서 다듬습니다.';
     else if (S.pass) price = '이용권의 휴머나이징 횟수로 셉니다.';
     else price = '이 글 전체는 <b>' + tk(cost) + '토큰</b>이에요. ' + esc(pk.name) + ' ' + tk(pk.cr) + '토큰(' + n2(pk.price) + '원)' + (pk.cr >= cost ? '이면 다듬고 <b>' + tk(pk.cr - cost) + '토큰</b>이 남아 다음 글에도 씁니다.' : '에 모자라는 만큼은 같은 코드에 충전해 이어서 다듬습니다.') + ' 결제하면 바로 메일로 토큰 코드가 오고, 이 글은 이어서 다듬어 드립니다.';
-    return '<section class="hz12-next ' + bandCls(k) + (hot ? ' hot' : sig ? ' sig' : ' calm') + '" aria-labelledby="hzNextT"><div class="l"><h3 id="hzNextT">' + esc(title) + '</h3><p class="sub">' + esc(sub) + '</p>' +
+    return '<section class="hz12-next ' + bandCls(k) + (hot ? ' hot' : sig ? ' sig' : ' calm') + '" aria-labelledby="hzNextT"><div class="l"><h3 id="hzNextT">' + (hot ? esc(title).replace('인간화(휴머나이징)해 드립니다', '<span class="nb"><em>인간화(휴머나이징)</em>해 드립니다</span>') : esc(title)) + '</h3><p class="sub">' + (hot ? '<b>AI 문장 패턴을 자연스럽게 다듬어 드려요.</b> ' : '') + esc(sub) + '</p>' +
       '<ul>' + li.map(function (x) { return '<li>' + ico('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></div>' +
       '<div class="r"><button class="btn btn-p btn-l" type="button" data-act="humall">' + ico('pen') + '<span>' + (S.pass ? '글 전체 휴머나이징 · ' + tk(cost) + '토큰' : '충전하고 글 전체 휴머나이징') + '</span></button><p class="price">' + price + '</p>' +
       (S.pass ? '' : '<button class="btn btn-g" type="button" data-act="humfree">' + freeTaste(t).part + ' 무료로 먼저 보기</button><button type="button" class="hz7-link" data-code data-intent="hum">토큰 코드가 있어요</button>') +
@@ -877,6 +889,7 @@
     if (act === 'help') { helper(); return; }
     if (act === 'alts') { alts(); return; }
     if (act === 'report') { report(); return; }
+    if (act === 'pick') { if (fileIn) fileIn.click(); return; }   // 13.24 빈 글 안내의 '파일 올리기'
     if (act === 'humall') { startHum(); return; }
     if (act === 'humfree') { setStep(3); pro(false, true); return; }
     if (act === 'fullcheck') { fullCheck(); return; }
@@ -1284,14 +1297,14 @@
   function prodsHtml(sel, noBest, need) {   // 13.17 칸: 배지 · 이름 · 토큰 · 가격(토큰당) · 절약, 이 글이 있으면 '이 글 N번'
     return prods().map(function (p) {
       var best = p.best && !noBest, k = need > 0 ? Math.floor(r1(p.cr / need) + 1e-9) : 0;
-      var sm = need > 0 ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : (p.save ? p.desc : (p.who ? p.who + ' · ' : '') + p.desc);
+      var sm = need > 0 ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : (p.pg || p.save ? p.desc : (p.who ? p.who + ' · ' : '') + p.desc);
       return '<label' + (best ? ' class="best"' : p.top ? ' class="top"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span>' +
         (best ? '<i class="tg">' + esc(p.badge || '추천') + '</i>' : p.top ? '<i class="tg top">' + esc(p.badge || '최고 혜택') + '</i>' : '') +
         '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b>' +
         (p.price ? '<b class="pr">' + n2(p.price) + '원' + (p.per ? '<small>토큰당 ' + esc(p.per) + '</small>' : '') + '</b>' : '') +
         (p.save ? '<i class="hz17-sv">플러스보다 토큰당 약 ' + p.save + '% 절약</i>' : '') +
         '<small class="ds">' + esc(sm) + '</small></span></label>';
-    }).join('');
+    }).join('') + (need > 0 ? '' : '<p class="hz20-pg">페이지 수는 1페이지 약 ' + n2(PG_CHARS) + '자 기준</p>');
   }
   function stepsHtml() {   // 바로 결제도, 결제 페이지도 없을 때(주문 → 결제 안내 메일): 결제 순서를 미리
     return '<ol class="hz13-steps" aria-label="결제 순서"><li><b>1</b><span>지금 주문<small>이메일만 적으면 됩니다</small></span></li><li><b>2</b><span>메일로 온 안내대로 카드 · 계좌이체 결제<small>결제 안내 메일은 영업일 하루 안에</small></span></li><li><b>3</b><span>메일로 받은 코드를 넣으면 바로 이어서<small>코드는 결제 확인 뒤 영업일 하루 안에</small></span></li></ol>';

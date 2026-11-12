@@ -182,12 +182,14 @@
       st.setAttribute('data-k', k || ''); st.innerHTML = stHtml(k, t);
     }
     function later(fn, ms) { var id = setTimeout(function () { T = T.filter(function (x) { return x !== id; }); fn(); }, ms); T.push(id); }
-    function focusTool() {   // '내 글로 해 보기': 검사 칸으로(결과가 나와 칸이 접혀 있으면 펼침)
-      var t = document.getElementById('hzText'); if (!t) { location.href = ROOT + 'humanize/'; return; }
+    function focusTool() {   // 13.24 'AI 패턴 줄이기': 'AI 작성률 무료 검사' 단추를 누른 것과 같음(넣은 글이 없으면 같은 안내가 뜸). 안내 · 진행 표시가 보이는 곳으로 옮김
+      var t = document.getElementById('hzText'), go = document.getElementById('hzCheck'), o = document.getElementById('hzOut');
+      if (!t || !go) { location.href = ROOT + 'humanize/'; return; }
       var inp = document.getElementById('hzIn'), ed = document.querySelector('#hzSum [data-act="edit"]');
       if (inp && inp.hidden && ed) ed.click();
-      t.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
-      setTimeout(function () { try { t.focus({ preventScroll: true }); } catch (e) { t.focus(); } }, RM ? 0 : 420);
+      go.click();
+      var tgt = (o && o.firstElementChild) || go, r = tgt.getBoundingClientRect(), vh = window.innerHeight || document.documentElement.clientHeight;
+      if (r.top < 84 || r.bottom > vh - 84) tgt.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
     }
     /* 낱말 단위로 바뀐 곳(뺀 말 · 넣은 말) */
     function diffOps(a, b) {
