@@ -1,11 +1,12 @@
 /* AIMarker 13.2 요금 페이지: '내 글은 얼마?' 계산기 · 토큰 충전 탭(개인 · 학생 | 회사 · 기관 · 학교)
    13.17 새 요금(라이트 · 플러스 · 프로 · 맥스). 셈은 글 검사 화면(assets/humanize.js)과 같은 식: 글자 수(공백 포함)를 6,000자씩 나눠 조각마다
-   100자 단위로 검사 0.2토큰(최소 1, 600자 이하는 0) · 휴머나이징 0.4토큰(최소 2). 값은 서버 PASS 단가 ÷ 10 */
+   100자 단위로 검사 0.4토큰(최소 2, 600자 이하는 0) · 휴머나이징 0.8토큰(최소 4). 값은 서버 PASS 단가 ÷ 10.
+   13.26(2026.11.19) 단가를 새 값으로. 이 계산기는 새로 충전하는 토큰의 값으로 셈(코드마다 값이 다르면 글 검사 화면이 그 코드에 맞춰 보여 줌) */
 (function () {
   'use strict';
   var root = document.body.getAttribute('data-root') || '';
   var TW = 100, CHUNK = 6000, HELP = 600, MAXC = 50000;
-  var U = { per: 100, cr: 0.2, min: 1 }, H = { per: 100, cr: 0.4, min: 2 };
+  var U = { per: 100, cr: 0.4, min: 2 }, H = { per: 100, cr: 0.8, min: 4 };
   var PK = [{ id: 'lt', nm: '라이트', price: 9900, cr: 100 }, { id: 'pl', nm: '플러스', price: 19900, cr: 300 }, { id: 'pr', nm: '프로', price: 39900, cr: 750, best: 1 }, { id: 'mx', nm: '맥스', price: 69900, cr: 1500 }];   // 13.17 표(humanize.js PRODS · build.py CREDITS 와 같게)
   function $(s, r) { return (r || document).querySelector(s); }
   function r1(x) { return Math.round(x * 10) / 10; }

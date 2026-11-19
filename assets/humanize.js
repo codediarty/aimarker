@@ -1,4 +1,7 @@
 /* AIMarker AI 작성률 검사 · 휴머나이징 12.1 (2026.10.21 오후) → 13.13 (2026.10.31)
+   - 13.26(2026.11.19) 글자 수 단가를 새 값으로: AI 작성률 검사 1,000자 4토큰(최소 2) · AI 휴머나이징 1,000자 8토큰(최소 4). 서버 AM서버.gs 1.3.0 과 같게.
+     코드마다 값이 다를 수 있음: 서버가 코드 상태(pass.rm)에 그 코드의 비율(새 값 1 · 그 전에 만든 코드 0.5)을 실어 주면 어림에 곱함(rateMul). rm 이 없으면(예전 판 서버) 서버 단가표 그대로.
+     예전 값 코드(rm < 1)에는 더 충전하지 않고 새 코드로 받음: 충전 창은 '어디에 충전할까요'를 감추고, 이 글에 드는 토큰을 새 코드의 값으로 보여 줌(openBuy · needLine).
    - 13.24(2026.11.12 밤): ③ 다듬기 칸 머리 문구를 'AI 작성률에 필터링되는 문장을 인간화(휴머나이징)해 드립니다'로(예전 머리 문구는 설명 첫 문장으로, nextHtml).
      넣은 글이 없을 때 안내는 파일 먼저 + 그 자리 '파일 올리기'(need · data-act pick). 예시 창 'AI 패턴 줄이기'(k.js focusTool)는 #hzCheck 를 누른 것과 같음.
      충전 칸 설명은 '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 N페이지'(PRODS doc · pg = 대표가 정한 값, 1페이지 약 1,200자로 셈한 값보다 적거나 같게. build.py CREDITS 와 같게)
@@ -14,7 +17,7 @@
      다듬기를 누르면 이 글에 드는 토큰을 보여 주고, 토큰이 없으면 모자라지 않는 가장 작은 충전을 골라 둔 채 충전 창을 엶.
      코드를 넣거나 결제하고 돌아오면 같은 글을 바로 휴머나이징. 다듬은 글은 올린 파일 형식 그대로 받음(13.23: .hwp · .hwpx · .docx 는 원본에서 바뀐 문단만, .pdf 는 새로 조판, .txt · .md 는 같은 텍스트). 붙여 넣은 글은 새 워드 파일
    - 13.2 토큰: 1토큰 = 100원(서버 PASS 1.2 는 아직 1크레딧 = 10원이라 am.js 가 숫자를 토큰으로 바꿔 줌). 글자 수만큼 빠짐
-     (AI 작성률 검사 1,000자 2토큰 · 100자 단위 0.2 · 최소 1, AI 휴머나이징 1,000자 4토큰 · 100자 단위 0.4 · 최소 2, 600자 이하 도우미 · 짧은 다시 검사는 0).
+     (13.26 부터 AI 작성률 검사 1,000자 4토큰 · 100자 단위 0.4 · 최소 2, AI 휴머나이징 1,000자 8토큰 · 100자 단위 0.8 · 최소 4, 600자 이하 도우미 · 짧은 다시 검사는 0).
      값은 돈으로 먼저(이 글 360원), 토큰은 소수 한 자리까지. 10토큰(1,000원) 이상이면 한 번 묻고, 모자라면 같은 코드에 충전.
      충전은 지금 코드에 더하거나 새 코드로. 예전 이용권 코드는 그대로 씀(횟수로 셈)
    - 11.0: '표현 다듬기'와 '고급 휴머나이징'을 화면에서 '휴머나이징' 하나로(서버 요청 · 이용권 횟수 규칙은 그대로, hum() 이 고름).
@@ -47,14 +50,14 @@
   var J = { HI: 85, MID: 65, SHORT: 60, SEG_AI: 20, UNFIT_RATE: 40, RISK_RATE: 20, UNFIT_SEG: 50,
     B: { unfit: ['부적합', '부적합 · 개선 필요'], risk: ['고위험', '고위험 · 수정 권고'], safe: ['안전', '안전 · AI 패턴 적음'], short: ['판단 보류', '판단 보류 · 글이 짧음'] } };
   var PRODS = [   // 13.17(10.31) 새 요금(대표): 라이트 · 플러스 · 프로(BEST 추천, 기본) · 맥스(최고 혜택) = 아임웹 96 · 97 · 98 · 99(build.py CREDITS 와 같게. 서버 products 는 결제 페이지 주소만 가져옴)
-    { id: 'lt', name: '라이트', price: 9900, cr: 100, base: 100, per: '99원', who: '간단한 문장 수정', doc: '레포트', pg: 10 },
-    { id: 'pl', name: '플러스', price: 19900, cr: 300, base: 300, per: '약 66원', who: '일반적인 문서 작업', doc: '레포트', pg: 30 },
-    { id: 'pr', name: '프로', price: 39900, cr: 750, base: 750, per: '약 53원', save: 20, badge: 'BEST 추천', best: 1, who: '넉넉한 토큰, 더 높은 가성비', doc: '논문', pg: 80 },
-    { id: 'mx', name: '맥스', price: 69900, cr: 1500, base: 1500, per: '약 47원', save: 30, badge: '최고 혜택', top: 1, who: '최대 토큰 제공', doc: '논문', pg: 200 }
+    { id: 'lt', name: '라이트', price: 9900, cr: 100, base: 100, per: '99원', who: '간단한 문장 수정', doc: '레포트', pg: 5 },
+    { id: 'pl', name: '플러스', price: 19900, cr: 300, base: 300, per: '약 66원', who: '일반적인 문서 작업', doc: '레포트', pg: 15 },
+    { id: 'pr', name: '프로', price: 39900, cr: 750, base: 750, per: '약 53원', save: 20, badge: 'BEST 추천', best: 1, who: '넉넉한 토큰, 더 높은 가성비', doc: '논문', pg: 40 },
+    { id: 'mx', name: '맥스', price: 69900, cr: 1500, base: 1500, per: '약 47원', save: 30, badge: '최고 혜택', top: 1, who: '최대 토큰 제공', doc: '논문', pg: 100 }
   ];   // 13.24 doc · pg = '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 몇 페이지'(대표가 정한 값. 1페이지 약 1,200자로 셈한 값보다 적거나 같음: build.py CREDITS 와 같게)
   var PG_CHARS = 1200;
   var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
-  var CR0 = { unit: { per: 100, cr: 0.2, min: 1 }, pro: { per: 100, cr: 0.4, min: 2 } }, ASK = 10;   // 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음
+  var CR0 = { unit: { per: 100, cr: 0.4, min: 2 }, pro: { per: 100, cr: 0.8, min: 4 } }, ASK = 10;   // 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var n2 = function (n) { return Number(n || 0).toLocaleString('ko-KR'); };
@@ -63,7 +66,7 @@
   function tk(x) { return r1(x).toLocaleString('ko-KR', { maximumFractionDigits: 1 }); }   // 토큰 수(소수 한 자리까지)
   function won(x) { return n2(Math.round(r1(x) * TW)) + '원'; }   // 토큰 → 원
   function tkw(x) { return tk(x) + '토큰'; }   // 13.3 값은 토큰으로만(1토큰 = 100원은 충전 창 · 요금 페이지에 한 번)
-  function per1k(kind) { var c = costT()[kind]; return c && c.per ? r1(c.cr * 1000 / c.per) : 0; }   // 1,000자에 드는 토큰
+  function per1k(kind) { var c = costT()[kind]; return c && c.per ? r1(c.cr * 1000 / c.per * rateMul()) : 0; }   // 1,000자에 드는 토큰(지금 코드의 값)
   var pad3 = function (n) { return ('00' + n).slice(-3); };
   function cid() { var c = ''; try { c = localStorage.getItem('am_cid') || ''; if (!c) { c = 'w' + Math.random().toString(36).slice(2, 12); localStorage.setItem('am_cid', c); } } catch (e) { c = c || 'w' + Math.random().toString(36).slice(2, 12); } return c; }
   function sget(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
@@ -74,7 +77,7 @@
   function toneFor() { var t = tone(); return t === 'auto' && S.toneUsed ? S.toneUsed : t; }   // 문장 도우미는 글 전체에서 정한 말투로
   function withDesc(p) {   // 13.5 설명: 레포트(3,000자) 검사와 휴머나이징 몇 편 · 누구에게 → 13.24 레포트 · 논문 검사와 휴머나이징 약 몇 페이지(pg 가 있는 칸)
     if (!p || !p.cr) return p;
-    var cyc = r1(costOf('unit', 3000) + costOf('pro', 3000)), k = cyc ? Math.floor(r1(p.cr / cyc) + 1e-9) : 0, bn = r1(p.cr - (p.base || p.cr));
+    var cyc = r1(costOf('unit', 3000, true) + costOf('pro', 3000, true)), k = cyc ? Math.floor(r1(p.cr / cyc) + 1e-9) : 0, bn = r1(p.cr - (p.base || p.cr));
     return Object.assign({}, p, { bonus: bn > 0 ? bn : 0, desc: p.pg ? (p.doc || '논문') + ' 검사와 휴머나이징 약 ' + n2(p.pg) + '페이지' : k ? '레포트(3,000자) 약 ' + n2(k) + '편' : (p.who || '') });   // 13.7 짧게(값 · 대상 없이)
   }
   function prodList() {   // 13.5 칸은 사이트 표(PRODS)가 기준. 서버 am.passinfo products 는 결제 페이지 주소(link)만 가져옴
@@ -84,16 +87,23 @@
   function prod(id) { id = OLD_ID[id] || id; var L = prodList(); for (var i = 0; i < L.length; i++) if (L[i].id === id) return withDesc(L[i]); return null; }
   function prods() { return prodList().map(withDesc); }
   function isCrId(id) { return /^(c\d+|t\d+|topup|new|best)$/.test(id || '') || !!prod(id); }   // 12.1 개인 토큰 충전만 여기서(기업 상품은 order.js)
-  /* 토큰 셈(서버와 같은 식, 13.2 부터 토큰 단위). 600자 이하 검사는 0, 휴머나이징은 길이와 상관없이 최소 2토큰 */
-  function costT() { return (S.info && S.info.credit && S.info.credit.cost) || CR0; }
-  function costOf(kind, len) { var c = costT()[kind]; if (!c || !c.per) return 0; return r1(Math.max(c.min, Math.ceil(len / c.per) * c.cr)); }
+  /* 토큰 셈(서버와 같은 식, 13.2 부터 토큰 단위). 600자 이하 검사는 0, 휴머나이징은 길이와 상관없이 최소 토큰(단가표의 min).
+     13.26 코드마다 값이 다를 수 있어 지금 코드의 비율(rateMul)을 곱함. list 가 참이면 새로 충전하는 토큰의 값(단가표 그대로) */
+  function costT() {   // 서버 단가표(am.passinfo). rm 을 주는 서버(1.3.0 부터)인데 손에 든 표가 그 전 것이면(서버가 바뀌기 전에 연 창) 사이트의 새 표로 셈
+    var t = S.info && S.info.credit && S.info.credit.cost;
+    if (!t) return CR0;
+    return S.pass && S.ps && S.ps.credit && typeof S.ps.rm === 'number' && t.unit && t.unit.cr < CR0.unit.cr ? CR0 : t;
+  }
+  function rateMul() { var m = S.pass && S.ps && S.ps.credit ? S.ps.rm : 1; return typeof m === 'number' && m > 0 && m <= 1 ? m : 1; }
+  function oldRate() { return isCr() && rateMul() < 1; }   // 예전 값 코드: 더 충전하지 않고 새 코드로 받음(서버 am.buy 도 새 코드로 돌림)
+  function costOf(kind, len, list) { var c = costT()[kind]; if (!c || !c.per) return 0; return r1(Math.max(c.min, Math.ceil(len / c.per) * c.cr) * (list ? 1 : rateMul())); }
   function isCr() { return !!(S.pass && S.ps && S.ps.credit); }
   function crLeft() { return isCr() ? Math.max(0, S.ps.cr || 0) : 0; }
   function chkCost(parts) { return r1(parts.reduce(function (a, p) { return a + (S.cache['c|' + p] || p.length <= HELP_MAX ? 0 : costOf('unit', p.length)); }, 0)); }
   function humCost(parts) { return r1(parts.reduce(function (a, p) { return a + costOf('pro', p.length); }, 0)); }
   function ymd(s) { var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || ''); return m ? m[1] + '.' + m[2] + '.' + m[3] : ''; }
   function lowHtml(name, len, need, freeLbl) {   // 토큰이 모자랄 때
-    return '<div class="hz7-err"><b>토큰이 모자라요</b><span>이 글(' + n2(len) + '자)의 ' + esc(name) + '에 ' + tkw(need) + '이 들고, 남은 토큰은 ' + tkw(crLeft()) + '입니다. 같은 코드에 충전하면 바로 이어서 합니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="topup" data-need="' + need + '" data-len="' + len + '" data-what="' + esc(name) + '">충전하기</button>' + (freeLbl ? '<button class="btn btn-g btn-s" type="button" data-again>' + esc(freeLbl) + '</button>' : '') + '</div></div>';
+    return '<div class="hz7-err"><b>토큰이 모자라요</b><span>이 글(' + n2(len) + '자)의 ' + esc(name) + '에 ' + tkw(need) + '이 들고, 남은 토큰은 ' + tkw(crLeft()) + '입니다. ' + (oldRate() ? '새로 충전한 토큰은 새 코드로 메일로 오고, 그 코드로 바로 이어서 합니다.' : '같은 코드에 충전하면 바로 이어서 합니다.') + '</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="topup" data-need="' + need + '" data-len="' + len + '" data-what="' + esc(name) + '">충전하기</button>' + (freeLbl ? '<button class="btn btn-g btn-s" type="button" data-again>' + esc(freeLbl) + '</button>' : '') + '</div></div>';
   }
   function ask(name, len, need, go) {   // 10토큰(1,000원) 이상이면 한 번 묻기
     S.prevOut = out.innerHTML; S.ask = go;
@@ -448,7 +458,7 @@
     var acts = slow && redo ? '<button class="btn btn-p btn-s" type="button" data-redo>다시 시도</button>' : '';
     var again = retry ? '<button class="btn btn-g btn-s" type="button" data-again>무료 검사로 보기</button>' : '';
     if (code === 'PASS') { clearPass(); S.passMsg = m; renderPass(); acts = '<button class="btn btn-g btn-s" type="button" data-code>코드 다시 넣기</button>' + again; }
-    else if (code === 'PASS_END' || code === 'PASS_USED') { if (isCr() && e.left != null) { S.ps.cr = Math.max(0, AM.toTok ? AM.toTok(+e.left || 0) : r1((+e.left || 0) / 10)); renderPass(); } if (code === 'PASS_USED' && isCr()) m = '남은 ' + tkw(crLeft()) + '으로는 이 요청을 할 수 없어요. 같은 코드에 충전하면 바로 이어서 합니다. 처리하지 못한 요청이라 토큰은 빠지지 않았습니다.'; acts = '<button class="btn btn-p btn-s" type="button" data-buy="' + (isCr() ? 'topup' : 't40') + '">' + (code === 'PASS_END' ? '새로 충전하기' : '충전하기') + '</button>' + again; }
+    else if (code === 'PASS_END' || code === 'PASS_USED') { if (isCr() && e.left != null) { S.ps.cr = Math.max(0, AM.toTok ? AM.toTok(+e.left || 0) : r1((+e.left || 0) / 10)); renderPass(); } if (code === 'PASS_USED' && isCr()) m = '남은 ' + tkw(crLeft()) + '으로는 이 요청을 할 수 없어요. ' + (oldRate() ? '새로 충전한 토큰은 새 코드로 메일로 오고, 그 코드로 바로 이어서 합니다.' : '같은 코드에 충전하면 바로 이어서 합니다.') + ' 처리하지 못한 요청이라 토큰은 빠지지 않았습니다.'; acts = '<button class="btn btn-p btn-s" type="button" data-buy="' + (isCr() ? 'topup' : 't40') + '">' + (code === 'PASS_END' ? '새로 충전하기' : '충전하기') + '</button>' + again; }
     else if (code === 'PASS_NEED') acts = '<button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button><button class="btn btn-g btn-s" type="button" data-code>토큰 코드 넣기</button>';
     else if (code === 'FREE_DAY') { var fb = packFor(0); m = '오늘 무료 검사를 다 썼어요(긴 글은 6,000자마다 한 번으로 셉니다). 토큰을 충전하면 지금 글의 전체 결과와 휴머나이징으로 바로 이어집니다.'; acts = '<button class="btn btn-p btn-s" type="button" data-buy="' + fb.id + '">' + esc(fb.name) + ' ' + tk(fb.cr) + '토큰 충전</button><button class="btn btn-g btn-s" type="button" data-code>토큰 코드 넣기</button>'; }
     out.innerHTML = '<div class="hz7-err"><b>' + (code === 'PASS_NEED' ? '토큰이 필요해요' : code === 'PASS_USED' && isCr() ? '토큰이 모자라요' : slow ? (e.name === 'TypeError' ? '연결하지 못했어요' : '응답이 늦어요') : '처리하지 못했어요') + '</b><span>' + esc(m) + '</span>' + (acts ? '<div class="row">' + acts + '</div>' : '') + '</div>'; stat(m);
@@ -810,7 +820,7 @@
     var title = hot ? 'AI 작성률에 필터링되는 문장을 인간화(휴머나이징)해 드립니다' : sig ? 'AI처럼 읽히는 표현 ' + n2(M.sigN) + '곳을 자연스럽게 다듬어 드려요' : '지금은 손볼 곳이 거의 없어요';
     var sub = hot ? (n ? 'AI로 보이는 문장 ' + n2(n) + '개를 포함해 ' : '') + '글 전체의 AI 말버릇과 번역투를 사람 말투에 가깝게 다듬습니다.' : sig ? '번역투, 빈말, 틀에 박힌 연결어를 사람 말투에 가깝게 바꾸고, 바꾸기 전후를 같은 기준으로 비교합니다. 사람이 쓴 글도 이런 표현 때문에 의심받을 수 있습니다.' : 'AI 작성 패턴도, AI처럼 읽히는 표현도 찾지 못했습니다. 그래도 말투와 흐름을 더 다듬고 싶다면 글 전체 휴머나이징을 할 수 있습니다.';
     var price;
-    if (isCr()) price = crLeft() >= cost ? '남은 ' + tkw(crLeft()) + '에서 ' + tk(cost) + '토큰이 빠집니다.' : '남은 ' + tkw(crLeft()) + '으로는 모자라요. 같은 코드에 충전하면 이어서 다듬습니다.';
+    if (isCr()) price = crLeft() >= cost ? '남은 ' + tkw(crLeft()) + '에서 ' + tk(cost) + '토큰이 빠집니다.' : '남은 ' + tkw(crLeft()) + '으로는 모자라요. ' + (oldRate() ? '새로 충전한 토큰은 새 코드로 메일로 오고, 그 코드로 이어서 다듬습니다.' : '같은 코드에 충전하면 이어서 다듬습니다.');
     else if (S.pass) price = '이용권의 휴머나이징 횟수로 셉니다.';
     else price = '이 글 전체는 <b>' + tk(cost) + '토큰</b>이에요. ' + esc(pk.name) + ' ' + tk(pk.cr) + '토큰(' + n2(pk.price) + '원)' + (pk.cr >= cost ? '이면 다듬고 <b>' + tk(pk.cr - cost) + '토큰</b>이 남아 다음 글에도 씁니다.' : '에 모자라는 만큼은 같은 코드에 충전해 이어서 다듬습니다.') + ' 결제하면 바로 메일로 토큰 코드가 오고, 이 글은 이어서 다듬어 드립니다.';
     return '<section class="hz12-next ' + bandCls(k) + (hot ? ' hot' : sig ? ' sig' : ' calm') + '" aria-labelledby="hzNextT"><div class="l"><h3 id="hzNextT">' + (hot ? esc(title).replace('인간화(휴머나이징)해 드립니다', '<span class="nb"><em>인간화(휴머나이징)</em>해 드립니다</span>') : esc(title)) + '</h3><p class="sub">' + (hot ? '<b>AI 문장 패턴을 자연스럽게 다듬어 드려요.</b> ' : '') + esc(sub) + '</p>' +
@@ -1336,9 +1346,11 @@
   }
   function needLine(p, tu) {   // 13.2 이 글 값(원 · 토큰)과, 고른 충전으로 하고 남는 토큰
     var nd = $('#hzBuyNeed'), N = S.buyNeed; if (!nd) return;
-    if (!N || !p) { nd.hidden = true; nd.innerHTML = ''; return; }
+    if (!p || (!N && !oldRate())) { nd.hidden = true; nd.innerHTML = ''; return; }
+    if (!N) { nd.innerHTML = '새로 충전한 토큰은 새 코드로 메일로 옵니다. 지금 코드에 남은 <b>' + tkw(crLeft()) + '</b>은 그대로 쓸 수 있습니다.'; nd.hidden = false; return; }   // 13.26 예전 값 코드로 그냥 연 충전 창
     var chk = S.intent === 'check', doW = chk ? '전체 검사를 해' : '다듬어', have = r1((tu ? crLeft() : 0) + p.cr), left = r1(have - N.need);
-    nd.innerHTML = '<span class="t">이 글(' + n2(N.len) + '자) ' + esc(N.what) + '</span><b class="v">' + tk(N.need) + '토큰</b>' +
+    nd.innerHTML = '<span class="t">이 글(' + n2(N.len) + '자) ' + esc(N.what) + (N.old ? ' · 새 코드로' : '') + '</span><b class="v">' + tk(N.need) + '토큰</b>' +
+      (N.old ? '<span class="r">지금 코드에 남은 토큰 <b>' + tk(N.old.left) + '</b> · 지금 코드로는 이 글에 <b>' + tkw(N.old.need) + '</b>이 듭니다. 새로 충전한 토큰은 새 코드로 메일로 오고, 새 코드로는 이 글에 <b>' + tkw(N.need) + '</b>이 듭니다.</span>' : '') +
       '<span class="r">' + (left >= 0 ? tk(p.cr) + '토큰 충전이면 ' + (chk ? '검사하고' : '다듬고') + ' <b>' + tkw(left) + '</b>이 남아요.' : tk(p.cr) + '토큰 충전으로는 ' + tk(-left) + '토큰이 모자라요. 더 큰 충전을 골라 주세요.') +
       (!S.intent ? '' : payReady() ? ' 결제하면 이 화면에서 바로 이어서 ' + doW + ' 드립니다.' : ' 메일의 단추를 누르거나 코드를 넣으면 이 글을 바로 이어서 ' + doW + ' 드립니다.') + '</span>';
     nd.hidden = false;
@@ -1347,15 +1359,17 @@
     if (!buyDlg) return;
     if (document.documentElement.classList.contains('is-twa')) { openCode(); if (window.AMTwaNote) window.AMTwaNote(); return; }   // 13.11 플레이 스토어 앱: 충전 창 대신 토큰 코드 넣기(앱 안에서는 결제하지 않음)
     opt = opt || {};
-    var wantTop = pid === 'topup' || (isCr() && pid !== 'new');
+    var old = oldRate(), rm0 = rateMul();   // 13.26 예전 값 코드: 새로 충전한 토큰은 새 코드(새 값)로 오므로, 이 글에 드는 토큰도 새 값으로 셈(opt.need 는 지금 코드의 값으로 센 것)
+    var needL = opt.need > 0 ? r1(old ? opt.need / rm0 : opt.need) : 0;
+    var wantTop = !old && (pid === 'topup' || (isCr() && pid !== 'new'));
     if (pid && OLD_ID[pid]) pid = OLD_ID[pid];
-    if (!prod(pid)) pid = packFor(opt.need > 0 ? Math.max(0, opt.need - (wantTop ? crLeft() : 0)) : 0).id;   // 13.13 그냥 열거나 이 글에 맞춰 열면 추천 칸(프로), 모자라면 큰 칸
+    if (!prod(pid)) pid = packFor(needL > 0 ? Math.max(0, needL - (wantTop ? crLeft() : 0)) : 0).id;   // 13.13 그냥 열거나 이 글에 맞춰 열면 추천 칸(프로), 모자라면 큰 칸
     buyBody.innerHTML = buyTpl;
-    S.buyNeed = opt.need > 0 ? { need: r1(opt.need), len: opt.len || 0, what: opt.what || 'AI 휴머나이징' } : null;
-    var fs = buyBody.querySelector('.hz7-prod'); if (fs) fs.innerHTML = '<legend class="sr">충전할 토큰</legend>' + prodsHtml(pid, false, opt.need > 0 ? r1(opt.need) : 0);
+    S.buyNeed = needL > 0 ? { need: needL, len: opt.len || 0, what: opt.what || 'AI 휴머나이징', old: old ? { need: r1(opt.need), left: crLeft() } : null } : null;
+    var fs = buyBody.querySelector('.hz7-prod'); if (fs) fs.innerHTML = '<legend class="sr">충전할 토큰</legend>' + prodsHtml(pid, false, needL);
     var bh = $('#hzBuyT', buyBody); if (bh) bh.textContent = opt.need > 0 ? (S.intent === 'check' ? '충전하고 전체 결과를 바로 보세요' : '충전하고 이 글을 바로 다듬으세요') : 'AI 휴머나이징 토큰 충전';
     var tw = buyBody.querySelector('.hz7-to');
-    if (tw) { if (isCr()) { tw.hidden = false; tw.innerHTML = '<legend class="sr">어디에 충전할까요</legend><label><input type="radio" name="to" value="this"' + (wantTop ? ' checked' : '') + '><span><b>지금 코드에 충전</b><small>' + esc(S.pass.replace(/^(.{4}).*(.{4})$/, '$1-····-····-$2')) + ' · 남은 ' + tk(crLeft()) + '토큰</small></span></label><label><input type="radio" name="to" value="new"' + (wantTop ? '' : ' checked') + '><span><b>새 코드로 받기</b><small>다른 사람에게 줄 때</small></span></label>'; } else { tw.hidden = true; tw.innerHTML = ''; } }
+    if (tw) { if (isCr() && !old) { tw.hidden = false; tw.innerHTML = '<legend class="sr">어디에 충전할까요</legend><label><input type="radio" name="to" value="this"' + (wantTop ? ' checked' : '') + '><span><b>지금 코드에 충전</b><small>' + esc(S.pass.replace(/^(.{4}).*(.{4})$/, '$1-····-····-$2')) + ' · 남은 ' + tk(crLeft()) + '토큰</small></span></label><label><input type="radio" name="to" value="new"' + (wantTop ? '' : ' checked') + '><span><b>새 코드로 받기</b><small>다른 사람에게 줄 때</small></span></label>'; } else { tw.hidden = true; tw.innerHTML = ''; } }
     var m = sget('am_buy_mail'); if (m) { var mi = $('#hzBuyMail'); if (mi) mi.value = m; }
     buyBtnLabel();   // 13.2 이 글에 드는 값과 고른 칸으로 남는 토큰(needLine) · 13.6 결제 페이지 안내
     if (why) say(buyBody.querySelector('.msg'), why, 'ok');
