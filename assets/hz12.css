@@ -75,6 +75,19 @@
 .hz12-go .k-btn-l .hz7-pill { background: var(--ds-blue-50); color: var(--ds-blue-700); }
 .hz12-run { flex: 0 1 auto; min-width: 280px; justify-content: center; }
 .hz12-run2[hidden] { display: none; }
+/* 13.30 토큰 코드가 있으면 두 단추(AI 작성률 리포트 | 휴머나이징)를 같은 너비로 */
+.hz12-go.two .hz12-run, .hz12-go.two .hz12-run2 { flex: 1 1 0; min-width: 0; height: 62px; padding: 0 16px; gap: 10px; justify-content: flex-start; }
+.hz12-go .k-btn-lg > span small { display: none; }
+.hz12-go.two .k-btn-lg > span { display: grid; flex: 1 1 auto; min-width: 0; text-align: left; line-height: 1.22; }
+.hz12-go.two .k-btn-lg > span small { display: block; margin-top: 3px; font-size: 12.5px; font-weight: 550; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ds-slate, #586179); }
+.hz12-go.two .k-btn-p > span small { color: rgba(255, 255, 255, .82); }   /* 13.30 파란 단추(토큰 코드가 있으면 휴머나이징) */
+.hz12-go.two .hz7-pill { flex: 0 0 auto; }
+@media (max-width: 640px) { .hz12-go.two .hz12-run, .hz12-go.two .hz12-run2 { flex: 1 1 100%; } }
+/* 13.30 토큰 코드가 있으면 단추 밑 한 줄은 두 단추 설명(결과서 · 휴머나이징) */
+.hz12-note span { word-break: keep-all; }
+.hz12-note b { font-weight: 650; color: var(--ds-ink-2); }
+.hz12-note.hz-ex .ico { color: var(--ds-blue-600); }
+@media (max-width: 640px) { .hz12-note.hz-ex { align-items: flex-start; justify-content: flex-start; } .hz12-note.hz-ex .ico { margin-top: 2px; flex: 0 0 auto; } }
 .hz12-note { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; color: var(--ds-mist); }
 .hz12-note .ico { width: 14px; height: 14px; color: var(--ds-green); }
 .hz12-pass { flex: 1 1 100%; margin: 0; padding: 8px 12px; font-size: 13px; border: 0; border-radius: 10px; box-shadow: none; }

@@ -22,8 +22,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261119a"
-TODAY = "2026-11-19"
+VER = "20261122a"
+TODAY = "2026-11-22"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
 #   세 묶음(순서 그대로): assets/b-base.css = 글꼴 + am.css(모든 페이지 같음) → assets/b-<8자리>.css = (site4 · v8) + 페이지 styles(없으면 생략)
@@ -224,17 +224,17 @@ def tiers_html(key, root, pick=None):
 # 12.0 토큰(AI 작성률 검사 · AI 휴머나이징). 글 검사, 요금, 개인용 페이지가 같은 칸을 씀.
 # 13.2 단위 1토큰 = 100원. 서버 PASS 1.2 는 1크레딧 = 10원이라 여기 값 = 서버 PASS_.PRODUCTS · PASS_.CR 값 ÷ 10(사이트 am.js 가 서버 숫자를 바꿔 보여 줌)
 TOKEN_WON = 100
-CREDIT_COST = {"unit": (100, 0.4, 2), "pro": (100, 0.8, 4)}   # (글자 수 단위, 토큰, 최소). 600자 이하 검사 · 도우미는 0. 2026.11.19 대표 결정: 글자 수 단가를 새 값으로(서버 AM서버.gs 1.3.0 과 같게. 그 전에 만든 코드는 예전 값 그대로라 서버가 코드마다 비율 rm 을 알려 줌)
+CREDIT_COST = {"unit": (100, 0.2, 1), "pro": (100, 0.4, 2)}   # (글자 수 단위, 토큰, 최소). 2026.11.21 밤 대표: 휴머나이징 1,000자 8 → 6 → 4토큰, AI 작성률 결과서(전체 검사 · PDF) 1,000자 2토큰, 무료 검사는 토큰 코드가 있어도 0. 600자 이하 검사 · 도우미는 0. 2026.11.19 대표 결정: 글자 수 단가를 새 값으로(서버 AM서버.gs 1.3.0 과 같게. 그 전에 만든 코드는 예전 값 그대로라 서버가 코드마다 비율 rm 을 알려 줌)
 # 13.17(10.31) 개인 토큰 새 요금(대표): 월 구독 없이 한 번 충전, 많이 충전할수록 토큰당 가격이 낮아짐(더 드리는 토큰 없음, cr = base).
 # 서버 AM서버.gs 1.2.0 lt · pl · pr · mx · assets/humanize.js PRODS · assets/tok.js PK 와 같게. save = 플러스(토큰당 약 66원)보다 토큰당 절약(%)
 CREDITS = [
-    {"id": "lt", "name": "라이트", "cr": 100, "base": 100, "price": 9900, "per": "99원", "who": "간단한 문장 수정", "doc": "레포트", "pg": 5},
-    {"id": "pl", "name": "플러스", "cr": 300, "base": 300, "price": 19900, "per": "약 66원", "who": "일반적인 문서 작업", "doc": "레포트", "pg": 15},
-    {"id": "pr", "name": "프로", "cr": 750, "base": 750, "price": 39900, "per": "약 53원", "who": "넉넉한 토큰, 더 높은 가성비", "tag": "BEST 추천", "save": 20, "doc": "논문", "pg": 40},
-    {"id": "mx", "name": "맥스", "cr": 1500, "base": 1500, "price": 69900, "per": "약 47원", "who": "최대 토큰 제공", "tag": "최고 혜택", "save": 30, "doc": "논문", "pg": 100},
+    {"id": "lt", "name": "라이트", "cr": 100, "base": 100, "price": 9900, "per": "99원", "who": "간단한 문장 수정", "doc": "레포트", "pg": 10},
+    {"id": "pl", "name": "플러스", "cr": 300, "base": 300, "price": 19900, "per": "약 66원", "who": "일반적인 문서 작업", "doc": "레포트", "pg": 30},
+    {"id": "pr", "name": "프로", "cr": 750, "base": 750, "price": 39900, "per": "약 53원", "who": "넉넉한 토큰, 더 높은 가성비", "tag": "BEST 추천", "save": 20, "doc": "논문", "pg": 80},
+    {"id": "mx", "name": "맥스", "cr": 1500, "base": 1500, "price": 69900, "per": "약 47원", "who": "최대 토큰 제공", "tag": "최고 혜택", "save": 30, "doc": "논문", "pg": 200},
 ]
 # 13.24(11.12 대표) 충전 칸 쓰임은 '레포트 몇 편' 대신 '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 몇 페이지'(doc · pg, 대표가 정한 값).
-# 기준: 1페이지 약 1,200자(공백 포함)를 전체 검사하고 휴머나이징하면 14.4토큰(2026.11.19 새 단가) → 셈한 값(6 · 20 · 52 · 104쪽)보다 적거나 같게 적음. assets/humanize.js PRODS doc · pg · PG_CHARS 와 같게
+# 기준: 1페이지 약 1,200자(공백 포함)를 무료로 검사하고 휴머나이징하면 4.8토큰(2026.11.21 밤 단가) → 셈한 값(20 · 62 · 156 · 312쪽)보다 적거나 같게 대표가 처음 정한 10 · 30 · 80 · 200쪽(11.19 에 절반으로 줄였던 것을 되돌림). assets/humanize.js PRODS doc · pg · PG_CHARS 와 같게
 PAGE_CHARS = 1200
 
 
@@ -256,13 +256,13 @@ def won(x):
 
 
 def report_cost():
-    """레포트(3,000자) 한 편: 검사와 휴머나이징"""
-    return round(credit_cost("unit", 3000) + credit_cost("pro", 3000), 1)
+    """레포트(3,000자) 한 편: 무료 검사 뒤 휴머나이징(13.30 검사는 토큰 코드가 있어도 무료)"""
+    return round(credit_cost("pro", 3000), 1)
 
 
 def page_cost():
-    """13.24 1페이지(PAGE_CHARS 자): 검사와 휴머나이징"""
-    return round(credit_cost("unit", PAGE_CHARS) + credit_cost("pro", PAGE_CHARS), 1)
+    """13.24 1페이지(PAGE_CHARS 자): 검사와 휴머나이징 → 13.30 검사는 무료라 휴머나이징만"""
+    return round(credit_cost("pro", PAGE_CHARS), 1)
 
 
 def use_html(t):
@@ -354,10 +354,10 @@ def credits_html(mode, root):
 def credit_cost_html():
     u, pr = CREDIT_COST["unit"], CREDIT_COST["pro"]
     rows = [
-        ("AI 작성률 전체 검사", "모든 문장의 색과 이유, 구간별 분석, 결과상세내역서", "1,000자 %s토큰 · 100자 단위 · 600자 이하는 0토큰" % tk(u[1] * 1000 / u[0]), credit_cost("unit", 3000)),
+        ("AI 작성률 결과서", "모든 문장의 색과 이유, 구간별 분석, 결과상세내역서(PDF)", "1,000자 %s토큰 · 100자 단위 · 600자 이하는 0토큰" % tk(u[1] * 1000 / u[0]), credit_cost("unit", 3000)),
         ("AI 휴머나이징", "글 전체, 바꾼 이유, 다른 버전, 바꾸기 전후 AI 작성률", "1,000자 %s토큰 · 100자 단위, 최소 %s토큰" % (tk(pr[1] * 1000 / pr[0]), tk(pr[2])), credit_cost("pro", 3000)),
         ("문장 도우미 · 짧은 다시 검사", "600자 이하 문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "빠지지 않음(토큰이 남아 있을 때)", 0),
-        ("무료 검사", "글 전체(5만 자까지) AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "코드 없이 무료", 0),
+        ("무료 검사", "글 전체(20만 자까지) AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "누구나 무료(토큰 코드가 있어도 빠지지 않음)", 0),
     ]
     tr = "".join('<tr><th scope="row">%s<small>%s</small></th><td data-h="빠지는 토큰">%s</td><td data-h="3,000자 글이면">%s</td></tr>'
                  % (a, b, c, ("%s토큰" % tk(d)) if d else "0토큰") for a, b, c, d in rows)
@@ -369,7 +369,7 @@ def credit_cost_html():
 def credit_packs_html(root):
     """13.2 토큰 충전 칸: [개인 · 학생 | 회사 · 기관 · 학교] 탭(assets/tok.js). 스크립트가 없으면 두 묶음이 모두 보임.
     개인: 부가세 포함, 글 검사 페이지 충전 창. 회사: 부가세 별도, 세금계산서, 결제 시트"""
-    pgn = '<p class="k-small tk17-pgn">페이지 수는 1페이지 약 %s자(공백 포함)를 전체 검사하고 휴머나이징할 때(1페이지 %s토큰)를 기준으로 여유 있게 적었습니다. 토큰은 넣은 글자 수만큼만 빠집니다.</p>' % (format(PAGE_CHARS, ","), tk(page_cost()))   # 13.24
+    pgn = '<p class="k-small tk17-pgn">페이지 수는 1페이지 약 %s자(공백 포함)를 무료로 검사하고 휴머나이징할 때(1페이지 %s토큰)를 기준으로 여유 있게 적었습니다. 토큰은 넣은 글자 수만큼만 빠집니다.</p>' % (format(PAGE_CHARS, ","), tk(page_cost()))   # 13.24
     me = '<div class="tk17-packs">%s</div>%s%s%s' % ("".join(pack17_html(t, root) for t in CREDITS), pgn, credit_table_html(), credit_guide_html())   # 13.17 새 요금 칸 + 상품별 구성 + 이용 안내
     biz = []
     for t in CATALOG["credit"]["tiers"]:
@@ -413,10 +413,10 @@ def credit_rates_html(root):
                     % (name, ('<small>%s</small>' % sub) if sub else '', what, " free" if free else "", cr, ('<small>%s</small>' % crsub) if crsub else '', go))
     u, pr = CREDIT_COST["unit"], CREDIT_COST["pro"]
     grp("글 검사와 다듬기")
-    row("AI 작성률 전체 검사", "레포트, 논문, 자기소개서, 원고 · 무료 검사 다음", "모든 문장의 AI 검출과 이유, 구간별 분석, 결과상세내역서", "1,000자 %s토큰" % tk(u[1] * 1000 / u[0]), "3,000자 글이면 %s토큰 · 600자 이하는 0토큰" % tk(credit_cost("unit", 3000)), link("humanize/", "검사하기"))
+    row("AI 작성률 결과서", "레포트, 논문, 자기소개서, 원고 · 무료 검사 다음", "모든 문장의 AI 검출과 이유, 구간별 분석, 결과상세내역서(PDF)", "1,000자 %s토큰" % tk(u[1] * 1000 / u[0]), "3,000자 글이면 %s토큰 · 600자 이하는 0토큰" % tk(credit_cost("unit", 3000)), link("humanize/", "검사하기"))
     row("AI 휴머나이징", "글 전체를 자연스럽게", "바꾼 곳과 이유, 다른 버전, 바꾸기 전후 AI 작성률, 같은 형식 파일로 받기", "1,000자 %s토큰" % tk(pr[1] * 1000 / pr[0]), "3,000자 글이면 %s토큰 · 최소 %s토큰" % (tk(credit_cost("pro", 3000)), tk(pr[2])), link("humanize/", "다듬기"))
     row("문장 도우미, 짧은 다시 검사", "600자 이하", "문장 고쳐 쓰기, 문장 후보 2개, 고친 문단 다시 검사", "0토큰", "토큰이 남아 있을 때", "", True)
-    row("무료 검사", "가입 없이", "글 전체(5만 자까지) AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "무료", "", link("humanize/", "무료로 검사"), True)
+    row("무료 검사", "가입 없이 · 토큰 코드가 있어도", "글 전체(20만 자까지) AI 작성률과 판정, 근거, 가장 뚜렷한 문장 2개, 휴머나이징 첫 문단", "무료", "", link("humanize/", "무료로 검사"), True)
     grp("AI 마킹")
     row("사이트 AI 마킹", "사이트 1개", "코드 한 줄로 자동 AI 마크, 근거 창, AI 마킹 안내 창, 점검 모드", "무료", "", link("site/", "설치하기"), True)
     t = tier("label", "label-standard"); a, b = crs(t)
@@ -814,7 +814,7 @@ def token_product_ld():
     그림은 assets/product/tokens-*.jpg(1:1 · 4:3 · 16:9, 토큰만 표기). 후기 · 별점은 실제로 받은 것이 생기기 전에는 넣지 않음"""
     img = lambda k: [SITE + "assets/product/%s-%s.jpg" % (k, r) for r in ("1x1", "4x3", "16x9")]
     desc = ("AI 작성률 검사와 AI 휴머나이징(AI 글 인간화)에 쓰는 AIMarker 토큰입니다. 글이나 한글 · 워드 · PDF 파일을 넣으면 AI 작성률과 AI 패턴이 남은 문장을 보여 드리고, "
-            "뜻은 그대로 둔 채 사람 문장으로 다듬습니다. 검사 1,000자 4토큰, 휴머나이징 1,000자 8토큰. 월 구독 없이 한 번 충전하고, 많이 충전할수록 토큰당 가격이 낮아집니다(라이트 100토큰 9,900원부터, 맥스 1,500토큰 69,900원). "
+            "뜻은 그대로 둔 채 사람 문장으로 다듬습니다. 검사는 무료, 휴머나이징 1,000자 4토큰. 월 구독 없이 한 번 충전하고, 많이 충전할수록 토큰당 가격이 낮아집니다(라이트 100토큰 9,900원부터, 맥스 1,500토큰 69,900원). "
             "결제하면 바로 16자리 토큰 코드를 이메일로 보내 드리고, 남은 토큰은 사라지지 않고 이어서 씁니다.")
     variants = []
     for c in CREDITS:
@@ -1048,7 +1048,7 @@ FC_TOOLS = [
     ("aimarker_geo_check", "am.geo", "사이트 · 상품 쪽 주소 하나로 AI 검색 준비 점수(0~100: AI 크롤러 접근 · 구조화 데이터 · 본문 · 메타 · 질문과 답 · 이미지 · 신뢰)와 붙여 넣을 고칠 코드(JSON-LD · llms.txt · robots.txt · 메타 · FAQ)를 받습니다. 상품 쪽이면 AI 상품 피드 한 줄도 줍니다.",
      {"url": {"type": "string", "description": "사이트 · 상품 쪽 주소"}}, ["url"]),
     ("aimarker_detect_text", "am.detect", "글의 AI 작성률(0~100)과 판정(band: 안전 · 고위험 · 부적합, AIMarker 판정 기준 1.0) · 판정 근거(band.why) · 구간별 검출 · AI 문체 특성 · 종합 의견과 AI 패턴이 몰린 문장을 받습니다. 같은 글은 언제나 같은 값 · 같은 판정입니다. 추정일 뿐 증명이 아니므로 결과만으로 사람을 판단하지 마세요. 글은 서버로 보내지만 저장하지 않습니다. 6,000자까지. 무료 키는 맛보기(판정 · 수치는 같은 값, 문장 위치는 가장 뚜렷한 2개만)이고, 토큰 코드(pass)나 유료 키면 모든 문장 · 구간을 받습니다.",
-     {"text": {"type": "string", "description": "확인할 글(6,000자까지)"}, "pass": {"type": "string", "description": "토큰 코드(선택). 글자 수만큼 토큰이 빠짐: 1,000자 4토큰(최소 2토큰), 600자 이하는 0. 응답 숫자는 0.1토큰 단위. 코드가 없으면 맛보기"}}, ["text"]),
+     {"text": {"type": "string", "description": "확인할 글(6,000자까지)"}, "pass": {"type": "string", "description": "토큰 코드(선택). 글자 수만큼 토큰이 빠짐: 1,000자 2토큰(최소 1토큰), 600자 이하는 0. 응답 숫자는 0.1토큰 단위. 코드가 없으면 맛보기"}}, ["text"]),
     ("aimarker_stamp", "am.stamp", "보고서 · 콘텐츠 버전 · 승인 기록을 증거 원장에 남깁니다. content 는 실행 코드에서 SHA-256 해시(h)로 바꿔 보내므로 내용은 서버로 가지 않습니다. 원장 번호와 서버 시각을 돌려주고, 하루치 원장은 다음 날 공개 앵커로 묶입니다.",
      {"content": {"type": "string", "description": "기록할 내용(실행 코드가 해시로 바꿈)"}, "k": {"type": "string", "enum": ["report", "version", "approval"], "description": "기록 종류"}, "n": {"type": "integer", "description": "보고서에 든 소재 수(선택)"}}, ["content"]),
     ("aimarker_verify", "am.verify", "원장 번호(id, LG로 시작)나 내용(content, 실행 코드가 해시로 바꿈)으로 증거 원장 기록을 확인합니다.",

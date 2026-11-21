@@ -8,7 +8,7 @@
     <div class="hz12-in" id="hzIn">
       <div class="hz12-drop" id="hzDrop">
         <label class="k-sr" for="hzText">검사할 글</label>
-        <textarea id="hzText" maxlength="50000" spellcheck="false" placeholder="검사할 글을 붙여 넣으세요"></textarea>
+        <textarea id="hzText" maxlength="200000" spellcheck="false" placeholder="검사할 글을 붙여 넣으세요"></textarea>
         <div class="hz12-empty" id="hzEmpty">
           <button type="button" class="hz12-up" id="hzPick">{{ico:upload}}<span>파일 올리기</span></button>
           <p class="dnd">또는 여기로 끌어다 놓으세요</p>
@@ -21,13 +21,13 @@
       <div class="hz12-bar">
         <div class="hz12-file" id="hzFileChip" hidden></div>
         <div class="hz12-ex" id="hzEx" role="group" aria-label="예시 글로 해 보기"><span>예시</span><button type="button" data-ex="thesis">논문</button><button type="button" data-ex="journal">학술지</button><button type="button" data-ex="report">대학 과제</button><button type="button" data-ex="grad">대학원 과제</button><button type="button" data-ex="essay">자기소개서</button></div>
-        <span class="hz12-cnt"><b id="hzCount">0</b>자<span class="lim" id="hzLimit"> / 무료 검사 5만 자까지</span></span>
+        <span class="hz12-cnt"><b id="hzCount">0</b>자<span class="lim" id="hzLimit"> / 무료 검사 20만 자까지</span></span>
       </div>
     </div>
     <div class="hz12-sum" id="hzSum" hidden></div>
     <div class="hz12-go" id="hzGo">
       <button class="k-btn k-btn-p k-btn-lg hz12-run" type="button" id="hzCheck">{{ico:search}}<span id="hzChkL">AI 작성률 무료 검사</span><em class="hz7-pill" id="hzChkTag" hidden></em></button>
-      <button class="k-btn k-btn-l k-btn-lg hz12-run2" type="button" id="hzPro" hidden>{{ico:pen}}<span>휴머나이징</span><em class="hz7-pill" id="hzProTag"></em></button>
+      <button class="k-btn k-btn-l k-btn-lg hz12-run2" type="button" id="hzPro" hidden>{{ico:pen}}<span>휴머나이징<small>AI 작성률 낮추기</small></span><em class="hz7-pill" id="hzProTag"></em></button>
       <p class="hz12-note" id="hzNote">{{ico:lock}}<span>가입 없이 무료 · 글과 파일은 저장하지 않습니다</span></p>
       <div class="hz7-pass hz12-pass" id="hzPass" aria-live="polite"></div>
     </div>

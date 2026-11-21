@@ -1,12 +1,13 @@
 /* AIMarker 13.2 요금 페이지: '내 글은 얼마?' 계산기 · 토큰 충전 탭(개인 · 학생 | 회사 · 기관 · 학교)
    13.17 새 요금(라이트 · 플러스 · 프로 · 맥스). 셈은 글 검사 화면(assets/humanize.js)과 같은 식: 글자 수(공백 포함)를 6,000자씩 나눠 조각마다
    100자 단위로 검사 0.4토큰(최소 2, 600자 이하는 0) · 휴머나이징 0.8토큰(최소 4). 값은 서버 PASS 단가 ÷ 10.
+   13.30(2026.11.21 밤) 휴머나이징 0.6토큰(1,000자 6), 검사는 무료라 사다리는 휴머나이징만으로 셈(전체 검사는 따로 고르는 것).
    13.26(2026.11.19) 단가를 새 값으로. 이 계산기는 새로 충전하는 토큰의 값으로 셈(코드마다 값이 다르면 글 검사 화면이 그 코드에 맞춰 보여 줌) */
 (function () {
   'use strict';
   var root = document.body.getAttribute('data-root') || '';
-  var TW = 100, CHUNK = 6000, HELP = 600, MAXC = 50000;
-  var U = { per: 100, cr: 0.4, min: 2 }, H = { per: 100, cr: 0.8, min: 4 };
+  var TW = 100, CHUNK = 6000, HELP = 600, MAXC = 200000;   // 13.30 한 번에 20만 자
+  var U = { per: 100, cr: 0.2, min: 1 }, H = { per: 100, cr: 0.4, min: 2 };   // 13.30 AI 작성률 결과서 · 휴머나이징
   var PK = [{ id: 'lt', nm: '라이트', price: 9900, cr: 100 }, { id: 'pl', nm: '플러스', price: 19900, cr: 300 }, { id: 'pr', nm: '프로', price: 39900, cr: 750, best: 1 }, { id: 'mx', nm: '맥스', price: 69900, cr: 1500 }];   // 13.17 표(humanize.js PRODS · build.py CREDITS 와 같게)
   function $(s, r) { return (r || document).querySelector(s); }
   function r1(x) { return Math.round(x * 10) / 10; }
@@ -33,17 +34,17 @@
       set('tkC2', (many ? '약 ' : '') + tk(c2) + '토큰'); set('tkW2', '');
       set('tkC3', (many ? '약 ' : '') + tk(c3) + '토큰'); set('tkW3', '');
       var pick = null, best = PK.filter(function (p) { return p.best; })[0];   // 13.13 기본은 추천 칸(프로), 이 글에 모자라면 덮는 칸
-      if (best && (c3 <= 0 || best.cr >= c3)) pick = best;
-      else PK.forEach(function (p) { var k = c3 > 0 ? Math.floor(r1(p.cr / c3) + 1e-9) : 0; if (!pick && k >= 1) pick = p; });
+      if (best && (c2 <= 0 || best.cr >= c2)) pick = best;   // 13.30 검사는 무료라 이 글 휴머나이징(c2)으로 셈
+      else PK.forEach(function (p) { var k = c2 > 0 ? Math.floor(r1(p.cr / c2) + 1e-9) : 0; if (!pick && k >= 1) pick = p; });
       pick = pick || PK[PK.length - 1];
       if (lad) lad.innerHTML = PK.map(function (p) {   // 고른 칸(단추와 같은 칸)을 강조, 칸마다 충전 창으로
-        var k = c3 > 0 ? Math.floor(r1(p.cr / c3) + 1e-9) : 0;
+        var k = c2 > 0 ? Math.floor(r1(p.cr / c2) + 1e-9) : 0;
         return '<li' + (p === pick ? ' class="pick"' : '') + '><a href="' + root + 'humanize/#buy-' + p.id + '"' + (p === pick ? ' aria-current="true"' : '') + '><span>' + (p.nm || '') + '<small>' + tk(p.cr) + '토큰</small></span><b>' +(k ? (k >= 1000 ? '1,000번 넘게' : n2(k) + '번') : '모자라요') + '</b></a></li>';
       }).join('');
-      var k1 = c3 > 0 ? Math.floor(r1(pick.cr / c3) + 1e-9) : 0;
+      var k1 = c2 > 0 ? Math.floor(r1(pick.cr / c2) + 1e-9) : 0;
       var go = $('#tkGo'); if (go) { go.href = root + 'humanize/#buy-' + pick.id; go.textContent = (pick.nm ? pick.nm + ' ' : '') + tk(pick.cr) + '토큰 충전하기'; }
-      set('tkGoN', k1 ? '이 글 검사와 휴머나이징 ' + n2(k1) + '번' : '이 글은 큰 충전이나 나눠서');
-      set('tkLadH', n ? '충전하면 이 글(' + n2(n) + '자) 검사와 휴머나이징을' : '충전하면 이런 글을');
+      set('tkGoN', k1 ? '이 글 휴머나이징 ' + n2(k1) + '번(검사는 무료)' : '이 글은 큰 충전이나 나눠서');
+      set('tkLadH', n ? '충전하면 이 글(' + n2(n) + '자) 휴머나이징을' : '충전하면 이런 글을');
     };
     form.addEventListener('change', function (e) {
       if (e.target && e.target.name === 'kind') { inp.value = e.target.value; calc(); }
