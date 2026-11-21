@@ -631,8 +631,15 @@ NOTICE_INLINE_KEYS = set(LOCAL_KEYS) | set(GUIDE_KEYS) | {"humanize", "mark", "m
 def guide_chips(root):
     """13.12 '이런 검색으로 오셨나요?' 칩(첫 화면 · /humanize/ · 안내 페이지 머리 아래). 지금 페이지 칩은 k.js 가 aria-current 로 어둡게"""
     return ('<nav class="lp-links" aria-label="검색으로 많이 찾는 안내"><div class="k-wrap"><p class="lp-links-k">이런 검색으로 오셨나요?</p><div class="lp-chips">%s</div></div></nav>'
-            % "".join('<a href="%s%s">%s</a>' % (root, g[0], g[5]) for g in GUIDES if g[1] not in CHIP_SKIP))
+            % ("".join('<a href="%s%s">%s</a>' % (root, g[0], g[5]) for g in GUIDES if g[1] not in CHIP_SKIP)
+               + "".join(('<a href="%s" target="_blank" rel="noopener">%s<span class="k-sr"> (새 창)</span></a>' % (u, t)) if u.startswith("http")
+                         else '<a href="%s%s">%s</a>' % (root, u, t) for u, t in CHIP_EXTRA)))
 
+
+# 13.29(11.21) 대표 요청: '이런 검색으로 오셨나요?' 칩 둘째 줄에 검색어 칩을 더함(칩 줄에만, 안내 모음 · 바닥글 · 휴대폰 메뉴에는 넣지 않음).
+#   (주소, 칩 이름). 바깥 주소는 새 창. 'AI 작성률 낮추기' · 'AI 휴머나이저'는 이미 GUIDES 칩에 있어 겹치지 않게 넣지 않음.
+#   카피클린은 운영사 성균관컨설팅의 문서검사(카피휴먼 사이트와 같은 주소).
+CHIP_EXTRA = [("humanize/", "AI 휴머나이징"), ("humanizer/", "AI 글 인간화"), ("https://www.skkc.co.kr/ai-detector", "카피클린")]
 
 CHIP_SKIP = {"ai-bypass"}   # 13.13 '우회' 칩은 첫 화면 · 도구 위에는 두지 않음(우회 도구로 읽히지 않게). 안내 모음 · 바닥글 · /ai-detector/ 에서 이어짐
 
