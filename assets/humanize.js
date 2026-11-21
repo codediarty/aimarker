@@ -533,11 +533,11 @@
       return merge(rs, isFull, t);
     }).then(function (M) {
       M.src = t; M.C = C; if (!M.full) freeShow(M);
-      S.res = M; S.edits = {}; S.sel = -1; S.side = 'ai'; S.fx = null; box.classList.remove('stale'); renderRes(); collapse(true); setStep(2); outShown(); toOut(); return M;
+      S.res = M; S.edits = {}; S.sel = -1; S.side = 'ai'; S.fx = null; box.classList.remove('stale'); renderRes(); if (M.full && S.wantPdf) { S.wantPdf = false; setTimeout(function () { try { report(); } catch (e) { /* 저장 단추로 */ } }, 600); } collapse(true); setStep(2); outShown(); toOut(); return M;
     }).catch(function (e) { if (e && e.code === 'FREE_DAY' && !full && S.pass) freeDayPaid(t); else fail(e, function (free) { check(t, { free: free }); }, function () { check(t, opt); }); return null; })
       .then(function (M) { setBusy(false); return M; });
   }
-  btnC.addEventListener('click', function () { check(undefined, { paid: !!S.pass }); });   // 13.30 토큰 코드가 있으면 왼쪽 단추는 리포트(토큰), 없으면 무료 검사
+  btnC.addEventListener('click', function () { S.wantPdf = false; check(undefined, { paid: !!S.pass }); });   // 13.30 토큰 코드가 있으면 왼쪽 단추는 리포트(토큰), 없으면 무료 검사
   function freeDayPaid(t) {   // 13.30 토큰 코드로 오늘 무료 검사를 다 썼으면: 전체 검사(토큰 숫자가 적힌 단추)나 휴머나이징으로 바로 이어서
     var c = isCr() ? chkCost(chunk(t).parts) : 0, m = '긴 글은 6,000자마다 한 번으로 셉니다. 무료 검사는 내일 다시 할 수 있고, 지금 ' + RPT + '를 받으면 모든 문장의 위치와 결과상세내역서(PDF)까지 바로 열립니다.';
     S.fullT = t;
@@ -858,8 +858,17 @@
     return '<section class="hz12-next ' + bandCls(k) + (hot ? ' hot' : sig ? ' sig' : ' calm') + '" aria-labelledby="hzNextT"><div class="l"><h3 id="hzNextT">' + (hot ? esc(title).replace('인간화(휴머나이징)해 드립니다', '<span class="nb"><em>인간화(휴머나이징)</em>해 드립니다</span>') : esc(title)) + '</h3><p class="sub">' + (hot ? '<b>AI 문장 패턴을 자연스럽게 다듬어 드려요.</b> ' : '') + esc(sub) + '</p>' +
       '<ul>' + li.map(function (x) { return '<li>' + ico('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></div>' +
       '<div class="r"><button class="btn btn-p btn-l" type="button" data-act="humall">' + ico('pen') + '<span>' + (S.pass ? '글 전체 휴머나이징 · ' + tk(cost) + '토큰' : '충전하고 글 전체 휴머나이징') + '</span></button><p class="price">' + price + '</p>' +
-      (S.pass ? '' : '<button class="btn btn-g" type="button" data-act="humfree">' + freeTaste(t).part + ' 무료로 먼저 보기</button><button type="button" class="hz7-link" data-code data-intent="hum">토큰 코드가 있어요</button>') +
+      (S.pass ? '' : '<button class="btn btn-g" type="button" data-act="humfree">' + freeTaste(t).part + ' 무료로 먼저 보기</button><button type="button" class="hz7-link" data-code data-intent="hum">토큰 코드가 있어요</button>') + rptHtml(M, t) +
       '<p class="fine">AI 사용을 밝혀야 하는 글이면 규정대로 밝히세요.</p></div></section>';
+  }
+  /* 13.30 대표: '결과서 누를 때가 없다' → 토큰 코드가 있으면 다듬기 칸 오른쪽 아래에 결과서 단추. 누르면 토큰이 빠지고 결과서(PDF 저장 창)가 바로 열림.
+     메일로 보내지 않음(글을 서버에 남기지 않는 원칙). 이미 받은 결과서면 토큰 없이 다시 저장 */
+  function rptHtml(M, t) {
+    if (!S.pass) return '';
+    if (M.full) return '<div class="rpt"><button class="btn btn-g btn-l" type="button" data-act="report">' + ico('file') + '<span>' + RPT + ' PDF로 저장</span></button><p class="price">이미 받은 결과서라 토큰이 빠지지 않습니다.</p></div>';
+    var rc = chkCost(chunk(t).parts.filter(function (p) { return p; }));
+    return '<div class="rpt"><button class="btn btn-g btn-l" type="button" data-act="fullcheck" data-pdf>' + ico('file') + '<span>' + RPT + ' 받기' + (isCr() && rc ? ' · ' + tk(rc) + '토큰' : '') + '</span></button>' +
+      '<p class="price">AI 패턴이 걸린 문장을 하나하나 상세히 진단해 PDF로 바로 저장합니다.' + (isCr() ? (rc ? ' 남은 토큰에서 ' + tk(rc) + '토큰이 빠집니다.' : ' 600자 이하 글이라 토큰이 빠지지 않습니다.') : '') + '</p></div>';
   }
   function fullHtml(M) {   // 무료: 모든 문장의 위치와 이유 · 구간별 분석 · 결과상세내역서는 토큰으로(전체 검사)
     if (M.full) return '';
@@ -936,7 +945,7 @@
     if (act === 'pick') { if (fileIn) fileIn.click(); return; }   // 13.24 빈 글 안내의 '파일 올리기'
     if (act === 'humall') { startHum(); return; }
     if (act === 'humfree') { setStep(3); pro(false, true); return; }
-    if (act === 'fullcheck') { var ft = S.fullT; S.fullT = null; fullCheck(ft); return; }
+    if (act === 'fullcheck') { S.wantPdf = b.hasAttribute('data-pdf'); var ft = S.fullT; S.fullT = null; fullCheck(ft); return; }   // 13.30 다듬기 칸의 결과서 단추면 받은 뒤 바로 PDF 저장 창
     if (act === 'getfile') { getFile(b.getAttribute('data-kind')); return; }
     if (act === 'fix' || act === 'pro' || act === 'hum') { hum(); return; }
     if (act === 'proagain') { S.variant = (S.variant || 0) + 1; hum(true); return; }

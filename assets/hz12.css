@@ -87,6 +87,10 @@
 .hz12-note span { word-break: keep-all; }
 .hz12-note b { font-weight: 650; color: var(--ds-ink-2); }
 .hz12-note.hz-ex .ico { color: var(--ds-blue-600); }
+/* 13.30 다듬기 칸 오른쪽 아래 결과서 단추(휴머나이징 설명 아래) */
+.hz12-next .rpt { display: grid; gap: 6px; margin-top: 4px; padding-top: 12px; border-top: 1px dashed var(--ds-line-2); }
+.hz12-next .rpt .btn-l { min-height: 50px; padding: 10px 18px; font-size: 15.5px; font-weight: 650; }
+.hz12-next .rpt .btn-l .ico { width: 18px; height: 18px; }
 @media (max-width: 640px) { .hz12-note.hz-ex { align-items: flex-start; justify-content: flex-start; } .hz12-note.hz-ex .ico { margin-top: 2px; flex: 0 0 auto; } }
 .hz12-note { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; color: var(--ds-mist); }
 .hz12-note .ico { width: 14px; height: 14px; color: var(--ds-green); }
