@@ -1061,3 +1061,4 @@ body .hz7-dlg .hz18-packs .tg { padding: 2px 9px; font-size: 11px; }
 .hz7-err.hz20-need .row .btn .ico { width: 16px; height: 16px; flex: 0 0 auto; }
 body .hz7-dlg .hz18-packs .hz20-pg { grid-column: 1 / -1; margin: -2px 2px 0; font-size: 12px; line-height: 1.5; color: var(--ds-mist); }
 .tk17-pgn { margin: 14px 2px 0; color: var(--ds-mist); }
+.tk17-pgn.rep { margin-top: 16px; font-size: 15px; line-height: 1.65; font-weight: 500; color: var(--ds-slate); word-break: keep-all; }   /* 13.31 반복 변환 안내(조금 크게) */

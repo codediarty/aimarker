@@ -11,7 +11,7 @@
    - 13.24(2026.11.12 밤): ③ 다듬기 칸 머리 문구를 'AI 작성률에 필터링되는 문장을 인간화(휴머나이징)해 드립니다'로(예전 머리 문구는 설명 첫 문장으로, nextHtml).
      넣은 글이 없을 때 안내는 파일 먼저 + 그 자리 '파일 올리기'(need · data-act pick). 예시 창 'AI 패턴 줄이기'(k.js focusTool)는 #hzCheck 를 누른 것과 같음.
      충전 칸 설명은 '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 N페이지'(PRODS doc · pg = 대표가 정한 값, 1페이지 약 1,200자로 셈한 값보다 적거나 같게. build.py CREDITS 와 같게)
-   - 13.17 요금(월 구독 없이 한 번 충전): 라이트 100 · 플러스 300 · 프로 750(BEST 추천, 기본) · 맥스 1,500토큰(아임웹 96 · 97 · 98 · 99, 결제하면 서버가 바로 확인해 보통 1분 안에 코드 메일, 13.18).
+   - 13.17 요금(월 구독 없이 한 번 충전): 라이트 100 · 플러스 350 · 프로 1,000(BEST 추천, 기본) · 맥스 2,000토큰(13.31 2026.11.22 대표: 토큰 양만 늘림, 값 그대로)(아임웹 96 · 97 · 98 · 99, 결제하면 서버가 바로 확인해 보통 1분 안에 코드 메일, 13.18).
      무료 검사는 글 전체(13.30 부터 20만 자까지, 6,000자 조각마다 같은 기준)를 한 번에 보고, 가장 뚜렷한 문장 2개만 열어 둠(나머지는 결제 뒤).
      결제하러 가는 동안 하던 일(글 · 올린 파일)을 이 브라우저에만 24시간 맡겨 두고(localStorage am_hz_job + IndexedDB), 메일 단추로 연 새 창이나
      이 창에 코드가 들어오면 한 창에서만 이어서 함(am_hz_job_run). 다른 창에서 코드가 들어오면 이 창도 코드를 받음(storage 이벤트)
@@ -56,14 +56,15 @@
   var J = { HI: 85, MID: 65, SHORT: 60, SEG_AI: 20, UNFIT_RATE: 40, RISK_RATE: 20, UNFIT_SEG: 50,
     B: { unfit: ['부적합', '부적합 · 개선 필요'], risk: ['고위험', '고위험 · 수정 권고'], safe: ['안전', '안전 · AI 패턴 적음'], short: ['판단 보류', '판단 보류 · 글이 짧음'] } };
   var PRODS = [   // 13.17(10.31) 새 요금(대표): 라이트 · 플러스 · 프로(BEST 추천, 기본) · 맥스(최고 혜택) = 아임웹 96 · 97 · 98 · 99(build.py CREDITS 와 같게. 서버 products 는 결제 페이지 주소만 가져옴)
-    { id: 'lt', name: '라이트', price: 9900, cr: 100, base: 100, per: '99원', who: '간단한 문장 수정', doc: '레포트', pg: 10 },
-    { id: 'pl', name: '플러스', price: 19900, cr: 300, base: 300, per: '약 66원', who: '일반적인 문서 작업', doc: '레포트', pg: 30 },
-    { id: 'pr', name: '프로', price: 39900, cr: 750, base: 750, per: '약 53원', save: 20, badge: 'BEST 추천', best: 1, who: '넉넉한 토큰, 더 높은 가성비', doc: '논문', pg: 80 },
-    { id: 'mx', name: '맥스', price: 69900, cr: 1500, base: 1500, per: '약 47원', save: 30, badge: '최고 혜택', top: 1, who: '최대 토큰 제공', doc: '논문', pg: 200 }
+    { id: 'lt', name: '라이트', price: 9900, cr: 100, base: 100, per: '99원', who: 'AI 작성률 낮추기, 미니멀하게', doc: '레포트', pg: 10 },
+    { id: 'pl', name: '플러스', price: 19900, cr: 350, base: 350, per: '약 57원', who: 'AI 작성률 낮추기, 합리적으로', doc: '레포트', pg: 35 },
+    { id: 'pr', name: '프로', price: 39900, cr: 1000, base: 1000, per: '약 40원', save: 30, badge: 'BEST 추천', best: 1, who: 'AI 작성률 낮추기, 더 효과적으로', doc: '논문', pg: 100 },
+    { id: 'mx', name: '맥스', price: 69900, cr: 2000, base: 2000, per: '약 35원', save: 39, badge: '최고 혜택', top: 1, who: '반복 변환으로 AI 작성률 극한까지 낮추기', doc: '논문', pg: 250 }
   ];   // 13.24 doc · pg = '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 몇 페이지'(대표가 정한 값. 1페이지 약 1,200자로 셈한 값보다 적거나 같음: build.py CREDITS 와 같게)
   var PG_CHARS = 1200;
   var RPT = 'AI 작성률 결과서';   // 13.30 토큰으로 받는 전체 검사의 이름(왼쪽 단추 · 무료 결과의 안내 단추). 대표: '리포트'보다 '결과서'
-  var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
+  var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr', pl2: 'pl', pr2: 'pr', mx2: 'mx' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
+  var SRV_PID = { pl: 'pl2', pr: 'pr2', mx: 'mx2' };   // 13.31 서버의 새 상품 번호(토큰 350 · 1,000 · 2,000). 예전 pl · pr · mx 는 서버에서 legacy(예전 코드의 환불 셈을 지키려고 번호를 새로 둠). 바로 결제(am.buy)는 새 번호로
   var CR0 = { unit: { per: 100, cr: 0.2, min: 1 }, pro: { per: 100, cr: 0.4, min: 2 } }, ASK = 10;   // 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
@@ -89,7 +90,7 @@
   }
   function prodList() {   // 13.5 칸은 사이트 표(PRODS)가 기준. 서버 am.passinfo products 는 결제 페이지 주소(link)만 가져옴
     var L = (S.info && S.info.products) || [];
-    return PRODS.map(function (p) { var s = L.filter(function (x) { return x && x.id === p.id; })[0]; return s && s.link ? Object.assign({}, p, { link: s.link }) : p; });
+    return PRODS.map(function (p) { var s = L.filter(function (x) { return x && (x.id === SRV_PID[p.id] || x.id === p.id); })[0]; return s && s.link ? Object.assign({}, p, { link: s.link }) : p; });
   }
   function prod(id) { id = OLD_ID[id] || id; var L = prodList(); for (var i = 0; i < L.length; i++) if (L[i].id === id) return withDesc(L[i]); return null; }
   function prods() { return prodList().map(withDesc); }
@@ -332,12 +333,12 @@
      조각마다 보내는 값(글 · 말투 · 버전 · 코드)은 하나씩 보낼 때와 똑같음. ready() 가 거짓인 동안(말투 '자동'이 아직 안 정해짐)은
      하나씩 보내 첫 조각이 정한 말투를 나머지에 그대로 씀. 실제 서버로 잰 값: 5,900자 6조각 하나씩 약 20초 → 3개씩 7.7초 · 6개씩 4.5초, 결과 같음 */
   var PAR = 4;
-  function par(list, fn, ready) {
-    var res = new Array(list.length), next = 0;
-    function one() { var i = next++; return fn(list[i], i).then(function (r) { res[i] = r; }); }
-    function solo() { return next < list.length && ready && !ready() ? one().then(solo) : Promise.resolve(); }
-    function lane() { return next < list.length ? one().then(lane) : Promise.resolve(); }
-    return solo().then(function () { var ls = [], k = Math.min(PAR, list.length - next); while (k-- > 0) ls.push(lane()); return Promise.all(ls); }).then(function () { return res; });
+  function par(list, fn, ready) {   // 2026.11.22 한 조각이 실패하면 새 조각은 더 보내지 않고(남은 토큰을 쓰지 않게), 이미 보낸 조각이 끝난 뒤 실패를 알림(진행 표시가 실패 안내를 덮지 않게)
+    var res = new Array(list.length), next = 0, err = null;
+    function one() { var i = next++; return fn(list[i], i).then(function (r) { res[i] = r; }, function (e) { if (!err) err = e || { message: '' }; }); }
+    function solo() { return !err && next < list.length && ready && !ready() ? one().then(solo) : Promise.resolve(); }
+    function lane() { return !err && next < list.length ? one().then(lane) : Promise.resolve(); }
+    return solo().then(function () { var ls = [], k = Math.min(PAR, list.length - next); while (k-- > 0) ls.push(lane()); return Promise.all(ls); }).then(function () { if (err) throw err; return res; });
   }
   function sha(s) {
     try { return crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join(''); }); } catch (e) { return Promise.resolve(''); }
@@ -847,7 +848,7 @@
   function nextHtml(M) {
     var k = M.band.key; if (k === 'short') return '';
     var t = M.src || cur(), cost = humCost(chunk(t).parts), pk = packFor(cost), hot = k !== 'safe', n = nAi(M);
-    var li = ['말투는 원문에 맞춰 자동으로, 숫자와 이름, 인용은 그대로', '다듬기 전후 AI 작성률을 같은 기준으로 비교', keepFile() ? '올린 ' + S.src.kindKo + ' 파일 서식 그대로 받기' : outKind(cur()) === 'pdf' ? '다듬은 글을 PDF 파일로 받기' : /^(txt|md)$/.test(outKind(cur())) ? '다듬은 글을 텍스트 파일로 받기' : '다듬은 글을 워드 파일로 받기'];
+    var li = ['말투는 원문에 맞춰 자동으로, 숫자와 이름, 인용은 그대로', '다듬기 전후 AI 작성률을 같은 기준으로 비교', '반복 변환할수록 AI 작성률은 계속 낮아집니다', '여러 번 변환하여 AI 작성률을 극한으로 줄여보세요'];   // 13.31 대표: 셋째 줄(받는 파일 꼴)을 반복 변환 안내로, 한 줄 더
     var sig = !hot && M.sigN > 0;   // 13.2b 안전인데 AI처럼 읽히는 표현이 있을 때
     var title = hot ? 'AI 작성률에 필터링되는 문장을 인간화(휴머나이징)해 드립니다' : sig ? 'AI처럼 읽히는 표현 ' + n2(M.sigN) + '곳을 자연스럽게 다듬어 드려요' : '지금은 손볼 곳이 거의 없어요';
     var sub = hot ? (n ? 'AI로 보이는 문장 ' + n2(n) + '개를 포함해 ' : '') + '글 전체의 AI 말버릇과 번역투를 사람 말투에 가깝게 다듬습니다.' : sig ? '번역투, 빈말, 틀에 박힌 연결어를 사람 말투에 가깝게 바꾸고, 바꾸기 전후를 같은 기준으로 비교합니다. 사람이 쓴 글도 이런 표현 때문에 의심받을 수 있습니다.' : 'AI 작성 패턴도, AI처럼 읽히는 표현도 찾지 못했습니다. 그래도 말투와 흐름을 더 다듬고 싶다면 글 전체 휴머나이징을 할 수 있습니다.';
@@ -857,18 +858,20 @@
     else price = '이 글 전체는 <b>' + tk(cost) + '토큰</b>이에요. ' + esc(pk.name) + ' ' + tk(pk.cr) + '토큰(' + n2(pk.price) + '원)' + (pk.cr >= cost ? '이면 다듬고 <b>' + tk(pk.cr - cost) + '토큰</b>이 남아 다음 글에도 씁니다.' : '에 모자라는 만큼은 같은 코드에 충전해 이어서 다듬습니다.') + ' 결제하면 바로 메일로 토큰 코드가 오고, 이 글은 이어서 다듬어 드립니다.';
     return '<section class="hz12-next ' + bandCls(k) + (hot ? ' hot' : sig ? ' sig' : ' calm') + '" aria-labelledby="hzNextT"><div class="l"><h3 id="hzNextT">' + (hot ? esc(title).replace('인간화(휴머나이징)해 드립니다', '<span class="nb"><em>인간화(휴머나이징)</em>해 드립니다</span>') : esc(title)) + '</h3><p class="sub">' + (hot ? '<b>AI 문장 패턴을 자연스럽게 다듬어 드려요.</b> ' : '') + esc(sub) + '</p>' +
       '<ul>' + li.map(function (x) { return '<li>' + ico('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></div>' +
-      '<div class="r"><button class="btn btn-p btn-l" type="button" data-act="humall">' + ico('pen') + '<span>' + (S.pass ? '글 전체 휴머나이징 · ' + tk(cost) + '토큰' : '충전하고 글 전체 휴머나이징') + '</span></button><p class="price">' + price + '</p>' +
+      '<div class="r"><button class="btn btn-p btn-l" type="button" data-act="humall">' + ico('pen') + '<span>' + (S.pass ? '글 전체 휴머나이징 · ' + tk(cost) + '토큰' : '충전하고 글 전체 휴머나이징') + '</span></button><p class="price"><span class="lead">AI 작성률을 줄이고 원문의 의미는 유지합니다.</span>' + price + '</p>' +
       (S.pass ? '' : '<button class="btn btn-g" type="button" data-act="humfree">' + freeTaste(t).part + ' 무료로 먼저 보기</button><button type="button" class="hz7-link" data-code data-intent="hum">토큰 코드가 있어요</button>') + rptHtml(M, t) +
-      '<p class="fine">AI 사용을 밝혀야 하는 글이면 규정대로 밝히세요.</p></div></section>';
+      '</div></section>';   // 13.31 대표: 휴머나이징 단추 밑에 한 줄, '규정대로 밝히세요' 줄은 자리만 차지해 뺌
   }
   /* 13.30 대표: '결과서 누를 때가 없다' → 토큰 코드가 있으면 다듬기 칸 오른쪽 아래에 결과서 단추. 누르면 토큰이 빠지고 결과서(PDF 저장 창)가 바로 열림.
      메일로 보내지 않음(글을 서버에 남기지 않는 원칙). 이미 받은 결과서면 토큰 없이 다시 저장 */
+  /* 13.31 대표: '결과서 받기'는 휴머나이징 뒤에 또 돈을 내라는 것처럼 보여 'AI 작성률 상세 진단'(선택 사항)으로. 빠지는 토큰은 그대로 적음 */
+  var DX = 'AI 작성률 상세 진단';
   function rptHtml(M, t) {
     if (!S.pass) return '';
-    if (M.full) return '<div class="rpt"><button class="btn btn-g btn-l" type="button" data-act="report">' + ico('file') + '<span>' + RPT + ' PDF로 저장</span></button><p class="price">이미 받은 결과서라 토큰이 빠지지 않습니다.</p></div>';
+    if (M.full) return '<div class="rpt"><button class="btn btn-g btn-l" type="button" data-act="report">' + ico('file') + '<span>상세 진단 PDF로 저장</span></button><p class="price">이미 받은 상세 진단이라 토큰이 빠지지 않습니다.</p></div>';
     var rc = chkCost(chunk(t).parts.filter(function (p) { return p; }));
-    return '<div class="rpt"><button class="btn btn-g btn-l" type="button" data-act="fullcheck" data-pdf>' + ico('file') + '<span>' + RPT + ' 받기' + (isCr() && rc ? ' · ' + tk(rc) + '토큰' : '') + '</span></button>' +
-      '<p class="price">AI 패턴이 걸린 문장을 하나하나 상세히 진단해 PDF로 바로 저장합니다.' + (isCr() ? (rc ? ' 남은 토큰에서 ' + tk(rc) + '토큰이 빠집니다.' : ' 600자 이하 글이라 토큰이 빠지지 않습니다.') : '') + '</p></div>';
+    return '<div class="rpt"><button class="btn btn-g btn-l" type="button" data-act="fullcheck" data-pdf>' + ico('file') + '<span>' + DX + (isCr() && rc ? ' · ' + tk(rc) + '토큰' : '') + '</span></button>' +
+      '<p class="price"><span class="lead">AI 작성 구간을 상세히 확인하세요. (선택 사항)</span>' + (isCr() ? (rc ? '남은 토큰에서 ' + tk(rc) + '토큰이 빠집니다.' : '600자 이하 글이라 토큰이 빠지지 않습니다.') : '') + '</p></div>';
   }
   function fullHtml(M) {   // 무료: 모든 문장의 위치와 이유 · 구간별 분석 · 결과상세내역서는 토큰으로(전체 검사)
     if (M.full) return '';
@@ -1351,7 +1354,7 @@
   function prodsHtml(sel, noBest, need) {   // 13.17 칸: 배지 · 이름 · 토큰 · 가격(토큰당) · 절약, 이 글이 있으면 '이 글 N번'
     return prods().map(function (p) {
       var best = p.best && !noBest, k = need > 0 ? Math.floor(r1(p.cr / need) + 1e-9) : 0;
-      var sm = need > 0 ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : (p.pg || p.save ? p.desc : (p.who ? p.who + ' · ' : '') + p.desc);
+      var sm = need > 0 ? (chkBuy() ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : !k ? '이 글의 AI 작성률을 낮추기엔 부족해요' : k === 1 ? '내 문서 AI 작성률 낮추기 (1회)' : '내 문서 AI 작성률 극한으로 낮추기 (' + (k >= 1000 ? '1,000회 넘게' : n2(k) + '회') + ' 반복)') : (p.pg || p.save ? p.desc : (p.who ? p.who + ' · ' : '') + p.desc);   // 11.22 대표 문구(다듬기 충전 칸: 모자람 · 1회 · N회 반복, 결과서는 그대로)
       return '<label' + (best ? ' class="best"' : p.top ? ' class="top"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span>' +
         (best ? '<i class="tg">' + esc(p.badge || '추천') + '</i>' : p.top ? '<i class="tg top">' + esc(p.badge || '최고 혜택') + '</i>' : '') +
         '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b>' +
@@ -1388,15 +1391,16 @@
     var am = $('#hzBuyAmt'); if (am) am.textContent = tk(p.cr) + '토큰 ' + n2(p.price) + '원(부가세 포함) · ';
     var n = $('#hzBuyNote'); if (n) n.innerHTML = sh ? '' : payReady() ? (tu ? '카드나 간편결제로 바로 결제합니다. 승인되면 지금 코드에 ' + tk(p.cr) + '토큰이 바로 더해집니다.' : '카드나 간편결제로 바로 결제합니다. 승인되면 이 화면에서 바로 토큰이 열리고, 코드는 메일로도 보내 드립니다.') : stepsHtml() + '<span class="hz19-nt">' + (tu ? '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 지금 코드에 ' + tk(p.cr) + '토큰을 더해 드립니다.' : '주문하면 성균관컨설팅 결제 안내를 메일로 드리고, 결제가 확인되면 토큰 코드를 메일로 보내 드립니다.') + '</span>';
   }
+  function chkBuy() { return S.intent === 'check' || !!(S.buyNeed && S.buyNeed.what === RPT); }   // 11.22 결과서를 받으려고 연 충전 창(코드가 있어 '충전하기'로 열면 S.intent 가 비어 있음)
   function needLine(p, tu) {   // 13.2 이 글 값(원 · 토큰)과, 고른 충전으로 하고 남는 토큰
     var nd = $('#hzBuyNeed'), N = S.buyNeed; if (!nd) return;
     if (!p || (!N && !oldRate())) { nd.hidden = true; nd.innerHTML = ''; return; }
     if (!N) { nd.innerHTML = '새로 충전한 토큰은 새 코드로 메일로 옵니다. 지금 코드에 남은 <b>' + tkw(crLeft()) + '</b>은 그대로 쓸 수 있습니다.'; nd.hidden = false; return; }   // 13.26 예전 값 코드로 그냥 연 충전 창
-    var chk = S.intent === 'check', doW = chk ? '결과서를 받아' : '다듬어', have = r1((tu ? crLeft() : 0) + p.cr), left = r1(have - N.need);
+    var chk = chkBuy(), doW = chk ? '결과서를 받아' : '다듬어', have = r1((tu ? crLeft() : 0) + p.cr), left = r1(have - N.need);
     nd.innerHTML = '<span class="t">이 글(' + n2(N.len) + '자) ' + esc(N.what) + (N.old ? ' · 새 코드로' : '') + '</span><b class="v">' + tk(N.need) + '토큰</b>' +
       (N.old ? '<span class="r">지금 코드에 남은 토큰 <b>' + tk(N.old.left) + '</b> · 지금 코드로는 이 글에 <b>' + tkw(N.old.need) + '</b>이 듭니다. 새로 충전한 토큰은 새 코드로 메일로 오고, 새 코드로는 이 글에 <b>' + tkw(N.need) + '</b>이 듭니다.</span>' : '') +
       '<span class="r">' + (left >= 0 ? tk(p.cr) + '토큰 충전이면 ' + (chk ? '검사하고' : '다듬고') + ' <b>' + tkw(left) + '</b>이 남아요.' : tk(p.cr) + '토큰 충전으로는 ' + tk(-left) + '토큰이 모자라요. 더 큰 충전을 골라 주세요.') +
-      (!S.intent ? '' : payReady() ? ' 결제하면 이 화면에서 바로 이어서 ' + doW + ' 드립니다.' : ' 메일의 단추를 누르거나 코드를 넣으면 이 글을 바로 이어서 ' + doW + ' 드립니다.') + '</span>';
+      (chk ? (!S.intent ? '' : payReady() ? ' 결제하면 이 화면에서 바로 이어서 ' + doW + ' 드립니다.' : ' 메일의 단추를 누르거나 코드를 넣으면 이 글을 바로 이어서 ' + doW + ' 드립니다.') : S.intent && payReady() ? ' 결제하면 이 화면에서 바로 이어서 ' + doW + ' 드립니다.' : ' 넉넉하게 충전하고 반복 변환할수록 AI 작성률을 더욱 강력하게 낮출 수 있습니다.') + '</span>';
     nd.hidden = false;
   }
   function openBuy(pid, why, opt) {
@@ -1411,7 +1415,7 @@
     buyBody.innerHTML = buyTpl;
     S.buyNeed = needL > 0 ? { need: needL, len: opt.len || 0, what: opt.what || 'AI 휴머나이징', old: old ? { need: r1(opt.need), left: crLeft() } : null } : null;
     var fs = buyBody.querySelector('.hz7-prod'); if (fs) fs.innerHTML = '<legend class="sr">충전할 토큰</legend>' + prodsHtml(pid, false, needL);
-    var bh = $('#hzBuyT', buyBody); if (bh) bh.textContent = opt.need > 0 ? (S.intent === 'check' ? '충전하고 전체 결과를 바로 보세요' : '충전하고 이 글을 바로 다듬으세요') : 'AI 휴머나이징 토큰 충전';
+    var bh = $('#hzBuyT', buyBody); if (bh) bh.innerHTML = opt.need > 0 ? (chkBuy() ? '충전하고 전체 결과를 바로 보세요' : '지금 충전하고 <span style="white-space:nowrap">AI 작성률을 낮추세요</span>') : 'AI 휴머나이징 토큰 충전';   // 11.22 대표 문구(휴대폰에서는 '지금 충전하고 / AI 작성률을 낮추세요' 로 끊김)
     var tw = buyBody.querySelector('.hz7-to');
     if (tw) { if (isCr() && !old) { tw.hidden = false; tw.innerHTML = '<legend class="sr">어디에 충전할까요</legend><label><input type="radio" name="to" value="this"' + (wantTop ? ' checked' : '') + '><span><b>지금 코드에 충전</b><small>' + esc(S.pass.replace(/^(.{4}).*(.{4})$/, '$1-····-····-$2')) + ' · 남은 ' + tk(crLeft()) + '토큰</small></span></label><label><input type="radio" name="to" value="new"' + (wantTop ? '' : ' checked') + '><span><b>새 코드로 받기</b><small>다른 사람에게 줄 때</small></span></label>'; } else { tw.hidden = true; tw.innerHTML = ''; } }
     var m = sget('am_buy_mail'); if (m) { var mi = $('#hzBuyMail'); if (mi) mi.value = m; }
@@ -1474,7 +1478,7 @@
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) { say(msg, '토큰 코드와 결제 안내를 받을 이메일 주소를 확인해 주세요.'); var mi0 = $('#hzBuyMail'); if (mi0) mi0.focus(); return; }
       btn.disabled = true; say(msg, payReady() ? '결제를 준비하는 중…' : '주문을 보내는 중…', 'ok');
       var hold = Math.max(0, 2700 - (Date.now() - t0));   // 너무 빨리 낸 주문은 서버가 사람이 아닌 것으로 보므로, 그만큼만 기다렸다 보냄
-      new Promise(function (ok) { setTimeout(ok, hold); }).then(function () { return AM.call('am.buy', { product: pid, to: to, contact: mail, agree: 1, pay: payReady() ? 1 : 0, hp: f.querySelector('[name="hp"]').value, ms: Date.now() - t0, src: location.pathname, cid: cid() }, 30000); }).then(function (r) {
+      new Promise(function (ok) { setTimeout(ok, hold); }).then(function () { return AM.call('am.buy', { product: SRV_PID[pid] || pid, to: to, contact: mail, agree: 1, pay: payReady() ? 1 : 0, hp: f.querySelector('[name="hp"]').value, ms: Date.now() - t0, src: location.pathname, cid: cid() }, 30000); }).then(function (r) {
         if (!r || !r.ok) throw r || {};
         if (r.pay && payReady()) return startPay(r, mail, msg, btn);
         sset('am_buy_mail', mail);
