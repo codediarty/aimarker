@@ -59,7 +59,7 @@
     { id: 'lt', name: '라이트', price: 9900, cr: 100, base: 100, per: '99원', who: 'AI 작성률 낮추기, 미니멀하게', doc: '레포트', pg: 10 },
     { id: 'pl', name: '플러스', price: 19900, cr: 350, base: 350, per: '약 57원', who: 'AI 작성률 낮추기, 합리적으로', doc: '레포트', pg: 35 },
     { id: 'pr', name: '프로', price: 39900, cr: 1000, base: 1000, per: '약 40원', save: 30, badge: 'BEST 추천', best: 1, who: 'AI 작성률 낮추기, 더 효과적으로', doc: '논문', pg: 100 },
-    { id: 'mx', name: '맥스', price: 69900, cr: 2000, base: 2000, per: '약 35원', save: 39, badge: '최고 혜택', top: 1, who: '반복 변환으로 AI 작성률 극한까지 낮추기', doc: '논문', pg: 250 }
+    { id: 'mx', name: '맥스', price: 69900, cr: 2000, base: 2000, per: '약 34원', save: 40, badge: '최고 혜택', top: 1, who: '반복 변환으로 AI 작성률 극한까지 낮추기', doc: '논문', pg: 250 }
   ];   // 13.24 doc · pg = '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 몇 페이지'(대표가 정한 값. 1페이지 약 1,200자로 셈한 값보다 적거나 같음: build.py CREDITS 와 같게)
   var PG_CHARS = 1200;
   var RPT = 'AI 작성률 결과서';   // 13.30 토큰으로 받는 전체 검사의 이름(왼쪽 단추 · 무료 결과의 안내 단추). 대표: '리포트'보다 '결과서'
@@ -1354,13 +1354,13 @@
   function prodsHtml(sel, noBest, need) {   // 13.17 칸: 배지 · 이름 · 토큰 · 가격(토큰당) · 절약, 이 글이 있으면 '이 글 N번'
     return prods().map(function (p) {
       var best = p.best && !noBest, k = need > 0 ? Math.floor(r1(p.cr / need) + 1e-9) : 0;
-      var sm = need > 0 ? (chkBuy() ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : !k ? '이 글의 AI 작성률을 낮추기엔 부족해요' : k === 1 ? '내 문서 AI 작성률 낮추기 (1회)' : '내 문서 AI 작성률 극한으로 낮추기 (' + (k >= 1000 ? '1,000회 넘게' : n2(k) + '회') + ' 반복)') : (p.pg || p.save ? p.desc : (p.who ? p.who + ' · ' : '') + p.desc);   // 11.22 대표 문구(다듬기 충전 칸: 모자람 · 1회 · N회 반복, 결과서는 그대로)
+      var sm = need > 0 ? (chkBuy() ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : !k ? '이 글의 AI 작성률을 낮추기엔 부족해요' : p.save ? '내 문서 AI 작성률 극한으로 낮추기' : (p.desc || '')) : (p.pg || p.save ? p.desc : (p.who ? p.who + ' · ' : '') + p.desc);   // 11.22 대표 문구(다듬기 충전 칸: 모자람 · 프로 · 맥스만 '내 문서 AI 작성률 극한으로 낮추기'. 21:41 몇 회 반복은 빼고 라이트 · 플러스는 평소 설명, 결과서는 그대로)
       return '<label' + (best ? ' class="best"' : p.top ? ' class="top"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span>' +
         (best ? '<i class="tg">' + esc(p.badge || '추천') + '</i>' : p.top ? '<i class="tg top">' + esc(p.badge || '최고 혜택') + '</i>' : '') +
         '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b>' +
         (p.price ? '<b class="pr">' + n2(p.price) + '원' + (p.save ? (function () { var pl = PRODS.filter(function (x) { return x.id === 'pl'; })[0]; return pl ? ' <s title="같은 토큰을 플러스 단가로 샀을 때의 금액" style="font-size:.8em;font-weight:600;color:#8A94A6;text-decoration-thickness:1.5px;font-variant-numeric:tabular-nums">' + n2(Math.round(p.cr * pl.price / pl.cr)) + '원</s>' : ''; })() : '') + (p.per ? '<small>토큰당 ' + esc(p.per) + '</small>' : '') + '</b>' : '') +   // 11.22 대표: 프로 · 맥스는 요금 칸처럼 플러스 단가 기준 줄 그은 금액
         (p.save ? '<i class="hz17-sv">플러스보다 토큰당 약 ' + p.save + '% 절약</i>' : '') +
-        '<small class="ds">' + esc(sm) + '</small></span></label>';
+        (sm ? '<small class="ds">' + esc(sm) + '</small>' : '') + '</span></label>';
     }).join('') + (need > 0 ? '' : '<p class="hz20-pg">페이지 수는 1페이지 약 ' + n2(PG_CHARS) + '자 기준 · 줄 그은 금액은 같은 토큰을 플러스 단가로 샀을 때의 금액</p>');
   }
   function stepsHtml() {   // 바로 결제도, 결제 페이지도 없을 때(주문 → 결제 안내 메일): 결제 순서를 미리
