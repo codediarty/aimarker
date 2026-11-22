@@ -3,8 +3,8 @@ path: local/nail/
 key: local-nail
 v9: 1
 title: 네일샵 마케팅 · 네일샵 홍보 · AI 검색 등록 | 손님이 AI에게 물을 때 우리 네일샵이 나오게 | AIMarker
-ogtitle: 네일샵 AI 검색 등록 · 손님이 AI에게 물을 때 우리 가게가 나오게 | AIMarker
-desc: '강남역 근처 일요일에도 하는 네일샵 추천해 줘', 손님은 이제 이렇게 ChatGPT · 제미나이 · 네이버 AI 브리핑에 묻습니다. 네일샵 정보를 넣으면 AI 검색 준비도와 손님 질문에 답할 수 있는지 무료로 진단하고, AI가 읽는 가게 페이지와 구조화 데이터를 자동으로 만들어 구글 · 네이버 · 빙에 등록합니다. 홈페이지가 없어도 됩니다. 990토큰(1토큰 100원)부터.
+ogtitle: 네일샵 AI 검색 등록 · 손님이 AI에게 물을 때 우리 브랜드가 나오게 | AIMarker
+desc: '강남역 근처 일요일에도 하는 네일샵 추천해 줘', 손님은 이제 이렇게 ChatGPT · 제미나이 · 네이버 AI 브리핑에 묻습니다. 네일샵 정보를 넣으면 AI 검색 준비도와 손님 질문에 답할 수 있는지 무료로 진단하고, AI가 읽는 브랜드 페이지와 구조화 데이터를 자동으로 만들어 구글 · 네이버 · 빙에 등록합니다. 홈페이지가 없어도 됩니다. 990토큰(1토큰 100원)부터.
 lc_ind: nail
 scripts: assets/local-core.js, assets/local.js
 styles: assets/local.css
@@ -14,10 +14,10 @@ selflabel: footer
   <div class="k-wrap">
     <div>
       <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}local/">기업 AI 검색 등록</a>{{ico:chev}}<span>네일샵</span></p>
-      <h1 class="k-h1" id="h1">'근처 네일샵 추천해 줘'<br>AI에게 물을 때, 우리 가게가 나오게</h1>
-      <p class="k-lead">손님은 이제 '강남역 네일샵'을 검색창 대신 AI에게 묻습니다. AI는 가격, 영업시간, 예약 방법, 1인샵인지 같은 정리된 정보가 있는 가게를 골라 답합니다. 홈페이지가 없어도 AI가 읽는 가게 페이지를 만들어 올려 드립니다.</p>
+      <h1 class="k-h1" id="h1">'근처 네일샵 추천해 줘'<br>AI에게 물을 때, 우리 브랜드가 나오게</h1>
+      <p class="k-lead">손님은 이제 '강남역 네일샵'을 검색창 대신 AI에게 묻습니다. AI는 가격, 영업시간, 예약 방법, 1인샵인지 같은 정리된 정보가 있는 브랜드를 골라 답합니다. 홈페이지가 없어도 AI가 읽는 브랜드 페이지를 만들어 올려 드립니다.</p>
       <form class="lc-start one" data-lc-start data-ind="nail" aria-label="기업 AI 검색 무료 진단"><label class="k-sr" for="sN">네일샵 이름</label><input class="inp" id="sN" name="name" maxlength="60" placeholder="네일샵 이름"><label class="k-sr" for="sA">동네 · 가까운 역</label><input class="inp" id="sA" name="area" maxlength="30" placeholder="동네 · 가까운 역"><button class="k-btn k-btn-p" type="submit">30초 무료 진단 시작{{ico:arrow}}</button></form>
-      <ul class="lc-trust"><li>{{ico:check}}가입 없이 무료</li><li>{{ico:clock}}30초면 결과</li><li>{{ico:check}}홈페이지 없어도 됨</li><li>{{ico:lock}}입력한 정보는 서버로 보내지 않음</li></ul>
+      <ul class="lc-trust"><li>{{ico:check}}가입 없이 무료</li><li>{{ico:clock}}30초면 결과</li><li>{{ico:check}}홈페이지 없어도 됨</li><li>{{ico:lock}}입력한 정보는 서버로 보내지 않음</li></ul><div class="lc-ais"><p class="lc-ais-k">{{ico:sparkle}}이런 AI 검색 · 답변이 읽는 형식으로 정리합니다</p><ul aria-label="AI 검색 · 답변 서비스"><li>ChatGPT</li><li>Claude</li><li>Gemini</li><li>Perplexity</li><li>Copilot</li><li>네이버 AI 브리핑</li></ul></div><style>.lc-ais{margin:20px 0 0;max-width:600px}.lc-ais-k{display:flex;align-items:center;gap:6px;margin:0 0 9px;font-size:12.5px;font-weight:650;color:var(--ds-mist)}.lc-ais-k .ico{width:14px;height:14px;color:var(--ds-blue-600)}.lc-ais ul{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}.lc-ais li{display:inline-flex;align-items:center;height:32px;padding:0 11px;border:1px solid var(--ds-line-2);border-radius:9px;background:#fff;font-size:13.5px;font-weight:750;letter-spacing:-.015em;color:var(--ds-ink);box-shadow:0 1px 2px rgba(11,23,48,.05);white-space:nowrap}@media (max-width:560px){.lc-ais li{height:31px;padding:0 10px;font-size:13px}}</style>
     </div>
     <div class="k-screen lc-ai" aria-hidden="true"><div class="k-screen-bar"><i></i><i></i><i></i><span>AI 검색 답변 예시</span><em class="k-ex">예시 · 가상의 네일샵</em></div><div class="lc-ai-body"><p class="lc-q"><span>손님</span><b>강남역 근처 일요일에도 하는 네일샵 추천해 줘</b></p><div class="lc-a"><p class="lc-a-t"><b>AI</b><span>일요일에도 문을 여는 곳으로 이런 곳이 있어요.</span></p><div class="lc-card"><div class="ch"><b>봄결 네일</b><span>네일샵 · 강남역 3번 출구 4분</span></div><ul><li>일요일 11:00~19:00</li><li>젤네일 45,000원부터</li><li>1인샵 · 네이버 예약</li></ul><p class="src">출처 <span>네일샵 정보 페이지</span><span>지도 · 플레이스</span></p></div></div><p class="lc-ai-ft"><span class="k">네일샵</span>AI가 답에 쓴 시간 · 가격 · 편의는 모두 네일샵이 미리 정리해 둔 정보입니다.</p></div></div>
   </div>
@@ -31,7 +31,7 @@ selflabel: footer
       <p class="lp-k">한 줄 답</p>
       <h2 class="k-h2" id="ansT">네일샵 AI 검색 등록은 무엇을 하나요?</h2>
       <p class="k-lead">손님이 AI에게 묻는 질문(강남역 일요일에 하는 네일샵)에 AI가 답할 수 있도록, 우리 네일샵의 사실 정보를 AI가 읽는 형식으로 만들어 검색 엔진과 지도에 올리고 서로 맞추는 일입니다.</p>
-      <ul class="lp-pts"><li>AI가 읽는 가게 페이지와 구조화 데이터(schema.org)를 업종에 맞는 형식으로 자동으로 만듭니다.</li><li>구글 · 네이버 · 빙에 등록하고, 네이버 플레이스 · 카카오맵 · 구글 지도의 정보를 같게 맞춥니다.</li><li>답할 수 있는 질문 수를 등록 전후로 보여 드립니다.</li></ul>
+      <ul class="lp-pts"><li>AI가 읽는 브랜드 페이지와 구조화 데이터(schema.org)를 업종에 맞는 형식으로 자동으로 만듭니다.</li><li>구글 · 네이버 · 빙에 등록하고, 네이버 플레이스 · 카카오맵 · 구글 지도의 정보를 같게 맞춥니다.</li><li>답할 수 있는 질문 수를 등록 전후로 보여 드립니다.</li></ul>
     </div>
   </div>
 </section>
@@ -51,7 +51,7 @@ selflabel: footer
   <div class="k-wrap">
     <div class="k-head"><h2 class="k-h2" id="needT">AI가 우리 네일샵을 추천하려면 필요한 정보</h2>
       <p class="k-lead">이 여섯 가지가 어디서나 같은 사실로 정리되어 있으면 AI가 답에 넣을 근거가 됩니다. 비어 있는 것은 진단 도구가 알려 드립니다.</p></div>
-    <ol class="lp-tips"><li><b>대표 서비스와 가격</b><span>젤네일, 패디큐어, 케어처럼, 가격은 '부터'로 적어도 됩니다.</span></li><li><b>요일별 영업시간</b><span>일요일 · 늦은 시간 영업은 AI가 자주 받는 질문입니다.</span></li><li><b>예약 방법</b><span>네이버 예약 링크가 있으면 함께.</span></li><li><b>1인샵 · 프라이빗 여부</b><span>손님이 일부러 찾는 조건입니다.</span></li><li><b>주차 · 위치</b><span>건물 이름, 몇 층, 가까운 역 출구.</span></li><li><b>사장님 한 줄 소개</b><span>가게만의 사실 하나(예약한 시간에 한 분만 받습니다).</span></li></ol>
+    <ol class="lp-tips"><li><b>대표 서비스와 가격</b><span>젤네일, 패디큐어, 케어처럼, 가격은 '부터'로 적어도 됩니다.</span></li><li><b>요일별 영업시간</b><span>일요일 · 늦은 시간 영업은 AI가 자주 받는 질문입니다.</span></li><li><b>예약 방법</b><span>네이버 예약 링크가 있으면 함께.</span></li><li><b>1인샵 · 프라이빗 여부</b><span>손님이 일부러 찾는 조건입니다.</span></li><li><b>주차 · 위치</b><span>건물 이름, 몇 층, 가까운 역 출구.</span></li><li><b>대표님 한 줄 소개</b><span>브랜드만의 사실 하나(예약한 시간에 한 분만 받습니다).</span></li></ol>
   </div>
 </section>
 
@@ -63,16 +63,16 @@ selflabel: footer
 
 <section class="k-sec" id="faq" aria-labelledby="fTitle">
   <div class="k-wrap">
-    <div class="k-head"><h2 class="k-h2" id="fTitle">네일샵 사장님이 자주 묻는 질문</h2></div>
+    <div class="k-head"><h2 class="k-h2" id="fTitle">네일샵 대표님이 자주 묻는 질문</h2></div>
     <div class="k-faq">
-      <details><summary>인스타그램만 하는데 등록할 수 있나요?</summary><p>됩니다. 인스타그램은 AI가 읽기 어려운 경우가 많아, AI가 읽는 가게 페이지를 따로 만들어 인스타그램 · 네이버 플레이스와 연결합니다. 프로필 소개도 같은 사실로 맞추는 방법을 알려 드립니다.</p></details>
+      <details><summary>인스타그램만 하는데 등록할 수 있나요?</summary><p>됩니다. 인스타그램은 AI가 읽기 어려운 경우가 많아, AI가 읽는 브랜드 페이지를 따로 만들어 인스타그램 · 네이버 플레이스와 연결합니다. 프로필 소개도 같은 사실로 맞추는 방법을 알려 드립니다.</p></details>
       <details><summary>가격이 디자인마다 달라요.</summary><p>'젤네일 45,000원부터'처럼 시작 가격만 적어도 됩니다. AI가 '얼마부터'를 그대로 옮겨 답하기 좋습니다.</p></details>
       <details><summary>네이버 플레이스 리뷰도 중요한가요?</summary><p>네이버 AI 브리핑은 플레이스 리뷰를 요약합니다. 리뷰를 사거나 꾸미는 일은 하지 않고, 답글에 주차 · 예약 같은 사실을 보태는 문구를 1년 관리에서 매달 추천해 드립니다.</p></details>
-      <details><summary>디자인 사진도 올려 주나요?</summary><p>AI 가게 페이지는 글 정보 중심입니다. 사진은 인스타그램 · 플레이스 링크로 연결합니다. AI로 만든 이미지를 쓴다면 <a class="k-a" href="{{root}}label/">AI 마킹</a>으로 표시를 붙이세요.</p></details>
-      <details><summary>ChatGPT에 가게를 직접 등록하는 건가요?</summary><p>아니요. ChatGPT · 제미나이 같은 AI에는 가게를 따로 등록하는 창구가 없습니다. AI는 답을 만들 때 검색 엔진 색인(구글 · 빙 · 네이버)과 지도 · 플레이스 정보, 웹 페이지를 읽습니다. 기업 AI 검색 등록은 그곳들에 우리 가게 정보를 AI가 읽는 형식으로 올리고 서로 맞추는 일입니다.</p></details>
-      <details><summary>AI 답변에 우리 가게가 나오게 하려면요?</summary><p>AI가 우리 가게를 몰라서, 또는 정보가 틀려서 빠지는 이유를 없애야 합니다. AIMarker는 AI가 읽는 가게 페이지와 정보를 갖추고, 1년 관리에서는 같은 질문을 매달 AI에게 물어 기록해 드립니다.</p></details>
+      <details><summary>디자인 사진도 올려 주나요?</summary><p>AI 브랜드 페이지는 글 정보 중심입니다. 사진은 인스타그램 · 플레이스 링크로 연결합니다. AI로 만든 이미지를 쓴다면 <a class="k-a" href="{{root}}label/">AI 마킹</a>으로 표시를 붙이세요.</p></details>
+      <details><summary>ChatGPT에 브랜드를 직접 등록하는 건가요?</summary><p>아니요. ChatGPT · 제미나이 같은 AI에는 브랜드를 따로 등록하는 창구가 없습니다. AI는 답을 만들 때 검색 엔진 색인(구글 · 빙 · 네이버)과 지도 · 플레이스 정보, 웹 페이지를 읽습니다. 기업 AI 검색 등록은 그곳들에 우리 브랜드 정보를 AI가 읽는 형식으로 올리고 서로 맞추는 일입니다.</p></details>
+      <details><summary>AI 답변에 우리 브랜드가 나오게 하려면요?</summary><p>AI가 우리 브랜드를 몰라서, 또는 정보가 틀려서 빠지는 이유를 없애야 합니다. AIMarker는 AI가 읽는 브랜드 페이지와 정보를 갖추고, 1년 관리에서는 같은 질문을 매달 AI에게 물어 기록해 드립니다.</p></details>
       <details><summary>얼마이고 어떻게 결제하나요?</summary><p>등록은 990토큰, 등록 + 1년 관리는 2,900토큰입니다(1토큰 100원, 부가세 별도). 결제는 운영사 성균관컨설팅 결제 페이지에서 회원가입 없이 토스페이 · 카드 · 계좌이체로 하고, 세금계산서도 됩니다.</p></details>
-      <details><summary>결제하면 어떻게 진행되나요?</summary><p>결제할 때 적은 이메일로 영업일 하루 안에 시작 안내를 드립니다. 이 페이지에서 받은 '가게 정보 파일'을 회신하거나 가게 정보를 적어 보내 주시면, AI 가게 페이지를 올리고 검색 엔진에 등록한 뒤 전후 진단 결과를 보내 드립니다.</p></details>
+      <details><summary>결제하면 어떻게 진행되나요?</summary><p>결제할 때 적은 이메일로 영업일 하루 안에 시작 안내를 드립니다. 이 페이지에서 받은 '브랜드 정보 파일'을 회신하거나 브랜드 정보를 적어 보내 주시면, AI 브랜드 페이지를 올리고 검색 엔진에 등록한 뒤 전후 진단 결과를 보내 드립니다.</p></details>
     </div>
   </div>
 </section>

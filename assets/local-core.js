@@ -1,6 +1,6 @@
 /* AIMarker 기업 AI 검색 등록(13.9, 2026.10.27) 핵심 엔진
-   가게 정보 한 번 → AI 검색 준비도(100점) · 손님이 AI에게 묻는 질문과 답할 수 있는지 · AI가 읽는 소개 문장 · 자주 묻는 질문 ·
-   구조화 데이터(schema.org JSON-LD, 업종별 형식) · llms.txt · robots.txt · 정보 맞춤 목록 · AI 가게 페이지(HTML 한 장).
+   브랜드 정보 한 번 → AI 검색 준비도(100점) · 손님이 AI에게 묻는 질문과 답할 수 있는지 · AI가 읽는 소개 문장 · 자주 묻는 질문 ·
+   구조화 데이터(schema.org JSON-LD, 업종별 형식) · llms.txt · robots.txt · 정보 맞춤 목록 · AI 브랜드 페이지(HTML 한 장).
    브라우저(assets/local.js)와 빌드(Node, _src/tools/store_render.js)가 같은 파일을 씁니다. 화면(DOM)에 손대지 않고, 밖으로 아무것도 보내지 않습니다. */
 (function (root, factory) {
   var api = factory();
@@ -280,13 +280,13 @@
   /* ---------- 업종 ----------
      t: 고르는 이름 · n: 손님이 부르는 말 · type: schema.org 형식 · open: '여는' 대신 쓰는 말 · hw: 영업시간을 부르는 말
      items: 대표 서비스 칸 예시 · feat: 고르는 편의 · key: AI 질문에 자주 나오는 것(준비도 셈)
-     subs: [이름, 손님이 부르는 말, 형식] · chk: 광고 표현 점검 규칙 팩(서버 am.check) · warn: 업종 주의(사실만) · ex: 예시 가게 */
+     subs: [이름, 손님이 부르는 말, 형식] · chk: 광고 표현 점검 규칙 팩(서버 am.check) · warn: 업종 주의(사실만) · ex: 예시 브랜드 */
   var IND = {
     clinic: { t: '병원 · 의원', n: '병원', type: 'MedicalClinic', open: '진료하는', hw: '진료 시간', brkWord: '점심시간', itemsT: '진료 과목 · 주요 진료', itemV: '합니다',
       items: ['소아청소년과 진료', '내과 진료', '영유아 검진', '예방접종', '건강검진'], feat: ['reserve', 'walkin', 'parking', 'insurance', 'kids', 'wheel', 'foreign', 'card'],
       key: ['hours', 'sun', 'night', 'parking', 'reserve', 'items'], chk: 'med', med: 1,
       ex: { name: '봄빛 소아청소년과의원', area: '분당 정자역', q: '정자역 근처 일요일에 진료하는 소아과 있어?' },
-      warn: '의료법은 치료 효과를 보장하거나, 다른 병원과 비교하거나, 환자 치료 경험담처럼 보이는 광고를 금지합니다(제56조). AI 가게 페이지에는 진료 과목, 진료 시간, 위치, 접수 방법처럼 확인할 수 있는 사실만 적고 \'최고 · 완치 · 100%\' 같은 말은 쓰지 않습니다.' },
+      warn: '의료법은 치료 효과를 보장하거나, 다른 병원과 비교하거나, 환자 치료 경험담처럼 보이는 광고를 금지합니다(제56조). AI 브랜드 페이지에는 진료 과목, 진료 시간, 위치, 접수 방법처럼 확인할 수 있는 사실만 적고 \'최고 · 완치 · 100%\' 같은 말은 쓰지 않습니다.' },
     dental: { t: '치과', n: '치과', type: 'Dentist', open: '진료하는', hw: '진료 시간', brkWord: '점심시간', itemsT: '주요 진료', itemV: '합니다',
       items: ['스케일링', '충치 치료', '신경 치료', '임플란트', '치아 교정'], feat: ['reserve', 'parking', 'kids', 'insurance', 'wheel', 'foreign', 'card'],
       key: ['hours', 'night', 'sat', 'parking', 'reserve', 'price'], chk: 'med', med: 1,
@@ -330,12 +330,12 @@
       items: ['김치찌개', '제육볶음', '된장찌개', '계란말이'], feat: ['reserve', 'parking', 'group', 'room', 'kids', 'solofood', 'takeout', 'delivery', 'pet'],
       key: ['hours', 'reserve', 'parking', 'group', 'price', 'sun'], chk: 'food',
       ni: '식당', ex: { name: '봄결식당', area: '을지로3가역', q: '을지로 회식하기 좋은 한식집 추천해 줘' },
-      warn: '메뉴에 원산지를 적는다면 가게 안 원산지 표시와 같게 적습니다(농수산물 원산지 표시법). \'몸에 좋은 · 면역력\' 같은 효능 표현은 광고 표현 점검으로 한 번 더 거릅니다.' },
+      warn: '메뉴에 원산지를 적는다면 매장 안 원산지 표시와 같게 적습니다(농수산물 원산지 표시법). \'몸에 좋은 · 면역력\' 같은 효능 표현은 광고 표현 점검으로 한 번 더 거릅니다.' },
     academy: { t: '학원 · 교습소', n: '학원', type: ['LocalBusiness', 'EducationalOrganization'], open: '수업하는', hw: '수업 시간', itemsT: '과목 · 과정', itemV: '가르칩니다', itemsS: '가르치는 과목 · 과정은', fee: 1,
       items: ['초등 영어', '중등 수학', '고등 국어', '내신 대비', '방학 특강'], feat: ['shuttle', 'trial', 'small', 'online', 'parking'],
       key: ['hours', 'fee', 'items', 'shuttle', 'trial', 'sat'], chk: 'gen',
       ex: { name: '봄결수학학원', area: '대치동', q: '대치동 소수 정원 중등 수학 학원 알려 줘' },
-      warn: '학원법은 교습비를 학습자가 보기 쉽게 알리고, 교육청에 신고한 금액과 다르게 표시하지 않도록 정하고 있습니다(제15조, 시 · 도 교육청 기준). 교습비 칸에 신고한 금액을 그대로 적으면 AI 가게 페이지에 함께 올리고, \'합격률 · 1등\' 같은 말은 근거가 있을 때만 씁니다.' },
+      warn: '학원법은 교습비를 학습자가 보기 쉽게 알리고, 교육청에 신고한 금액과 다르게 표시하지 않도록 정하고 있습니다(제15조, 시 · 도 교육청 기준). 교습비 칸에 신고한 금액을 그대로 적으면 AI 브랜드 페이지에 함께 올리고, \'합격률 · 1등\' 같은 말은 근거가 있을 때만 씁니다.' },
     fitness: { t: '필라테스 · 요가 · 헬스', n: '운동 센터', type: 'ExerciseGym', open: '여는', hw: '운영 시간', itemsT: '수업 · 회원권과 가격', itemV: '합니다', itemsS: '수업 · 회원권은',
       subs: [['필라테스', '필라테스', 'ExerciseGym', '필라테스 센터'], ['요가', '요가원', 'ExerciseGym', '요가원'], ['헬스 · PT', '헬스장', 'ExerciseGym', '헬스장'], ['크로스핏 · 그룹 운동', '운동 센터', 'ExerciseGym', '운동 센터']], ni: '운동 센터',
       items: ['1:1 개인 레슨', '그룹 레슨', '체험 수업', '회원권 3개월'], feat: ['trial', 'small', 'parking', 'shower', 'wear', 'female'],
@@ -346,7 +346,7 @@
       items: ['아파트 매매', '전월세', '상가 · 사무실', '원룸 · 오피스텔'], feat: ['consult', 'parking', 'foreign', 'online'],
       key: ['hours', 'reg', 'items', 'tel', 'sat', 'consult'], chk: 'gen',
       ex: { name: '봄결공인중개사사무소', area: '위례', q: '위례 신혼부부 전세 잘 보는 부동산 알려 줘' },
-      warn: '중개대상물(매물)을 인터넷에 표시 · 광고할 때는 중개사무소 이름 · 소재지 · 연락처 · 등록번호와 개업공인중개사 이름을 밝혀야 합니다(공인중개사법 제18조의2). 매물을 소개하지 않더라도 AI 가게 페이지에는 이 정보를 함께 적습니다.' },
+      warn: '중개대상물(매물)을 인터넷에 표시 · 광고할 때는 중개사무소 이름 · 소재지 · 연락처 · 등록번호와 개업공인중개사 이름을 밝혀야 합니다(공인중개사법 제18조의2). 매물을 소개하지 않더라도 AI 브랜드 페이지에는 이 정보를 함께 적습니다.' },
     office: { t: '법률 · 세무 · 노무 사무소', n: '사무소', type: 'LocalBusiness', open: '여는', hw: '상담 시간', itemsT: '상담 분야', itemV: '상담합니다', areaServed: 1, subReq: 1, q2: '우리 지역 일도 맡아?',
       subs: [['변호사', '법률사무소', 'LegalService'], ['법무사', '법무사 사무소', 'LegalService'], ['세무사', '세무사 사무소', 'AccountingService'], ['회계사', '회계사무소', 'AccountingService'], ['노무사', '노무사 사무소', 'LocalBusiness'], ['행정사', '행정사 사무소', 'LocalBusiness']],
       items: ['상속 · 증여', '세금 신고 · 기장', '임금 · 해고 상담', '등기 · 소송 서류'], feat: ['consult', 'online', 'parking', 'foreign'], noEx: 1,
@@ -363,8 +363,8 @@
       items: ['커플룸(2인)', '가족룸(4인)', '독채(6인)', '바비큐 세트'], feat: ['parking', 'pet', 'bbq', 'pool', 'kids', 'breakfast', 'pickup'],
       key: ['checkin', 'price', 'parking', 'pet', 'bbq', 'items'], chk: 'gen',
       ex: { name: '봄결스테이', area: '가평', q: '가평 반려견 동반 되는 독채 펜션 추천해 줘' } },
-    shop: { t: '그 밖의 가게', n: '가게', type: 'Store', open: '여는', hw: '영업시간', itemsT: '대표 상품 · 서비스와 가격', itemV: '합니다', itemsS: '대표 상품 · 서비스는', noEx: 1,
-      subs: [['꽃집', '꽃집', 'Florist'], ['공방 · 클래스', '공방', 'LocalBusiness'], ['사진관 · 스튜디오', '사진관', 'LocalBusiness'], ['안경원', '안경원', 'Optician'], ['세탁소', '세탁소', 'DryCleaningOrLaundry'], ['애견 미용 · 용품', '애견미용', 'PetStore'], ['그 밖의 가게', '가게', 'Store']],
+    shop: { t: '그 밖의 매장', n: '브랜드', type: 'Store', open: '여는', hw: '영업시간', itemsT: '대표 상품 · 서비스와 가격', itemV: '합니다', itemsS: '대표 상품 · 서비스는', noEx: 1,
+      subs: [['꽃집', '꽃집', 'Florist'], ['공방 · 클래스', '공방', 'LocalBusiness'], ['사진관 · 스튜디오', '사진관', 'LocalBusiness'], ['안경원', '안경원', 'Optician'], ['세탁소', '세탁소', 'DryCleaningOrLaundry'], ['애견 미용 · 용품', '애견미용', 'PetStore'], ['그 밖의 매장', '브랜드', 'Store']],
       items: ['대표 상품', '대표 서비스'], feat: ['reserve', 'walkin', 'parking', 'card', 'delivery', 'gift', 'kids'],
       key: ['hours', 'items', 'price', 'parking', 'reserve', 'sun'], chk: 'gen',
       ex: { name: '봄결꽃집', area: '합정역', q: '합정역 근처 당일 꽃다발 되는 꽃집 있어?' } }
@@ -383,7 +383,7 @@
   /* 소개 문장에 쓰는 이름(손님이 부르는 말보다 곳을 가리키는 말: '필라테스' → '필라테스 센터') */
   function placeNoun(s) { var x = sub(s); return (x && x[3]) || ind(s).ni || noun(s); }
 
-  /* ---------- 들어온 가게 정보를 한 모양으로 ---------- */
+  /* ---------- 들어온 브랜드 정보를 한 모양으로 ---------- */
   function normalize(raw) {
     raw = raw || {};
     var s = { v: 1, ind: has(IND, raw.ind) ? raw.ind : 'shop', sub: clean(raw.sub, 30), name: clean(raw.name, 60), branch: clean(raw.branch, 30), area: clean(raw.area, 30),
@@ -429,7 +429,7 @@
     return F;
   }
   /* 빠진 정보 이름(누르면 그 칸으로) */
-  var NEED = { base: ['가게 이름 · 주소', 'f-name'], name: ['가게 이름', 'f-name'], addr: ['도로명 주소', 'f-addr'], area: ['동네 · 가까운 역', 'f-area'], tel: ['전화번호', 'f-tel'],
+  var NEED = { base: ['브랜드 이름 · 주소', 'f-name'], name: ['브랜드 이름', 'f-name'], addr: ['도로명 주소', 'f-addr'], area: ['동네 · 가까운 역', 'f-area'], tel: ['전화번호', 'f-tel'],
     hours: ['요일별 영업시간', 'h-mon'], week: ['쉬는 요일까지 모든 요일', 'h-mon'], sun: ['일요일 영업시간', 'h-sun'], sat: ['토요일 영업시간', 'h-sat'], night: ['저녁 늦게까지 여는지', 'h-mon'], early: ['아침 일찍 여는지', 'h-mon'], hol: ['공휴일 · 쉬는 날', 'h-hol'],
     items: ['대표 서비스 · 메뉴', 'it-n0'], price: ['가격', 'it-p0'], addr2: ['찾아오는 길', 'f-addr2'], book: ['예약 방법', 'l-book'], fee: ['교습비', 'f-fee'], reg: ['중개사무소 등록번호', 'b-reg'],
     area2: ['일하는 지역', 'f-area2'], checkin: ['체크인 · 체크아웃 시간', 'f-checkin'], cuisine: ['음식 종류', 'f-cuisine'], sub: ['세부 업종', 'f-sub'] };
@@ -464,7 +464,7 @@
   }
 
   /* ---------- AI가 읽는 소개 문장(사실만, 입력한 것으로만) ---------- */
-  /* 사장님이 적은 짧은 말을 문장으로: '걸어서 4분' → '걸어서 4분입니다.', '올라오세요' → 그대로 */
+  /* 대표님이 적은 짧은 말을 문장으로: '걸어서 4분' → '걸어서 4분입니다.', '올라오세요' → 그대로 */
   function sent(x, tail) { x = clean(x).replace(/[.。]+$/, ''); if (!x) return ''; return /(다|요|음|함|됨|임|\))$/.test(x) ? x + '.' : x + (tail || '입니다') + '.'; }
   /* 쉬는 날 안내: '설 · 추석 당일' → '설 · 추석 당일에도 쉽니다.'(매주 쉬는 요일이 있을 때) · '…에 쉽니다.'(없을 때) */
   function offSent(x, also) { x = clean(x).replace(/[.。]+$/, ''); if (!x) return ''; return /(다|요)$/.test(x) ? x + '.' : x + (/(휴무|쉼|휴진|휴관|휴업)$/.test(x) ? '입니다' : also ? '에도 쉽니다' : '에 쉽니다') + '.'; }
@@ -482,9 +482,9 @@
     var near = s.area && where.indexOf(s.area) < 0 ? s.area + (/(역|입구|사거리|교차로)$/.test(s.area) ? ' 근처' : '') : '';
     return [where, near].filter(Boolean).join(' ');
   }
-  /* AI가 읽는 소개(입력한 사실만으로, 꾸미는 말 없이). 사장님 한 줄 소개는 끝에 그대로 */
+  /* AI가 읽는 소개(입력한 사실만으로, 꾸미는 말 없이). 대표님 한 줄 소개는 끝에 그대로 */
   function intro(s) {
-    var I = ind(s), F = facts(s), n = noun(s), nm = (s.name || '우리 가게') + (s.branch ? ' ' + s.branch : ''), out = [], place = placeOf(s);
+    var I = ind(s), F = facts(s), n = noun(s), nm = (s.name || '우리 브랜드') + (s.branch ? ' ' + s.branch : ''), out = [], place = placeOf(s);
     out.push(jo(nm, '은', '는') + ' ' + (place ? place + '에 있는 ' : '') + (s.cuisine && I.cuisine ? s.cuisine + ' ' : '') + placeNoun(s) + '입니다.');
     var il = itemsList(s, 4);
     if (il.length) {
@@ -509,7 +509,7 @@
     wifi: '노트북 작업하기 좋나요?', pet: '반려동물과 함께 갈 수 있나요?', group: '단체 예약이 되나요?', shuttle: '차량 운행을 하나요?', trial: '체험 수업이 있나요?', consult: '상담 예약이 되나요?',
     estimate: '방문 실측 · 견적을 받을 수 있나요?', warranty: '시공 뒤 A/S를 보증하나요?', bbq: '바비큐를 할 수 있나요?', online: '비대면으로도 되나요?', designer: '디자이너를 지정할 수 있나요?', small: '소수 정원으로 수업하나요?' };
   function faq(s) {
-    var I = ind(s), F = facts(s), nm = (s.name || '우리 가게') + (s.branch ? ' ' + s.branch : ''), A = [], miss = [];
+    var I = ind(s), F = facts(s), nm = (s.name || '우리 브랜드') + (s.branch ? ' ' + s.branch : ''), A = [], miss = [];
     function add(q, a, need) { if (a) A.push({ q: q, a: a }); else miss.push({ q: q, need: need }); }
     add(jo(nm, '은', '는') + ' 어떤 곳인가요?', s.name ? intro(s) : '', 'name');
     var hs = hoursSentence(s);
@@ -563,10 +563,10 @@
     part('trust', '소개와 신뢰', 10, (s.about ? 4 : 0) + ((s.biz.owner || s.biz.no) ? 3 : 0) + (I.reg ? (s.biz.reg ? 3 : 0) : (s.addr2 ? 3 : 0)),
       [!s.about && 'about', !(s.biz.owner || s.biz.no) && 'b-owner', I.reg ? (!s.biz.reg && 'reg') : (!s.addr2 && 'addr2')]);
     var total = parts.reduce(function (t, p) { return t + p.got; }, 0);
-    var grade = total >= 90 ? { k: 'a', t: 'AI가 답할 준비가 되었습니다' } : total >= 70 ? { k: 'b', t: 'AI가 대부분 답할 수 있습니다' } : total >= 40 ? { k: 'c', t: 'AI가 일부만 답할 수 있습니다' } : { k: 'd', t: 'AI가 우리 가게를 잘 모릅니다' };
+    var grade = total >= 90 ? { k: 'a', t: 'AI가 답할 준비가 되었습니다' } : total >= 70 ? { k: 'b', t: 'AI가 대부분 답할 수 있습니다' } : total >= 40 ? { k: 'c', t: 'AI가 일부만 답할 수 있습니다' } : { k: 'd', t: 'AI가 우리 브랜드를 잘 모릅니다' };
     return { total: total, grade: grade, parts: parts };
   }
-  var TIP = { 'l-place': ['네이버 플레이스 주소', 'l-place'], 'l-kakao': ['카카오맵 · 구글 지도 주소', 'l-kakao'], 'l-insta': ['홈페이지 · 인스타그램 · 블로그', 'l-insta'], 'l-book': ['예약 링크', 'l-book'], about: ['사장님 한 줄 소개', 'f-about'], 'b-owner': ['대표자 · 사업자 정보', 'b-owner'] };
+  var TIP = { 'l-place': ['네이버 플레이스 주소', 'l-place'], 'l-kakao': ['카카오맵 · 구글 지도 주소', 'l-kakao'], 'l-insta': ['홈페이지 · 인스타그램 · 블로그', 'l-insta'], 'l-book': ['예약 링크', 'l-book'], about: ['대표님 한 줄 소개', 'f-about'], 'b-owner': ['대표자 · 사업자 정보', 'b-owner'] };
   function tipName(k) { return TIP[k] ? TIP[k][0] : needName(k); }
   function tipField(k) { return TIP[k] ? TIP[k][1] : needField(k); }
 
@@ -615,12 +615,12 @@
       isPartOf: o.hosted ? { '@type': 'WebSite', '@id': SITE + '#site', name: 'AIMarker', url: SITE } : undefined });
     return prune({ '@context': 'https://schema.org', '@graph': graph });
   }
-  function title(s) { var a = s.area || parseAddr(s.addr).short; return (s.name || '우리 가게') + (s.branch ? ' ' + s.branch : '') + ' · ' + (a ? a + ' ' : '') + noun(s) + ' | ' + ind(s).hw + ' · 위치 · ' + (ind(s).med ? '진료 안내' : '예약'); }
+  function title(s) { var a = s.area || parseAddr(s.addr).short; return (s.name || '우리 브랜드') + (s.branch ? ' ' + s.branch : '') + ' · ' + (a ? a + ' ' : '') + noun(s) + ' | ' + ind(s).hw + ' · 위치 · ' + (ind(s).med ? '진료 안내' : '예약'); }
 
   /* ---------- llms.txt · robots.txt ---------- */
   function llms(s, o) {
     o = o || {};
-    var I = ind(s), q = faq(s).list, L = s.links, lines = ['# ' + (s.name || '우리 가게') + (s.branch ? ' ' + s.branch : ''), '', '> ' + intro(s), '', '## 기본 정보', '- 업종: ' + noun(s) + (s.cuisine ? ' (' + s.cuisine + ')' : '')];
+    var I = ind(s), q = faq(s).list, L = s.links, lines = ['# ' + (s.name || '우리 브랜드') + (s.branch ? ' ' + s.branch : ''), '', '> ' + intro(s), '', '## 기본 정보', '- 업종: ' + noun(s) + (s.cuisine ? ' (' + s.cuisine + ')' : '')];
     if (s.addr) lines.push('- 주소: ' + s.addr + (s.addr2 ? ' (' + s.addr2 + ')' : ''));
     if (s.tel) lines.push('- 전화: ' + s.tel);
     var ht = hoursText(s); if (ht) lines.push('- ' + I.hw + ': ' + ht);
@@ -632,8 +632,8 @@
     if (s.items.length) { lines.push('', '## ' + I.itemsT); s.items.forEach(function (it) { lines.push('- ' + it.n + (it.p ? ': ' + it.p : '') + (it.d ? ' (' + it.d + ')' : '')); }); }
     if (q.length) { lines.push('', '## 자주 묻는 질문'); q.slice(1).forEach(function (x) { lines.push('- Q: ' + x.q + ' A: ' + x.a); }); }
     var lk = [['예약', L.book], ['네이버 플레이스', L.place], ['카카오맵', L.kakao], ['구글 지도', L.google], ['홈페이지', L.home], ['인스타그램', L.insta], ['블로그', L.blog]].filter(function (x) { return x[1]; });
-    if (lk.length || o.url) { lines.push('', '## 링크'); if (o.url) lines.push('- [가게 정보 페이지](' + o.url + ')'); lk.forEach(function (x) { lines.push('- [' + x[0] + '](' + x[1] + ')'); }); }
-    lines.push('', '정보 확인: ' + (s.updated || '입력한 날') + ', 가게가 직접 확인한 정보입니다.');
+    if (lk.length || o.url) { lines.push('', '## 링크'); if (o.url) lines.push('- [브랜드 정보 페이지](' + o.url + ')'); lk.forEach(function (x) { lines.push('- [' + x[0] + '](' + x[1] + ')'); }); }
+    lines.push('', '정보 확인: ' + (s.updated || '입력한 날') + ', 브랜드가 직접 확인한 정보입니다.');
     return lines.join('\n') + '\n';
   }
   var BOTS = [['OAI-SearchBot', 'ChatGPT 검색'], ['ChatGPT-User', 'ChatGPT 사용자 요청'], ['PerplexityBot', 'Perplexity 검색'], ['Perplexity-User', 'Perplexity 사용자 요청'], ['Claude-SearchBot', 'Claude 검색'], ['Claude-User', 'Claude 사용자 요청'], ['Googlebot', '구글 검색 · AI 개요'], ['Bingbot', '빙 검색 · Copilot'], ['Yeti', '네이버 검색 · AI 브리핑'], ['Daumoa', '다음 검색']];
@@ -641,7 +641,7 @@
 
   /* ---------- 정보 맞춤 목록(어디서나 같은 사실) ---------- */
   function checklist(s) {
-    var ht = hoursText(s), same = ['이름 ' + (s.name || '(가게 이름)'), '주소 ' + (s.addr || '(도로명 주소)'), '전화 ' + (s.tel || '(전화번호)'), ind(s).hw + ' ' + (ht || '(요일별 시간)')];
+    var ht = hoursText(s), same = ['이름 ' + (s.name || '(브랜드 이름)'), '주소 ' + (s.addr || '(도로명 주소)'), '전화 ' + (s.tel || '(전화번호)'), ind(s).hw + ' ' + (ht || '(요일별 시간)')];
     var L = s.links;
     return [
       { k: 'place', t: '네이버 플레이스(스마트플레이스)', done: !!L.place, href: 'https://new.smartplace.naver.com/', d: '네이버 AI 브리핑은 플레이스 정보와 리뷰를 요약합니다. 아래 값과 똑같이 맞추고, 대표 메뉴 · 가격 · 편의 정보 칸을 빠짐없이 채우세요.', same: same },
@@ -653,7 +653,7 @@
     ];
   }
 
-  /* ---------- AI 가게 페이지(HTML 한 장, 스크립트 없음) ---------- */
+  /* ---------- AI 브랜드 페이지(HTML 한 장, 스크립트 없음) ---------- */
   var PCSS = 'body{margin:0;background:#F6F8FB;color:#0B1733;font:16px/1.65 "Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;word-break:keep-all}' +
     'a{color:#0B63F6}.w{max-width:760px;margin:0 auto;padding:24px 16px 40px}.hd{background:#fff;border:1px solid #E3E7EE;border-radius:16px;padding:24px}' +
     '.k{display:inline-flex;gap:6px;align-items:center;margin:0 0 10px;padding:3px 10px;border-radius:999px;background:#F3F7FF;color:#0952D6;font-size:12.5px;font-weight:700}' +
@@ -689,7 +689,7 @@
       '<meta property="og:type" content="website"><meta property="og:title" content="' + esc(ttl) + '"><meta property="og:description" content="' + esc(desc) + '">' + (o.url ? '<meta property="og:url" content="' + esc(o.url) + '">' : '') + '<meta property="og:locale" content="ko_KR">' +
       '<meta name="generator" content="AIMarker 기업 AI 검색 등록 ' + VER + '">' +
       '<script type="application/ld+json">' + JSON.stringify(ld).replace(/</g, '\\u003c') + '</script><style>' + PCSS + '</style></head><body><main class="w">' +
-      '<header class="hd"><p class="k">' + (up ? '가게가 확인한 정보 · ' + esc(up.replace(/-/g, '.')) + ' 기준' : '가게가 확인한 정보') + '</p><h1>' + esc((s.name || '우리 가게') + (s.branch ? ' ' + s.branch : '')) + '</h1>' +
+      '<header class="hd"><p class="k">' + (up ? '브랜드가 확인한 정보 · ' + esc(up.replace(/-/g, '.')) + ' 기준' : '브랜드가 확인한 정보') + '</p><h1>' + esc((s.name || '우리 브랜드') + (s.branch ? ' ' + s.branch : '')) + '</h1>' +
       '<p class="sub">' + esc([ad.locality || ad.short, s.area, (s.cuisine && I.cuisine ? s.cuisine + ' ' : '') + noun(s)].filter(Boolean).join(' · ')) + '</p><p class="lead">' + esc(it) + '</p>' + (acts ? '<div class="acts">' + acts + '</div>' : '') + '</header>' +
       (rows ? '<section aria-labelledby="t-h"><h2 id="t-h">' + esc(I.hw) + '</h2><table><tbody>' + rows + '</tbody></table></section>' : '') +
       (items ? '<section aria-labelledby="t-i"><h2 id="t-i">' + esc(I.itemsT) + '</h2><table><tbody>' + items + '</tbody></table>' + (I.med ? '<p class="warn">진료 내용에 따라 비용이 달라질 수 있습니다. 자세한 비용은 내원 전에 확인해 주세요.</p>' : '') + '</section>' : '') +
@@ -697,11 +697,11 @@
       (faqH ? '<section aria-labelledby="t-q"><h2 id="t-q">자주 묻는 질문</h2>' + faqH + '</section>' : '') +
       (info ? '<section aria-labelledby="t-a"><h2 id="t-a">위치와 정보</h2><table><tbody>' + info + '</tbody></table></section>' : '') +
       (links ? '<section aria-labelledby="t-l"><h2 id="t-l">바로 가기</h2><ul class="links">' + links + '</ul></section>' : '') +
-      '<p class="ft">이 페이지의 정보는 ' + esc(jo(s.name || '가게', '이', '가')) + ' ' + (up ? esc(up.replace(/-/g, '.')) + '에 직접 확인했습니다' : '직접 확인했습니다') + '. 바뀐 정보가 있으면 가게로 알려 주세요.' +
+      '<p class="ft">이 페이지의 정보는 ' + esc(jo(s.name || '브랜드', '이', '가')) + ' ' + (up ? esc(up.replace(/-/g, '.')) + '에 직접 확인했습니다' : '직접 확인했습니다') + '. 바뀐 정보가 있으면 브랜드로 알려 주세요.' +
       (o.hosted ? '<br>만든 곳 <a href="' + SITE + 'local/">AIMarker 기업 AI 검색 등록</a>' : '') + '</p></main></body></html>\n';
   }
 
-  /* 가게 정보 파일(내려받기 · 주문할 때 회신) */
+  /* 브랜드 정보 파일(내려받기 · 주문할 때 회신) */
   function fileOf(s) { var o = JSON.parse(JSON.stringify(s)); o.kind = 'aimarker-store'; o.engine = VER; return JSON.stringify(o, null, 2) + '\n'; }
 
   return { VER: VER, SITE: SITE, IND: IND, ORDER: ORDER, FEAT: FEAT, DAYS: DAYS, DKO: DKO, esc: esc, jo: jo, roman: roman, slug: slug, parseAddr: parseAddr, parsePrice: parsePrice,

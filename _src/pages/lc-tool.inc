@@ -1,22 +1,22 @@
 <section class="k-sec lc-sec" id="tool" aria-labelledby="lcT">
   <div class="k-wrap">
     <div class="k-head">
-      <p class="k-eyebrow">{{ico:radar}}자세한 진단 · AI 가게 페이지 무료로 만들기</p>
-      <h2 class="k-h2" id="lcT">빈칸을 채우면, AI가 읽는 가게 페이지가 바로 생깁니다</h2>
-      <p class="k-lead">가게 정보를 넣는 만큼 점수가 바로 오르고, 손님 질문에 답할 수 있는 개수가 늘어납니다. AI가 읽는 가게 페이지와 구조화 데이터를 그 자리에서 만들어 드리고, 결제하신 분은 여기서 받은 '가게 정보 파일'만 회신하면 됩니다. <button type="button" class="k-a lc-lq" data-lq>먼저 30초 진단부터 하기</button></p>
+      <p class="k-eyebrow">{{ico:radar}}자세한 진단 · AI 브랜드 페이지 무료로 만들기</p>
+      <h2 class="k-h2" id="lcT">빈칸을 채우면, AI가 읽는 브랜드 페이지가 바로 생깁니다</h2>
+      <p class="k-lead">브랜드 정보를 넣는 만큼 점수가 바로 오르고, 손님 질문에 답할 수 있는 개수가 늘어납니다. AI가 읽는 브랜드 페이지와 구조화 데이터를 그 자리에서 만들어 드리고, 결제하신 분은 여기서 받은 '브랜드 정보 파일'만 회신하면 됩니다. <button type="button" class="k-a lc-lq" data-lq>먼저 30초 진단부터 하기</button></p>
     </div>
     <div class="lc" id="lcTool" data-ind="{{lc_ind}}">
       <form class="lc-form" id="lcForm" novalidate autocomplete="off">
         <p class="lc-pill" id="lcPill" hidden aria-hidden="true"></p>
         <details class="lc-step" id="s1" open>
-          <summary><span class="n">1</span><span class="tt">가게 기본 정보<small>이것만 넣어도 점수가 나옵니다</small></span><span class="lc-gain"></span></summary>
+          <summary><span class="n">1</span><span class="tt">브랜드 기본 정보<small>이것만 넣어도 점수가 나옵니다</small></span><span class="lc-gain"></span></summary>
           <div class="lc-body">
             <div class="lc-row">
               <div class="field"><label for="f-ind">업종</label><select class="sel" id="f-ind" name="ind"></select></div>
               <div class="field" id="f-subw" hidden><label for="f-sub">세부 업종</label><select class="sel" id="f-sub" name="sub"></select></div>
             </div>
             <div class="lc-row">
-              <div class="field"><label for="f-name">가게 이름 <em>필수</em></label><input class="inp" id="f-name" name="name" maxlength="60" placeholder="예: 봄결 네일"></div>
+              <div class="field"><label for="f-name">브랜드 이름 <em>필수</em></label><input class="inp" id="f-name" name="name" maxlength="60" placeholder="예: 봄결 네일"></div>
               <div class="field"><label for="f-area">동네 · 가까운 역</label><input class="inp" id="f-area" name="area" maxlength="30" placeholder="예: 강남역, 분당 정자동"></div>
             </div>
             <div class="field"><label for="f-addr">도로명 주소</label><input class="inp" id="f-addr" name="addr" maxlength="160" placeholder="예: 서울 강남구 테헤란로 123, 4층"></div>
@@ -77,7 +77,7 @@
         <details class="lc-step" id="s6">
           <summary><span class="n">6</span><span class="tt">소개와 사업자 정보<small>AI가 믿을 근거, 선택</small></span><span class="lc-gain"></span></summary>
           <div class="lc-body">
-            <div class="field"><label for="f-about">사장님 한 줄 소개 <small>선택</small></label><textarea class="txt lc-ta" id="f-about" name="about" maxlength="300" rows="2" placeholder="예: 예약한 시간에 한 분만 받습니다. 재료는 매일 아침 들여옵니다."></textarea></div>
+            <div class="field"><label for="f-about">대표님 한 줄 소개 <small>선택</small></label><textarea class="txt lc-ta" id="f-about" name="about" maxlength="300" rows="2" placeholder="예: 예약한 시간에 한 분만 받습니다. 재료는 매일 아침 들여옵니다."></textarea></div>
             <div class="lc-row">
               <div class="field"><label for="b-owner">대표자 이름 <small>선택</small></label><input class="inp" id="b-owner" name="b-owner" maxlength="40"></div>
               <div class="field"><label for="b-no">사업자등록번호 <small>선택</small></label><input class="inp" id="b-no" name="b-no" maxlength="40" inputmode="numeric"></div>
@@ -85,7 +85,7 @@
             <div class="field" data-for="reg" hidden><label for="b-reg">중개사무소 등록번호 <em>공인중개사법</em></label><input class="inp" id="b-reg" name="b-reg" maxlength="40" placeholder="예: 제41135-2026-00001호"></div>
           </div>
         </details>
-        <div class="lc-go"><button class="k-btn k-btn-p k-btn-lg" type="submit">AI 가게 페이지 만들기{{ico:arrow}}</button><span>입력한 내용은 이 브라우저 안에서만 계산하고 서버로 보내지 않습니다(이 브라우저에만 임시 저장).</span></div>
+        <div class="lc-go"><button class="k-btn k-btn-p k-btn-lg" type="submit">AI 브랜드 페이지 만들기{{ico:arrow}}</button><span>입력한 내용은 이 브라우저 안에서만 계산하고 서버로 보내지 않습니다(이 브라우저에만 임시 저장).</span></div>
       </form>
       <aside class="lc-side" id="lcSide" aria-label="AI 검색 준비도"></aside>
       <p class="k-sr" id="lcLive" aria-live="polite"></p>

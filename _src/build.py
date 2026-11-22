@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261122e"
+VER = "20261122f"
 TODAY = "2026-11-22"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -84,7 +84,7 @@ SHOP_URL = "https://skkc.co.kr/shop_view?idx=%s&kaiec_buy=1"
 SHOP_IDX = {
     # 13.7(10.26) AI 마킹 4개 등록(설치 포함 · 1개월 · 12개월 선결제, 자동 재결제 없음). 정기구독(자동 결제) 승인 뒤 월 상품을 바꿈
     "label-standard-m": "41", "label-standard-y": "42", "label-business-m": "43", "label-business-y": "44",
-    # 13.11d(10.27) 기업 GEO 세팅 3 · 월 관리 2 를 아임웹 디지털 상품으로(가게 · AI 마킹과 같은 바로 결제, 사이트 표시는 토큰). 부가세 포함 판매가
+    # 13.11d(10.27) 기업 GEO 세팅 3 · 월 관리 2 를 아임웹 디지털 상품으로(브랜드 · AI 마킹과 같은 바로 결제, 사이트 표시는 토큰). 부가세 포함 판매가
     "geo-lite": "84", "geo-standard": "85", "geo-pro": "86", "geocare-care-m": "87", "geocare-grow-m": "88",
     "service-starter-m": "", "bundle-trust": "",
     # 12.1 토큰(개인은 AI 휴머나이징 충전 창, 기업 credit-* 는 결제 시트). 비어 있으면 결제 안내 메일로. kaiec_buy=1 이면 바로 결제 페이지로 열림
@@ -130,16 +130,16 @@ CATALOG = {
          "feat": ["관리의 모든 것", "AI가 인용하기 좋은 글 매달 2편", "자주 묻는 질문 · 상품 피드 갱신", "경쟁사 추적과 분기 전략 회의"]},
     ]},
 }
-# 13.9(10.27) 기업 AI 검색 등록(자영업자 GEO 세팅): 병원 · 네일샵 · 카페 · 학원 · 부동산 등 모든 동네 가게. 세 가지로만(복잡하지 않게)
+# 13.9(10.27) 기업 AI 검색 등록(자영업자 GEO 세팅): 병원 · 네일샵 · 카페 · 학원 · 부동산 등 모든 로컬 브랜드. 세 가지로만(복잡하지 않게)
 CATALOG["local"] = {"name": "기업 AI 검색 등록", "vat": "부가세 별도", "tiers": [
-    {"id": "local-basic", "name": "등록", "full": "기업 AI 검색 등록", "who": "가게 · 병원 · 매장 1곳, 홈페이지 없어도", "price": "99,000원", "per": "1회", "m": 99000, "note": "등록 뒤 한 달 수정 2번",
-     "feat": ["AI가 읽는 가게 페이지 1개(aimarker.kr/p/가게 이름/), 업종별 구조화 데이터", "손님이 AI에게 묻는 질문 15개와 답", "구글 · 네이버 · 빙 검색 등록, 새 페이지는 네이버 · 빙에 바로 알림",
+    {"id": "local-basic", "name": "등록", "full": "기업 AI 검색 등록", "who": "브랜드 · 병원 · 매장 1곳, 홈페이지 없어도", "price": "99,000원", "per": "1회", "m": 99000, "note": "등록 뒤 한 달 수정 2번",
+     "feat": ["AI가 읽는 브랜드 페이지 1개(aimarker.kr/p/브랜드 이름/), 업종별 구조화 데이터", "손님이 AI에게 묻는 질문 15개와 답", "구글 · 네이버 · 빙 검색 등록, 새 페이지는 네이버 · 빙에 바로 알림",
               "네이버 플레이스 · 카카오맵 · 구글 지도 정보 맞춤 목록", "업종 광고 표현 점검(의료 · 뷰티 · 식품 · 일반 규칙)", "등록 뒤 다시 진단해 전후 비교"]},
-    {"id": "local-year", "name": "등록 + 1년 관리", "full": "기업 AI 검색 등록 + 1년 관리", "who": "꾸준히 손님을 늘리고 싶은 가게", "price": "290,000원", "per": "1회", "m": 290000, "note": "1년 관리 포함", "best": "추천",
-     "feat": ["등록의 모든 것", "홈페이지가 있으면 구조화 데이터 · 자주 묻는 질문 · llms.txt 설치까지", "네이버 플레이스 · 카카오맵 · 구글 비즈니스 프로필 정보 정리(사장님 계정에서 함께)",
-              "1년 동안 바뀌는 정보 반영(영업시간 · 메뉴 · 가격, 월 4번까지)", "매달 AI 답변 확인 리포트: 질문 10개를 ChatGPT · 제미나이 · 네이버 · 구글에", "리뷰 답글 문구 매달 5개, 같은 상권 가게 3곳과 분기 비교"]},
-    {"id": "local-multi", "name": "여러 지점", "who": "프랜차이즈 · 병원 그룹, 지점 3곳부터", "price": "견적", "note": "지점마다 AI 가게 페이지와 정보 맞춤", "per": "", "cta": "견적 받기", "href": "contact/?plan=local-multi&type=local",
-     "feat": ["지점마다 AI 가게 페이지와 구조화 데이터", "본사 홈페이지의 지점 찾기 페이지 구조화", "지점 정보 한 번에 바꾸기(영업시간 · 휴무 · 가격)", "지점별 AI 답변 확인 리포트", "계약서 · 세금계산서"]},
+    {"id": "local-year", "name": "등록 + 1년 관리", "full": "기업 AI 검색 등록 + 1년 관리", "who": "꾸준히 손님을 늘리고 싶은 브랜드", "price": "290,000원", "per": "1회", "m": 290000, "note": "1년 관리 포함", "best": "추천",
+     "feat": ["등록의 모든 것", "홈페이지가 있으면 구조화 데이터 · 자주 묻는 질문 · llms.txt 설치까지", "네이버 플레이스 · 카카오맵 · 구글 비즈니스 프로필 정보 정리(대표님 계정에서 함께)",
+              "1년 동안 바뀌는 정보 반영(영업시간 · 메뉴 · 가격, 월 4번까지)", "매달 AI 답변 확인 리포트: 질문 10개를 ChatGPT · 제미나이 · 네이버 · 구글에", "리뷰 답글 문구 매달 5개, 같은 상권 매장 3곳과 분기 비교"]},
+    {"id": "local-multi", "name": "여러 지점", "who": "프랜차이즈 · 병원 그룹, 지점 3곳부터", "price": "견적", "note": "지점마다 AI 브랜드 페이지와 정보 맞춤", "per": "", "cta": "견적 받기", "href": "contact/?plan=local-multi&type=local",
+     "feat": ["지점마다 AI 브랜드 페이지와 구조화 데이터", "본사 홈페이지의 지점 찾기 페이지 구조화", "지점 정보 한 번에 바꾸기(영업시간 · 휴무 · 가격)", "지점별 AI 답변 확인 리포트", "계약서 · 세금계산서"]},
 ]}
 # 13.5 기업 토큰은 'GEO 스타터 · 비즈니스 · 맥스'(AI 검색 노출 최적화 중심, 모든 기업 기능에 같은 토큰). 부가세 별도, 결제는 부가세 포함 금액
 CATALOG["credit"] = {"name": "기업 토큰", "vat": "부가세 별도, 세금계산서", "tiers": [
@@ -438,7 +438,7 @@ def credit_rates_html(root):
     t = tier("service", "service-growth"); a, b = crs(t)
     row("AI 서비스 마킹 그로스", "이용자가 빠르게 느는 서비스", "월 10만 건, 제31조 표시 정책 문서, 감사 기록과 분기 보고서", a, b, buy("service-growth"))
     grp("기업 AI 검색 등록(병원 · 네일샵 · 카페 · 학원 등)")
-    row("기업 AI 검색 진단", "업종 · 가게 정보", "AI 검색 준비도, 손님 질문에 답할 수 있는지, AI 가게 페이지 · 구조화 데이터 만들기", "무료", "", link("local/", "진단하기"), True)
+    row("기업 AI 검색 진단", "업종 · 브랜드 정보", "AI 검색 준비도, 손님 질문에 답할 수 있는지, AI 브랜드 페이지 · 구조화 데이터 만들기", "무료", "", link("local/", "진단하기"), True)
     for tid in ("local-basic", "local-year"):
         t = tier("local", tid); a, b = crs(t)
         row(t.get("full", t["name"]), t["who"], ", ".join(t["feat"][:3]), a, b, buy(tid))
@@ -583,14 +583,14 @@ def kaiec_badge(dark=False, lg=False, root=""):
 PRODUCTS = [("label/", "fingerprint", "AI 마킹", "코드 한 줄로 사이트 속 AI 생성물에 AI 마크 자동 부착"),
             ("mark/", "badge", "파일 AI 마킹", "이미지 · 영상 · 문서에 AI 마크와 출처 기록"),
             ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리를 찾고 추천하게"),
-            ("local/", "store", "기업 AI 검색 등록", "병원 · 매장 · 학원, 손님이 AI에게 물을 때 우리 업체가 나오게"),
+            ("local/", "store", "기업 AI 검색 등록", "병원 · 매장 · 학원, 손님이 AI에게 물을 때 우리 브랜드가 나오게"),
             ("humanize/", "pen", "AI 휴머나이징 · AI 작성률 검사", "레포트 · 논문 · 자기소개서의 AI 말버릇을 사람 말투로"),
             ("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 상품 피드"),
             ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 광고주 승인, 감사 기록"),
             ("label/#service", "code", "AI 서비스 마킹", "AI 서비스 결과물마다 AI 마크를 자동으로(API · SDK · MCP)")]
 # 12.0 메뉴: 개인(AI 휴머나이징)은 맨 앞 단독 메뉴, 기업용 제품은 펼침 하나로
 MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코드 한 줄로 사이트 속 AI 생성물에 AI 마크"),
-                          ("local/", "store", "기업 AI 검색 등록", "병원 · 매장 · 학원, AI가 우리 업체를 정확히 알게"),
+                          ("local/", "store", "기업 AI 검색 등록", "병원 · 매장 · 학원, AI가 우리 브랜드를 정확히 알게"),
                           ("mark/", "badge", "파일 AI 마킹", "이미지 · 영상 · 문서에 AI 마크와 출처 기록"),
                           ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 네이버 AI 브리핑이 우리를 찾게"),
                           ("label/#service", "code", "AI 서비스 마킹", "AI 서비스 결과물마다 자동 마킹")]),
@@ -705,11 +705,11 @@ def header(root, key):
     side = '' if key == "humanize" else '<a class="k-hl opt cr13-hl" href="%spricing/#credits">토큰 충전</a>' % root
     b2c_sheet = '<span class="grp">AI 글 검사와 휴머나이징</span>' + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, t, d in B2C_MENU)
     biz_sheet = "".join('<span class="grp">%s</span>' % g + "".join('<a href="%s%s">%s<small>%s</small></a>' % (root, h, t, d) for h, ic, t, d in links) for g, links in MENU_GROUPS[:2])
-    # 13.10 휴대폰 메뉴는 보는 페이지에 맞는 묶음을 먼저(기업 · 가게 페이지는 마킹과 검색이 위로)
+    # 13.10 휴대폰 메뉴는 보는 페이지에 맞는 묶음을 먼저(기업 · 브랜드 페이지는 마킹과 검색이 위로)
     sheet = (biz_sheet + b2c_sheet) if (biz or key in LOCAL_KEYS) else (b2c_sheet + biz_sheet)
     sheet += '<span class="grp">더 보기</span><a href="%sbusiness/">기업용 한눈에</a><a href="%spricing/">요금과 결제</a><a href="%sdevelopers/">개발자</a><a href="%stechnology/">기술</a><a href="%scompany/">회사</a>' % (root, root, root, root, root)
     sheet += '<button type="button" class="k-install" data-install hidden>%s<span><b>AIMarker 앱 설치</b><small>홈 화면에서 바로 열기</small></span></button>' % ico("phone")   # 13.10 설치형 웹 앱(k.js 가 설치할 수 있을 때만 보임)
-    # 13.10 휴대폰 메뉴 아래 주 단추도 머리 주 단추와 같은 곳으로(가게 페이지는 30초 진단, GEO 는 무료 진단, 글 검사 화면은 검사 칸)
+    # 13.10 휴대폰 메뉴 아래 주 단추도 머리 주 단추와 같은 곳으로(브랜드 페이지는 30초 진단, GEO 는 무료 진단, 글 검사 화면은 검사 칸)
     sheet_p = '<a class="p" href="#top" data-focus="hzText">무료로 검사</a>' if key == "humanize" else cta.replace('class="k-btn k-btn-p k-btn-s"', 'class="p"')
     sheet += '<div class="ds-sheet-cta"><a href="%spricing/#credits">토큰 충전</a>%s</div>' % (root, sheet_p)
     return ('<a class="k-skip" href="#main">본문으로 건너뛰기</a>'
@@ -740,7 +740,7 @@ def footer(root):
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
     biz.append('<span>결제 · 세금계산서는 운영사 성균관컨설팅이 처리합니다</span>')
     cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("site/", "설치 마법사"), ("mark/", "파일 AI 마킹"), ("local/", "기업 AI 검색 등록"), ("geo/", "AI 검색 노출 최적화"), ("geo-setup/", "GEO 세팅 · SEO 설정"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
-            ("고객별", [("personal/", "개인 · 학생"), ("ai-rate/", "AI 작성률 낮추기"), ("resume/", "자기소개서 AI 검사"), ("academic/", "레포트 · 논문 AI 검사"), ("proof/", "AI 활용 증빙서"), ("local/", "가게 · 병원 · 매장 사장님"), ("local/clinic/", "병원 · 치과 AI 검색 등록"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "문의하기")]),
+            ("고객별", [("personal/", "개인 · 학생"), ("ai-rate/", "AI 작성률 낮추기"), ("resume/", "자기소개서 AI 검사"), ("academic/", "레포트 · 논문 AI 검사"), ("proof/", "AI 활용 증빙서"), ("local/", "브랜드 · 병원 · 매장 대표님"), ("local/clinic/", "병원 · 치과 AI 검색 등록"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "문의하기")]),
             ("개발자", [("developers/", "API와 SDK"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("m.js", "AI 마킹 스크립트(공개 코드)"), ("v/", "사이트 AI 마크 확인"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
             ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금과 토큰"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
     colhtml = "".join('<div><b>%s</b>%s</div>' % (t, "".join('<a href="%s%s">%s</a>' % (root, h, x) for h, x in links)) for t, links in cols)
@@ -751,7 +751,7 @@ def footer(root):
     std += ('<div class="k-ft-std k-ft-gd"><span><b>AI 글 검사 안내</b>%s</span></div>'
             % ", ".join('<a href="%s%s">%s</a>' % (root, g[0], g[2]) for g in GUIDES))
     return ('<footer class="k-ft"><div class="k-wrap"><div class="k-ft-top"><div class="k-ft-brand">%s'
-            '<p>AIMarker(AI Marker · 에이아이마커)는 글의 AI 작성률 검사와 휴머나이징, AI가 만든 이미지 · 영상 · 글의 AI 마크, 회사와 가게가 AI 검색에 정확히 소개되도록 돕는 GEO까지 한곳에서 하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
+            '<p>AIMarker(AI Marker · 에이아이마커)는 글의 AI 작성률 검사와 휴머나이징, AI가 만든 이미지 · 영상 · 글의 AI 마크, 회사와 브랜드가 AI 검색에 정확히 소개되도록 돕는 GEO까지 한곳에서 하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
             '<button type="button" class="k-install ft" data-install hidden>%s<span><b>AIMarker 앱 설치</b><small>휴대폰 · PC 홈 화면에</small></span></button>'
             '<div id="aimarker" class="ft-label"></div></div>'
             '<div class="k-ft-cols">%s</div></div>%s'
@@ -778,8 +778,8 @@ def local_service_ld(ind, url):
                        "price": t["m"], "priceCurrency": "KRW", "url": SITE + "local/#packages", "seller": {"@id": SITE + "#org"},
                        "priceSpecification": {"@type": "UnitPriceSpecification", "price": t["m"], "priceCurrency": "KRW", "valueAddedTaxIncluded": False, "unitText": t.get("per", "1회")}})
     return {"@type": "Service", "@id": SITE + "local/#service", "name": "기업 AI 검색 등록", "alternateName": ["가게 AI 검색 등록", "자영업자 GEO 세팅", "가게 AI 검색 노출", "로컬 GEO"],
-            "serviceType": "AI 검색 등록(GEO) · 가게 구조화 데이터", "url": SITE + "local/",
-            "description": "손님이 ChatGPT · 제미나이 · 네이버 AI 브리핑 · 구글 AI 개요에 가게를 물을 때 AI가 정확한 정보를 읽도록, AI가 읽는 가게 페이지와 업종별 구조화 데이터를 만들어 구글 · 네이버 · 빙에 등록하고 지도 정보와 맞춥니다. 무료 진단, 홈페이지가 없어도 됩니다.",
+            "serviceType": "AI 검색 등록(GEO) · 브랜드 구조화 데이터", "url": SITE + "local/",
+            "description": "손님이 ChatGPT · 제미나이 · 네이버 AI 브리핑 · 구글 AI 개요에 브랜드를 물을 때 AI가 정확한 정보를 읽도록, AI가 읽는 브랜드 페이지와 업종별 구조화 데이터를 만들어 구글 · 네이버 · 빙에 등록하고 지도 정보와 맞춥니다. 무료 진단, 홈페이지가 없어도 됩니다.",
             "provider": {"@id": SITE + "#org"}, "areaServed": {"@type": "Country", "name": "대한민국"},
             "audience": {"@type": "BusinessAudience", "audienceType": (who + " 운영자") if who else "자영업자 · 소상공인(병원 · 치과 · 한의원 · 네일샵 · 미용실 · 카페 · 음식점 · 학원 · 부동산 등)"},
             "offers": offers}
@@ -933,7 +933,7 @@ def page(meta, body):
     body = body.replace("{{hero_h1}}", meta.get("hero_h1") or 'AI로 작성된 글은<br>검사기에 <span class="hz13-mk">필터링</span>됩니다')
     body = body.replace("{{guide_chips}}", guide_chips("{{root}}")).replace("{{guide_hub}}", guide_hub("{{root}}"))   # 13.12 검색어 안내 칩 · 안내 모음
     body = body.replace("{{root}}", root).replace("{{ver}}", VER).replace("{{logo_dk}}", logo_img(root, True)).replace("{{logo}}", logo_img(root)).replace("{{kaiec}}", kaiec_badge(root=root)).replace("{{kaiec_lg}}", kaiec_badge(lg=True, root=root)).replace("{{kaiec_dk}}", kaiec_badge(dark=True, root=root))
-    body = body.replace("{{lc_ind}}", meta.get("lc_ind", ""))   # 13.9 가게 진단 도구의 업종(업종 페이지)
+    body = body.replace("{{lc_ind}}", meta.get("lc_ind", ""))   # 13.9 브랜드 진단 도구의 업종(업종 페이지)
     body = re.sub(r"\{\{tiers:([a-z]+)(?::([a-z]+))?\}\}", lambda m: tiers_html(m.group(1), root, m.group(2)), body)
     body = re.sub(r"\{\{(?:passes|credits):(buy|link)\}\}", lambda m: credits_html(m.group(1), root), body)
     body = body.replace("{{credit_cost}}", credit_cost_html().replace("{{root}}", root))
@@ -1176,7 +1176,7 @@ def build_ai_assets():
 
 def build_stores():
     """13.9 기업 AI 검색 등록: _src/stores/*.json → p/<주소>/index.html(Node, _src/tools/store_render.js 가 화면과 같은 엔진으로) + p/index.html 목록.
-    올린 가게가 없으면 아무것도 만들지 않음(빈 목록 페이지를 공개하지 않음). 결과 목록을 돌려줌(사이트맵 · llms.txt)"""
+    올린 브랜드가 없으면 아무것도 만들지 않음(빈 목록 페이지를 공개하지 않음). 결과 목록을 돌려줌(사이트맵 · llms.txt)"""
     sdir = os.path.join(HERE, "stores")
     files = [f for f in sorted(os.listdir(sdir)) if f.endswith(".json") and not f.startswith("_")] if os.path.isdir(sdir) else []
     if not files:
@@ -1184,22 +1184,22 @@ def build_stores():
     import subprocess
     r = subprocess.run(["node", os.path.join(HERE, "tools", "store_render.js")], capture_output=True, text=True)
     if r.returncode:
-        raise SystemExit("가게 페이지 만들기 실패: " + (r.stderr or r.stdout)[-800:])
+        raise SystemExit("브랜드 페이지 만들기 실패: " + (r.stderr or r.stdout)[-800:])
     stores = json.loads(r.stdout or "[]")
     if not stores:
         return []
     import html as _h
     cards = "".join('<a href="%s/"><b>%s</b><span>%s · %s</span><small>%s</small><em>%s 확인</em></a>' % (
         _h.escape(x["slug"]), _h.escape(x["name"]), _h.escape(x["area"] or ""), _h.escape(x["noun"]), _h.escape(x["intro"][:90] + ("…" if len(x["intro"]) > 90 else "")), _h.escape(x["updated"].replace("-", "."))) for x in stores)
-    body = ('<section class="k-phero" aria-labelledby="h1"><div class="k-wrap"><p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}local/">기업 AI 검색 등록</a>{{ico:chev}}<span>등록 가게</span></p>'
-            '<h1 class="k-h1" id="h1">AI 검색에 등록한 가게</h1><p class="k-lead">가게가 직접 확인한 정보(이름 · 주소 · 시간 · 가격 · 편의)를 AI가 읽는 형식으로 정리한 페이지입니다. 정보는 가게가 확인한 날 기준입니다.</p></div></section>'
-            '<section class="k-sec k-tight"><div class="k-wrap"><nav class="lc-inds lc-stores" aria-label="등록 가게">%s</nav>'
-            '<p class="k-small" style="margin-top:18px">우리 가게도 올리려면 <a href="{{root}}local/">기업 AI 검색 등록</a>에서 무료로 진단해 보세요.</p></div></section>') % cards
-    meta = {"path": "p/", "key": "local-dir", "v9": "1", "title": "AI 검색에 등록한 가게 | AIMarker 기업 AI 검색 등록", "desc": "AIMarker 기업 AI 검색 등록으로 올린 가게 목록입니다. 가게가 직접 확인한 이름 · 주소 · 영업시간 · 가격 · 편의 정보를 AI가 읽는 형식(구조화 데이터)으로 정리했습니다.", "styles": "assets/local.css", "selflabel": "footer"}
+    body = ('<section class="k-phero" aria-labelledby="h1"><div class="k-wrap"><p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}local/">기업 AI 검색 등록</a>{{ico:chev}}<span>등록 브랜드</span></p>'
+            '<h1 class="k-h1" id="h1">AI 검색에 등록한 브랜드</h1><p class="k-lead">브랜드가 직접 확인한 정보(이름 · 주소 · 시간 · 가격 · 편의)를 AI가 읽는 형식으로 정리한 페이지입니다. 정보는 브랜드가 확인한 날 기준입니다.</p></div></section>'
+            '<section class="k-sec k-tight"><div class="k-wrap"><nav class="lc-inds lc-stores" aria-label="등록 브랜드">%s</nav>'
+            '<p class="k-small" style="margin-top:18px">우리 브랜드도 올리려면 <a href="{{root}}local/">기업 AI 검색 등록</a>에서 무료로 진단해 보세요.</p></div></section>') % cards
+    meta = {"path": "p/", "key": "local-dir", "v9": "1", "title": "AI 검색에 등록한 브랜드 | AIMarker 기업 AI 검색 등록", "desc": "AIMarker 기업 AI 검색 등록으로 올린 브랜드 목록입니다. 브랜드가 직접 확인한 이름 · 주소 · 영업시간 · 가격 · 편의 정보를 AI가 읽는 형식(구조화 데이터)으로 정리했습니다.", "styles": "assets/local.css", "selflabel": "footer"}
     os.makedirs(os.path.join(ROOT, "p"), exist_ok=True)
     with open(os.path.join(ROOT, "p", "index.html"), "w", encoding="utf-8") as f:
         f.write(page(meta, body))
-    print("올린 가게:", ", ".join("%s(%s점)" % (x["slug"], x["score"]) for x in stores))
+    print("올린 브랜드:", ", ".join("%s(%s점)" % (x["slug"], x["score"]) for x in stores))
     return stores
 
 
@@ -1232,7 +1232,7 @@ def main():
                     '<link rel="canonical" href="%s%s"><meta http-equiv="refresh" content="0; url=../%s">'
                     '<script>location.replace("../%s" + location.search + location.hash)</script></head>'
                     '<body><p><a href="../%s">AIMarker %s 페이지로 이동합니다</a></p></body></html>\n' % (SITE, new, new, new, new, new.strip("/")))
-    stores = build_stores()   # 13.9 올린 가게 페이지(없으면 빈 목록)
+    stores = build_stores()   # 13.9 올린 브랜드 페이지(없으면 빈 목록)
     # 사이트맵
     urls = [b[:-len("index.html")] for b in built if b.endswith("index.html") and "404" not in b]
     if stores:
@@ -1257,9 +1257,9 @@ def main():
     with open(os.path.join(ROOT, "offline", "index.html"), "w", encoding="utf-8") as f:
         f.write(open(os.path.join(HERE, "app", "offline.html"), encoding="utf-8").read().replace("@@VER@@", VER))
     build_ai_assets()
-    if stores:   # llms.txt 끝에 등록 가게(가게가 확인한 사실 한 줄씩)
+    if stores:   # llms.txt 끝에 등록 브랜드(브랜드가 확인한 사실 한 줄씩)
         with open(os.path.join(ROOT, "llms.txt"), "a", encoding="utf-8") as f:
-            f.write("\n## 등록 가게(기업 AI 검색 등록)\n\n" + "".join("- [%s](%s): %s (가게 확인 %s)\n" % (x["name"], x["url"], x["intro"], x["updated"]) for x in stores))
+            f.write("\n## 등록 브랜드(기업 AI 검색 등록)\n\n" + "".join("- [%s](%s): %s (브랜드 확인 %s)\n" % (x["name"], x["url"], x["intro"], x["updated"]) for x in stores))
     # 13.9 IndexNow 키 파일(네이버 · 빙)
     with open(os.path.join(ROOT, INDEXNOW_KEY + ".txt"), "w", encoding="utf-8") as f:
         f.write(INDEXNOW_KEY)

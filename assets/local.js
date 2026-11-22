@@ -1,8 +1,8 @@
-/* AIMarker 가게 AI 검색 등록 화면(13.9, 2026.10.27 · 13.9b 30초 진단 창)
-   입력하는 대로 바로 계산합니다(assets/local-core.js): AI 검색 준비도 · 손님이 AI에게 묻는 질문 · AI 가게 페이지 · 구조화 데이터 · llms.txt.
+/* AIMarker 브랜드 AI 검색 등록 화면(13.9, 2026.10.27 · 13.9b 30초 진단 창)
+   입력하는 대로 바로 계산합니다(assets/local-core.js): AI 검색 준비도 · 손님이 AI에게 묻는 질문 · AI 브랜드 페이지 · 구조화 데이터 · llms.txt.
    계산은 이 브라우저 안에서만 하고 서버로 보내지 않습니다. 서버에 보내는 것은 '광고 표현 점검'을 누를 때 점검할 문장(소개 · 질문의 답 · 메뉴와 가격 · 참고,
    전화번호와 링크는 빼고)뿐이며 저장하지 않습니다(am.check).
-   작성 중인 내용은 사장님이 입력을 시작한 뒤에만, 업종마다 이 브라우저에 임시로 남깁니다(다른 사람과 공유되지 않음). */
+   작성 중인 내용은 대표님이 입력을 시작한 뒤에만, 업종마다 이 브라우저에 임시로 남깁니다(다른 사람과 공유되지 않음). */
 (function () {
   'use strict';
   var L = window.AMLocal, AM = window.AM || {};
@@ -29,7 +29,7 @@
     arrow: '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>'
   };
 
-  /* 자세한 진단(AI 가게 페이지 만들기)으로: 같은 페이지에 도구가 있으면 그 자리에서, 없으면 /local/ 로 */
+  /* 자세한 진단(AI 브랜드 페이지 만들기)으로: 같은 페이지에 도구가 있으면 그 자리에서, 없으면 /local/ 로 */
   function toTool(d) {
     if (window.AMLocalTool) { window.AMLocalTool.start(d); return; }
     var q = [];
@@ -38,8 +38,8 @@
   }
 
   /* ---------- 30초 AI 검색 진단(13.9b) ----------
-     질문 5~7개를 누르면, 지금 AI가 우리 가게를 소개할 근거가 있는지 바로 보여 줍니다(빈틈은 빨갛게, 크게).
-     결과는 사장님이 답한 내용으로만 계산합니다. 실제 AI 답변을 조회하거나 꾸며 내지 않고, 이 브라우저 밖으로 보내지 않습니다. */
+     질문 5~7개를 누르면, 지금 AI가 우리 브랜드를 소개할 근거가 있는지 바로 보여 줍니다(빈틈은 빨갛게, 크게).
+     결과는 대표님이 답한 내용으로만 계산합니다. 실제 AI 답변을 조회하거나 꾸며 내지 않고, 이 브라우저 밖으로 보내지 않습니다. */
   var LQ = (function () {
     var box = null, lastFocus = null, D = null, A = {}, path = [], busy = 0;
     var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -102,7 +102,7 @@
       else if (A.nap === 'unk') G.push([1, '정보가 서로 같은지 확인한 적이 없습니다', '한 곳만 고치고 다른 곳은 그대로인 경우가 가장 흔합니다.']);
       if (A.facts === 'few') G.push([2, '손님이 묻는 것(' + keyFacts() + ')에 답할 글이 없습니다', '답할 근거가 없으면 AI는 그 질문에 답할 수 있는 다른 ' + L.jo(nn, '을', '를') + ' 권할 수 있습니다.']);
       else if (A.facts === 'some') G.push([1, '손님이 묻는 것이 일부만 정리돼 있습니다', '빠진 질문에서는 답할 수 있는 다른 ' + L.jo(nn, '이', '가') + ' 먼저 나올 수 있습니다.']);
-      if (A.ai === 'bad') G.push([2, 'AI가 ' + L.jo(we(), '을', '를') + ' 틀리게 말하거나 빠뜨리고 있습니다', '사장님이 직접 확인한 신호입니다. 근거가 되는 페이지를 올리고 곳곳의 정보를 맞춰야 바뀝니다.']);
+      if (A.ai === 'bad') G.push([2, 'AI가 ' + L.jo(we(), '을', '를') + ' 틀리게 말하거나 빠뜨리고 있습니다', '대표님이 직접 확인한 신호입니다. 근거가 되는 페이지를 올리고 곳곳의 정보를 맞춰야 바뀝니다.']);
       else if (A.ai === 'never') G.push([1, 'AI가 ' + L.jo(we(), '을', '를') + ' 어떻게 소개하는지 아무도 확인하지 않았습니다', '손님은 이미 묻고 있습니다. 1년 관리에서는 같은 질문을 매달 AI에게 물어 기록해 드립니다.']);
       return G.sort(function (a, b) { return b[0] - a[0]; });
     }
@@ -116,10 +116,10 @@
       return '<div class="lq-chat"><p class="lq-chat-h"><b>정보가 비어 있으면, AI 답은 이렇게 됩니다</b><em>예시 화면 · 실제 AI 답변이 아님</em></p>' +
         '<p class="lc-q"><span>손님</span><b>' + esc(q) + '</b></p>' +
         '<div class="lc-a"><p class="lc-a-t"><b>AI</b><span>' + esc(L.jo(w, '을', '를')) + ' 확인할 수 있는 곳으로 이런 곳이 있어요.</span></p>' +
-        '<div class="lq-cs"><div class="lq-c ok"><b>A ' + esc(nn) + '</b><span>' + esc(w) + ' 정보 있음 · 출처 가게 페이지</span></div>' +
+        '<div class="lq-cs"><div class="lq-c ok"><b>A ' + esc(nn) + '</b><span>' + esc(w) + ' 정보 있음 · 출처 브랜드 페이지</span></div>' +
         '<div class="lq-c ok"><b>B ' + esc(nn) + '</b><span>' + esc(w) + ' 정보 있음 · 출처 구글 지도</span></div>' +
         '<div class="lq-c no"><b>' + esc(nm()) + '</b><span>' + esc(w) + ' 정보를 찾지 못해 답에서 빠짐</span></div></div></div>' +
-        '<p class="lq-chat-f">1년 관리에서는 이런 질문을 매달 실제 AI에게 물어, 우리 가게가 나오는지 기록해 드립니다.</p></div>';
+        '<p class="lq-chat-f">1년 관리에서는 이런 질문을 매달 실제 AI에게 물어, 우리 브랜드가 나오는지 기록해 드립니다.</p></div>';
     }
     function track(ev, p) { try { if (window.gtag) window.gtag('event', ev, p || {}); } catch (e) { /* 무시 */ } }
 
@@ -187,16 +187,16 @@
         (G.length ? '<section class="lq-g"><h3>지금 AI가 확인하지 못하는 것 <b>' + G.length + '개</b>' + (big ? '<em>큰 빈틈 ' + big + '</em>' : '') + '</h3><ol>' +
           G.map(function (g) { return '<li class="lv' + g[0] + '"><span class="m" aria-hidden="true">' + (g[0] === 2 ? ICO.x : '!') + '</span><div><b>' + esc(g[1]) + '</b><p>' + esc(g[2]) + '</p></div></li>'; }).join('') + '</ol></section>' : '') +
         '<section class="lq-cta"><h3>' + (gk === 'a' ? '1년 관리로 지키세요' : '이 빈틈, 영업일 하루 안에 메워 드립니다') + '</h3>' +
-        '<p>AI가 읽는 가게 페이지와 구조화 데이터를 만들어 구글 · 네이버 · 빙에 등록하고, 지도 정보를 같게 맞춥니다. 홈페이지가 없어도 되고, 사장님은 가게 정보만 한 번 보내 주시면 됩니다.</p>' +
+        '<p>AI가 읽는 브랜드 페이지와 구조화 데이터를 만들어 구글 · 네이버 · 빙에 등록하고, 지도 정보를 같게 맞춥니다. 홈페이지가 없어도 되고, 대표님은 브랜드 정보만 한 번 보내 주시면 됩니다.</p>' +
         '<div class="lq-btns"><button type="button" class="k-btn k-btn-p k-btn-lg" data-buy="local-year">등록 + 1년 관리 · 2,900토큰<em>추천</em></button>' +
         '<button type="button" class="k-btn k-btn-l k-btn-lg" data-buy="local-basic">등록만 · 990토큰</button></div>' +
         '<p class="lq-fine">1토큰 100원 · 부가세 별도</p>' +
-        '<p class="lq-twa twa-only">앱에서는 신청과 결제를 받지 않습니다. 먼저 무료로 AI 가게 페이지를 만들어 보세요.</p>' +
-        '<p class="lq-more"><button type="button" class="k-a" data-detail>먼저 무료로 AI 가게 페이지 만들어 보기' + ICO.arrow + '</button><button type="button" class="k-a" data-again>다시 진단하기</button></p></section>' +
+        '<p class="lq-twa twa-only">앱에서는 신청과 결제를 받지 않습니다. 먼저 무료로 AI 브랜드 페이지를 만들어 보세요.</p>' +
+        '<p class="lq-more"><button type="button" class="k-a" data-detail>먼저 무료로 AI 브랜드 페이지 만들어 보기' + ICO.arrow + '</button><button type="button" class="k-a" data-again>다시 진단하기</button></p></section>' +
         '<section class="lq-qs"><h3>손님이 AI에게 묻는 질문 ' + C.length + '개</h3><ul>' + C.map(function (c) {
           return '<li class="v' + c.v + '"><span class="m" aria-hidden="true">' + (c.v === 2 ? ICO.check : c.v === 1 ? '!' : ICO.x) + '</span><span>' + esc(c.q) + '<small>' + (c.v === 2 ? '답할 근거 있음' : c.v === 1 ? '틀리거나 빠질 수 있음' : '근거 없음 · ' + esc(word(c.need[c.need.length - 1]))) + '</small></span></li>';
         }).join('') + '</ul></section>' +
-        '<p class="lq-note">사장님이 답한 내용으로 계산한 결과이며, 실제 AI 답변을 조회한 것이 아닙니다. 답한 내용은 서버로 보내지 않습니다.</p>';
+        '<p class="lq-note">대표님이 답한 내용으로 계산한 결과이며, 실제 AI 답변을 조회한 것이 아닙니다. 답한 내용은 서버로 보내지 않습니다.</p>';
       var b = body(); b.scrollTop = 0;
       foot(true);
       try { b.focus({ preventScroll: true }); } catch (e) { b.focus(); }
@@ -359,7 +359,7 @@
   }
   function readFeat() { return $$('input[name=ft]:checked', form).map(function (x) { return x.value; }); }
 
-  /* 화면 → 가게 정보 */
+  /* 화면 → 브랜드 정보 */
   function read() {
     var E = form.elements, h = {};
     DAYS.forEach(function (d) {
@@ -372,7 +372,7 @@
       links: { place: g('l-place'), kakao: g('l-kakao'), google: g('l-google'), home: g('l-home'), insta: g('l-insta'), book: g('l-book') },
       biz: { owner: g('b-owner'), no: g('b-no'), reg: g('b-reg') }, updated: today() };
   }
-  /* 가게 정보 → 화면(불러오기 · 주소로 시작) */
+  /* 브랜드 정보 → 화면(불러오기 · 주소로 시작) */
   function fill(d) {
     if (!d) return;
     var E = form.elements;
@@ -406,7 +406,7 @@
   function sig() { if (!S) return ''; var t = checkText(S), h = 0; for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) | 0; return S.ind + ':' + h; }
   function run() {
     S = L.normalize(read()); S.slug = L.slug(S.name, S.area);
-    if (CK && CK.sig === sig()) S.check = { at: CK.at, hi: CK.hi, n: CK.n };   // 점검한 문장 그대로일 때만 기록이 따라감(가게 정보 파일 · 올리기 확인)
+    if (CK && CK.sig === sig()) S.check = { at: CK.at, hi: CK.hi, n: CK.n };   // 점검한 문장 그대로일 때만 기록이 따라감(브랜드 정보 파일 · 올리기 확인)
     SC = L.score(S); QS = L.questions(S); FQ = L.faq(S);
     paintSide(); paintSteps();
     if (!out.hidden) paintOut();
@@ -447,9 +447,9 @@
   }
 
   /* ---------- 결과물 ---------- */
-  var TABS = [['page', 'AI 가게 페이지'], ['faq', '손님 질문 · 답'], ['ld', '구조화 데이터'], ['llms', 'llms.txt'], ['robots', 'robots.txt'], ['same', '정보 맞춤 목록'], ['chk', '광고 표현 점검']];
+  var TABS = [['page', 'AI 브랜드 페이지'], ['faq', '손님 질문 · 답'], ['ld', '구조화 데이터'], ['llms', 'llms.txt'], ['robots', 'robots.txt'], ['same', '정보 맞춤 목록'], ['chk', '광고 표현 점검']];
   out.innerHTML = '<div class="lc-out-h"><div><p class="lc-k">자동으로 만든 결과</p><h3 class="k-h3">입력한 정보로 지금 바로 만들었습니다</h3></div>' +
-    '<div class="lc-out-a"><button type="button" class="k-btn k-btn-l k-btn-s" data-file>가게 정보 파일 받기</button><button type="button" class="k-btn k-btn-q k-btn-s" data-reset>처음부터</button></div></div>' +
+    '<div class="lc-out-a"><button type="button" class="k-btn k-btn-l k-btn-s" data-file>브랜드 정보 파일 받기</button><button type="button" class="k-btn k-btn-q k-btn-s" data-reset>처음부터</button></div></div>' +
     '<div class="lc-tabs" role="tablist" aria-label="결과물">' + TABS.map(function (t, i) { return '<button type="button" role="tab" id="lt-' + t[0] + '" aria-controls="lp-' + t[0] + '" aria-selected="' + (i ? 'false' : 'true') + '"' + (i ? ' tabindex="-1"' : '') + '>' + t[1] + '</button>'; }).join('') + '</div>' +
     TABS.map(function (t, i) { return '<div class="lc-pane" role="tabpanel" id="lp-' + t[0] + '" aria-labelledby="lt-' + t[0] + '"' + (i ? ' hidden' : '') + '></div>'; }).join('');
   out.hidden = true;
@@ -466,7 +466,7 @@
       var html = L.page(s, { url: u, hosted: true, noindex: true });
       TX.page = L.page(s, { url: u, hosted: true });
       if (!pane.firstChild) pane.innerHTML = '<p class="lc-pn">이 화면 그대로 <b>' + esc(u.replace('https://', '')) + '</b> 같은 주소에 올리고, 구글 · 네이버 · 빙에 등록합니다. 홈페이지가 있으면 그곳에 올려도 됩니다.</p>' +
-        '<div class="lc-frame"><div class="k-screen-bar"><i></i><i></i><i></i><span class="u"></span><em class="k-ex">미리보기</em></div><iframe title="AI 가게 페이지 미리보기" sandbox="allow-popups" loading="lazy"></iframe></div>' +
+        '<div class="lc-frame"><div class="k-screen-bar"><i></i><i></i><i></i><span class="u"></span><em class="k-ex">미리보기</em></div><iframe title="AI 브랜드 페이지 미리보기" sandbox="allow-popups" loading="lazy"></iframe></div>' +
         '<div class="lc-row-b"><button type="button" class="k-btn k-btn-l k-btn-s" data-dl="page" data-name="ai-store-page.html">HTML 파일 받기</button><a class="k-btn k-btn-p k-btn-s" href="#packages">이 페이지로 등록 맡기기</a></div>';
       $('.u', pane).textContent = u.replace('https://', '');
       if (html !== lastHtml) { lastHtml = html; $('iframe', pane).srcdoc = html; }
@@ -481,7 +481,7 @@
       setPane(pane, code('ld', TX.ld, '', '업종에 맞는 schema.org 형식(' + esc([].concat(L.typeOf(s)).join(' · ')) + ')으로 이름 · 주소 · 영업시간 · 가격 · 편의 · 자주 묻는 질문을 담았습니다. 홈페이지가 있으면 &lt;head&gt; 안에 붙여 넣으세요.'));
     } else if (tabNow === 'llms') {
       TX.llms = L.llms(s, { url: s.links.home || u });
-      setPane(pane, code('llms', TX.llms, 'llms.txt', 'AI에게 우리 가게를 한 번에 소개하는 안내 파일입니다. 홈페이지가 있으면 맨 위 주소(/llms.txt)에 올리세요.'));
+      setPane(pane, code('llms', TX.llms, 'llms.txt', 'AI에게 우리 브랜드를 한 번에 소개하는 안내 파일입니다. 홈페이지가 있으면 맨 위 주소(/llms.txt)에 올리세요.'));
     } else if (tabNow === 'robots') {
       TX.robots = L.robots();
       setPane(pane, code('robots', TX.robots, '', 'ChatGPT · Claude · Perplexity · 구글 · 빙 · 네이버의 검색용 크롤러가 들어올 수 있게 하는 규칙입니다. 이미 robots.txt가 있으면 이 줄들을 더하세요.'));
@@ -491,7 +491,7 @@
           (c.same.length ? '<ul>' + c.same.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') + (c.href ? '<a class="k-a" href="' + esc(c.href) + '" target="_blank" rel="noopener">열기' + ICO.arrow + '</a>' : '') + '</li>';
       }).join('') + '</ol>');
     } else if (tabNow === 'chk') {
-      if (!pane.firstChild) pane.innerHTML = '<p class="lc-pn">소개 문장과 질문의 답, 사장님이 적은 말에 업종 광고 규칙(' + esc(L.IND[s.ind].med ? '의료' : L.IND[s.ind].chk === 'food' ? '식품' : L.IND[s.ind].chk === 'cos' ? '뷰티' : '일반') + ')에 걸릴 만한 표현이 있는지 AIMarker 검수 엔진으로 봅니다. 문구는 점검할 때만 보내고 저장하지 않습니다.</p>' +
+      if (!pane.firstChild) pane.innerHTML = '<p class="lc-pn">소개 문장과 질문의 답, 대표님이 적은 말에 업종 광고 규칙(' + esc(L.IND[s.ind].med ? '의료' : L.IND[s.ind].chk === 'food' ? '식품' : L.IND[s.ind].chk === 'cos' ? '뷰티' : '일반') + ')에 걸릴 만한 표현이 있는지 AIMarker 검수 엔진으로 봅니다. 문구는 점검할 때만 보내고 저장하지 않습니다.</p>' +
         '<div class="lc-row-b"><button type="button" class="k-btn k-btn-p k-btn-s" data-chk>광고 표현 점검하기</button></div><div class="lc-chk" aria-live="polite"></div>';
     }
   }
@@ -507,7 +507,7 @@
     paintOut();
   }
 
-  /* 광고 표현 점검(서버 am.check). 사장님이 적은 말에서 나온 후보는 그 칸에서 바로 바꿈 */
+  /* 광고 표현 점검(서버 am.check). 대표님이 적은 말에서 나온 후보는 그 칸에서 바로 바꿈 */
   function runCheck(btn) {
     var s = S, I = L.IND[s.ind], box = $('#lp-chk .lc-chk'), text = checkText(s), mySig = sig();
     if (!AM.call) { box.innerHTML = '<p class="lc-pn">지금은 점검할 수 없어요.</p>'; return; }
@@ -529,7 +529,7 @@
     }).then(function () { btn.disabled = false; btn.textContent = '다시 점검하기'; });
   }
   function locate(t) {
-    var E = form.elements, cand = [['about', '사장님 한 줄 소개'], ['note', '참고 · 안 되는 것'], ['addr2', '찾아오는 길'], ['off', '쉬는 날 안내'], ['fee', '교습비']];
+    var E = form.elements, cand = [['about', '대표님 한 줄 소개'], ['note', '참고 · 안 되는 것'], ['addr2', '찾아오는 길'], ['off', '쉬는 날 안내'], ['fee', '교습비']];
     for (var i = 0; i < nItems; i++) cand.push(['itn-' + i, (i + 1) + '번째 서비스 이름'], ['itp-' + i, (i + 1) + '번째 가격']);
     for (var j = 0; j < cand.length; j++) { var el = E[cand[j][0]]; if (el && el.value && el.value.indexOf(t) >= 0) return { id: el.id, el: el, label: cand[j][1] }; }
     return null;

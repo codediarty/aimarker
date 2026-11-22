@@ -19,7 +19,7 @@
       <a href="{{root}}local/office/">법률 · 세무 · 노무</a>
       <a href="{{root}}local/interior/">인테리어 · 시공</a>
       <a href="{{root}}local/stay/">숙박 · 펜션</a>
-      <a href="{{root}}local/shop/">꽃집 · 공방 · 그 밖의 가게</a>
+      <a href="{{root}}local/shop/">꽃집 · 공방 · 그 밖의 매장</a>
     </div>
   </div>
 </nav>

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* 13.9 가게 AI 검색 등록: _src/stores/*.json(가게 정보 파일) → p/<주소>/index.html
+/* 13.9 브랜드 AI 검색 등록: _src/stores/*.json(브랜드 정보 파일) → p/<주소>/index.html
    화면의 미리보기와 같은 엔진(assets/local-core.js 의 page())으로 만들어, 손님이 본 미리보기와 올린 페이지가 똑같습니다.
    '_' 로 시작하는 파일과 "publish": false 인 파일은 건너뜁니다. 결과 목록(JSON)을 표준 출력으로 build.py 에 넘깁니다.
    법으로 정한 표시가 빠지면 올리지 않고 멈춥니다(학원 교습비 · 부동산 등록번호와 개업공인중개사 · 사무소 세부 업종 · 의료 광고 표현 점검). */
@@ -12,12 +12,12 @@ const dir = path.join(ROOT, '_src', 'stores');
 const out = [], seen = {};
 function need(f, s) {
   const I = L.IND[s.ind], miss = [];
-  if (!s.name) miss.push('가게 이름');
+  if (!s.name) miss.push('브랜드 이름');
   if (!s.updated) miss.push('확인 날짜(updated, YYYY-MM-DD)');
   if (I.fee && !s.fee) miss.push('교습비(학원법: 교습비 표시)');
   if (I.reg && (!s.biz.reg || !s.biz.owner || !s.addr || !s.tel)) miss.push('중개사무소 등록번호 · 개업공인중개사 이름 · 소재지 · 연락처(공인중개사법 제18조의2)');
   if (I.subReq && !s.sub) miss.push('세부 업종(변호사 · 법무사 · 세무사 · 회계사 · 노무사 · 행정사. "법률사무소"는 변호사만 쓸 수 있음)');
-  if (I.med && !s.check) miss.push('광고 표현 점검 기록(진단 화면 → 광고 표현 점검 → 가게 정보 파일 다시 받기)');
+  if (I.med && !s.check) miss.push('광고 표현 점검 기록(진단 화면 → 광고 표현 점검 → 브랜드 정보 파일 다시 받기)');
   if (I.med && s.check && s.check.hi > 0) miss.push('광고 표현 점검의 높은 위험 후보 ' + s.check.hi + '개를 고친 뒤 다시 점검');
   if (miss.length) throw new Error(f + ': 올리기 전에 채울 것 → ' + miss.join(' / '));
 }
