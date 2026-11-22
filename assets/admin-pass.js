@@ -3,6 +3,8 @@
   'use strict';
   var AM = window.AM || {}, $ = function (s) { return document.querySelector(s); };
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  // 2026.11.22 토큰 사용 기한 없앰: 끝 날짜가 없거나 2100년 뒤면 '기한 없음'
+  function lim(e) { e = String(e || ''); return (!e || +e.slice(0, 4) >= 2100) ? '기한 없음' : '유효기간 ' + e.slice(0, 10) + '까지'; }
   function n2(n) { return Number(n || 0).toLocaleString('ko-KR'); }
   /* 13.2 1토큰 = 100원: 서버(1크레딧 = 10원) 숫자는 am.js 가 토큰으로 바꿔 주고, 보낼 때는 AM.toCr 로 크레딧으로 */
   function tn(x) { return (Math.round((+x || 0) * 10) / 10).toLocaleString('ko-KR', { maximumFractionDigits: 1 }); }
@@ -80,7 +82,7 @@
     $('#psList').innerHTML = ps.length ? ps.slice(0, 200).map(function (p) {
       var on = p.st === '사용';
       var KL = { t: '충전', d: '차감', r: '환불' }, log = p.credit && (p.log || []).length ? '<div class="adm-log">' + p.log.slice(-6).reverse().map(function (g) { var d = new Date(g.at || 0); return '<span>' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + (KL[g.k] || g.k) + ' ' + (g.k === 't' ? '+' : '-') + tn(g.cr) + (g.o ? ' · ' + esc(g.o) : '') + (g.m ? ' · ' + esc(g.m) : '') + '</span>'; }).join('') + '</div>' : '';
-      var info = p.credit ? '<span class="adm-cr">남은 <b>' + tn(p.left) + '</b> / ' + tn(p.total) + '토큰(' + n2(Math.round((+p.left || 0) * 100)) + '원어치) · 쓴 ' + tn(p.used) + ' · ' + n2(p.runs) + '번</span>' + (p.rm === 0.5 ? '<span>예전 값(1,000자 검사 2 · 휴머나이징 4토큰)</span>' : p.rm === 1 ? '<span>새 값(1,000자 결과서 2 · 휴머나이징 4토큰)</span>' : '') + '<span>유효기간 ' + esc((p.end || '').slice(0, 10)) + '까지</span>'
+      var info = p.credit ? '<span class="adm-cr">남은 <b>' + tn(p.left) + '</b> / ' + tn(p.total) + '토큰(' + n2(Math.round((+p.left || 0) * 100)) + '원어치) · 쓴 ' + tn(p.used) + ' · ' + n2(p.runs) + '번</span>' + (p.rm === 0.5 ? '<span>예전 값(1,000자 검사 2 · 휴머나이징 4토큰)</span>' : p.rm === 1 ? '<span>새 값(1,000자 결과서 2 · 휴머나이징 4토큰)</span>' : '') + '<span>' + esc(lim(p.end)) + '</span>'
         : '<span>' + (p.start ? '시작 ' + esc(p.start.slice(0, 16)) + ' · 끝 ' + esc(p.end.slice(0, 16)) : '아직 안 씀') + '</span><span>쓴 횟수 ' + n2(p.used) + (p.pro ? ' · 고급 ' + n2(p.pro) : '') + ' · 남은 ' + n2(p.left) + '</span>';
       return '<div class="adm-it"><div class="adm-m"><b>' + esc(p.id) + '</b>' + badge(p.st) + '<span>' + esc(p.name) + (p.biz ? ' · 기업' : '') + '</span></div>' +
         '<div class="adm-s"><span>만든 ' + esc(p.at) + '</span>' + (p.order ? '<span>주문 ' + esc(p.order) + '</span>' : '') + (p.to ? '<span>' + esc(p.to) + '</span>' : '') + info + (p.memo ? '<span>' + esc(p.memo) + '</span>' : '') + log + '</div>' +
@@ -178,7 +180,7 @@
     if (!twice(btn, '한 번 더 누르면 충전')) return;
     btn.disabled = true; say(msg, '충전하는 중…', 'ok');
     call('topup', { id: id, product: pr, cr: pr ? 0 : toCr(cr), order: f.order.value.trim(), to: to, memo: f.memo.value.trim() }).then(function (r) {
-      say(msg, r.id + ' 에 ' + tn(r.added) + '토큰을 더했습니다. 남은 ' + tn(r.left) + ' / ' + tn(r.total) + ' · 유효기간 ' + String(r.end || '').slice(0, 10) + '까지' + (r.mailed ? ' · 알림 메일 보냄' : ''), 'ok'); f.reset(); return load();
+      say(msg, r.id + ' 에 ' + tn(r.added) + '토큰을 더했습니다. 남은 ' + tn(r.left) + ' / ' + tn(r.total) + ' · ' + lim(r.end) + (r.mailed ? ' · 알림 메일 보냄' : ''), 'ok'); f.reset(); return load();
     }).catch(function (e8) { say(msg, (e8 && e8.message) || '충전하지 못했습니다.'); if (e8 && e8.code === 'ADMIN') gate(e8.message); }).then(function () { btn.disabled = false; });
   });
   $('#dedForm').addEventListener('submit', function (e) {
