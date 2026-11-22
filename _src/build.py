@@ -352,7 +352,7 @@ def credit_guide_html():
 
 def credits_html(mode, root):
     """토큰 충전 칸 네 개(13.17 새 요금, 요금 페이지와 같은 칸). mode 'buy': 글 검사 페이지(그 자리에서 충전 창), 'link': 다른 페이지(글 검사 페이지의 충전 창으로)."""
-    feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "남은 토큰은 사라지지 않고 이어서, 모자라면 같은 코드에 충전"]
+    feat = ["모든 AI 검출 문장과 이유, 구간별 분석", "글 전체 AI 휴머나이징과 다른 버전", "결과상세내역서(PDF)", "내 문서 AI 작성률 낮추기"]
     allf = "".join('<li>%s<span>%s</span></li>' % (ico("check"), f) for f in feat)
     return ('<p class="tk17-unit"><b>월 구독 없이 한 번 충전</b><span>많이 충전할수록 토큰당 가격이 낮아집니다 · 1페이지(약 %s자) 검사와 휴머나이징 %s토큰</span></p><div class="tk17-packs">%s</div>'
             '<div class="cr-all"><b>어느 충전이든 똑같이 열립니다</b><ul>%s</ul></div>') % (format(PAGE_CHARS, ","), tk(page_cost()), "".join(pack17_html(t, root, mode=mode) for t in CREDITS), allf)
