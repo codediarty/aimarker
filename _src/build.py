@@ -792,11 +792,12 @@ TOKEN_PRODUCT_ID = SITE + "humanize/#tokens"
 
 
 def return_policy_ld():
-    """이용약관 제7조의3: 충전한 날부터 7일 안에는 쓰고 남은 유료 토큰을 공제 없이 환불(하나도 쓰지 않았다면 전액).
+    """이용약관 제7조의4(환불 제한, 2026.11.22): 쓴 토큰은 환불 없음, 남은 유료 토큰은 충전한 날부터 1년 안 요청분만 10% 빼고 환불,
+    법에 따른 청약철회(충전한 날부터 7일 안, 쓰지 않은 유료 토큰)는 빼지 않음. 구글 형식에는 이 7일 청약철회를 그대로 적음.
     디지털 상품이라 돌려보낼 물건이 없으므로 returnMethod(우편 · 매장 반품)는 적지 않음"""
-    return {"@type": "MerchantReturnPolicy", "@id": RETURN_POLICY_ID, "name": "토큰 · 디지털 상품 환불 기준(이용약관 제7조의3)",
+    return {"@type": "MerchantReturnPolicy", "@id": RETURN_POLICY_ID, "name": "토큰 · 디지털 상품 환불 기준(이용약관 제7조의4 환불 제한)",
             "applicableCountry": "KR", "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow", "merchantReturnDays": 7,
-            "returnFees": "https://schema.org/FreeReturn", "refundType": "https://schema.org/FullRefund", "merchantReturnLink": SITE + "terms/#pass"}
+            "returnFees": "https://schema.org/FreeReturn", "refundType": "https://schema.org/FullRefund", "merchantReturnLink": SITE + "terms/#norefund"}
 
 
 def org_ld():
