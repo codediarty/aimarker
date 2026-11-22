@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 13.9 가게 AI 검색 등록(자영업자 GEO 세팅): /local/ 과 업종별 안내 페이지 17개를 _src/pages/ 에 만듭니다.
+# 13.9 기업 AI 검색 등록(자영업자 GEO 세팅): /local/ 과 업종별 안내 페이지 17개를 _src/pages/ 에 만듭니다.
 # 쓰는 법: python3 _src/tools/lp_local.py → python3 _src/build.py
 # 페이지마다 같은 무료 진단 도구(lc-tool.inc, assets/local-core.js · local.js)가 있고, 업종 페이지는 그 업종으로 미리 맞춰져 있습니다.
 # 글 원칙: 노출 · 순위를 약속하는 말도, 약속하지 않는다는 말도 쓰지 않음(13.12b), 출처 있는 수치만, 업종 법 규정은 확인한 것만(법률 자문 아님), 긴 줄표 · 금지 낱말 없음.
@@ -220,7 +220,7 @@ IND = [
 
 # 모든 페이지 공통 질문(업종 페이지는 앞의 넷)
 COMMON_FAQ = [
- ("ChatGPT에 가게를 직접 등록하는 건가요?", "아니요. ChatGPT · 제미나이 같은 AI에는 가게를 따로 등록하는 창구가 없습니다. AI는 답을 만들 때 검색 엔진 색인(구글 · 빙 · 네이버)과 지도 · 플레이스 정보, 웹 페이지를 읽습니다. 가게 AI 검색 등록은 그곳들에 우리 가게 정보를 AI가 읽는 형식으로 올리고 서로 맞추는 일입니다."),
+ ("ChatGPT에 가게를 직접 등록하는 건가요?", "아니요. ChatGPT · 제미나이 같은 AI에는 가게를 따로 등록하는 창구가 없습니다. AI는 답을 만들 때 검색 엔진 색인(구글 · 빙 · 네이버)과 지도 · 플레이스 정보, 웹 페이지를 읽습니다. 기업 AI 검색 등록은 그곳들에 우리 가게 정보를 AI가 읽는 형식으로 올리고 서로 맞추는 일입니다."),
  ("AI 답변에 우리 가게가 나오게 하려면요?", "AI가 우리 가게를 몰라서, 또는 정보가 틀려서 빠지는 이유를 없애야 합니다. AIMarker는 AI가 읽는 가게 페이지와 정보를 갖추고, 1년 관리에서는 같은 질문을 매달 AI에게 물어 기록해 드립니다."),
  ("얼마이고 어떻게 결제하나요?", "등록은 990토큰, 등록 + 1년 관리는 2,900토큰입니다(1토큰 100원, 부가세 별도). 결제는 운영사 성균관컨설팅 결제 페이지에서 회원가입 없이 토스페이 · 카드 · 계좌이체로 하고, 세금계산서도 됩니다."),
  ("결제하면 어떻게 진행되나요?", "결제할 때 적은 이메일로 영업일 하루 안에 시작 안내를 드립니다. 이 페이지에서 받은 '가게 정보 파일'을 회신하거나 가게 정보를 적어 보내 주시면, AI 가게 페이지를 올리고 검색 엔진에 등록한 뒤 전후 진단 결과를 보내 드립니다."),
@@ -297,11 +297,11 @@ TRUST = ('<ul class="lc-trust"><li>{{ico:check}}가입 없이 무료</li><li>{{i
 
 def start_form(ind=None, label="30초 무료 진단 시작", n="가게"):
     if ind:
-        return ('<form class="lc-start one" data-lc-start data-ind="%s" aria-label="가게 AI 검색 무료 진단">'
+        return ('<form class="lc-start one" data-lc-start data-ind="%s" aria-label="기업 AI 검색 무료 진단">'
                 '<label class="k-sr" for="sN">%s 이름</label><input class="inp" id="sN" name="name" maxlength="60" placeholder="%s 이름">'
                 '<label class="k-sr" for="sA">동네 · 가까운 역</label><input class="inp" id="sA" name="area" maxlength="30" placeholder="동네 · 가까운 역">'
                 '<button class="k-btn k-btn-p" type="submit">%s{{ico:arrow}}</button></form>') % (ind, esc(n), esc(n), label)
-    return ('<form class="lc-start" data-lc-start aria-label="가게 AI 검색 무료 진단">'
+    return ('<form class="lc-start" data-lc-start aria-label="기업 AI 검색 무료 진단">'
             '<label class="k-sr" for="sI">업종</label><select class="sel" id="sI" name="ind"></select>'
             '<label class="k-sr" for="sN">가게 이름</label><input class="inp" id="sN" name="name" maxlength="60" placeholder="가게 이름">'
             '<label class="k-sr" for="sA">동네 · 가까운 역</label><input class="inp" id="sA" name="area" maxlength="30" placeholder="동네 · 가까운 역">'
@@ -315,7 +315,7 @@ def page_industry(d):
             % (d["ex"]["q"], d["short"]))
     head = HEAD.format(path="local/%s/" % d["slug"], key="local-" + d["k"], title=title, ogtitle="%s AI 검색 등록 · 손님이 AI에게 물을 때 우리 가게가 나오게 | AIMarker" % d["short"], desc=desc, ind=d["k"])
     hero = ('<section class="k-phero k-ph2 lc-hero lc-ih" id="top" aria-labelledby="h1">\n  <div class="k-wrap">\n    <div>\n'
-            '      <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}local/">가게 AI 검색 등록</a>{{ico:chev}}<span>%s</span></p>\n'
+            '      <p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}local/">기업 AI 검색 등록</a>{{ico:chev}}<span>%s</span></p>\n'
             '      <h1 class="k-h1" id="h1">%s</h1>\n      <p class="k-lead">%s</p>\n      %s\n      %s\n    </div>\n    %s\n  </div>\n</section>\n'
             ) % (esc(d["short"]), d["h1"], d["lead"], start_form(d["k"], n=d["n"]), TRUST, ai_screen(d["ex"], d["short"], n=d["n"]))
     ans = ('<section class="k-sec lp-ans" id="answer" aria-labelledby="ansT">\n  <div class="k-wrap">\n    <div class="lp-ans-b">\n      <p class="lp-k">한 줄 답</p>\n'
@@ -337,8 +337,8 @@ def page_industry(d):
     tail = ('<section class="k-sec" id="faq" aria-labelledby="fTitle">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="fTitle">%s %s이 자주 묻는 질문</h2></div>\n    <div class="k-faq">\n%s\n    </div>\n  </div>\n</section>\n'
             % (esc(d["short"]), HON.get(d["k"], "사장님"), faq_html(faq)))
     cta = ('<section class="k-cta" aria-labelledby="ctaT">\n  <div class="k-wrap k-cta-in">\n    <div><h2 class="k-h2" id="ctaT">우리 %s, AI가 지금 얼마나 알까요?</h2><p class="k-lead">질문 몇 개에 누르기만 하면 30초 안에 결과가 나옵니다. 가입 없이 무료이고, 답한 내용은 서버로 보내지 않습니다.</p></div>\n'
-           '    <div>%s<p class="k-small" style="margin-top:12px">다른 업종: <a href="{{root}}local/">가게 AI 검색 등록 전체</a> · <a href="{{root}}pricing/#local">요금</a></p></div>\n  </div>\n</section>\n'
-           ) % (esc(d["n"]), start_form(d["k"], "30초 무료 진단", n=d["n"]).replace('aria-label="가게 AI 검색 무료 진단"', 'aria-label="가게 AI 검색 무료 진단(페이지 끝)"').replace('id="sN"', 'id="sN2"').replace('for="sN"', 'for="sN2"').replace('id="sA"', 'id="sA2"').replace('for="sA"', 'for="sA2"'))
+           '    <div>%s<p class="k-small" style="margin-top:12px">다른 업종: <a href="{{root}}local/">기업 AI 검색 등록 전체</a> · <a href="{{root}}pricing/#local">요금</a></p></div>\n  </div>\n</section>\n'
+           ) % (esc(d["n"]), start_form(d["k"], "30초 무료 진단", n=d["n"]).replace('aria-label="기업 AI 검색 무료 진단"', 'aria-label="기업 AI 검색 무료 진단(페이지 끝)"').replace('id="sN"', 'id="sN2"').replace('for="sN"', 'for="sN2"').replace('id="sA"', 'id="sA2"').replace('for="sA"', 'for="sA2"'))
     body = head + hero + "\n{{inc:lc-links.inc}}\n\n" + ans + "\n" + qsec + "\n{{inc:lc-tool.inc}}\n\n" + need + "\n{{inc:lc-stats.inc}}\n\n{{inc:lc-flow.inc}}\n\n{{inc:lc-pk.inc}}\n\n" + tail + "\n" + cta
     return body
 
@@ -347,8 +347,8 @@ def page_main():
     pick = ["nail", "clinic", "cafe", "academy", "realty"]
     ex = [dict(d["ex"], ind=d["short"]) for k in pick for d in IND if d["k"] == k]
     head = HEAD.format(path="local/", key="local",
-                       title="가게 AI 검색 등록 · 자영업자 GEO 세팅 | ChatGPT · 네이버 AI 브리핑에 우리 가게가 나오게 | AIMarker",
-                       ogtitle="손님이 AI에게 물을 때, 우리 가게가 나오게 · AIMarker 가게 AI 검색 등록",
+                       title="기업 AI 검색 등록 · 자영업자 GEO 세팅 | ChatGPT · 네이버 AI 브리핑에 우리 가게가 나오게 | AIMarker",
+                       ogtitle="손님이 AI에게 물을 때, 우리 가게가 나오게 · AIMarker 기업 AI 검색 등록",
                        desc="병원 · 치과 · 네일샵 · 미용실 · 카페 · 음식점 · 학원 · 부동산까지, 손님은 이제 ChatGPT · 제미나이 · 네이버 AI 브리핑에 가게를 묻습니다. 가게 정보를 넣으면 AI 검색 준비도와 손님 질문에 답할 수 있는지 무료로 진단하고, AI가 읽는 가게 페이지와 구조화 데이터를 자동으로 만들어 구글 · 네이버 · 빙에 등록합니다. 홈페이지가 없어도 됩니다. 990토큰(1토큰 100원)부터.",
                        ind="")
     hero = ('<section class="k-phero k-ph2 lc-hero" id="top" aria-labelledby="h1">\n  <div class="k-wrap">\n    <div>\n'
@@ -358,8 +358,8 @@ def page_main():
             '      %s\n      %s\n    </div>\n    %s\n  </div>\n</section>\n'
             '<script type="application/json" id="lcEx">%s</script>\n') % (start_form(), TRUST, ai_screen(ex[0], ex[0]["ind"], rot=True), json.dumps(ex, ensure_ascii=False).replace("</", "<\\/"))
     ans = ('<section class="k-sec lp-ans" id="answer" aria-labelledby="ansT">\n  <div class="k-wrap">\n    <div class="lp-ans-b">\n      <p class="lp-k">한 줄 답</p>\n'
-           '      <h2 class="k-h2" id="ansT">가게 AI 검색 등록은 무엇인가요?</h2>\n'
-           '      <p class="k-lead">AI가 우리 가게를 답에 넣으려면 세 가지가 필요합니다. ① 어디서나 같은 기본 정보(이름 · 주소 · 전화 · 시간) ② 손님 질문에 답할 사실(가격 · 주차 · 예약 · 쉬는 날) ③ AI가 읽는 형식(구조화 데이터 · llms.txt). 가게 AI 검색 등록은 이 세 가지를 만들어 구글 · 네이버 · 빙과 지도에 올리고 서로 맞추는 일입니다.</p>\n'
+           '      <h2 class="k-h2" id="ansT">기업 AI 검색 등록은 무엇인가요?</h2>\n'
+           '      <p class="k-lead">AI가 우리 가게를 답에 넣으려면 세 가지가 필요합니다. ① 어디서나 같은 기본 정보(이름 · 주소 · 전화 · 시간) ② 손님 질문에 답할 사실(가격 · 주차 · 예약 · 쉬는 날) ③ AI가 읽는 형식(구조화 데이터 · llms.txt). 기업 AI 검색 등록은 이 세 가지를 만들어 구글 · 네이버 · 빙과 지도에 올리고 서로 맞추는 일입니다.</p>\n'
            '      <ul class="lp-pts"><li>ChatGPT · 제미나이에는 가게를 직접 등록하는 창구가 없습니다. AI가 읽는 검색 색인과 지도에 올리는 것이 등록입니다.</li>'
            '<li>홈페이지가 없으면 AI가 읽는 가게 페이지(aimarker.kr/p/가게 이름/)를 만들어 드립니다.</li>'
            '<li>AI가 답할 수 있는 질문 수를 등록 전후로 보여 드립니다.</li></ul>\n    </div>\n  </div>\n</section>\n')
@@ -373,7 +373,7 @@ def page_main():
            '    </div>\n    <p class="lc-alarm">AI는 모르는 가게를 추천하기 어렵습니다. 정보가 비어 있으면, 그 질문에 답할 수 있는 옆 가게가 먼저 나올 수 있습니다.</p>\n  </div>\n</section>\n')
     vs = ('<section class="k-sec k-panel" id="vs" aria-labelledby="vsT">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="vsT">광고 대행과 무엇이 다른가요</h2>\n'
           '      <p class="k-lead">AIMarker는 자리를 사지 않고, AI가 읽는 사실을 갖춥니다. 그래서 멈춰도 남습니다.</p></div>\n'
-          '    <div class="k-tbl-w"><table class="lp-tbl"><thead><tr><th scope="col">무엇을</th><th scope="col">플레이스 · 블로그 광고 대행</th><th scope="col">\'AI 추천 1위\' 약속 상품</th><th scope="col">AIMarker 가게 AI 검색 등록</th></tr></thead><tbody>\n'
+          '    <div class="k-tbl-w"><table class="lp-tbl"><thead><tr><th scope="col">무엇을</th><th scope="col">플레이스 · 블로그 광고 대행</th><th scope="col">\'AI 추천 1위\' 약속 상품</th><th scope="col">AIMarker 기업 AI 검색 등록</th></tr></thead><tbody>\n'
           '      <tr><td>하는 일</td><td>광고 자리 · 순위 · 체험단 글</td><td>키워드 하나에 맞춘 작업</td><td>AI가 읽는 가게 페이지 · 구조화 데이터 · 검색 등록 · 정보 맞춤</td></tr>\n'
           '      <tr><td>보여 주는 것</td><td>광고가 나간 기간과 노출 수</td><td>특정 질문 하나의 순위</td><td>AI가 답할 수 있는 질문 수를 등록 전후로 비교</td></tr>\n'
           '      <tr><td>비용</td><td>매달 광고비</td><td>키워드마다</td><td>990토큰(1회)부터, 1년 관리 2,900토큰</td></tr>\n'
@@ -388,13 +388,13 @@ def page_main():
     faq = ('<section class="k-sec" id="faq" aria-labelledby="fTitle">\n  <div class="k-wrap">\n    <div class="k-head"><h2 class="k-h2" id="fTitle">사장님 · 원장님이 자주 묻는 질문</h2></div>\n    <div class="k-faq">\n%s\n    </div>\n  </div>\n</section>\n'
            % faq_html(COMMON_FAQ))
     cta = ('<section class="k-cta" aria-labelledby="ctaT">\n  <div class="k-wrap k-cta-in">\n    <div><h2 class="k-h2" id="ctaT">우리 가게, AI가 지금 얼마나 알까요?</h2><p class="k-lead">업종을 고르고 질문 몇 개에 누르기만 하면 30초 안에 결과가 나옵니다. 가입 없이 무료이고, 답한 내용은 서버로 보내지 않습니다.</p></div>\n'
-           '    <div>%s</div>\n  </div>\n</section>\n') % start_form(label="30초 무료 진단").replace('aria-label="가게 AI 검색 무료 진단"', 'aria-label="가게 AI 검색 무료 진단(페이지 끝)"').replace('id="s', 'id="t').replace('for="s', 'for="t')
+           '    <div>%s</div>\n  </div>\n</section>\n') % start_form(label="30초 무료 진단").replace('aria-label="기업 AI 검색 무료 진단"', 'aria-label="기업 AI 검색 무료 진단(페이지 끝)"').replace('id="s', 'id="t').replace('for="s', 'for="t')
     return head + hero + "\n{{inc:lc-links.inc}}\n\n" + ans + "\n{{inc:lc-stats.inc}}\n\n" + why + "\n{{inc:lc-tool.inc}}\n\n{{inc:lc-flow.inc}}\n\n{{inc:lc-pk.inc}}\n\n" + vs + "\n" + inds + "\n" + faq + "\n" + cta
 
 
 def links_inc():
     chips = "".join('\n      <a href="{{root}}local/%s/">%s</a>' % (d["slug"], esc(d["short"])) for d in IND)
-    return ('<nav class="lp-links lc-links" aria-label="업종별 가게 AI 검색 등록">\n  <div class="k-wrap">\n    <p class="lp-links-k">업종별로 보기</p>\n    <div class="lp-chips">\n      <a href="{{root}}local/">전체</a>%s\n    </div>\n  </div>\n</nav>\n') % chips
+    return ('<nav class="lp-links lc-links" aria-label="업종별 기업 AI 검색 등록">\n  <div class="k-wrap">\n    <p class="lp-links-k">업종별로 보기</p>\n    <div class="lp-chips">\n      <a href="{{root}}local/">전체</a>%s\n    </div>\n  </div>\n</nav>\n') % chips
 
 
 def main():

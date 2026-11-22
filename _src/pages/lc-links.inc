@@ -1,4 +1,4 @@
-<nav class="lp-links lc-links" aria-label="업종별 가게 AI 검색 등록">
+<nav class="lp-links lc-links" aria-label="업종별 기업 AI 검색 등록">
   <div class="k-wrap">
     <p class="lp-links-k">업종별로 보기</p>
     <div class="lp-chips">

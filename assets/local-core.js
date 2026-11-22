@@ -1,4 +1,4 @@
-/* AIMarker 가게 AI 검색 등록(13.9, 2026.10.27) 핵심 엔진
+/* AIMarker 기업 AI 검색 등록(13.9, 2026.10.27) 핵심 엔진
    가게 정보 한 번 → AI 검색 준비도(100점) · 손님이 AI에게 묻는 질문과 답할 수 있는지 · AI가 읽는 소개 문장 · 자주 묻는 질문 ·
    구조화 데이터(schema.org JSON-LD, 업종별 형식) · llms.txt · robots.txt · 정보 맞춤 목록 · AI 가게 페이지(HTML 한 장).
    브라우저(assets/local.js)와 빌드(Node, _src/tools/store_render.js)가 같은 파일을 씁니다. 화면(DOM)에 손대지 않고, 밖으로 아무것도 보내지 않습니다. */
@@ -637,7 +637,7 @@
     return lines.join('\n') + '\n';
   }
   var BOTS = [['OAI-SearchBot', 'ChatGPT 검색'], ['ChatGPT-User', 'ChatGPT 사용자 요청'], ['PerplexityBot', 'Perplexity 검색'], ['Perplexity-User', 'Perplexity 사용자 요청'], ['Claude-SearchBot', 'Claude 검색'], ['Claude-User', 'Claude 사용자 요청'], ['Googlebot', '구글 검색 · AI 개요'], ['Bingbot', '빙 검색 · Copilot'], ['Yeti', '네이버 검색 · AI 브리핑'], ['Daumoa', '다음 검색']];
-  function robots() { return '# AI 검색 · 답변 크롤러 허용(AIMarker 가게 AI 검색 등록)\n# 이미 robots.txt 가 있으면 이 줄들을 더하세요. 학습용 크롤러(GPTBot · Google-Extended 등) 허용은 따로 정하면 됩니다.\n' + BOTS.map(function (b) { return '\n# ' + b[1] + '\nUser-agent: ' + b[0] + '\nAllow: /'; }).join('\n') + '\n'; }
+  function robots() { return '# AI 검색 · 답변 크롤러 허용(AIMarker 기업 AI 검색 등록)\n# 이미 robots.txt 가 있으면 이 줄들을 더하세요. 학습용 크롤러(GPTBot · Google-Extended 등) 허용은 따로 정하면 됩니다.\n' + BOTS.map(function (b) { return '\n# ' + b[1] + '\nUser-agent: ' + b[0] + '\nAllow: /'; }).join('\n') + '\n'; }
 
   /* ---------- 정보 맞춤 목록(어디서나 같은 사실) ---------- */
   function checklist(s) {
@@ -687,7 +687,7 @@
     return '<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' +
       '<title>' + esc(ttl) + '</title><meta name="description" content="' + esc(desc) + '">' + canon + robotsMeta +
       '<meta property="og:type" content="website"><meta property="og:title" content="' + esc(ttl) + '"><meta property="og:description" content="' + esc(desc) + '">' + (o.url ? '<meta property="og:url" content="' + esc(o.url) + '">' : '') + '<meta property="og:locale" content="ko_KR">' +
-      '<meta name="generator" content="AIMarker 가게 AI 검색 등록 ' + VER + '">' +
+      '<meta name="generator" content="AIMarker 기업 AI 검색 등록 ' + VER + '">' +
       '<script type="application/ld+json">' + JSON.stringify(ld).replace(/</g, '\\u003c') + '</script><style>' + PCSS + '</style></head><body><main class="w">' +
       '<header class="hd"><p class="k">' + (up ? '가게가 확인한 정보 · ' + esc(up.replace(/-/g, '.')) + ' 기준' : '가게가 확인한 정보') + '</p><h1>' + esc((s.name || '우리 가게') + (s.branch ? ' ' + s.branch : '')) + '</h1>' +
       '<p class="sub">' + esc([ad.locality || ad.short, s.area, (s.cuisine && I.cuisine ? s.cuisine + ' ' : '') + noun(s)].filter(Boolean).join(' · ')) + '</p><p class="lead">' + esc(it) + '</p>' + (acts ? '<div class="acts">' + acts + '</div>' : '') + '</header>' +
@@ -698,7 +698,7 @@
       (info ? '<section aria-labelledby="t-a"><h2 id="t-a">위치와 정보</h2><table><tbody>' + info + '</tbody></table></section>' : '') +
       (links ? '<section aria-labelledby="t-l"><h2 id="t-l">바로 가기</h2><ul class="links">' + links + '</ul></section>' : '') +
       '<p class="ft">이 페이지의 정보는 ' + esc(jo(s.name || '가게', '이', '가')) + ' ' + (up ? esc(up.replace(/-/g, '.')) + '에 직접 확인했습니다' : '직접 확인했습니다') + '. 바뀐 정보가 있으면 가게로 알려 주세요.' +
-      (o.hosted ? '<br>만든 곳 <a href="' + SITE + 'local/">AIMarker 가게 AI 검색 등록</a>' : '') + '</p></main></body></html>\n';
+      (o.hosted ? '<br>만든 곳 <a href="' + SITE + 'local/">AIMarker 기업 AI 검색 등록</a>' : '') + '</p></main></body></html>\n';
   }
 
   /* 가게 정보 파일(내려받기 · 주문할 때 회신) */

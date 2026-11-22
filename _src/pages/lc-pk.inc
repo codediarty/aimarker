@@ -1,6 +1,6 @@
 <section class="k-sec k-panel" id="packages" aria-labelledby="pkT">
   <div class="k-wrap">
-    <div class="k-head-row"><div class="k-head"><p class="k-eyebrow">{{ico:store}}가게 AI 검색 등록</p><h2 class="k-h2" id="pkT">한 번 등록하면, AI가 읽는 곳 모두에</h2>
+    <div class="k-head-row"><div class="k-head"><p class="k-eyebrow">{{ico:store}}기업 AI 검색 등록</p><h2 class="k-h2" id="pkT">한 번 등록하면, AI가 읽는 곳 모두에</h2>
       <p class="k-lead">처음이라면 '등록 + 1년 관리'를 권합니다. 영업시간이나 가격이 바뀌어도 AI가 늘 맞는 답을 하도록 1년 동안 맞춰 드리고, 매달 AI 답변을 확인합니다.</p></div>
       <button type="button" class="k-btn k-btn-l" data-lq>30초 무료 진단 먼저</button></div>
     {{tiers:local}}

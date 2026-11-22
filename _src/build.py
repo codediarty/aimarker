@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261122d"
+VER = "20261122e"
 TODAY = "2026-11-22"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -91,7 +91,7 @@ SHOP_IDX = {
     # 13.17(10.31) 개인 토큰 새 요금(대표): 라이트 lt · 플러스 pl · 프로 pr(BEST 추천) · 맥스 mx(최고 혜택) = 아임웹 96 · 97 · 98 · 99(결제하면 서버가 바로 코드 메일).
     # 예전 t10 · t40 · t80(89~91)과 34~37 은 이 사이트에서 팔지 않음(예전 링크로 산 주문도 코드는 그대로 나감). 기업 38~40 은 그대로
     "lt": "96", "pl": "97", "pr": "98", "mx": "99", "credit-b10": "38", "credit-b30": "39", "credit-b100": "40",
-    # 13.9(10.27) 가게 AI 검색 등록(자영업자 GEO 세팅) 2개. skkc.co.kr 디지털 상품 81(108,900원) · 82(319,000원), 부가세 포함 금액
+    # 13.9(10.27) 기업 AI 검색 등록(자영업자 GEO 세팅) 2개. skkc.co.kr 디지털 상품 81(108,900원) · 82(319,000원), 부가세 포함 금액
     "local-basic": "81", "local-year": "82",
 }
 CATALOG = {
@@ -130,12 +130,12 @@ CATALOG = {
          "feat": ["관리의 모든 것", "AI가 인용하기 좋은 글 매달 2편", "자주 묻는 질문 · 상품 피드 갱신", "경쟁사 추적과 분기 전략 회의"]},
     ]},
 }
-# 13.9(10.27) 가게 AI 검색 등록(자영업자 GEO 세팅): 병원 · 네일샵 · 카페 · 학원 · 부동산 등 모든 동네 가게. 세 가지로만(복잡하지 않게)
-CATALOG["local"] = {"name": "가게 AI 검색 등록", "vat": "부가세 별도", "tiers": [
-    {"id": "local-basic", "name": "등록", "full": "가게 AI 검색 등록", "who": "가게 · 병원 · 매장 1곳, 홈페이지 없어도", "price": "99,000원", "per": "1회", "m": 99000, "note": "등록 뒤 한 달 수정 2번",
+# 13.9(10.27) 기업 AI 검색 등록(자영업자 GEO 세팅): 병원 · 네일샵 · 카페 · 학원 · 부동산 등 모든 동네 가게. 세 가지로만(복잡하지 않게)
+CATALOG["local"] = {"name": "기업 AI 검색 등록", "vat": "부가세 별도", "tiers": [
+    {"id": "local-basic", "name": "등록", "full": "기업 AI 검색 등록", "who": "가게 · 병원 · 매장 1곳, 홈페이지 없어도", "price": "99,000원", "per": "1회", "m": 99000, "note": "등록 뒤 한 달 수정 2번",
      "feat": ["AI가 읽는 가게 페이지 1개(aimarker.kr/p/가게 이름/), 업종별 구조화 데이터", "손님이 AI에게 묻는 질문 15개와 답", "구글 · 네이버 · 빙 검색 등록, 새 페이지는 네이버 · 빙에 바로 알림",
               "네이버 플레이스 · 카카오맵 · 구글 지도 정보 맞춤 목록", "업종 광고 표현 점검(의료 · 뷰티 · 식품 · 일반 규칙)", "등록 뒤 다시 진단해 전후 비교"]},
-    {"id": "local-year", "name": "등록 + 1년 관리", "full": "가게 AI 검색 등록 + 1년 관리", "who": "꾸준히 손님을 늘리고 싶은 가게", "price": "290,000원", "per": "1회", "m": 290000, "note": "1년 관리 포함", "best": "추천",
+    {"id": "local-year", "name": "등록 + 1년 관리", "full": "기업 AI 검색 등록 + 1년 관리", "who": "꾸준히 손님을 늘리고 싶은 가게", "price": "290,000원", "per": "1회", "m": 290000, "note": "1년 관리 포함", "best": "추천",
      "feat": ["등록의 모든 것", "홈페이지가 있으면 구조화 데이터 · 자주 묻는 질문 · llms.txt 설치까지", "네이버 플레이스 · 카카오맵 · 구글 비즈니스 프로필 정보 정리(사장님 계정에서 함께)",
               "1년 동안 바뀌는 정보 반영(영업시간 · 메뉴 · 가격, 월 4번까지)", "매달 AI 답변 확인 리포트: 질문 10개를 ChatGPT · 제미나이 · 네이버 · 구글에", "리뷰 답글 문구 매달 5개, 같은 상권 가게 3곳과 분기 비교"]},
     {"id": "local-multi", "name": "여러 지점", "who": "프랜차이즈 · 병원 그룹, 지점 3곳부터", "price": "견적", "note": "지점마다 AI 가게 페이지와 정보 맞춤", "per": "", "cta": "견적 받기", "href": "contact/?plan=local-multi&type=local",
@@ -437,8 +437,8 @@ def credit_rates_html(root):
     row("AI 서비스 마킹 스타터", "생성형 AI 서비스", "결과물 서명 마크 월 1만 건, 사전 고지 문구, 내려받기 안내 창", a, b, buy("service-starter"))
     t = tier("service", "service-growth"); a, b = crs(t)
     row("AI 서비스 마킹 그로스", "이용자가 빠르게 느는 서비스", "월 10만 건, 제31조 표시 정책 문서, 감사 기록과 분기 보고서", a, b, buy("service-growth"))
-    grp("가게 AI 검색 등록(병원 · 네일샵 · 카페 · 학원 등)")
-    row("가게 AI 검색 진단", "업종 · 가게 정보", "AI 검색 준비도, 손님 질문에 답할 수 있는지, AI 가게 페이지 · 구조화 데이터 만들기", "무료", "", link("local/", "진단하기"), True)
+    grp("기업 AI 검색 등록(병원 · 네일샵 · 카페 · 학원 등)")
+    row("기업 AI 검색 진단", "업종 · 가게 정보", "AI 검색 준비도, 손님 질문에 답할 수 있는지, AI 가게 페이지 · 구조화 데이터 만들기", "무료", "", link("local/", "진단하기"), True)
     for tid in ("local-basic", "local-year"):
         t = tier("local", tid); a, b = crs(t)
         row(t.get("full", t["name"]), t["who"], ", ".join(t["feat"][:3]), a, b, buy(tid))
@@ -583,14 +583,14 @@ def kaiec_badge(dark=False, lg=False, root=""):
 PRODUCTS = [("label/", "fingerprint", "AI 마킹", "코드 한 줄로 사이트 속 AI 생성물에 AI 마크 자동 부착"),
             ("mark/", "badge", "파일 AI 마킹", "이미지 · 영상 · 문서에 AI 마크와 출처 기록"),
             ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 제미나이 · 네이버 AI 브리핑이 우리를 찾고 추천하게"),
-            ("local/", "store", "가게 AI 검색 등록", "병원 · 네일샵 · 카페 · 학원, 손님이 AI에게 물을 때 우리 가게가 나오게"),
+            ("local/", "store", "기업 AI 검색 등록", "병원 · 매장 · 학원, 손님이 AI에게 물을 때 우리 업체가 나오게"),
             ("humanize/", "pen", "AI 휴머나이징 · AI 작성률 검사", "레포트 · 논문 · 자기소개서의 AI 말버릇을 사람 말투로"),
             ("commerce/", "store", "AI 커머스 엔진", "AI 쇼핑이 읽는 상품 데이터와 상품 피드"),
             ("compliance/", "shield", "AI 컴플라이언스", "출고 전 점검, 광고주 승인, 감사 기록"),
             ("label/#service", "code", "AI 서비스 마킹", "AI 서비스 결과물마다 AI 마크를 자동으로(API · SDK · MCP)")]
 # 12.0 메뉴: 개인(AI 휴머나이징)은 맨 앞 단독 메뉴, 기업용 제품은 펼침 하나로
 MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코드 한 줄로 사이트 속 AI 생성물에 AI 마크"),
-                          ("local/", "store", "가게 AI 검색 등록", "병원 · 네일샵 · 카페, AI가 우리 가게를 정확히 알게"),
+                          ("local/", "store", "기업 AI 검색 등록", "병원 · 매장 · 학원, AI가 우리 업체를 정확히 알게"),
                           ("mark/", "badge", "파일 AI 마킹", "이미지 · 영상 · 문서에 AI 마크와 출처 기록"),
                           ("geo/", "globe", "AI 검색 노출 최적화", "ChatGPT · 네이버 AI 브리핑이 우리를 찾게"),
                           ("label/#service", "code", "AI 서비스 마킹", "AI 서비스 결과물마다 자동 마킹")]),
@@ -621,14 +621,14 @@ GUIDES = [("ai-rate/", "ai-rate", "AI 작성률 낮추기", "AI 패턴을 찾아
 GUIDE_KEYS = [g[1] for g in GUIDES]
 B2C_MENU = ([("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인")] + [(g[0], g[2], g[3]) for g in GUIDES if g[4]] +
             [("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")])
-NAV = [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("local/", "가게 AI 검색 등록"), ("products", "기업용"), ("pricing/", "요금"), ("company/", "회사")]   # 13.9 '개발자'는 기업용 펼침 · 바닥글로, 그 자리에 가게 AI 검색 등록
+NAV = [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("local/", "기업 AI 검색 등록"), ("products", "기업용"), ("pricing/", "요금"), ("company/", "회사")]   # 13.9 '개발자'는 기업용 펼침 · 바닥글로, 그 자리에 기업 AI 검색 등록
 LOCAL_KEYS = ["local", "local-clinic", "local-dental", "local-kmed", "local-derma", "local-vet", "local-nail", "local-hair", "local-beauty", "local-cafe", "local-restaurant", "local-academy", "local-fitness", "local-realty", "local-office", "local-interior", "local-stay", "local-shop"]
 PRODUCT_PAGE_KEYS = ["label", "site", "v", "mark", "mcheck", "m", "geo", "geo-setup", "seo-setup", "geo-marketing", "commerce", "compliance", "report", "check", "scan", "verify", "creators", "product", "app", "business", "contact"]
 B2C_KEYS = ["humanize", "personal", "proof"] + GUIDE_KEYS   # 13.8 검색 수요 안내 페이지도 개인용 메뉴
 NAV_KEY = {"humanize/": B2C_KEYS, "label/": ["label", "site", "v", "mark", "mcheck", "m"], "local/": LOCAL_KEYS, "pricing/": ["pricing"], "developers/": ["developers"], "company/": ["company", "brand", "technology", "trust", "guide"]}
 TABS = [("", "home", "홈", ["home"]), ("humanize/", "pen", "휴머나이징", B2C_KEYS),
         ("label/", "fingerprint", "AI 마킹", ["label", "site", "v", "mark", "mcheck", "m"]),
-        ("local/", "store", "가게 등록", LOCAL_KEYS),
+        ("local/", "store", "기업 등록", LOCAL_KEYS),
         ("pricing/", "card", "토큰", ["pricing"])]
 
 
@@ -687,7 +687,7 @@ def header(root, key):
     biz = key in PRODUCT_PAGE_KEYS
     if key == "humanize":
         cta = ('<a class="k-btn k-btn-p k-btn-s" href="%shumanize/#price">토큰 충전</a>' % root)
-    elif key in LOCAL_KEYS:   # 13.9 가게 AI 검색 등록은 같은 페이지의 무료 진단 칸으로
+    elif key in LOCAL_KEYS:   # 13.9 기업 AI 검색 등록은 같은 페이지의 무료 진단 칸으로
         cta = '<a class="k-btn k-btn-p k-btn-s" href="#quick" data-lq>30초 진단</a>'
     elif key in ("geo", "geo-setup", "seo-setup", "geo-marketing"):   # 13.10 GEO 안내 페이지는 같은 페이지의 무료 진단 칸으로
         cta = '<a class="k-btn k-btn-p k-btn-s" href="#gForm" data-focus="gUrl">무료로 진단</a>'
@@ -739,7 +739,7 @@ def footer(root):
         biz.append('<span>%s</span>' % b["addr"])
     biz.append('<span>문의 <a href="mailto:%s">%s</a></span>' % (b["mail"], b["mail"]))
     biz.append('<span>결제 · 세금계산서는 운영사 성균관컨설팅이 처리합니다</span>')
-    cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("site/", "설치 마법사"), ("mark/", "파일 AI 마킹"), ("local/", "가게 AI 검색 등록"), ("geo/", "AI 검색 노출 최적화"), ("geo-setup/", "GEO 세팅 · SEO 설정"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
+    cols = [("제품", [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("site/", "설치 마법사"), ("mark/", "파일 AI 마킹"), ("local/", "기업 AI 검색 등록"), ("geo/", "AI 검색 노출 최적화"), ("geo-setup/", "GEO 세팅 · SEO 설정"), ("commerce/", "AI 커머스 엔진"), ("compliance/", "AI 컴플라이언스"), ("m/", "마크 확인")]),
             ("고객별", [("personal/", "개인 · 학생"), ("ai-rate/", "AI 작성률 낮추기"), ("resume/", "자기소개서 AI 검사"), ("academic/", "레포트 · 논문 AI 검사"), ("proof/", "AI 활용 증빙서"), ("local/", "가게 · 병원 · 매장 사장님"), ("local/clinic/", "병원 · 치과 AI 검색 등록"), ("pricing/#label", "1인 · 소상공인"), ("business/", "기업 · 기관 · 학교"), ("label/#service", "AI 서비스 회사"), ("report/", "일괄 확인 리포트"), ("check/", "광고 문구 검수"), ("contact/", "문의하기")]),
             ("개발자", [("developers/", "API와 SDK"), ("developers/#mcp", "MCP 서버"), ("developers/openapi.json", "OpenAPI 명세"), ("m.js", "AI 마킹 스크립트(공개 코드)"), ("v/", "사이트 AI 마크 확인"), ("llms.txt", "llms.txt"), (".well-known/aimarker-keys.json", "마크 서명 공개키"), ("verify/", "원장 확인")]),
             ("회사", [("company/", "회사 소개"), ("technology/", "기술"), ("pricing/", "요금과 토큰"), ("trust/", "신뢰와 판단 기준"), ("guide/", "광고와 AI 표시 가이드"), ("brand/", "브랜드 자료"), ("terms/", "이용약관"), ("privacy/", "<b>개인정보처리방침</b>")])]
@@ -762,7 +762,7 @@ def footer(root):
 
 
 def local_service_ld(ind, url):
-    """13.9 가게 AI 검색 등록 서비스 구조화 데이터(대표 페이지와 업종 페이지 17개). 값은 CATALOG['local'] 그대로(부가세 별도)"""
+    """13.9 기업 AI 검색 등록 서비스 구조화 데이터(대표 페이지와 업종 페이지 17개). 값은 CATALOG['local'] 그대로(부가세 별도)"""
     names = {}
     try:
         with open(os.path.join(HERE, "tools", "lp_local.json"), encoding="utf-8") as f:
@@ -777,7 +777,7 @@ def local_service_ld(ind, url):
         offers.append({"@type": "Offer", "name": t.get("full") or t["name"], "description": " · ".join(t["feat"][:4]),
                        "price": t["m"], "priceCurrency": "KRW", "url": SITE + "local/#packages", "seller": {"@id": SITE + "#org"},
                        "priceSpecification": {"@type": "UnitPriceSpecification", "price": t["m"], "priceCurrency": "KRW", "valueAddedTaxIncluded": False, "unitText": t.get("per", "1회")}})
-    return {"@type": "Service", "@id": SITE + "local/#service", "name": "가게 AI 검색 등록", "alternateName": ["자영업자 GEO 세팅", "가게 AI 검색 노출", "로컬 GEO"],
+    return {"@type": "Service", "@id": SITE + "local/#service", "name": "기업 AI 검색 등록", "alternateName": ["가게 AI 검색 등록", "자영업자 GEO 세팅", "가게 AI 검색 노출", "로컬 GEO"],
             "serviceType": "AI 검색 등록(GEO) · 가게 구조화 데이터", "url": SITE + "local/",
             "description": "손님이 ChatGPT · 제미나이 · 네이버 AI 브리핑 · 구글 AI 개요에 가게를 물을 때 AI가 정확한 정보를 읽도록, AI가 읽는 가게 페이지와 업종별 구조화 데이터를 만들어 구글 · 네이버 · 빙에 등록하고 지도 정보와 맞춥니다. 무료 진단, 홈페이지가 없어도 됩니다.",
             "provider": {"@id": SITE + "#org"}, "areaServed": {"@type": "Country", "name": "대한민국"},
@@ -913,7 +913,7 @@ def auto_ld(meta, body, path, title, desc):
             qa.append({"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}})
     if len(qa) >= 2 and "FAQPage" not in own:
         graph.append({"@type": "FAQPage", "@id": url + "#faq", "mainEntity": qa[:20]})
-    if meta.get("key") in LOCAL_KEYS and not own:   # 13.9 가게 AI 검색 등록: 우리 서비스도 AI가 읽게(서비스 · 요금 · 대상 업종)
+    if meta.get("key") in LOCAL_KEYS and not own:   # 13.9 기업 AI 검색 등록: 우리 서비스도 AI가 읽게(서비스 · 요금 · 대상 업종)
         graph.append(local_service_ld(meta.get("lc_ind", ""), url))
         graph[1]["about"] = {"@id": SITE + "local/#service"}
     if not graph:
@@ -1175,7 +1175,7 @@ def build_ai_assets():
 
 
 def build_stores():
-    """13.9 가게 AI 검색 등록: _src/stores/*.json → p/<주소>/index.html(Node, _src/tools/store_render.js 가 화면과 같은 엔진으로) + p/index.html 목록.
+    """13.9 기업 AI 검색 등록: _src/stores/*.json → p/<주소>/index.html(Node, _src/tools/store_render.js 가 화면과 같은 엔진으로) + p/index.html 목록.
     올린 가게가 없으면 아무것도 만들지 않음(빈 목록 페이지를 공개하지 않음). 결과 목록을 돌려줌(사이트맵 · llms.txt)"""
     sdir = os.path.join(HERE, "stores")
     files = [f for f in sorted(os.listdir(sdir)) if f.endswith(".json") and not f.startswith("_")] if os.path.isdir(sdir) else []
@@ -1191,11 +1191,11 @@ def build_stores():
     import html as _h
     cards = "".join('<a href="%s/"><b>%s</b><span>%s · %s</span><small>%s</small><em>%s 확인</em></a>' % (
         _h.escape(x["slug"]), _h.escape(x["name"]), _h.escape(x["area"] or ""), _h.escape(x["noun"]), _h.escape(x["intro"][:90] + ("…" if len(x["intro"]) > 90 else "")), _h.escape(x["updated"].replace("-", "."))) for x in stores)
-    body = ('<section class="k-phero" aria-labelledby="h1"><div class="k-wrap"><p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}local/">가게 AI 검색 등록</a>{{ico:chev}}<span>등록 가게</span></p>'
+    body = ('<section class="k-phero" aria-labelledby="h1"><div class="k-wrap"><p class="k-crumb"><a href="{{root}}">AIMarker</a>{{ico:chev}}<a href="{{root}}local/">기업 AI 검색 등록</a>{{ico:chev}}<span>등록 가게</span></p>'
             '<h1 class="k-h1" id="h1">AI 검색에 등록한 가게</h1><p class="k-lead">가게가 직접 확인한 정보(이름 · 주소 · 시간 · 가격 · 편의)를 AI가 읽는 형식으로 정리한 페이지입니다. 정보는 가게가 확인한 날 기준입니다.</p></div></section>'
             '<section class="k-sec k-tight"><div class="k-wrap"><nav class="lc-inds lc-stores" aria-label="등록 가게">%s</nav>'
-            '<p class="k-small" style="margin-top:18px">우리 가게도 올리려면 <a href="{{root}}local/">가게 AI 검색 등록</a>에서 무료로 진단해 보세요.</p></div></section>') % cards
-    meta = {"path": "p/", "key": "local-dir", "v9": "1", "title": "AI 검색에 등록한 가게 | AIMarker 가게 AI 검색 등록", "desc": "AIMarker 가게 AI 검색 등록으로 올린 가게 목록입니다. 가게가 직접 확인한 이름 · 주소 · 영업시간 · 가격 · 편의 정보를 AI가 읽는 형식(구조화 데이터)으로 정리했습니다.", "styles": "assets/local.css", "selflabel": "footer"}
+            '<p class="k-small" style="margin-top:18px">우리 가게도 올리려면 <a href="{{root}}local/">기업 AI 검색 등록</a>에서 무료로 진단해 보세요.</p></div></section>') % cards
+    meta = {"path": "p/", "key": "local-dir", "v9": "1", "title": "AI 검색에 등록한 가게 | AIMarker 기업 AI 검색 등록", "desc": "AIMarker 기업 AI 검색 등록으로 올린 가게 목록입니다. 가게가 직접 확인한 이름 · 주소 · 영업시간 · 가격 · 편의 정보를 AI가 읽는 형식(구조화 데이터)으로 정리했습니다.", "styles": "assets/local.css", "selflabel": "footer"}
     os.makedirs(os.path.join(ROOT, "p"), exist_ok=True)
     with open(os.path.join(ROOT, "p", "index.html"), "w", encoding="utf-8") as f:
         f.write(page(meta, body))
@@ -1259,7 +1259,7 @@ def main():
     build_ai_assets()
     if stores:   # llms.txt 끝에 등록 가게(가게가 확인한 사실 한 줄씩)
         with open(os.path.join(ROOT, "llms.txt"), "a", encoding="utf-8") as f:
-            f.write("\n## 등록 가게(가게 AI 검색 등록)\n\n" + "".join("- [%s](%s): %s (가게 확인 %s)\n" % (x["name"], x["url"], x["intro"], x["updated"]) for x in stores))
+            f.write("\n## 등록 가게(기업 AI 검색 등록)\n\n" + "".join("- [%s](%s): %s (가게 확인 %s)\n" % (x["name"], x["url"], x["intro"], x["updated"]) for x in stores))
     # 13.9 IndexNow 키 파일(네이버 · 빙)
     with open(os.path.join(ROOT, INDEXNOW_KEY + ".txt"), "w", encoding="utf-8") as f:
         f.write(INDEXNOW_KEY)
