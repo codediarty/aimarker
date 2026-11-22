@@ -41,7 +41,7 @@
   <div class="hz7-dlg-b" id="hzBuyBody">
     <p class="hz18-k">{{ico:fingerprint}}AIMarker 토큰 충전</p>
     <h2 id="hzBuyT">AI 휴머나이징 토큰 충전</h2>
-    <p class="hz13-unit"><b>월 구독 없이 한 번 충전</b><span>내 문서 AI 작성률 낮추기. 반복할수록 AI 작성률은 더 낮아집니다.</span></p>
+    <p class="hz13-unit"><b>월 구독 없이 한 번 충전</b><span>내 문서 AI 작성률 낮추기. 반복할수록 AI 작성률은 더 낮아집니다.</span></p><style>@media (max-width:540px){body .hz7-dlg .hz18-packs .pr s+small{display:none}}</style>
     <p class="hz12-need" id="hzBuyNeed" hidden></p>
     <form id="hzBuyForm" novalidate>
       <fieldset class="hz7-to" hidden></fieldset>

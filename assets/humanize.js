@@ -1358,10 +1358,10 @@
       return '<label' + (best ? ' class="best"' : p.top ? ' class="top"' : '') + '><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span>' +
         (best ? '<i class="tg">' + esc(p.badge || '추천') + '</i>' : p.top ? '<i class="tg top">' + esc(p.badge || '최고 혜택') + '</i>' : '') +
         '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b>' +
-        (p.price ? '<b class="pr">' + n2(p.price) + '원' + (p.per ? '<small>토큰당 ' + esc(p.per) + '</small>' : '') + '</b>' : '') +
+        (p.price ? '<b class="pr">' + n2(p.price) + '원' + (p.save ? (function () { var pl = PRODS.filter(function (x) { return x.id === 'pl'; })[0]; return pl ? ' <s title="같은 토큰을 플러스 단가로 샀을 때의 금액" style="font-size:.8em;font-weight:600;color:#8A94A6;text-decoration-thickness:1.5px;font-variant-numeric:tabular-nums">' + n2(Math.round(p.cr * pl.price / pl.cr)) + '원</s>' : ''; })() : '') + (p.per ? '<small>토큰당 ' + esc(p.per) + '</small>' : '') + '</b>' : '') +   // 11.22 대표: 프로 · 맥스는 요금 칸처럼 플러스 단가 기준 줄 그은 금액
         (p.save ? '<i class="hz17-sv">플러스보다 토큰당 약 ' + p.save + '% 절약</i>' : '') +
         '<small class="ds">' + esc(sm) + '</small></span></label>';
-    }).join('') + (need > 0 ? '' : '<p class="hz20-pg">페이지 수는 1페이지 약 ' + n2(PG_CHARS) + '자 기준</p>');
+    }).join('') + (need > 0 ? '' : '<p class="hz20-pg">페이지 수는 1페이지 약 ' + n2(PG_CHARS) + '자 기준 · 줄 그은 금액은 같은 토큰을 플러스 단가로 샀을 때의 금액</p>');
   }
   function stepsHtml() {   // 바로 결제도, 결제 페이지도 없을 때(주문 → 결제 안내 메일): 결제 순서를 미리
     return '<ol class="hz13-steps" aria-label="결제 순서"><li><b>1</b><span>지금 주문<small>이메일만 적으면 됩니다</small></span></li><li><b>2</b><span>메일로 온 안내대로 카드 · 계좌이체 결제<small>결제 안내 메일은 영업일 하루 안에</small></span></li><li><b>3</b><span>메일로 받은 코드를 넣으면 바로 이어서<small>코드는 결제 확인 뒤 영업일 하루 안에</small></span></li></ol>';
