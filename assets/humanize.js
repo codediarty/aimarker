@@ -1371,7 +1371,7 @@
     return '<div class="hz19-flow" aria-hidden="true"><span class="a">AIMarker</span>' + ico('arrow') + '<span class="s">성균관컨설팅</span></div>' +
       '<p class="hz19-lead">결제는 AIMarker 운영사 <b>성균관컨설팅</b> 결제 페이지에서 합니다. 회원가입 없이 토스페이 · 카드로 결제하면 ' +
       (tu ? '지금 코드에 ' + tk(p.cr) + '토큰이 더해집니다(코드를 받았던 이메일로 결제해 주세요).' : '바로(보통 1분 안), 결제할 때 적은 이메일로 token@aimarker.kr 에서 16자리 토큰 코드가 갑니다.') +
-      ' 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다. 쓴 토큰은 환불하지 않습니다(<a href="/terms/#norefund" target="_blank" rel="noopener">이용약관 제7조의4 환불 제한</a>).</p>';
+      ' 영수증과 카드 명세서에는 성균관컨설팅으로 표시됩니다.</p>';
   }
   function shopLink(pid) {   // 12.1 공식 결제처 성균관컨설팅 결제 페이지(서버 AM_BUY_LINKS 또는 사이트 SHOP_IDX 에 상품 번호가 있을 때)
     var p = prod(pid); if (p && p.link) return p.link;

@@ -82,7 +82,7 @@
       '<button class="k-btn k-btn-p k-buy-go" type="submit">결제하기</button>' +
       '<p class="k-buy-more"><span>다른 방법</span>' + (isCredit ? '' : '<button type="button" data-pay="credit">' + (tokFirst ? '받은 토큰 코드로 내기' : '토큰으로 내기') + (saved ? '<small>저장된 코드 ' + esc(saved.slice(-4)) + '</small>' : '') + '</button>') + '<button type="button" data-pay="bank">' + (tokFirst ? '계좌이체 · 세금계산서로 충전' : '계좌이체 · 세금계산서') + '</button></p>' +
       '<div class="k-buy-msg" role="status"></div>' +
-      '<p class="k-buy-note"><span class="nt">결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다.</span> <a href="' + root + 'terms/" target="_blank" rel="noopener">이용약관 · 환불</a> · contact@skkc.co.kr</p>' +
+      '<p class="k-buy-note"><span class="nt">결제 뒤 영업일 하루 안에 시작 안내 메일을 드립니다.</span> <a href="' + root + 'terms/" target="_blank" rel="noopener">이용약관</a> · contact@skkc.co.kr</p>' +
       '</form></div>';
     document.body.appendChild(box);
     document.body.style.overflow = 'hidden';
