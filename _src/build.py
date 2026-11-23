@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261123h"
+VER = "20261123i"
 TODAY = "2026-11-23"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -319,8 +319,8 @@ def pack17_html(t, root, mode="link"):
         btn = '<a class="k-btn %s" href="%shumanize/#buy-%s">%s</a>' % (kind, root, t["id"], label)
     sv = ('<p class="tk17-sv">플러스 대비 토큰당 <b>약 %d%% 절약</b></p>' % t["save"]) if t.get("save") else ''
     # 2026.11.22 대표: 카피휴먼처럼 프로 · 맥스는 같은 토큰을 플러스 단가로 샀을 때의 금액을 줄 그어 보여 줌(CSS 묶음은 그대로 두려고 style 속성으로)
-    st = ('<s title="같은 토큰을 플러스 단가로 샀을 때의 금액" style="font-size:14.5px;font-weight:600;color:#8A94A6;text-decoration-thickness:1.5px;font-variant-numeric:tabular-nums">'
-          '<span class="k-sr">플러스 단가 기준 </span>%s원</s>' % format(int(round(t["cr"] * 19900 / 350)), ",")) if t.get("save") else ''
+    st = ('<s title="정가" style="font-size:14.5px;font-weight:600;color:#8A94A6;text-decoration-thickness:1.5px;font-variant-numeric:tabular-nums">'
+          '<span class="k-sr">정가 </span>%s원</s>' % format({1000: 60000, 2000: 120000}.get(t["cr"]) or int(round(t["cr"] * 19900 / 350)), ","))   # 2026.11.23 22:23 대표: 정가 60,000원 · 120,000원 if t.get("save") else ''
     return ('<article class="tk17-pack%s" id="pk-%s">%s<p class="nm"><b>%s</b><span>%s</span></p>'
             '<p class="tk"><b>%s</b><small>토큰</small></p><p class="pr"><b>%s원</b>%s<span>토큰당 %s</span></p>%s'
             '<p class="use">%s</p>%s</article>'
@@ -377,7 +377,7 @@ def credit_packs_html(root):
     """13.2 토큰 충전 칸: [개인 · 학생 | 회사 · 기관 · 학교] 탭(assets/tok.js). 스크립트가 없으면 두 묶음이 모두 보임.
     개인: 부가세 포함, 글 검사 페이지 충전 창. 회사: 부가세 별도, 세금계산서, 결제 시트"""
     pgn = ('<p class="tk17-pgn rep">반복 변환할수록 AI 작성률은 계속 낮아집니다. 여러 번 변환하여 AI 작성 흔적을 극한까지 줄여보세요.</p>'
-           '<p class="tk17-pgn">절약률은 플러스의 토큰당 가격(약 57원)과 비교한 값이고, 줄 그은 금액은 같은 토큰을 플러스 단가로 샀을 때의 금액입니다.</p>')   # 2026.11.22 카피휴먼과 같게   # 13.31 대표: 쪽수 기준 설명 대신 반복 변환 안내를 조금 크게
+           '<p class="tk17-pgn">절약률은 플러스의 토큰당 가격(약 57원)과 비교한 값이고, 줄 그은 금액은 정가입니다.</p>')   # 2026.11.22 카피휴먼과 같게   # 13.31 대표: 쪽수 기준 설명 대신 반복 변환 안내를 조금 크게
     me = '<div class="tk17-packs">%s</div>%s%s%s' % ("".join(pack17_html(t, root) for t in CREDITS), pgn, credit_table_html(), credit_guide_html())   # 13.17 새 요금 칸 + 상품별 구성 + 이용 안내
     biz = []
     for t in CATALOG["credit"]["tiers"]:

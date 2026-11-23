@@ -1062,3 +1062,32 @@ body .hz7-dlg .hz18-packs .tg { padding: 2px 9px; font-size: 11px; }
 body .hz7-dlg .hz18-packs .hz20-pg { grid-column: 1 / -1; margin: -2px 2px 0; font-size: 12px; line-height: 1.5; color: var(--ds-mist); }
 .tk17-pgn { margin: 14px 2px 0; color: var(--ds-mist); }
 .tk17-pgn.rep { margin-top: 16px; font-size: 15px; line-height: 1.65; font-weight: 500; color: var(--ds-slate); word-break: keep-all; }   /* 13.31 반복 변환 안내(조금 크게) */
+
+/* 13.34(2026.11.23 22:13 대표 '9,900원짜리만 사고 싶게 생겼다 · 밸런스'): 충전 창 칸을 2 × 2 로 고르게. 큰 칸(프로 · 맥스)은 위 줄에 크게, 작은 칸(라이트 · 플러스)은 아래 줄에 작게.
+   결제 안내는 긴 상자 대신 결제 단추 아래 두 줄(카피휴먼 21:24 문구와 같게) */
+html body .hz7-dlg.hz18-dlg .hz18-packs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
+html body .hz7-dlg.hz18-dlg .hz18-packs label.big span { padding: 16px 16px 14px; }
+html body .hz7-dlg.hz18-dlg .hz18-packs label.big .tk { font-size: 30px; }
+html body .hz7-dlg.hz18-dlg .hz18-packs label.big .ds { margin-top: 6px; font-weight: 650; color: var(--ds-ink-2); }
+html body .hz7-dlg.hz18-dlg .hz18-packs label.top span { border-color: var(--ds-ink-2); }
+html body .hz7-dlg.hz18-dlg .hz18-packs label.sm span { padding: 11px 14px 10px; border-width: 1px; background: var(--ds-canvas); }
+html body .hz7-dlg.hz18-dlg .hz18-packs label.sm .nm { font-size: 12.5px; color: var(--ds-slate); }
+html body .hz7-dlg.hz18-dlg .hz18-packs label.sm .tk { font-size: 20px; }
+html body .hz7-dlg.hz18-dlg .hz18-packs label.sm .pr { margin-top: 2px; font-size: 14px; }
+html body .hz7-dlg.hz18-dlg .hz18-packs label.sm .ds { margin-top: 3px; font-size: 11.5px; }
+html body .hz7-dlg.hz18-dlg .hz18-packs label input:checked + span { border-color: var(--ds-blue-600); background: var(--ds-blue-50); box-shadow: inset 0 0 0 1px var(--ds-blue-600); }
+html body .hz7-dlg.hz18-dlg .hz18-packs .hz20-pg { margin: 2px 2px 0; font-weight: 650; color: var(--ds-ink-2); }
+html body .hz7-dlg-b .hz19-gate { gap: 6px; margin: 12px 0 0; padding: 0; border: 0; border-radius: 0; background: none; }
+html body .hz7-dlg-b .hz19-safe, html body .hz7-dlg-b .hz19-auto { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; margin: 0; font-size: 12.5px; line-height: 1.55; color: var(--ds-slate); word-break: keep-all; }
+html body .hz7-dlg-b .hz19-safe b { font-weight: 750; color: var(--ds-ink-2); }
+html body .hz7-dlg-b .hz19-auto { flex-wrap: nowrap; align-items: flex-start; font-size: 13px; font-weight: 650; color: var(--ds-ink-2); }
+html body .hz7-dlg-b .hz19-safe .ico, html body .hz7-dlg-b .hz19-auto .ico { width: 15px; height: 15px; flex: none; margin: 0; }
+html body .hz7-dlg-b .hz19-safe .ico { color: var(--ds-green-ink); }
+html body .hz7-dlg-b .hz19-auto .ico { margin-top: 2px; padding: 2px; border-radius: 999px; background: var(--ds-green-bg); color: var(--ds-green-ink); width: 17px; height: 17px; }
+@media (max-width: 560px) {
+  html body .hz7-dlg.hz18-dlg .hz18-packs { grid-template-columns: minmax(0, 1fr); gap: 7px; }
+  html body .hz7-dlg.hz18-dlg .hz18-packs label.big span { padding: 12px 13px 11px; }
+  html body .hz7-dlg.hz18-dlg .hz18-packs label.big .tk { font-size: 24px; }
+  html body .hz7-dlg.hz18-dlg .hz18-packs label.sm span { padding: 9px 12px 8px; }
+  html body .hz7-dlg.hz18-dlg .hz18-packs label.sm .tk { font-size: 18px; }
+}
