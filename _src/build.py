@@ -820,7 +820,8 @@ def ship_ld():
 def token_product_ld():
     """13.12 개인 토큰(AI 작성률 검사 · AI 휴머나이징)을 구글 판매자 목록 · 제품 스니펫 형식으로: 묶음(ProductGroup) 하나 + 충전 칸 4개(변형, 크기 = 토큰 수).
     칸마다 주소 /humanize/?pack=pr 이 그 칸을 고른 충전 창을 바로 엶(humanize.js, 예전 ?pack=t40 · c30 은 새 칸으로). 값은 CREDITS(부가세 포함) = 아임웹 96~99 판매가.
-    그림은 assets/product/tokens-*.jpg(1:1 · 4:3 · 16:9, 토큰만 표기). 후기 · 별점은 실제로 받은 것이 생기기 전에는 넣지 않음"""
+    그림은 assets/product/tokens-*.jpg(1:1 · 4:3 · 16:9, 토큰만 표기). 후기 · 별점은 실제로 받은 것이 생기기 전에는 넣지 않음
+    2026.11.23 묶음(ProductGroup) 그림은 옛 칸(스탠다드 110 · 프로 500 · 프리미엄 1,200)이 그려진 tokens-* 대신 지금 BEST 칸 tokens-pr-* 로(옛 그림 파일은 그대로 둠)"""
     img = lambda k: [SITE + "assets/product/%s-%s.jpg" % (k, r) for r in ("1x1", "4x3", "16x9")]
     desc = ("AI 작성률 검사와 AI 휴머나이징(AI 글 인간화)에 쓰는 AIMarker 토큰입니다. 글이나 한글 · 워드 · PDF 파일을 넣으면 AI 작성률과 AI 패턴이 남은 문장을 보여 드리고, "
             "뜻은 그대로 둔 채 사람 문장으로 다듬습니다. 검사는 무료, 휴머나이징 1,000자 6토큰. 월 구독 없이 한 번 충전하고, 많이 충전할수록 토큰당 가격이 낮아집니다(라이트 100토큰 9,900원부터, 맥스 2,000토큰 69,900원). "
@@ -838,7 +839,7 @@ def token_product_ld():
                                     "availability": "https://schema.org/InStock", "itemCondition": "https://schema.org/NewCondition",
                                     "seller": {"@id": SITE + "#org"}, "shippingDetails": ship_ld(), "hasMerchantReturnPolicy": {"@id": RETURN_POLICY_ID}}})
     return {"@type": "ProductGroup", "@id": TOKEN_PRODUCT_ID, "name": "AIMarker 휴머나이징 토큰(AI 작성률 검사 · AI 글 인간화)", "productGroupID": "AIM-TK",
-            "url": SITE + "humanize/", "description": desc, "image": img("tokens"), "brand": {"@type": "Brand", "name": "AIMarker"},
+            "url": SITE + "humanize/", "description": desc, "image": img("tokens-pr"), "brand": {"@type": "Brand", "name": "AIMarker"},
             "variesBy": ["https://schema.org/size"], "hasVariant": variants}
 
 
