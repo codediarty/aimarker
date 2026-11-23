@@ -65,7 +65,7 @@
   var RPT = 'AI 작성률 결과서';   // 13.30 토큰으로 받는 전체 검사의 이름(왼쪽 단추 · 무료 결과의 안내 단추). 대표: '리포트'보다 '결과서'
   var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr', pl2: 'pl', pr2: 'pr', mx2: 'mx' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
   var SRV_PID = { pl: 'pl2', pr: 'pr2', mx: 'mx2' };   // 13.31 서버의 새 상품 번호(토큰 350 · 1,000 · 2,000). 예전 pl · pr · mx 는 서버에서 legacy(예전 코드의 환불 셈을 지키려고 번호를 새로 둠). 바로 결제(am.buy)는 새 번호로
-  var CR0 = { unit: { per: 100, cr: 0.2, min: 1 }, pro: { per: 100, cr: 0.4, min: 2 } }, ASK = Infinity;   // 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음 · 13.32 부터 묻지 않음(단추에 토큰 숫자가 적혀 있어 누르면 바로 실행)
+  var CR0 = { unit: { per: 100, cr: 0.3, min: 1.5 }, pro: { per: 100, cr: 0.6, min: 3 } }, ASK = Infinity;   // 11.23 1.5배(새로 산 코드 값, 예전 코드는 서버 rm 2/3 을 곱함) · 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음 · 13.32 부터 묻지 않음(단추에 토큰 숫자가 적혀 있어 누르면 바로 실행)
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var n2 = function (n) { return Number(n || 0).toLocaleString('ko-KR'); };
@@ -1291,10 +1291,10 @@
     return '<div class="hz12-files">' + ico('download') + '<div class="t"><b>다듬은 글 받기</b>' + (note ? '<span>' + esc(note) + '</span>' : '') + '</div><div class="b"><button class="btn btn-p btn-s" type="button" data-act="getfile" data-kind="' + k + '">' + esc(OUT_LBL[k] || OUT_LBL.docx) + '</button>' + more + '</div></div>';
   }
   function dlTop(F) {   // 11.23 대표: 결과 칸 오른쪽 위에 '다운로드 받기'(아래 '다듬은 글 받기'의 첫 단추와 같은 파일) · '더 줄이기'(바꾼 글로 한 번 더 휴머나이징)
-    var b = '';
+    var b = '<button class="btn btn-g btn-s hz9-new" type="button" data-act="new" title="글 칸을 비우고 다른 글을 넣습니다(토큰 코드는 그대로)"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg><span>새 글 넣기</span></button>';   // 11.23 대표 '다른거 다시 돌리거나 새로하기 그런 버튼도 없어서': 넣은 글 위 줄의 '새 글'과 같은 일(#hz 의 data-act="new" 처리: 글 칸 비우고 처음 화면, 코드 · 토큰은 그대로)
     if (F && F.text && window.AMTextIn) { var k = outKind(F.src), lb = OUT_LBL[k] || OUT_LBL.docx; b += '<button class="btn btn-g btn-s hz9-dl" type="button" data-act="getfile" data-kind="' + k + '" title="' + esc(lb) + '" aria-label="다듬은 글 ' + esc(lb) + '">' + ico('download') + '<span>다운로드 받기</span></button>'; }
     if (F && F.kind === 'pro' && F.text && S.pass) b += '<button class="btn btn-p btn-s hz9-less" type="button" data-act="more" title="바꾼 글로 한 번 더 휴머나이징합니다"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg><span>더 줄이기' + (isCr() ? ' · ' + tk(humCost(chunk(F.text).parts)) + '토큰' : '') + '</span></button>';
-    return b ? '<div class="hz9-cmp-act">' + b + '</div>' : '';
+    return '<div class="hz9-cmp-act">' + b + '</div>';
   }
   function baseName() { var n = (S.src && (!S.src.edited || srcLike(cur())) && S.src.name) || 'AIMarker'; return n.replace(/\.[^.]+$/, '').slice(0, 60) || 'AIMarker'; }
   function getFile(kind) {

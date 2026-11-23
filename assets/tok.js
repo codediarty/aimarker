@@ -7,7 +7,7 @@
   'use strict';
   var root = document.body.getAttribute('data-root') || '';
   var TW = 100, CHUNK = 6000, HELP = 600, MAXC = 200000;   // 13.30 한 번에 20만 자
-  var U = { per: 100, cr: 0.2, min: 1 }, H = { per: 100, cr: 0.4, min: 2 };   // 13.30 AI 작성률 결과서 · 휴머나이징
+  var U = { per: 100, cr: 0.3, min: 1.5 }, H = { per: 100, cr: 0.6, min: 3 };   // 13.30 AI 작성률 결과서 · 휴머나이징 · 11.23 1.5배(1,000자 3 · 6토큰)
   var PK = [{ id: 'lt', nm: '라이트', price: 9900, cr: 100 }, { id: 'pl', nm: '플러스', price: 19900, cr: 350 }, { id: 'pr', nm: '프로', price: 39900, cr: 1000, best: 1 }, { id: 'mx', nm: '맥스', price: 69900, cr: 2000 }];   // 13.17 표(humanize.js PRODS · build.py CREDITS 와 같게)
   function $(s, r) { return (r || document).querySelector(s); }
   function r1(x) { return Math.round(x * 10) / 10; }

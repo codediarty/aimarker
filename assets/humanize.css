@@ -731,10 +731,17 @@
 .hz9-cmp-act .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
 .hz9-cmp-act .ico { width: 16px; height: 16px; flex: none; margin: 0; color: currentColor; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .hz9-cmp-h:has(.hz9-cmp-act) .hz9-tagl { padding-right: 330px; }
+.hz9-cmp-h:has(.hz9-new) .hz9-tagl { padding-right: 460px; }   /* 11.23 '새 글 넣기'까지 단추 셋 */
+@media (max-width: 1000px) {
+  .hz9-cmp-act { position: static; justify-self: stretch; display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); margin-top: 6px; }   /* 11.23 단추 셋이 태그 줄과 겹치지 않게 좁은 PC 부터 아래 줄로 */
+  .hz9-cmp-h:has(.hz9-cmp-act) .hz9-tagl { padding-right: 0; }
+}
 @media (max-width: 760px) {
   .hz9-cmp-act { position: static; justify-self: stretch; display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); margin-top: 6px; }
   .hz9-cmp-h:has(.hz9-cmp-act) .hz9-tagl { padding-right: 0; }
 }
 @media (max-width: 480px) {
   .hz9-cmp-act { grid-template-columns: 1fr; }   /* 휴대폰: 두 단추를 한 줄씩(토큰 숫자가 길어도 안 넘치게) */
+  .hz9-cmp-act:has(.hz9-new) { grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); }   /* 11.23 '새 글 넣기' · '다운로드 받기' 한 줄(자리가 모자라면 한 줄씩), '더 줄이기'는 아래 한 줄 전체 */
+  .hz9-cmp-act .hz9-less { grid-column: 1 / -1; }
 }
