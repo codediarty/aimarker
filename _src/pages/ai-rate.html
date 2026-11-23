@@ -133,6 +133,42 @@ selflabel: footer
   </div>
 </section>
 
+<section class="k-sec" id="stubborn" aria-labelledby="stbT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="stbT">AI 작성률이 잘 안 내려가는 글, 다섯 가지</h2>
+      <p class="k-lead">고쳐도 숫자가 잘 움직이지 않는 글에는 까닭이 있습니다. 내 글이 어느 쪽인지 보고 방법을 바꾸세요.</p>
+    </div>
+    <div class="k-tbl-w">
+    <table class="lp-tbl">
+      <thead><tr><th scope="col">이런 글</th><th scope="col">잘 안 내려가는 까닭</th><th scope="col">이렇게 해 보세요</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">개념 · 이론 정리가 대부분인 글</th><td>정의문은 누가 써도 비슷한 문장이 됩니다.</td><td>정의는 교재를 인용하고, 그 개념이 드러난 예를 내 자료로 붙입니다.</td></tr>
+        <tr><th scope="row">항목을 늘어놓은 글</th><td>항목마다 같은 짜임이 되풀이됩니다.</td><td>꼭 필요한 항목 두세 개만 남겨 문장으로 풀어 씁니다.</td></tr>
+        <tr><th scope="row">300자 안팎의 짧은 문항</th><td>문장 하나가 숫자에서 차지하는 몫이 큽니다.</td><td>문장마다 내 사실을 하나씩 넣습니다. 한 문장만 남아도 숫자가 크게 남습니다.</td></tr>
+        <tr><th scope="row">외국어 자료를 옮긴 글</th><td>번역투가 문장 곳곳에 남습니다.</td><td>원문 어순을 버리고 우리말 어순으로, 핵심만 다시 씁니다.</td></tr>
+        <tr><th scope="row">AI로 여러 번 다시 쓴 글</th><td>같은 습관이 겹겹이 쌓였습니다.</td><td>고치기보다 내 메모로 문단을 다시 쓰는 편이 빠릅니다.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="rate-math" aria-labelledby="rmtT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="rmtT">AI 작성률 숫자, 이렇게 움직입니다</h2>
+      <p class="k-lead">AIMarker의 AI 작성률은 AI 검출 문장의 글자 수를 전체 글자 수로 나눈 값입니다(공백 제외). 그래서 어느 문장을 고치느냐에 따라 숫자가 움직이는 폭이 다릅니다.</p>
+    </div>
+    <ol class="lp-tips">
+      <li><b>처음 · 2,000자 가운데 검출 문장 다섯 개(합계 600자)</b><span>600 ÷ 2,000 = AI 작성률 30%입니다.</span></li>
+      <li><b>긴 문장 두 개(합계 360자)를 다시 쓰면</b><span>남은 검출은 240자, 240 ÷ 2,000 = 12%입니다.</span></li>
+      <li><b>짧은 문장 세 개를 마저 고치면</b><span>검출 문장이 남지 않아 0%가 됩니다. 길고 뚜렷한 문장부터 고치면 숫자가 빨리 내려갑니다.</span></li>
+    </ol>
+    <p class="lp-note">계산은 설명을 위한 예시입니다. 다른 검사기는 계산법이 다를 수 있습니다.</p>
+  </div>
+</section>
+
 {{inc:lp-pat.inc}}
 
 {{inc:lp-steps.inc}}
@@ -143,6 +179,8 @@ selflabel: footer
   <div class="k-wrap">
     <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
     <div class="k-faq">
+      <details><summary>고쳤는데 AI 작성률이 오히려 올랐어요.</summary><p>새로 넣은 문장에 AI 패턴이 있거나, 고치다가 문장이 길어져 검출 문장의 글자 수가 늘었을 수 있습니다. 바뀐 문장만 다시 보고, 다듬기 전과 뒤를 같은 기준으로 견줘 보세요.</p></details>
+      <details><summary>AI 작성률은 문장 수로 세나요, 글자 수로 세나요?</summary><p>AIMarker는 글자 수로 셉니다. AI 검출 문장의 글자 수를 전체 글자 수로 나눈 값이라, 긴 문장 하나를 고치면 짧은 문장 여러 개를 고친 것만큼 내려가기도 합니다. 다른 검사기는 계산법이 다를 수 있습니다.</p></details>
       <details><summary>AI 낮추는 방법 가운데 가장 빠른 것은 무엇인가요?</summary><p>걸리는 문장을 먼저 찾는 것입니다. 글 전체를 손보면 한두 시간이 걸리지만, 표시된 문장만 고치면 훨씬 빨리 끝납니다. 위 검사 칸에 붙여 넣으면 AI 패턴이 남은 문장을 무료로 보여 드리고, 그 문장만 휴머나이징으로 다듬을 수 있습니다.</p></details>
       <details><summary>AI작성률 낮추는 법, 돈 들이지 않고도 되나요?</summary><p>됩니다. 이 페이지의 다섯 단계와 점검표는 직접 해도 되는 방법이고, AI 작성률 검사도 가입 없이 무료입니다. 문장이 많거나 시간이 없을 때 휴머나이징(1,000자 4토큰)을 사용하세요. 첫 문단은 무료로 바꿔 봅니다.</p></details>
       <details><summary>AI 낮추기와 AI 작성률 줄이기는 다른 말인가요?</summary><p>같은 말입니다. 'AI 낮추기', 'AI율 낮추기', 'AI 작성률 줄이기' 모두 글에 남은 AI 패턴을 줄여 AI 작성률 숫자를 내리는 일을 가리킵니다. 특정 검사기를 말할 때는 '카피킬러 AI 낮추기', 'GPT킬러 낮추기'처럼 부릅니다.</p></details>

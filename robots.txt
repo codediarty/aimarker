@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://aimarker.kr/sitemap.xml
+Sitemap: https://aimarker.kr/rss.xml

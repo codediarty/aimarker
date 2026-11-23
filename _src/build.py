@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261123c"
+VER = "20261123d"
 TODAY = "2026-11-23"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -1203,9 +1203,39 @@ def build_stores():
     return stores
 
 
+RSS_LINK = '<link rel="alternate" type="application/rss+xml" title="AIMarker 안내 글" href="%srss.xml">' % SITE
+
+
+def write_rss(feed):
+    """13.33 rss.xml: 날짜(updated)가 적힌 안내 · 검색어 쪽을 최근 고친 순서로(최대 50개). 제목 · 설명은 쪽의 것 그대로"""
+    import html as _h, datetime as _d
+    def rfc(d):
+        try:
+            t = _d.datetime.strptime(d, "%Y-%m-%d")
+        except ValueError:
+            t = _d.datetime.strptime(TODAY, "%Y-%m-%d")
+        days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][t.weekday()]
+        mons = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][t.month - 1]
+        return "%s, %02d %s %d 09:00:00 +0900" % (days, t.day, mons, t.year)
+    items = sorted(feed, key=lambda x: (x[0], x[1]), reverse=True)[:50]
+    out = ['<?xml version="1.0" encoding="UTF-8"?>', '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>',
+           '<title>AIMarker 안내 글</title><link>%s</link>' % SITE,
+           '<description>AI 작성률 검사 · AI 작성률 낮추기 · AI 휴머나이징 안내 글(AIMarker)</description><language>ko</language>',
+           '<atom:link href="%srss.xml" rel="self" type="application/rss+xml"/>' % SITE,
+           '<lastBuildDate>%s</lastBuildDate>' % rfc(TODAY)]
+    for d, path, title, desc in items:
+        url = SITE + path
+        out.append('<item><title>%s</title><link>%s</link><guid isPermaLink="true">%s</guid><pubDate>%s</pubDate><description>%s</description></item>' % (
+            _h.escape(title), url, url, rfc(d), _h.escape(desc)))
+    out.append('</channel></rss>')
+    with open(os.path.join(ROOT, "rss.xml"), "w", encoding="utf-8") as f:
+        f.write("\n".join(out) + "\n")
+
+
 def main():
     pages_dir = os.path.join(HERE, "pages")
     built = []
+    feed = []   # 13.33 RSS 항목(날짜, 주소, 제목, 설명)
     # 13.10 지난 빌드의 CSS 묶음을 지우고 이번 페이지가 쓰는 것만 다시 만듦(쓰지 않는 묶음이 남지 않게)
     for old in os.listdir(os.path.join(ROOT, "assets")):
         if old.startswith("b-") and old.endswith(".css"):
@@ -1219,10 +1249,12 @@ def main():
         out = os.path.join(ROOT, out_rel)
         os.makedirs(os.path.dirname(out), exist_ok=True)
         with open(out, "w", encoding="utf-8") as f:
-            f.write(page(meta, body))
+            f.write(page(meta, body).replace('<link rel="canonical"', RSS_LINK + '<link rel="canonical"', 1))   # 13.33 RSS 알림 줄
         if meta.get("noindex"):
             continue
         built.append(out_rel)
+        if meta.get("updated") and out_rel.endswith("index.html"):   # 13.33 RSS: 날짜가 적힌 안내 · 검색어 쪽
+            feed.append((meta.get("updated"), out_rel[:-len("index.html")], meta.get("title", ""), meta.get("desc", "")))
     # 옮긴 주소: 예전 주소로 들어오면 새 주소로(쿼리 · # 그대로)
     for old, new in REDIRECTS:
         out = os.path.join(ROOT, old, "index.html")
@@ -1243,6 +1275,7 @@ def main():
     sm.append("</urlset>")
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write("\n".join(sm) + "\n")
+    write_rss(feed)   # 13.33 네이버 · 구글 · 빙이 새 글을 빨리 알게
     # 작업 공간 서비스 워커 저장소 이름도 같은 판으로(옛 저장분 지우기)
     swp = os.path.join(ROOT, "app", "sw.js")
     if os.path.exists(swp):
