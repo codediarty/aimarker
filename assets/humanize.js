@@ -1290,11 +1290,11 @@
       (k === 'pdf' ? '<button class="btn btn-g btn-s" type="button" data-act="getfile" data-kind="docx">워드(.docx)</button>' : '') + '<button class="btn btn-g btn-s" type="button" data-act="getfile" data-kind="txt">텍스트(.txt)</button>';
     return '<div class="hz12-files">' + ico('download') + '<div class="t"><b>다듬은 글 받기</b>' + (note ? '<span>' + esc(note) + '</span>' : '') + '</div><div class="b"><button class="btn btn-p btn-s" type="button" data-act="getfile" data-kind="' + k + '">' + esc(OUT_LBL[k] || OUT_LBL.docx) + '</button>' + more + '</div></div>';
   }
-  function dlTop(F) {   // 11.23 대표: 결과 칸 오른쪽 위에 '다운로드 받기'(아래 '다듬은 글 받기'의 첫 단추와 같은 파일) · '더 줄이기'(바꾼 글로 한 번 더 휴머나이징)
-    var b = '<button class="btn btn-g btn-s hz9-new" type="button" data-act="new" title="글 칸을 비우고 다른 글을 넣습니다(토큰 코드는 그대로)"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg><span>새 글 넣기</span></button>';   // 11.23 대표 '다른거 다시 돌리거나 새로하기 그런 버튼도 없어서': 넣은 글 위 줄의 '새 글'과 같은 일(#hz 의 data-act="new" 처리: 글 칸 비우고 처음 화면, 코드 · 토큰은 그대로)
-    if (F && F.text && window.AMTextIn) { var k = outKind(F.src), lb = OUT_LBL[k] || OUT_LBL.docx; b += '<button class="btn btn-g btn-s hz9-dl" type="button" data-act="getfile" data-kind="' + k + '" title="' + esc(lb) + '" aria-label="다듬은 글 ' + esc(lb) + '">' + ico('download') + '<span>다운로드 받기</span></button>'; }
-    if (F && F.kind === 'pro' && F.text && S.pass) b += '<button class="btn btn-p btn-s hz9-less" type="button" data-act="more" title="바꾼 글로 한 번 더 휴머나이징합니다"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg><span>더 줄이기' + (isCr() ? ' · ' + tk(humCost(chunk(F.text).parts)) + '토큰' : '') + '</span></button>';
-    return '<div class="hz9-cmp-act">' + b + '</div>';
+  function dlTop(F) {   // 11.23 대표: 결과 칸 오른쪽 위에 'AI 작성률 낮춘 파일 다운로드'(파란 단추, 아래 '다듬은 글 받기'의 첫 단추와 같은 파일) · '더 줄이기'(흰 단추, 바꾼 글로 한 번 더 휴머나이징). 19:53 대표 '그게 메인이니까 … 파란색, 더 줄이기는 흰색'
+    var b = '';   // 11.23 19:53 대표 '새글 넣기는 … 저기서는 지워도되고': 이 칸에서는 뺌(넣은 글 위 줄의 '새 글'은 그대로)
+    if (F && F.text && window.AMTextIn) { var k = outKind(F.src), lb = OUT_LBL[k] || OUT_LBL.docx; b += '<button class="btn btn-p btn-s hz9-dl" type="button" data-act="getfile" data-kind="' + k + '" title="' + esc(lb) + '" aria-label="AI 작성률 낮춘 파일 다운로드(' + esc(lb) + ')">' + ico('download') + '<span>AI 작성률 낮춘 파일 다운로드</span></button>'; }
+    if (F && F.kind === 'pro' && F.text && S.pass) b += '<button class="btn btn-g btn-s hz9-less" type="button" data-act="more" title="바꾼 글로 한 번 더 휴머나이징합니다"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg><span>더 줄이기' + (isCr() ? ' · ' + tk(humCost(chunk(F.text).parts)) + '토큰' : '') + '</span></button>';
+    return b ? '<div class="hz9-cmp-act">' + b + '</div>' : '';
   }
   function baseName() { var n = (S.src && (!S.src.edited || srcLike(cur())) && S.src.name) || 'AIMarker'; return n.replace(/\.[^.]+$/, '').slice(0, 60) || 'AIMarker'; }
   function getFile(kind) {
