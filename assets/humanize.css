@@ -724,3 +724,17 @@
 .hz7-dlg-b { grid-template-columns: minmax(0, 1fr); }
 .hz7-dlg-b .hz19-go { height: auto; min-height: 54px; padding-top: 10px; padding-bottom: 10px; white-space: normal; line-height: 1.35; text-align: center; word-break: keep-all; text-wrap: balance; }
 @media (max-width: 420px) { .hz7-dlg-b { padding-left: 18px; padding-right: 18px; } .hz7-dlg-b .hz19-go { padding-left: 16px; padding-right: 16px; font-size: 15.5px; } }
+
+/* 11.23 대표: 다듬은 결과 칸 오른쪽 위 '다운로드 받기' · '더 줄이기' */
+.hz9-cmp-h { position: relative; }
+.hz9-cmp-act { position: absolute; top: 18px; right: 24px; display: flex; gap: 8px; }
+.hz9-cmp-act .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
+.hz9-cmp-act .ico { width: 16px; height: 16px; flex: none; margin: 0; color: currentColor; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hz9-cmp-h:has(.hz9-cmp-act) .hz9-tagl { padding-right: 330px; }
+@media (max-width: 760px) {
+  .hz9-cmp-act { position: static; justify-self: stretch; display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); margin-top: 6px; }
+  .hz9-cmp-h:has(.hz9-cmp-act) .hz9-tagl { padding-right: 0; }
+}
+@media (max-width: 480px) {
+  .hz9-cmp-act { grid-template-columns: 1fr; }   /* 휴대폰: 두 단추를 한 줄씩(토큰 숫자가 길어도 안 넘치게) */
+}

@@ -988,6 +988,7 @@
     if (act === 'getfile') { getFile(b.getAttribute('data-kind')); return; }
     if (act === 'fix' || act === 'pro' || act === 'hum') { hum(); return; }
     if (act === 'proagain') { S.variant = (S.variant || 0) + 1; hum(true); return; }
+    if (act === 'more' && S.fx) { moreFix(); return; }   // 11.23 '더 줄이기'
     if (act === 'usefix' && S.fx) { useFix(); return; }
     if (act === 'copyfix' && S.fx) { if (AM.copy) AM.copy(S.fx.text, b); else if (navigator.clipboard) navigator.clipboard.writeText(S.fx.text); return; }
     if (act === 'backres' && S.res) { if (HV.cur === 'fx' && history.state && history.state.hz === 'fx') { history.back(); return; } S.fxLast = S.fx; S.fx = null; renderRes(); setStep(2); return; }
@@ -1289,6 +1290,12 @@
       (k === 'pdf' ? '<button class="btn btn-g btn-s" type="button" data-act="getfile" data-kind="docx">워드(.docx)</button>' : '') + '<button class="btn btn-g btn-s" type="button" data-act="getfile" data-kind="txt">텍스트(.txt)</button>';
     return '<div class="hz12-files">' + ico('download') + '<div class="t"><b>다듬은 글 받기</b>' + (note ? '<span>' + esc(note) + '</span>' : '') + '</div><div class="b"><button class="btn btn-p btn-s" type="button" data-act="getfile" data-kind="' + k + '">' + esc(OUT_LBL[k] || OUT_LBL.docx) + '</button>' + more + '</div></div>';
   }
+  function dlTop(F) {   // 11.23 대표: 결과 칸 오른쪽 위에 '다운로드 받기'(아래 '다듬은 글 받기'의 첫 단추와 같은 파일) · '더 줄이기'(바꾼 글로 한 번 더 휴머나이징)
+    var b = '';
+    if (F && F.text && window.AMTextIn) { var k = outKind(F.src), lb = OUT_LBL[k] || OUT_LBL.docx; b += '<button class="btn btn-g btn-s hz9-dl" type="button" data-act="getfile" data-kind="' + k + '" title="' + esc(lb) + '" aria-label="다듬은 글 ' + esc(lb) + '">' + ico('download') + '<span>다운로드 받기</span></button>'; }
+    if (F && F.kind === 'pro' && F.text && S.pass) b += '<button class="btn btn-p btn-s hz9-less" type="button" data-act="more" title="바꾼 글로 한 번 더 휴머나이징합니다"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg><span>더 줄이기' + (isCr() ? ' · ' + tk(humCost(chunk(F.text).parts)) + '토큰' : '') + '</span></button>';
+    return b ? '<div class="hz9-cmp-act">' + b + '</div>' : '';
+  }
   function baseName() { var n = (S.src && (!S.src.edited || srcLike(cur())) && S.src.name) || 'AIMarker'; return n.replace(/\.[^.]+$/, '').slice(0, 60) || 'AIMarker'; }
   function getFile(kind) {
     var F = S.fx; if (!F || !F.text || !window.AMTextIn) return;
@@ -1327,12 +1334,12 @@
     var h2 = d < 0 ? 'AI 작성률이 ' + (-d) + '%p 내려갔습니다' : d > 0 ? 'AI 작성률이 ' + d + '%p 올라갔습니다' : changes ? 'AI 작성률은 그대로입니다' : '바꿀 곳이 거의 없었습니다';
     var rs = ab ? (ab.why || []).map(whyMain).join(', ') : '';
     var sub = ab ? (ab.key === 'safe' ? lbl + '은 AI 패턴 낮음(안전)입니다. 눈에 띄는 AI 작성 패턴이 적습니다.' : ab.key === 'short' ? '' : lbl + '은 ' + headOf(ab) + '(' + ab.ko + ')입니다.' + (rs ? ' 남은 근거: ' + rs + '.' : '')) : '';
-    var tip = ab && ab.key === 'unfit' ? (pro ? '아직 AI 패턴이 남아 있습니다. “' + btnL + '”를 누른 뒤 검출 문장에 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰세요.' : '글의 짜임과 흐름에 AI 패턴이 남아 있으면 판정이 바로 바뀌지 않습니다. 검출 문장을 눌러 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰세요.')
-      : ab && ab.key === 'risk' ? '남은 검출 문장은 “' + btnL + '”를 누른 뒤 확인하고, 눌러서 직접 고쳐 쓸 수 있습니다.' : '';
+    var tip = ab && ab.key === 'unfit' ? (pro ? '아직 AI 패턴이 남아 있습니다. ' + (S.pass ? '“더 줄이기”로 한 번 더 변환하거나, ' : '') + '“' + btnL + '”를 누른 뒤 검출 문장에 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰세요.' : '글의 짜임과 흐름에 AI 패턴이 남아 있으면 판정이 바로 바뀌지 않습니다. 검출 문장을 눌러 내 경험이나 생각, 구체적인 예를 더해 고쳐 쓰세요.')
+      : ab && ab.key === 'risk' ? (pro && S.pass ? '“더 줄이기”로 한 번 더 변환하면 AI 작성률이 더 내려갑니다. ' : '') + '남은 검출 문장은 “' + btnL + '”를 누른 뒤 확인하고, 눌러서 직접 고쳐 쓸 수 있습니다.' : '';
     var tags = '<li class="on">휴머나이징</li>' + (pro ? '<li>말투 자동 · ' + (TN || '원문 그대로') + '</li>' : '') + (F.variant ? '<li>버전 ' + (F.variant + 1) + '</li>' : '') + '<li>바꾼 곳 <b>' + changes + '</b></li>';
     var f = F.facts, facts = '<div class="hz7-facts2' + (f.missing.length ? ' bad' : '') + '">' + ico(f.missing.length ? 'alert' : 'check') + '<span>' + (f.missing.length ? '원문의 숫자와 인용 가운데 ' + lbl + '에서 찾지 못한 것: ' + esc(f.missing.join(', ')) + '. 꼭 대조해 주세요.' : f.total ? '원문의 숫자, 인용, 고유명사 ' + f.total + '개를 그대로 지켰습니다.' : '바꾸면 안 되는 숫자나 인용이 없는 글입니다.') + '</span></div>';
     var arrow = '<span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15"/><path d="m13 6 6 6-6 6"/></svg>' + (d ? '<b class="' + (d < 0 ? 'dn' : 'up') + '">' + (d < 0 ? '−' : '+') + Math.abs(d) + '%p</b>' : '') + '</span>';
-    out.innerHTML = '<div class="hz7-res hz9">' + paidBar() + '<section class="hz9-cmp ' + (ab ? bandCls(ab.key) : 'is-n') + '"><div class="hz9-cmp-h"><ul class="hz9-tagl">' + tags + '</ul><h2>' + h2 + '</h2>' + (sub ? '<p>' + esc(sub) + '</p>' : '') + '</div>' +
+    out.innerHTML = '<div class="hz7-res hz9">' + paidBar() + '<section class="hz9-cmp ' + (ab ? bandCls(ab.key) : 'is-n') + '"><div class="hz9-cmp-h"><ul class="hz9-tagl">' + tags + '</ul><h2>' + h2 + '</h2>' + (sub ? '<p>' + esc(sub) + '</p>' : '') + dlTop(F) + '</div>' +
       '<div class="hz9-ba">' + cmpSide('바꾸기 전', F.beforeRate, F.beforeBand || null, 'from') + arrow + cmpSide('바꾼 뒤', A.rate, ab || null, 'to') + '</div>' +
       (tip ? '<div class="hz9-tip">' + ico('info') + '<span>' + esc(tip) + '</span></div>' : '') + '</section>' +
       '<div class="hz7-vt" role="tablist">' + tabs.map(function (t, k) { return '<button type="button" role="tab" data-fv="' + t[0] + '" aria-selected="' + (k ? 'false' : 'true') + '">' + esc(t[1]) + '</button>'; }).join('') + '</div>' +
@@ -1351,6 +1358,12 @@
     out.querySelectorAll('[data-fp]').forEach(function (p) { p.hidden = p.getAttribute('data-fp') !== v; });
   });
   function useFix() { var F = S.fx; ta.value = F.text; if (S.src) S.src.applied = true; count(); S.res = F.after; S.res.at = new Date(); S.edits = {}; S.sel = -1; S.fx = null; renderRes(); toOut(); histSet('res'); }
+  function moreFix() {   // 11.23 대표: '더 줄이기' 바꾼 글을 글 칸에 넣고 바로 한 번 더 휴머나이징(반복 변환, 토큰은 그 글만큼. 모자라면 평소처럼 충전 안내)
+    var F = S.fx; if (!F || S.busy) return;
+    ta.value = F.text; if (S.src) S.src.applied = true; count();
+    S.res = F.after; S.res.at = new Date(); S.edits = {}; S.sel = -1; S.fxLast = F; S.fx = null; histSet('res');
+    hum();
+  }
 
   /* ---------- 결과상세내역서(인쇄 · PDF 저장, 결제 뒤에만) ---------- */
   function report() {
