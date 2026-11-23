@@ -65,7 +65,7 @@
   var RPT = 'AI 작성률 결과서';   // 13.30 토큰으로 받는 전체 검사의 이름(왼쪽 단추 · 무료 결과의 안내 단추). 대표: '리포트'보다 '결과서'
   var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr', pl2: 'pl', pr2: 'pr', mx2: 'mx' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
   var SRV_PID = { pl: 'pl2', pr: 'pr2', mx: 'mx2' };   // 13.31 서버의 새 상품 번호(토큰 350 · 1,000 · 2,000). 예전 pl · pr · mx 는 서버에서 legacy(예전 코드의 환불 셈을 지키려고 번호를 새로 둠). 바로 결제(am.buy)는 새 번호로
-  var CR0 = { unit: { per: 100, cr: 0.2, min: 1 }, pro: { per: 100, cr: 0.4, min: 2 } }, ASK = 10;   // 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음
+  var CR0 = { unit: { per: 100, cr: 0.2, min: 1 }, pro: { per: 100, cr: 0.4, min: 2 } }, ASK = Infinity;   // 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음 · 13.32 부터 묻지 않음(단추에 토큰 숫자가 적혀 있어 누르면 바로 실행)
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var n2 = function (n) { return Number(n || 0).toLocaleString('ko-KR'); };
@@ -196,11 +196,47 @@
   box.addEventListener('click', function (e) {
     var b = e.target.closest('[data-act="edit"], [data-act="new"]'); if (!b || !box.contains(b)) return;
     collapse(false);
-    if (b.getAttribute('data-act') === 'new') { ta.value = ''; S.src = null; renderChip(); out.innerHTML = ''; S.res = null; S.fx = null; box.classList.remove('has-out', 'stale'); setStep(1); count(); }
+    if (b.getAttribute('data-act') === 'new') { ta.value = ''; S.src = null; renderChip(); out.innerHTML = ''; S.res = null; S.fx = null; box.classList.remove('has-out', 'stale'); setStep(1); count(); histSet(null); try { window.dispatchEvent(new Event('am:hz-out')); } catch (x0) { /* 예전 브라우저 */ } }
     try { ta.focus({ preventScroll: true }); } catch (x) { ta.focus(); }
     try { box.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' }); } catch (x2) { /* 그대로 */ }
   });
   function outShown() { box.classList.add('has-out'); try { window.dispatchEvent(new Event('am:hz-out')); } catch (e) { /* 예전 브라우저 */ } }
+  /* 13.32(2026.11.23 대표 '버튼 누르면 실행되면서 실행 화면으로 가야지'): 단추를 누르면 바로 진행 화면이 보이게.
+     넣은 글은 한 줄로 접고 진행 단계부터 화면 위쪽에. 예전에는 긴 결과가 짧은 확인 상자 · 진행 막대로 바뀌며
+     화면이 아래 구획으로 밀려 다른 곳으로 간 것처럼 보였음 */
+  function runShow(kind) {
+    collapse(true); outShown(); histPush(kind);
+    try { var tgt = stepsEl || out, r = tgt.getBoundingClientRect(); if (r.top < 0 || r.top > window.innerHeight * .3) tgt.scrollIntoView({ behavior: 'auto', block: 'start' }); } catch (e) { /* 그대로 */ }
+  }
+  /* 13.32 뒤로가기: 검사 결과 · 다듬은 결과마다 방문 기록을 하나씩 남겨, 뒤로가기를 누르면 사이트를 나가지 않고
+     이전 화면(다듬은 결과 → 검사 결과 → 글 넣기)으로. 처리하는 중에는 그 화면에 머묾(결과가 나오면 보임) */
+  var HV = { on: !!(window.history && history.pushState), cur: null, hash: location.hash };
+  function histPush(kind) {
+    if (!HV.on || !kind || HV.cur === kind) return;
+    try { history.pushState({ hz: kind }, '', location.href); HV.cur = kind; HV.hash = location.hash; } catch (e) { /* 그대로 */ }
+  }
+  function histSet(kind) { if (!HV.on) return; try { history.replaceState(kind ? { hz: kind } : null, '', location.href); HV.cur = kind || null; } catch (e) { /* 그대로 */ } }
+  function renderFx() { var F = S.fx; if (!F) return; if (F.free) renderFixFree(); else if (F.kind === 'proFree') renderProFree(); else renderFix(); }
+  function viewIn() {   // 글 넣기 화면(검사 결과는 앞으로가기를 위해 그대로 둠)
+    if (S.fx) S.fxLast = S.fx;
+    S.fx = null; collapse(false); out.innerHTML = ''; box.classList.remove('has-out'); setStep(1);
+    try { window.dispatchEvent(new Event('am:hz-out')); } catch (e) { /* 예전 브라우저 */ }
+  }
+  window.addEventListener('popstate', function (e) {
+    if (!HV.on) return;
+    var k = (e.state && e.state.hz) || null;
+    if (!e.state && location.hash !== HV.hash) { HV.hash = location.hash; return; }   // 쪽 안 링크(#price 등)로 옮겨 간 것
+    HV.hash = location.hash;
+    if (S.busy) {
+      try { history.pushState(HV.cur ? { hz: HV.cur } : null, '', location.href); } catch (x) { /* 그대로 */ }
+      stat('처리하는 중이라 이 화면에 그대로 있습니다. 끝나면 결과가 보입니다.'); return;
+    }
+    HV.cur = k;
+    if (k === 'fx' && (S.fx || S.fxLast)) { S.fx = S.fx || S.fxLast; renderFx(); }
+    else if ((k === 'res' || k === 'fx') && S.res) { if (S.fx) S.fxLast = S.fx; S.fx = null; renderRes(); collapse(true); setStep(2); outShown(); }
+    else viewIn();
+    try { var tg = stepsEl || box, rr = tg.getBoundingClientRect(); if (rr.top < 0 || rr.top > window.innerHeight * .35) tg.scrollIntoView({ behavior: 'auto', block: 'start' }); } catch (x2) { /* 그대로 */ }
+  });
 
   /* ---------- 12.1 바로 검사(무료일 때만): 파일을 올리거나, 글을 붙여 넣거나, 예시를 고르면 ---------- */
   var autoT = 0;
@@ -464,10 +500,10 @@
 
   /* ---------- 진행 · 오류 ---------- */
   function setBusy(on) { S.busy = on; btnC.disabled = on; btnP.disabled = on; }
-  function prog(label, i, n) {
+  function prog(label, i, n, sub) {
     var pct = n ? Math.round(i / n * 100) : 30;
     var el = $('.hz7-prog', out);
-    if (!el) { out.innerHTML = '<div class="hz7-prog"><b></b><i><em></em></i><p>문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고, AIMarker 판정 기준 1.6으로 판정합니다. 표지 · 목차 · 참고문헌 같은 줄은 빼고 본문 문장만 셉니다. 같은 글은 언제나 같은 결과가 나옵니다.</p></div>'; el = $('.hz7-prog', out); stat(label); }
+    if (!el) { out.innerHTML = '<div class="hz7-prog"><b></b><i><em></em></i><p>' + (sub || '문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고, AIMarker 판정 기준 1.6으로 판정합니다. 표지 · 목차 · 참고문헌 같은 줄은 빼고 본문 문장만 셉니다. 같은 글은 언제나 같은 결과가 나옵니다.') + '</p></div>'; el = $('.hz7-prog', out); stat(label); }
     $('b', el).textContent = label + (n > 1 ? ' ' + i + ' / ' + n : ''); $('em', el).style.width = Math.max(6, pct) + '%';
     el.classList.toggle('ind', n <= 1 && i < n);   // 한 번에 끝나는 검사는 흐르는 막대로
   }
@@ -522,7 +558,7 @@
       if (needN > S.ps.left) { out.innerHTML = '<div class="hz7-err"><b>남은 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 검사해 이용권 ' + needN + '회가 필요합니다.' : '이 글을 검사하려면 이용권 ' + needN + '회가 필요합니다.') + ' 지금 남은 횟수는 ' + S.ps.left + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button><button class="btn btn-g btn-s" type="button" data-again>무료 검사 결과로 보기</button></div></div>'; S.retry = function () { check(t, { free: true }); }; return Promise.resolve(null); }
     }
     var lbl = full ? RPT + ' 만드는 중' : 'AI 작성률 무료 검사 중';
-    setBusy(true); prog(lbl, 0, C.parts.length);
+    setBusy(true); prog(lbl, 0, C.parts.length, full && isCr() ? '문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고 결과서를 만듭니다. 긴 글은 6,000자씩 나눠 동시에 처리합니다. 처리하지 못하면 토큰은 빠지지 않습니다.' : ''); if (full) runShow('res');
     var done = 0, tnC = tone();   // 13.30 동시에 보내도 진행 표시는 끝난 조각 수, 말투는 시작할 때 값 하나로
     return par(C.parts, function (part, i) {
       var key = 'c|' + part;
@@ -534,7 +570,7 @@
       return merge(rs, isFull, t);
     }).then(function (M) {
       M.src = t; M.C = C; if (!M.full) freeShow(M);
-      S.res = M; S.edits = {}; S.sel = -1; S.side = 'ai'; S.fx = null; box.classList.remove('stale'); renderRes(); if (M.full && S.wantPdf) { S.wantPdf = false; setTimeout(function () { try { report(); } catch (e) { /* 저장 단추로 */ } }, 600); } collapse(true); setStep(2); outShown(); toOut(); return M;
+      S.res = M; S.edits = {}; S.sel = -1; S.side = 'ai'; S.fx = null; S.fxLast = null; box.classList.remove('stale'); renderRes(); histPush('res'); if (M.full && S.wantPdf) { S.wantPdf = false; setTimeout(function () { try { report(); } catch (e) { /* 저장 단추로 */ } }, 600); } collapse(true); setStep(2); outShown(); toOut(); return M;
     }).catch(function (e) { if (e && e.code === 'FREE_DAY' && !full && S.pass) freeDayPaid(t); else fail(e, function (free) { check(t, { free: free }); }, function () { check(t, opt); }); return null; })
       .then(function (M) { setBusy(false); return M; });
   }
@@ -954,7 +990,7 @@
     if (act === 'proagain') { S.variant = (S.variant || 0) + 1; hum(true); return; }
     if (act === 'usefix' && S.fx) { useFix(); return; }
     if (act === 'copyfix' && S.fx) { if (AM.copy) AM.copy(S.fx.text, b); else if (navigator.clipboard) navigator.clipboard.writeText(S.fx.text); return; }
-    if (act === 'backres' && S.res) { S.fx = null; renderRes(); setStep(2); return; }
+    if (act === 'backres' && S.res) { if (HV.cur === 'fx' && history.state && history.state.hz === 'fx') { history.back(); return; } S.fxLast = S.fx; S.fx = null; renderRes(); setStep(2); return; }
   });
   out.addEventListener('keydown', function (e) {
     var t = e.target; if (!t || !t.matches) return;
@@ -997,7 +1033,7 @@
     var C0 = chunk(t), C = full ? C0 : { parts: [C0.parts[0]], seps: [] };
     if (full && isCr()) { var needF = C.parts.reduce(function (a, p) { return a + (p.length <= HELP_MAX ? 0 : costOf('unit', p.length)); }, 0); if (needF > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, needF, ''); return; } }
     else if (full && S.ps && C.parts.length > S.ps.left) { out.innerHTML = '<div class="hz7-err"><b>남은 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 바꿔 이용권 ' + C.parts.length + '회가 필요합니다.' : '이 글을 바꾸려면 이용권 1회가 필요합니다.') + ' 지금 남은 횟수는 ' + S.ps.left + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button></div></div>'; return; }
-    setBusy(true); prog('사람 말투로 바꾸는 중', 0, C.parts.length);
+    setBusy(true); prog('사람 말투로 바꾸는 중', 0, C.parts.length, 'AI 말버릇만 사람 말투로 바꾸고, 뜻과 숫자 · 이름 · 인용은 그대로 둡니다. 긴 글은 6,000자씩 나눠 동시에 처리합니다.'); runShow('fx');
     var tn = tone(), doneF = 0;
     par(C.parts, function (part, i) { return call('am.style', { text: part, mode: 'fix', tone: tn, pass: full ? S.pass : '' }, 90000).then(function (r) { if (r.toneUsed && tn === 'auto') { tn = r.toneUsed; S.toneUsed = r.toneUsed; } prog('사람 말투로 바꾸는 중', ++doneF, C.parts.length); return r; }); }, function () { return tn !== 'auto'; })
       .then(function (rs) {
@@ -1019,7 +1055,7 @@
     if (again !== true) S.variant = 0;
     if (!S.pass || free) {   // 무료 맛보기: 첫 문단만(토큰이 모자랄 때도 고를 수 있음)
       var FT = freeTaste(t);
-      setBusy(true); prog(FT.part + '을 사람 말투로 다듬는 중', 0, 1);
+      setBusy(true); prog(FT.part + '을 사람 말투로 다듬는 중', 0, 1, 'AI 말버릇만 사람 말투로 바꾸고, 뜻과 숫자 · 이름 · 인용은 그대로 둡니다.'); runShow('fx');
       call('am.humanize', { text: FT.text, tone: tone() }, 60000).then(function (r) { S.fx = { kind: 'proFree', part: FT.part, src: r.src, text: r.text, total: t.length, shown: r.shown, changes: r.changes, samples: r.samples || [], tone: r.tone, toneNote: r.toneNote || '', taste: r.taste || null }; renderProFree(); toOut(); })
         .catch(function (e) { fail(e, null, function () { pro(); }); }).then(function () { setBusy(false); });
       return;
@@ -1028,7 +1064,7 @@
     var C = chunk(t);
     if (isCr()) { if (humCost(C.parts) > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, humCost(C.parts), '첫 문단 무료로 보기'); S.retry = function () { pro(false, true); }; return; } }
     else if (S.ps && C.parts.length > S.ps.proLeft) { out.innerHTML = '<div class="hz7-err"><b>휴머나이징 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 바꿔 휴머나이징 ' + C.parts.length + '회가 필요합니다.' : '이 글을 바꾸려면 휴머나이징 1회가 필요합니다.') + ' 남은 휴머나이징은 ' + S.ps.proLeft + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button></div></div>'; return; }
-    setBusy(true); prog('AI 문체를 사람 말투로 바꾸는 중', 0, C.parts.length);
+    setBusy(true); prog('AI 문체를 사람 말투로 바꾸는 중', 0, C.parts.length, 'AI 말버릇만 사람 말투로 바꾸고, 뜻과 숫자 · 이름 · 인용은 그대로 둡니다. 긴 글은 6,000자씩 나눠 동시에 처리합니다.' + (isCr() ? ' 처리하지 못하면 토큰은 빠지지 않습니다.' : '')); runShow('fx');
     var tn = tone(), doneH = 0;
     par(C.parts, function (part, i) { return call('am.humanize', { text: part, tone: tn, variant: S.variant, pass: S.pass }, 120000).then(function (r) { if (tn === 'auto' && r.tone) { tn = r.tone; S.toneUsed = r.tone; } prog('AI 문체를 사람 말투로 바꾸는 중', ++doneH, C.parts.length); return r; }); }, function () { return tn !== 'auto'; })
       .then(function (rs) {
@@ -1314,7 +1350,7 @@
     out.querySelectorAll('[data-fv]').forEach(function (b) { b.setAttribute('aria-selected', b === t ? 'true' : 'false'); });
     out.querySelectorAll('[data-fp]').forEach(function (p) { p.hidden = p.getAttribute('data-fp') !== v; });
   });
-  function useFix() { var F = S.fx; ta.value = F.text; if (S.src) S.src.applied = true; count(); S.res = F.after; S.res.at = new Date(); S.edits = {}; S.sel = -1; S.fx = null; renderRes(); toOut(); }
+  function useFix() { var F = S.fx; ta.value = F.text; if (S.src) S.src.applied = true; count(); S.res = F.after; S.res.at = new Date(); S.edits = {}; S.sel = -1; S.fx = null; renderRes(); toOut(); histSet('res'); }
 
   /* ---------- 결과상세내역서(인쇄 · PDF 저장, 결제 뒤에만) ---------- */
   function report() {
