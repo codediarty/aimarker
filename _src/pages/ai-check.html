@@ -2,12 +2,12 @@
 path: ai-check/
 key: ai-check
 v9: 1
-title: AI 검사기 무료, 한국어 챗GPT 검사기 | AIMarker
+title: AI 검사 무료, AI 작성률 검사 · AI 표절 검사 · 챗GPT 검사기 | AIMarker
 ogtitle: AI 검사기 무료, 문장별로 AI 패턴을 표시합니다 | AIMarker
-desc: 무료 AI 검사기(AI 글 판별, 챗GPT 검사기). 글을 붙여 넣거나 한글 · 워드 · PDF를 올리면 AI 작성률(%)과 판정(안전 · 고위험 · 부적합), AI 패턴이 남은 문장을 빨간 형광펜으로 보여 드립니다. 가입 없이 글 전체(20만 자까지) 무료, 글은 저장하지 않습니다. 검출된 문장은 휴머나이징으로 바로 다듬습니다.
-crumb: AI 검사기 무료
+desc: AI 검사 무료(AI 작성률 검사 · AI 표절 검사 · 챗GPT 검사기 · AI 글 판별): 글을 붙여 넣거나 한글 · 워드 · PDF를 올리면 AI 작성률(%)과 판정(안전 · 고위험 · 부적합), AI 패턴이 남은 문장을 빨간 형광펜으로 보여 드립니다. 흔히 'AI 표절 검사'라고 부르는 것이 이 AI 작성률 검사입니다(다른 문서와 겹치는지 보는 표절 검사는 하지 않습니다). 제출 전에 검사하는 순서와 결과별로 할 일도 정리했습니다. 가입 없이 글 전체(20만 자까지) 무료, 글은 저장하지 않습니다.
+crumb: AI 작성률 검사
 crumb_parent: humanize/|AI 휴머나이징
-updated: 2026-11-21
+updated: 2026-11-23
 scripts: assets/textin.js, assets/humanize.js
 styles: assets/humanize.css, assets/hz12.css
 selflabel: footer
@@ -18,9 +18,9 @@ selflabel: footer
     <div class="hz15-grid" id="hzHero">
       <div class="hz15-l" id="tool">
         <div class="hz12-hd hz15-hd">
-          <p class="hz12-k">{{ico:fingerprint}}AI 검사기 무료 · 챗GPT 검사기 · AI 글 판별</p>
+          <p class="hz12-k">{{ico:fingerprint}}AI 검사 · AI 작성률 검사 · AI 표절 검사 · AI 검사기 무료 · 챗GPT 검사기</p>
           <h1 class="hz12-h1" id="h1">이 글, AI 검사기에<br><span class="hz13-mk">걸릴까요</span>?</h1>
-          <p class="lp-sub">숫자 하나가 아니라, 어느 문장이 왜 AI로 보이는지까지 보여 드립니다. 가입 없이 글 전체 무료.</p>
+          <p class="lp-sub">AI 작성률 검사 결과를 숫자 하나가 아니라, 어느 문장이 왜 AI로 보이는지까지 보여 드립니다. 가입 없이 글 전체 무료.</p>
         </div>
 {{inc:hz-tool.inc}}
       </div>
@@ -40,7 +40,7 @@ selflabel: footer
       <h2 class="k-h2" id="ansT">무료 AI 검사기, 무엇이 다른가요?</h2>
       <p class="k-lead">대부분의 AI 검사기는 'AI 확률 N%' 숫자 하나만 보여 줍니다. AIMarker는 문장마다 AI 패턴을 찾아 표시(AI 마킹)하고, 판정 기준을 공개하며, 같은 글은 언제나 같은 결과가 나옵니다. 그래서 검사에서 끝나지 않고, 표시된 문장을 바로 사람 문장으로 다듬을 수 있습니다.</p>
       <ul class="lp-pts"><li>챗GPT · 제미나이 · 클로드 등 어떤 AI가 썼든, 글에 남은 AI 패턴을 봅니다.</li><li>결과는 AI 작성률(%) · 판정(안전 · 고위험 · 부적합) · 문장별 표시 · 까닭입니다.</li><li>가입 없이 글 전체(20만 자까지) 무료, 한글 · 워드 · PDF 파일 그대로, 글은 저장하지 않습니다.</li></ul>
-      <p class="lp-upd"><time datetime="2026-11-21">2026년 11월 21일</time> 업데이트 · AIMarker 편집</p>
+      <p class="lp-upd"><time datetime="2026-11-23">2026년 11월 23일</time> 업데이트 · AIMarker 편집</p>
     </div>
   </div>
 </section>
@@ -60,6 +60,63 @@ selflabel: footer
   </div>
 </section>
 
+<section class="k-sec" id="kinds" aria-labelledby="kdT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="kdT">AI 검사, AI 표절 검사, 표절 검사는 무엇이 다른가요?</h2>
+      <p class="k-lead">이름이 비슷해 헷갈리지만 보는 것이 다릅니다. 내가 확인하려는 것이 어느 쪽인지 먼저 고르세요.</p>
+    </div>
+    <div class="k-tbl-w">
+    <table class="lp-tbl">
+      <thead><tr><th scope="col">검사</th><th scope="col">보는 것</th><th scope="col">결과</th><th scope="col">어디서</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">AI 검사 · AI 작성률 검사</th><td>글이 AI가 쓴 글과 얼마나 닮았는지</td><td>AI 작성률(%), 판정, AI 패턴이 남은 문장</td><td>이 페이지 위 무료 검사</td></tr>
+        <tr><th scope="row">AI 표절 검사(흔히 부르는 말)</th><td>대개 AI 작성률 검사를 뜻함</td><td>위와 같음</td><td>이 페이지 위 무료 검사</td></tr>
+        <tr><th scope="row">표절 검사</th><td>다른 문서와 겹치는 문장</td><td>표절률, 겹친 문서</td><td>제출처가 쓰는 표절 검사기</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="lp-note">AIMarker는 AI 작성률을 검사하고, 다른 문서와 겹치는지 보는 표절 검사는 하지 않습니다. 표절률을 낮추는 법은 <a class="k-a" href="{{root}}copykiller/">카피킬러 낮추는 방법</a>, AI 표절률을 낮추는 법은 <a class="k-a" href="{{root}}ai-plagiarism/">AI 표절률 낮추기</a>에 정리했습니다.</p>
+  </div>
+</section>
+
+<section class="k-sec" id="before-submit" aria-labelledby="bsT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="bsT">AI 작성률 검사, 제출 전에는 이 순서로</h2>
+      <p class="k-lead">숫자 하나만 보고 끝내면 무엇을 고칠지 모릅니다. 이 다섯 단계면 검사가 고치기로 이어집니다.</p>
+    </div>
+    <ol class="lp-tips">
+      <li><b>낼 파일을 그대로 넣으세요.</b><span>복사한 글보다 낼 파일(한글 · 워드 · PDF)을 그대로 올려야 표 · 각주 · 줄바꿈까지 같은 상태로 봅니다. 표지 · 목차 · 참고문헌 줄은 빼고 본문 문장만 셉니다.</span></li>
+      <li><b>숫자보다 표시된 문장을 먼저 보세요.</b><span>AI 작성률이 같아도 표시된 문장이 한 문단에 몰렸는지 흩어졌는지에 따라 고칠 양이 다릅니다.</span></li>
+      <li><b>판정 까닭을 읽으세요.</b><span>번역투, 상투적 연결어, 빈말 수식, 대화창 흔적 가운데 무엇이 많은지 보면 고칠 방향이 정해집니다.</span></li>
+      <li><b>고친 뒤 같은 파일로 다시 검사하세요.</b><span>같은 글은 언제나 같은 결과가 나오므로, 다듬기 전과 뒤의 숫자를 바로 비교할 수 있습니다.</span></li>
+      <li><b>제출처 검사기로 마지막 확인.</b><span>학교나 회사가 정한 검사기가 있으면 그 결과가 기준입니다. 숫자는 검사기마다 다를 수 있습니다.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="k-sec" id="what-next" aria-labelledby="wnT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="wnT">AI 작성률 검사 결과별로 할 일</h2>
+      <p class="k-lead">판정마다 고칠 곳과 양이 다릅니다. 지금 받은 결과의 줄을 보세요.</p>
+    </div>
+    <div class="k-tbl-w">
+    <table class="lp-tbl">
+      <thead><tr><th scope="col">결과</th><th scope="col">뜻</th><th scope="col">할 일</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">부적합</th><td>AI 작성률 40% 이상이거나, 검출 구간이 절반 이상이거나, 대화창 흔적이 있음</td><td>대화창 흔적(굵은 글씨 · 기호 · '물론입니다')부터 지우고, 표시된 문장을 문단 단위로 다시 쓰기</td></tr>
+        <tr><th scope="row">고위험</th><td>AI 검출 문장이 남아 있지만 40% 아래</td><td>표시된 문장만 고치고 다시 검사</td></tr>
+        <tr><th scope="row">안전 + AI 패턴 주의</th><td>검출 문장은 없지만 그렇게 읽힐 수 있는 표현이 있음</td><td>알려 드린 표현만 다듬기</td></tr>
+        <tr><th scope="row">안전</th><td>AI 검출 문장이 없음</td><td>제출처 검사기로 마지막 확인</td></tr>
+        <tr><th scope="row">400자 아래 짧은 글</th><td>AI 글도 낮게 나올 수 있어 결과가 흔들림</td><td>문단 두세 개 이상을 넣고 다시 검사</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
 {{inc:lp-pat.inc}}
 
 {{inc:lp-steps.inc}}
@@ -70,6 +127,10 @@ selflabel: footer
   <div class="k-wrap">
     <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
     <div class="k-faq">
+      <details><summary>AI 표절 검사와 AI 작성률 검사는 같은 건가요?</summary><p>흔히 'AI 표절 검사'라고 부르는 것은 대부분 AI 작성률 검사입니다. 글이 다른 글을 베꼈는지가 아니라 AI가 쓴 글과 얼마나 닮았는지를 봅니다. AIMarker는 AI 작성률을 검사하고, 다른 문서와 겹치는지 보는 표절 검사는 하지 않습니다. 표절률은 제출처가 쓰는 표절 검사기로 확인하세요.</p></details>
+      <details><summary>AI 검사는 어떻게 하나요?</summary><p>위 검사 칸에 글을 붙여 넣거나 한글 · 워드 · PDF 파일을 올리면 됩니다. 가입 없이 몇 초 안에 AI 작성률, 판정, AI 패턴이 가장 뚜렷한 문장을 무료로 보여 드립니다. 모든 문장의 표시와 까닭은 AI 작성률 결과서(1,000자 2토큰)로 봅니다.</p></details>
+      <details><summary>AI 작성률 검사 결과가 검사기마다 다른 까닭은요?</summary><p>검사기마다 판별 모델과 기준, 세는 범위(목차 · 표 · 참고문헌을 넣는지)가 달라서입니다. AIMarker는 본문 문장만 엄격하게 세어 다른 검사기보다 높게 나올 수 있습니다. 숫자 하나보다 표시된 문장을 기준으로 고치고, 마지막은 제출처 검사기로 확인하세요.</p></details>
+      <details><summary>AI 작성률 검사, 논문 한 편 전체도 되나요?</summary><p>됩니다. 가입 없이 20만 자까지 한 번에 넣을 수 있고, 한글 · 워드 · PDF 파일을 그대로 올리면 됩니다. 표지 · 목차 · 참고문헌 같은 줄은 빼고 본문 문장만 셉니다.</p></details>
       <details><summary>AI 검사 결과는 정확한가요?</summary><p>AI 작성 여부를 100% 확인할 수 있는 검사기는 없습니다. AIMarker는 판별 모델과 AI 패턴 DB로 문장마다 점수를 매기고 공개된 기준으로 판정하며, 같은 글은 언제나 같은 결과가 나옵니다. 결과는 추정이며 증명이 아니므로, 사람을 판단하는 근거로 쓰지 마세요. <a class="k-a" href="{{root}}humanize/#read">판정 기준 보기</a></p></details>
       <details><summary>사람이 쓴 글인데 AI로 나왔어요.</summary><p>번역투와 격식체가 많은 글, 틀에 박힌 보고서 문장은 사람이 써도 AI 패턴으로 잡힐 수 있습니다. 표시된 문장을 보고 그 표현만 다듬으면 내려갑니다. 'AI 패턴 주의'는 검출은 아니지만 그렇게 읽힐 수 있는 표현을 알려 드리는 것입니다.</p></details>
       <details><summary>몇 자까지 무료인가요?</summary><p>가입 없이 글 전체(20만 자까지)를 무료로 검사합니다. AI 작성률 · 판정 · 판정 근거는 유료와 같은 값이고, 문장은 가장 뚜렷한 2개를 열어 둡니다. 모든 문장의 표시 · 까닭 · 결과상세내역서는 AI 작성률 결과서로 봅니다(1,000자 2토큰). 무료 검사는 하루 30번(긴 글은 6,000자마다 한 번)까지입니다.</p></details>

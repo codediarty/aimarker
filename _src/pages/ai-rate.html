@@ -2,12 +2,12 @@
 path: ai-rate/
 key: ai-rate
 v9: 1
-title: AI 작성률 낮추기, AI 작성률 줄이는 방법과 기준 | AIMarker
+title: AI 작성률 낮추기, AI 낮추는 방법 5단계와 고친 예 | AIMarker
 ogtitle: AI 작성률 낮추기, AI 패턴을 지우면 내려갑니다 | AIMarker
-desc: AI 작성률 낮추기 · AI 작성률 줄이기: AI 작성률(AI율)은 AI가 쓴 글과 닮은 문장의 비율이라, 탐지기가 보는 AI 패턴을 찾아 그 문장만 사람 문장으로 바꾸면 내려갑니다. 글을 붙여 넣거나 한글 · 워드 · PDF를 올리면 AI 패턴이 남은 문장을 표시하고, 휴머나이징으로 뜻은 그대로 둔 채 다듬어 전후 AI 작성률을 같은 기준으로 보여 드립니다. 가입 없이 무료 검사.
+desc: AI 작성률 낮추기(AI 낮추기 · AI작성률 낮추는 법): AI 작성률은 AI가 쓴 글과 닮은 문장의 비율이라, 탐지기가 보는 AI 패턴이 남은 문장만 찾아 사람 문장으로 바꾸면 내려갑니다. 문단 하나를 다섯 단계로 고친 예, 레포트 · 논문 · 자기소개서 · 블로그별 낮추는 방법, 내기 전 10분 점검표를 정리했습니다. 글을 붙여 넣거나 한글 · 워드 · PDF를 올리면 가입 없이 무료로 검사합니다.
 crumb: AI 작성률 낮추기
 crumb_parent: humanize/|AI 휴머나이징
-updated: 2026-11-21
+updated: 2026-11-23
 scripts: assets/textin.js, assets/humanize.js
 styles: assets/humanize.css, assets/hz12.css
 selflabel: footer
@@ -18,7 +18,7 @@ selflabel: footer
     <div class="hz15-grid" id="hzHero">
       <div class="hz15-l" id="tool">
         <div class="hz12-hd hz15-hd">
-          <p class="hz12-k">{{ico:fingerprint}}AI 작성률 낮추기 · AI 작성률 줄이기 · AI율 낮추기</p>
+          <p class="hz12-k">{{ico:fingerprint}}AI 작성률 낮추기 · AI 낮추기 · AI작성률 낮추는 법 · AI율 줄이기</p>
           <h1 class="hz12-h1" id="h1">AI 작성률 낮추기,<br>AI 패턴을 지우면 <span class="hz13-mk">내려갑니다</span></h1>
           <p class="lp-sub">단어 몇 개를 바꾸는 것으로는 안 내려갑니다. 탐지기가 보는 패턴이 남은 문장을 찾아 그 문장을 바꿔야 합니다.</p>
         </div>
@@ -40,7 +40,7 @@ selflabel: footer
       <h2 class="k-h2" id="ansT">AI 작성률 낮추는 법, 한 줄로</h2>
       <p class="k-lead">AI 작성률은 'AI가 쓴 글과 닮은 문장의 비율'입니다. 그래서 AI 작성률을 낮추거나 줄이려면 글 전체를 손대는 것이 아니라, AI 패턴이 남은 문장을 찾아 그 문장만 사람 문장으로 바꾸면 됩니다. AIMarker는 그 문장을 찾아 표시(AI 마킹)하고, 의미와 문맥은 그대로 둔 채 바꿔 드립니다.</p>
       <ul class="lp-pts"><li>동의어로 바꾸기, 문장 순서 바꾸기만으로는 패턴이 그대로 남습니다.</li><li>핵심 패턴은 번역투, 상투적 연결어, 빈말과 과장 수식, 틀에 박힌 도입과 마무리입니다.</li><li>바꾼 뒤에는 같은 기준으로 다시 재서 다듬기 전과 뒤의 숫자를 확인합니다.</li></ul>
-      <p class="lp-upd"><time datetime="2026-11-21">2026년 11월 21일</time> 업데이트 · AIMarker 편집</p>
+      <p class="lp-upd"><time datetime="2026-11-23">2026년 11월 23일</time> 업데이트 · AIMarker 편집</p>
     </div>
   </div>
 </section>
@@ -61,6 +61,78 @@ selflabel: footer
   </div>
 </section>
 
+<section class="k-sec" id="walk" aria-labelledby="walkT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="walkT">AI 작성률 낮추는 방법, 문단 하나로 따라 하기</h2>
+      <p class="k-lead">레포트 한 문단을 다섯 단계로 고쳤습니다. 빨간 표시가 단계마다 지운 곳입니다. 숫자와 사례 자리에는 내 자료를 넣으면 됩니다.</p>
+    </div>
+    <ul class="lp-ba" aria-label="AI 작성률 낮추는 다섯 단계 예시">
+      <li><b>1단계 · 접속어 빼기</b><p class="bf"><mark>또한,</mark> 수면이 부족하면 집중력이 떨어질 수 있다. <mark>따라서</mark> 대학생에게는 규칙적인 수면 습관이 필요하다.</p><p class="af">수면이 부족하면 집중력이 떨어진다. 대학생에게는 규칙적인 수면 습관이 필요하다.</p><span>앞뒤 문장만으로 뜻이 이어지면 접속어는 뺍니다. 문단마다 '또한 · 따라서 · 뿐만 아니라 · 결론적으로'가 몇 번 나오는지 세어 보세요.</span></li>
+      <li><b>2단계 · 번역투를 우리말로</b><p class="bf">학업 성취<mark>에 있어서</mark> 중요한 요소로 <mark>작용하고 있다</mark>. 습관을 <mark>형성함으로써</mark> 효율을 높인다.</p><p class="af">학업 성취를 좌우한다. 습관을 들여 효율을 높인다.</p><span>'~에 있어서'는 '~에서', '~함으로써'는 '~해서'로 바꾸고, '작용하고 있다'는 무엇을 하는지 드러나는 동사 하나로 줄입니다.</span></li>
+      <li><b>3단계 · 빈말 자리에 내 자료</b><p class="bf">수면 부족은 <mark>다양한 부정적인 영향</mark>을 미칠 수 있다.</p><p class="af">같은 과 동기 40명에게 물어보니, 시험 기간 평균 수면 시간은 4시간 50분이었다.</p><span>'다양한 · 효과적인 · 긍정적인 영향'은 누구나 쓰는 말입니다. 그 자리에 직접 모은 숫자, 읽은 자료의 쪽수, 겪은 일을 넣습니다. AI는 내 자료를 모릅니다.</span></li>
+      <li><b>4단계 · 첫 문장을 장면으로</b><p class="bf"><mark>현대 사회에서</mark> 수면은 대학생의 학업에 <mark>매우 중요한 요소</mark>이다.</p><p class="af">지난 중간고사 때 사흘을 네 시간씩 자고 시험을 봤다.</p><span>큰 이야기로 여는 첫 문장은 AI 글의 대표 패턴입니다. 내가 본 장면이나 겪은 일로 시작하면 다음 문장도 따라 바뀝니다.</span></li>
+      <li><b>5단계 · 끝 문장을 내 판단으로</b><p class="bf"><mark>결론적으로</mark> 올바른 수면 습관은 학업에 긍정적인 영향을 미친다<mark>고 할 수 있다</mark>.</p><p class="af">이번 학기에는 열두 시 반 전에 불을 끄는 날을 일주일에 나흘로 늘려 볼 생각이다.</p><span>일반론으로 맺지 말고 내 판단이나 다음 행동으로 맺습니다. '~라고 할 수 있다'는 지우고 단정해도 됩니다.</span></li>
+      <li><b>문단 전체 · 고치기 전과 뒤</b><p class="bf"><mark>현대 사회에서</mark> 수면은 대학생의 학업 성취<mark>에 있어서</mark> 매우 중요한 요소로 작용하고 있다. <mark>또한,</mark> 수면이 부족하면 집중력 저하와 같은 <mark>다양한</mark> 부정적인 영향을 미칠 수 있다. <mark>따라서</mark> 대학생들은 규칙적인 수면 습관을 <mark>형성함으로써</mark> 학업 효율을 높이는 것이 필요하다. <mark>결론적으로,</mark> 올바른 수면 습관은 학업에 긍정적인 영향을 미친다<mark>고 할 수 있다</mark>.</p><p class="af">지난 중간고사 때 사흘을 네 시간씩 자고 시험을 봤다. 마지막 날에는 문제를 두 번이나 잘못 읽었다. 같은 과 동기 40명에게 물어보니 시험 기간 평균 수면 시간은 4시간 50분이었다. 잠이 모자라면 집중이 흐려지고, 같은 공부에 시간이 더 든다. 이번 학기에는 열두 시 반 전에 불을 끄는 날을 일주일에 나흘로 늘려 볼 생각이다.</p><span>주장은 그대로(잠이 학업을 좌우한다)이고, 문장마다 내 자료와 판단이 들어갔습니다.</span></li>
+    </ul>
+    <p class="lp-note">예시는 설명을 위해 만든 글입니다. 논문처럼 1인칭을 쓰지 않는 글은 '내 경험' 대신 조사한 자료와 연도 · 대상 · 숫자를 넣으세요.</p>
+  </div>
+</section>
+
+<section class="k-sec" id="by-type" aria-labelledby="typeT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="typeT">AI작성률 낮추는 법, 글 종류마다 다릅니다</h2>
+      <p class="k-lead">AI 패턴이 몰리는 자리는 글 종류마다 정해져 있습니다. 그곳부터 보면 고칠 양이 줄어듭니다.</p>
+    </div>
+    <div class="k-tbl-w">
+    <table class="lp-tbl">
+      <thead><tr><th scope="col">글 종류</th><th scope="col">AI 패턴이 잘 남는 곳</th><th scope="col">낮추는 방법</th><th scope="col">손대지 말 것</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">레포트 · 과제</th><td>서론 첫 문단, 결론 문단, 이론을 정리한 문단</td><td>수업 자료의 쪽수, 내가 고른 사례, 내 의견 한 줄 넣기</td><td>인용한 원문, 표의 숫자</td></tr>
+        <tr><th scope="row">졸업 · 학위 논문</th><td>연구의 필요성, 선행 연구 요약의 끝 문장, 연구의 의의</td><td>선행 연구를 연도 · 대상 · 결과로 적고, '~하고자 한다'가 잇따르지 않게</td><td>통계 값, 변수 이름, 인용 표기, 전문 용어</td></tr>
+        <tr><th scope="row">자기소개서</th><td>성장 과정의 첫 문장, 지원 동기, 입사 후 포부</td><td>언제 · 어디서 · 무엇을 · 얼마나 했는지, 숫자로 된 결과</td><td>회사 이름, 직무 이름, 상 이름</td></tr>
+        <tr><th scope="row">블로그 · 후기</th><td>소제목 기호, 굵은 글씨, 글머리 기호, '물론입니다' 같은 대화창 흔적</td><td>문단으로 다시 쓰고 날짜 · 가격 · 장소 넣기</td><td>상호, 메뉴 이름, 주소</td></tr>
+        <tr><th scope="row">업무 보고서 · 기획서</th><td>배경 설명, 기대 효과</td><td>날짜 · 금액 · 담당 · 다음 할 일을 문장 안에</td><td>회사 안 용어, 표의 숫자</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="words" aria-labelledby="wordsT">
+  <div class="k-wrap">
+    <div class="lp-ans-b">
+      <p class="lp-k">검색어 풀이</p>
+      <h2 class="k-h2" id="wordsT">AI 낮추기, AI작성률 낮추는 방법, 같은 말일까요?</h2>
+      <p class="k-lead">같은 일을 가리킵니다. 'AI 낮추기', 'AI율 낮추기', 'AI 작성률 줄이기', 'AI작성률 낮추는 방법'은 모두 글에 남은 AI 패턴을 줄여 AI 작성률 숫자를 내리는 일입니다. 어느 검사기의 숫자를 내리려는지에 따라 결과지를 읽는 법만 조금 다릅니다.</p>
+      <ul class="lp-pts">
+        <li><b>카피킬러 AI 낮추기</b>: 카피킬러는 표절률과 AI 작성률을 따로 보여 줍니다. AI 작성률은 'AI 의심' 문장을, 표절률은 인용과 출처를 고칩니다. <a class="k-a" href="{{root}}copykiller/">카피킬러 낮추는 방법</a></li>
+        <li><b>GPT킬러 낮추기</b>: AI로 잡힌 문장을 찾아 그 문장만 내 말로 다시 씁니다. <a class="k-a" href="{{root}}gptkiller/">GPT킬러 낮추는 순서</a></li>
+        <li><b>AI 휴머나이징</b>: 찾은 문장의 AI 말버릇을 도구로 한꺼번에 사람 문장으로 바꾸는 일입니다. <a class="k-a" href="{{root}}humanize/">AI 휴머나이징</a></li>
+        <li><b>AI 작성률 검사</b>: 고치기 전에 어느 문장이 걸리는지 먼저 확인하는 일입니다. <a class="k-a" href="{{root}}ai-check/">AI 작성률 검사 무료</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="checklist" aria-labelledby="ckT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="ckT">내기 전 10분 점검표</h2>
+      <p class="k-lead">글을 다 고쳤다면 마지막으로 이 여섯 가지만 보세요. 찾기(Ctrl+F)로 금방 확인합니다.</p>
+    </div>
+    <ol class="lp-tips">
+      <li><b>첫 문장과 끝 문장을 소리 내어 읽으세요.</b><span>누가 썼는지 모를 문장이면 고칩니다. 문단의 첫 문장과 끝 문장에 AI 패턴이 가장 많이 몰립니다.</span></li>
+      <li><b>접속어를 세어 보세요.</b><span>'또한', '따라서', '뿐만 아니라', '결론적으로'를 찾아 문단마다 하나 넘게 나오면 줄입니다.</span></li>
+      <li><b>번역투를 찾아 바꾸세요.</b><span>'에 있어서', '을 통해', '함으로써', '되어지'를 찾아 우리말로 바꿉니다.</span></li>
+      <li><b>문단마다 내 자료가 있는지 보세요.</b><span>날짜, 장소, 숫자, 쪽수, 고유명사 가운데 하나도 없는 문단은 일반론만 이어진 문단입니다.</span></li>
+      <li><b>대화창 흔적을 지우세요.</b><span>굵은 글씨, 글머리 기호, 이모지, '물론입니다', '다음과 같습니다'는 대화창에서 복사한 흔적입니다.</span></li>
+      <li><b>다시 검사하고 제출처 기준을 확인하세요.</b><span>AI 패턴이 남은 문장이 없는지 보고, 제출처가 정한 검사기와 기준이 있으면 그 결과로 마지막 확인을 합니다.</span></li>
+    </ol>
+  </div>
+</section>
+
 {{inc:lp-pat.inc}}
 
 {{inc:lp-steps.inc}}
@@ -71,6 +143,9 @@ selflabel: footer
   <div class="k-wrap">
     <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
     <div class="k-faq">
+      <details><summary>AI 낮추는 방법 가운데 가장 빠른 것은 무엇인가요?</summary><p>걸리는 문장을 먼저 찾는 것입니다. 글 전체를 손보면 한두 시간이 걸리지만, 표시된 문장만 고치면 훨씬 빨리 끝납니다. 위 검사 칸에 붙여 넣으면 AI 패턴이 남은 문장을 무료로 보여 드리고, 그 문장만 휴머나이징으로 다듬을 수 있습니다.</p></details>
+      <details><summary>AI작성률 낮추는 법, 돈 들이지 않고도 되나요?</summary><p>됩니다. 이 페이지의 다섯 단계와 점검표는 직접 해도 되는 방법이고, AI 작성률 검사도 가입 없이 무료입니다. 문장이 많거나 시간이 없을 때 휴머나이징(1,000자 4토큰)을 사용하세요. 첫 문단은 무료로 바꿔 봅니다.</p></details>
+      <details><summary>AI 낮추기와 AI 작성률 줄이기는 다른 말인가요?</summary><p>같은 말입니다. 'AI 낮추기', 'AI율 낮추기', 'AI 작성률 줄이기' 모두 글에 남은 AI 패턴을 줄여 AI 작성률 숫자를 내리는 일을 가리킵니다. 특정 검사기를 말할 때는 '카피킬러 AI 낮추기', 'GPT킬러 낮추기'처럼 부릅니다.</p></details>
       <details><summary>AI 작성률이 몇 % 아래면 안전한가요?</summary><p>기준은 학교와 회사, 탐지기마다 다릅니다. AIMarker 판정 기준(AMJ-1.5)은 AI 작성률 40% 이상이면 부적합, 20% 이상이거나 AI 검출 문장이 남아 있으면 고위험, 그 아래면 안전으로 봅니다. 제출처가 쓰는 기준을 확인하고, 검출 문장이 남지 않도록 다듬는 것이 가장 안전합니다.</p></details>
       <details><summary>카피킬러 AI 작성률도 같은 방법으로 낮추나요?</summary><p>같은 원리입니다. 카피킬러는 표절률과 AI 작성률을 따로 보여 주는데, AI 작성률은 출처 표기와 상관없이 AI 패턴이 남은 문장을 바꿔야 내려갑니다. 결과지를 읽는 순서와 표절률 정리법은 <a class="k-a" href="{{root}}copykiller/">카피킬러 AI 작성률 낮추기</a>에 정리했습니다. AIMarker는 카피킬러와 관계가 없습니다.</p></details>
       <details><summary>AI 작성률을 0%로 만들 수 있나요?</summary><p>글마다 다릅니다. 첫 화면의 예시 문단은 실제 엔진으로 63%에서 0%로 내려갔지만, 글 전체가 틀에 박힌 글이면 한 번에 다 내려가지 않을 수 있습니다. 그럴 때는 표시된 문장을 내 경험과 숫자로 다시 쓰고 한 번 더 검사하세요. AIMarker는 결과를 좋게 보이도록 숫자를 조정하지 않습니다.</p></details>

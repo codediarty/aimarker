@@ -22,8 +22,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261122g"
-TODAY = "2026-11-22"
+VER = "20261123a"
+TODAY = "2026-11-23"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
 #   세 묶음(순서 그대로): assets/b-base.css = 글꼴 + am.css(모든 페이지 같음) → assets/b-<8자리>.css = (site4 · v8) + 페이지 styles(없으면 생략)
@@ -605,19 +605,19 @@ MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코
 # 13.12(10.28) 검색어 안내 페이지(맨 위 검사 도구 + 한 줄 답 + 자주 묻는 질문). '이런 검색으로 오셨나요?' 칩 · 휴대폰 메뉴 · 바닥글 · /humanize/ 안내 모음이 모두 이 목록을 씀.
 #   (주소, key, 이름, 한 줄 설명, 휴대폰 메뉴에 넣을지, 칩 이름). 글은 _src/tools/lp138_a.py · lp138_b.py · lp138_c.py · lp138_d.py
 #   13.12c(10.30) 지피티킬러 낮추기 · 직접 쓴 글이 AI로 나왔을 때 · AI 검사기 우회 대신 고쳐 쓰기를 더함(우회 안내는 휴대폰 메뉴에 넣지 않음)
-GUIDES = [("ai-rate/", "ai-rate", "AI 작성률 낮추기", "AI 패턴을 찾아 그 문장만 사람 문장으로", True, "AI 작성률 낮추기"),
-          ("copykiller/", "copykiller", "카피킬러 표절률 · AI 작성률 낮추기", "표절률과 AI 작성률을 나눠 고치는 순서", True, "카피킬러 낮추기"),
-          ("gptkiller/", "gptkiller", "지피티킬러 낮추기", "GPT킬러 점수, 잡힌 문장만 다시 쓰는 순서", True, "지피티킬러 낮추기"),
+GUIDES = [("ai-rate/", "ai-rate", "AI 작성률 낮추기 · AI 낮추는 방법", "AI 패턴을 찾아 그 문장만 사람 문장으로", True, "AI 작성률 낮추기"),
+          ("copykiller/", "copykiller", "카피킬러 AI 낮추기 · 표절률 낮추기", "AI 의심 문장과 표절률을 나눠 고치는 순서", True, "카피킬러 AI 낮추기"),
+          ("gptkiller/", "gptkiller", "GPT킬러 · 지피티킬러 낮추기", "GPT킬러 점수, 잡힌 문장만 다시 쓰는 순서", True, "GPT킬러 낮추기"),
           ("ai-detector/", "ai-detector", "GPT킬러 · AI 탐지기 대비", "탐지기가 보는 패턴과 고쳐 쓰는 법", True, "GPT킬러 · AI 탐지기"),
           ("ai-plagiarism/", "ai-plagiarism", "AI 표절률 낮추기", "챗GPT 표절률이 출처로 안 내려가는 까닭", True, "AI 표절률 낮추기"),
-          ("ai-tone/", "ai-tone", "AI 티 안 나게 하는 법", "한국어 글의 AI 티 7가지와 고친 예", True, "AI 티 안 나게"),
+          ("ai-tone/", "ai-tone", "챗GPT · AI 티 안 나게 하는 법", "한국어 글의 AI 티 7가지와 고친 예", True, "챗GPT 티 안 나게"),
           ("humanizer/", "humanizer", "AI 휴머나이저 · AI 글 인간화", "뜻은 그대로, AI 말버릇만 바꿉니다", False, "AI 휴머나이저"),
           ("false-positive/", "false-positive", "직접 쓴 글이 AI로 나왔을 때", "GPT킬러 오탐, 이력 챙기기와 고쳐 쓰기", True, "직접 쓴 글 오탐"),
-          ("ai-bypass/", "ai-bypass", "AI 검사기 우회 대신 고쳐 쓰기", "우회 꼼수가 남기는 흔적과 AI 패턴 줄이기", False, "AI 검사기 우회"),
+          ("ai-bypass/", "ai-bypass", "AI 탐지 · 검사기 우회 대신 고쳐 쓰기", "우회 꼼수가 남기는 흔적과 AI 패턴 줄이기", False, "AI 탐지 우회"),
           ("prompt/", "prompt", "AI 작성률 낮추는 프롬프트", "복사해 쓰는 예시 다섯 가지와 한계", True, "휴머나이징 프롬프트"),
           ("resume/", "resume", "자기소개서 AI 검사", "서류에서 걸러지기 전에 문항별로", True, "자기소개서 AI 검사"),
           ("academic/", "academic", "레포트 · 논문 AI 검사", "한글 · 워드 · PDF 그대로, 각주는 그대로", True, "레포트 · 논문 · 과제"),
-          ("ai-check/", "ai-check", "AI 검사기 무료", "가입 없이 글 전체, 뚜렷한 문장부터", False, "AI 검사기 무료")]
+          ("ai-check/", "ai-check", "AI 작성률 검사 · AI 검사기 무료", "가입 없이 글 전체, 뚜렷한 문장부터", False, "AI 작성률 검사")]
 GUIDE_KEYS = [g[1] for g in GUIDES]
 B2C_MENU = ([("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인")] + [(g[0], g[2], g[3]) for g in GUIDES if g[4]] +
             [("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")])

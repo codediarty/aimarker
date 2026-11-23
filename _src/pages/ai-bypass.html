@@ -2,12 +2,12 @@
 path: ai-bypass/
 key: ai-bypass
 v9: 1
-title: AI 검사기 우회, 꼼수 대신 AI 패턴 고쳐 쓰기 | AIMarker
+title: AI 탐지 우회, 꼼수 대신 AI 패턴 고쳐 쓰기 | AIMarker
 ogtitle: AI 탐지 우회 꼼수는 흔적을 남깁니다 | AIMarker
-desc: AI 검사기 우회 · AI 탐지 우회 방법을 찾고 있다면 먼저 보세요. 글자 사이 공백 · 특수 문자 끼우기, 번역기 왕복, 영어용 우회 도구는 글을 망치거나 검사를 피하려 한 흔적으로 보이기 쉽고, 해외에서는 휴머나이저로 비튼 글을 잡아내는 탐지 기능도 나왔습니다. AI 탐지기가 보는 AI 패턴과, 내 글에서 그 패턴을 줄이는 고쳐 쓰기 순서를 정리했습니다.
-crumb: AI 검사기 우회
+desc: AI 탐지 우회 · AI 검사기 우회 방법을 찾고 있다면 먼저 보세요. 글자 사이 공백 · 특수 문자 끼우기, 번역기 왕복, 영어용 우회 도구는 글을 망치거나 검사를 피하려 한 흔적으로 보이기 쉽고, 해외에서는 휴머나이저로 비튼 글을 잡아내는 탐지 기능도 나왔습니다. 제출처 규칙별로 할 일, 우회 대신 할 수 있는 방법, 내 글에서 AI 패턴을 줄이는 고쳐 쓰기 순서를 정리했습니다.
+crumb: AI 탐지 우회
 crumb_parent: humanize/|AI 휴머나이징
-updated: 2026-11-21
+updated: 2026-11-23
 scripts: assets/textin.js, assets/humanize.js
 styles: assets/humanize.css, assets/hz12.css
 selflabel: footer
@@ -18,8 +18,8 @@ selflabel: footer
     <div class="hz15-grid" id="hzHero">
       <div class="hz15-l" id="tool">
         <div class="hz12-hd hz15-hd">
-          <p class="hz12-k">{{ico:fingerprint}}AI 검사기 우회 · AI 탐지 우회 · AI 탐지기 우회</p>
-          <h1 class="hz12-h1" id="h1">AI 검사기 우회,<br>꼼수는 <span class="hz13-mk">흔적</span>을 남깁니다</h1>
+          <p class="hz12-k">{{ico:fingerprint}}AI 탐지 우회 · AI 검사기 우회 · AI 탐지기 우회</p>
+          <h1 class="hz12-h1" id="h1">AI 탐지 우회,<br>꼼수는 <span class="hz13-mk">흔적</span>을 남깁니다</h1>
           <p class="lp-sub">탐지기를 속이려고 글을 비틀면 글이 망가지고 흔적이 남습니다. AI 패턴이 남은 문장을 찾아 내 말로 고쳐 쓰세요.</p>
         </div>
 {{inc:hz-tool.inc}}
@@ -40,7 +40,7 @@ selflabel: footer
       <h2 class="k-h2" id="ansT">AI 검사기 우회, 한 줄로</h2>
       <p class="k-lead">AI 검사기를 속이는 꼼수(공백 · 특수 문자 끼우기, 번역기 왕복, 영어용 우회 도구)는 글을 망치거나 검사를 피하려 한 흔적으로 보이기 쉽습니다. AI 탐지기는 단어가 아니라 문장의 짜임, 연결어, 수식 습관 같은 AI 패턴을 봅니다. 내 글에서 AI 패턴을 줄이려면 AI처럼 읽히는 문장을 찾아 내 경험과 자료로 다시 쓰고, AI 말버릇을 고치고, 내기 전에 다시 확인하세요. AI 사용이 금지된 과제라면 AI를 사용하지 않는 것이 답입니다.</p>
       <ul class="lp-pts"><li>해외에서는 휴머나이저로 비튼 글을 따로 잡아내는 탐지 기능도 나왔습니다(Turnitin, 영어 글 대상, THE Journal 2025.9.2 보도).</li><li>AIMarker는 AI 사용을 숨기는 도구가 아닙니다. AI 말버릇을 사람 문장으로 바꾸고, 뜻과 사실을 지키지 못하는 문장은 원문 그대로 둡니다.</li><li>직접 쓴 글이 AI로 나와 걱정이라면 우회보다 초안과 수정 이력이 힘이 됩니다. <a class="k-a" href="{{root}}false-positive/">직접 쓴 글이 AI로 나왔을 때</a></li></ul>
-      <p class="lp-upd"><time datetime="2026-11-21">2026년 11월 21일</time> 업데이트 · AIMarker 편집</p>
+      <p class="lp-upd"><time datetime="2026-11-23">2026년 11월 23일</time> 업데이트 · AIMarker 편집</p>
     </div>
   </div>
 </section>
@@ -83,6 +83,46 @@ selflabel: footer
   </div>
 </section>
 
+<section class="k-sec" id="rules" aria-labelledby="ruT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="ruT">AI 탐지 우회를 찾기 전에, 제출처 규칙부터</h2>
+      <p class="k-lead">우회를 찾는 까닭은 대개 넷 가운데 하나입니다. 상황마다 할 일이 다릅니다.</p>
+    </div>
+    <div class="k-tbl-w">
+    <table class="lp-tbl">
+      <thead><tr><th scope="col">상황</th><th scope="col">할 일</th><th scope="col">하지 말 것</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">AI 사용이 금지된 과제 · 시험</th><td>AI를 사용하지 않고 직접 씁니다. 이미 사용했다면 담당자에게 먼저 말하는 편이 낫습니다.</td><td>우회 도구로 AI 사용을 감추기</td></tr>
+        <tr><th scope="row">AI 사용은 허용, 표기는 요구</th><td>어떤 AI를 어디에 사용했는지 밝히고(<a class="k-a" href="{{root}}proof/">AI 활용 증빙서</a>), 문장은 내 말로 다듬습니다.</td><td>표기 없이 내기</td></tr>
+        <tr><th scope="row">규칙이 없거나 모름</th><td>담당 교수나 담당자에게 먼저 묻고, AI 말버릇을 줄여 읽기 좋은 글로 다듬습니다.</td><td>글자를 비틀어 검사만 피하기</td></tr>
+        <tr><th scope="row">직접 썼는데 AI로 나옴</th><td>초안 · 메모 · 수정 이력을 모으고, 표시된 문장의 말버릇만 다듬습니다.</td><td>멀쩡한 글을 통째로 비틀기</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="instead" aria-labelledby="isT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="isT">AI 탐지 우회 대신 할 수 있는 네 가지</h2>
+      <p class="k-lead">탐지기를 피하는 것보다 글이 내 글다워지는 것이 오래 갑니다. 읽는 사람이 먼저 알아채는 것도 막을 수 있습니다.</p>
+    </div>
+    <ol class="lp-tips">
+      <li><b>AI는 초안까지만 맡기세요.</b><span>자료 찾기, 목차 잡기, 첫 초안까지만 AI에게 맡기고, 본문은 내 자료로 다시 씁니다.</span></li>
+      <li><b>내 자료를 넣으세요.</b><span>직접 잰 숫자, 읽은 자료의 쪽수, 수업에서 들은 사례, 내가 겪은 일은 AI가 모르는 내용입니다. 이런 문장은 탐지기에도 사람 문장으로 읽힙니다.</span></li>
+      <li><b>사용한 범위를 밝히세요.</b><span>허용된 곳에서는 사용 범위를 밝히는 편이 숨기는 것보다 안전합니다. 나중에 질문을 받아도 설명할 근거가 남습니다.</span></li>
+      <li><b>말버릇은 도구로 정리하세요.</b><span>번역투, 연결어, 빈말 같은 말버릇은 휴머나이징으로 정리하고, 뜻과 사실이 그대로인지 원문과 나란히 확인합니다.</span></li>
+    </ol>
+    <ul class="lp-ba" aria-label="대화창 흔적을 고친 예" style="margin-top:20px">
+      <li><b>대화창 흔적이 남은 후기 글</b><p class="bf"><mark>물론입니다! 아래는</mark> 성수동 카페 방문 후기입니다. <mark>## 분위기</mark> <mark>**넓은 공간**</mark>: 카페는 <mark>다양한</mark> 좌석을 제공하고 있습니다.</p><p class="af">토요일 오후 세 시쯤 성수동 카페에 갔다. 2층 창가 자리가 비어 있어 거기 앉았는데, 자리마다 콘센트가 있어 노트북을 오래 켜 두기 좋았다.</p><span>'물론입니다', 소제목 기호(##), 굵은 글씨(**)는 대화창에서 복사한 흔적입니다. 지우고 문단으로 다시 쓰세요. AIMarker 판정 기준은 이런 흔적을 부적합 근거로 봅니다.</span></li>
+      <li><b>번역기 왕복을 거친 문장</b><p class="bf">이 카페는 <mark>넓은 공간을 가지고 있으며</mark> 고객들<mark>에게 있어서</mark> 편안한 경험을 <mark>제공합니다</mark>.</p><p class="af">자리가 넓어서 오래 앉아 있어도 눈치가 보이지 않았다.</p><span>번역기를 두 번 거치면 '~을 가지고 있다', '~에게 있어서' 같은 번역투가 짙어집니다. 우회는커녕 AI 패턴이 늘어납니다.</span></li>
+    </ul>
+    <p class="lp-note">예시는 설명을 위해 만든 글입니다.</p>
+  </div>
+</section>
+
 {{inc:lp-pat.inc}}
 
 {{inc:lp-steps.inc}}
@@ -93,6 +133,8 @@ selflabel: footer
   <div class="k-wrap">
     <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
     <div class="k-faq">
+      <details><summary>AI 탐지 우회와 휴머나이징은 어떻게 다른가요?</summary><p>우회는 탐지기를 속이려고 글을 비트는 것이고, 휴머나이징은 AI 말버릇을 사람 문장으로 바꿔 글을 읽기 좋게 만드는 것입니다. 우회한 글은 조사가 어긋나고 뜻이 바뀌기 쉽고, AIMarker 휴머나이징은 뜻과 사실을 지키지 못하는 문장을 원문 그대로 둡니다. 어느 쪽이든 제출처의 AI 사용 규칙이 먼저입니다.</p></details>
+      <details><summary>AI 탐지 우회 사이트에 글을 넣어도 괜찮을까요?</summary><p>서비스마다 다릅니다. 글을 저장하는지, 어디로 보내는지 먼저 확인하세요. AIMarker는 검사 · 휴머나이징 요청을 처리한 뒤 버리고 글 본문을 저장하지 않으며, 한글 · 워드 · PDF 파일은 브라우저 안에서 글만 꺼내고 파일은 서버로 보내지 않습니다.</p></details>
       <details><summary>AI 탐지 우회 프로그램을 사용하면 안 걸리나요?</summary><p>탐지기도 계속 바뀝니다. 해외에서는 휴머나이저로 비튼 글을 따로 잡아내는 탐지 기능도 나왔습니다(Turnitin, 영어 글 대상, THE Journal 2025.9.2 보도). 글을 비틀면 조사가 어긋나고 뜻이 바뀌어, 탐지기보다 읽는 사람이 먼저 알아채기도 합니다. 내 글의 AI 패턴을 줄이려면 AI처럼 읽히는 문장을 내 말로 다시 쓰세요.</p></details>
       <details><summary>AIMarker 휴머나이징은 우회 도구인가요?</summary><p>아닙니다. 탐지기를 속이려고 글을 비트는 것이 아니라, AI 말버릇(번역투, 상투적 연결어, 빈말 수식)을 사람 문장으로 바꿉니다. 바꾼 문장은 숫자 · 이름 · 인용 · 부정 · 주장의 세기가 바뀌지 않았는지 검사하고, 지키지 못하는 문장은 원문 그대로 둡니다. AI 사용을 밝혀야 하는 곳이라면 <a class="k-a" href="{{root}}proof/">AI 활용 증빙서</a>를 함께 내세요.</p></details>
       <details><summary>GPT킬러 우회도 같은 이야기인가요?</summary><p>같습니다. GPT킬러 같은 한국어 탐지기도 글이 AI가 쓴 글과 얼마나 닮았는지를 문장 단위로 봅니다. 꼼수보다 AI로 잡힌 문장을 내 말로 다시 쓰는 편이 낫습니다. 순서는 <a class="k-a" href="{{root}}gptkiller/">지피티킬러 낮추기</a>에 정리했습니다.</p></details>
