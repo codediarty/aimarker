@@ -7,7 +7,7 @@ ogtitle: 과제 내기 전에, AI 작성률부터 확인하세요 | AIMarker
 desc: 레포트 · 논문 AI 검사: 대학은 과제와 레포트를 AI 탐지기로 검사합니다(교수자 검사 문서량 1년 새 75.9% 증가, 서울대 한 과목 62명 중 36명 AI 사용 확인). 한글 · 워드 · PDF 파일을 올리면 AI 작성률과 AI 패턴이 남은 문장을 바로 보여 드리고, 휴머나이징은 인용 · 각주 · 숫자는 그대로 둔 채 AI 말버릇만 다듬어 같은 형식으로 돌려드립니다. 3,000자 레포트 휴머나이징 12토큰, 월 구독 없이 라이트 9,900원부터.
 crumb: 레포트 · 논문 AI 검사
 crumb_parent: humanize/|AI 휴머나이징
-updated: 2026-11-21
+updated: 2026-11-23
 scripts: assets/textin.js, assets/humanize.js
 styles: assets/humanize.css, assets/hz12.css
 selflabel: footer
@@ -40,7 +40,7 @@ selflabel: footer
       <h2 class="k-h2" id="ansT">레포트 AI 검사, 대학은 어떻게 하나요?</h2>
       <p class="k-lead">교수자는 과제를 AI 탐지기로 검사하고, 결과는 성적과 징계로 이어집니다. 탐지기는 문장마다 AI 패턴을 보므로 참고 문헌을 바꾸거나 단어를 바꾸는 것으로는 내려가지 않습니다. AIMarker는 같은 패턴을 찾아 문장에 표시하고, 인용 · 각주 · 숫자는 그대로 둔 채 그 문장만 사람 문장으로 바꿉니다.</p>
       <ul class="lp-pts"><li>서울대 한 전공과목에서 62명 중 36명이 과제에 AI를 사용한 것으로 확인됐고, 자진 신고한 학생은 그 과제 0점, 적발된 학생은 D- 학점을 받았습니다(세계일보 2026.7.30).</li><li>국내 한 교수자 평가용 서비스의 AI 검사 문서량은 1년 새 75.9% 늘어 한 달 57만 7천 건이었습니다(유니콘팩토리 2026.5.26).</li><li>3,000자 레포트 한 편이면 검사는 무료, 휴머나이징 12토큰입니다(모든 문장 위치까지 보는 AI 작성률 결과서는 6토큰)(월 구독 없이 한 번 충전).</li></ul>
-      <p class="lp-upd"><time datetime="2026-11-21">2026년 11월 21일</time> 업데이트 · AIMarker 편집</p>
+      <p class="lp-upd"><time datetime="2026-11-23">2026년 11월 23일</time> 업데이트 · AIMarker 편집</p>
     </div>
   </div>
 </section>
@@ -60,6 +60,60 @@ selflabel: footer
   </div>
 </section>
 
+<section class="k-sec" id="where" aria-labelledby="whT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="whT">레포트에서 AI 패턴이 몰리는 곳</h2>
+      <p class="k-lead">레포트 한 편을 검사하면 AI 패턴은 고르게 퍼지지 않고 몇 군데에 몰립니다. 자리마다 흔한 문장과 바꾸는 법입니다.</p>
+    </div>
+    <div class="k-tbl-w">
+    <table class="lp-tbl">
+      <thead><tr><th scope="col">자리</th><th scope="col">흔한 문장</th><th scope="col">바꾸는 법</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">서론 첫 문단</th><td>현대 사회에서 ○○은 점점 더 중요해지고 있다.</td><td>과제가 묻는 질문을 첫 문장에 바로 쓰거나, 수업에서 다룬 사례 하나로 시작합니다.</td></tr>
+        <tr><th scope="row">개념 정리</th><td>○○이란 ~을 의미하며, 이는 ~라는 점에서 중요하다.</td><td>교재나 논문의 정의를 따옴표로 인용하고 출처를 답니다. 내 말로 풀 때는 예를 하나 붙입니다.</td></tr>
+        <tr><th scope="row">사례 나열</th><td>첫째, ~. 둘째, ~. 셋째, ~.</td><td>사례를 둘로 줄이고, 각 사례가 내 주장과 어떻게 이어지는지 씁니다.</td></tr>
+        <tr><th scope="row">결론</th><td>결론적으로 ~라고 할 수 있으며, 앞으로 더 많은 연구가 필요하다.</td><td>서론의 질문에 대한 내 답과, 이번 과제에서 다루지 못한 점 하나를 씁니다.</td></tr>
+        <tr><th scope="row">자료 요약</th><td>~의 연구에 따르면 ~것으로 나타났다. (출처 없이 되풀이)</td><td>누가, 언제, 어떤 자료로 보였는지 밝히고 쪽수를 적습니다.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="k-sec" id="rules" aria-labelledby="ruT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="ruT">내기 전에 AI 사용 규칙부터 확인하세요</h2>
+      <p class="k-lead">AI를 사용해도 되는지, 어디까지 되는지는 과목과 학교마다 다릅니다. 고쳐 쓰기보다 먼저 확인할 일입니다.</p>
+    </div>
+    <ol class="lp-tips">
+      <li><b>강의계획서와 과제 공지</b><span>AI 사용을 금지하는지, 자료 찾기나 맞춤법 고침까지는 허용하는지 적혀 있는 경우가 많습니다.</span></li>
+      <li><b>학교의 생성형 AI 지침</b><span>여러 대학이 누리집이나 교수학습 지원 부서에 생성형 AI 활용 지침을 올려 두었습니다. 학과 지침이 따로 있는지도 보세요.</span></li>
+      <li><b>밝히는 법</b><span>AI 사용이 허용된 과제라도 어떤 AI를 어디에 사용했는지 적어 내라고 하는 곳이 있습니다. <a class="k-a" href="{{root}}proof/">AI 활용 증빙서</a>로 정리해 함께 내세요.</span></li>
+      <li><b>모르면 여쭙기</b><span>규칙이 없거나 애매하면 내기 전에 교수자나 조교에게 물어보세요. 물어본 메일은 남겨 두세요.</span></li>
+      <li><b>금지된 과제라면</b><span>AI가 쓴 글을 다듬어 내는 것도 규칙 위반이 될 수 있습니다. 이때 AIMarker는 직접 쓴 글에서 AI처럼 읽히는 문장을 확인하는 데만 사용하세요.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="k-sec" id="ac-check" aria-labelledby="acT">
+  <div class="k-wrap">
+    <div class="k-head">
+      <h2 class="k-h2" id="acT">레포트 제출 전 점검표</h2>
+      <p class="k-lead">AI 검사 말고도 내기 전에 손볼 곳이 있습니다. 위에서부터 차례로 확인하세요.</p>
+    </div>
+    <ol class="lp-tips">
+      <li><b>인용과 출처가 짝을 이루나요?</b><span>본문에 인용한 자료가 참고 문헌 목록에 모두 있는지, 목록의 자료가 본문에 모두 쓰였는지 맞춰 봅니다.</span></li>
+      <li><b>참고 문헌이 실제로 있나요?</b><span>AI의 도움을 받아 찾은 자료는 RISS, KCI, 구글 학술검색에서 제목으로 찾아 실제로 있는지 확인합니다.</span></li>
+      <li><b>직접 인용에 따옴표가 있나요?</b><span>다른 글의 문장을 그대로 가져왔다면 따옴표와 쪽수를 붙입니다. 표절 검사와 AI 검사는 따로 봅니다.</span></li>
+      <li><b>서론의 질문에 결론이 답하나요?</b><span>서론에서 던진 질문과 결론의 답이 어긋나면 글이 틀에 맞춰 쓴 것처럼 읽힙니다.</span></li>
+      <li><b>분량과 형식이 맞나요?</b><span>글자 수(공백 포함 여부), 글꼴, 쪽 번호, 파일 형식(HWP · DOCX · PDF)을 과제 공지와 맞춥니다.</span></li>
+      <li><b>AI 패턴이 남았나요?</b><span>마지막으로 본문을 검사해 AI 패턴이 남은 문장을 확인합니다. 고친 뒤에도 같은 기준으로 다시 확인합니다.</span></li>
+    </ol>
+  </div>
+</section>
+
 {{inc:lp-pat.inc}}
 
 {{inc:lp-steps.inc}}
@@ -70,6 +124,9 @@ selflabel: footer
   <div class="k-wrap">
     <div class="k-head"><h2 class="k-h2" id="fTitle">자주 묻는 질문</h2></div>
     <div class="k-faq">
+      <details><summary>조별 과제는 어떻게 검사하나요?</summary><p>맡은 사람별로 나눠 검사하면 어느 부분에 AI 패턴이 남았는지 보입니다. 합친 뒤에는 말투(한다체 · 습니다체)와 용어를 맞추고, 전체를 한 번 더 검사하세요.</p></details>
+      <details><summary>영어 자료를 번역해 정리한 부분도 AI로 나오나요?</summary><p>번역기를 사용했거나 영어 문장 짜임을 그대로 옮기면 번역투가 많아져 AI 패턴으로 잡히기 쉽습니다. 자료의 핵심만 내 말로 다시 쓰고, 그대로 옮길 문장은 따옴표로 인용하세요. 번역기를 사용했다면 과제 규칙에 따라 밝히세요.</p></details>
+      <details><summary>교수님이 AI 사용을 의심하시면 어떻게 하나요?</summary><p>글을 쓴 과정(초안, 수정 기록, 참고 자료)을 보여 드리고 내용을 직접 설명하세요. 자세한 순서는 <a class="k-a" href="{{root}}false-positive/">직접 쓴 글이 AI로 나왔을 때</a>에 정리했습니다.</p></details>
       <details><summary>학교가 정한 탐지기가 따로 있으면요?</summary><p>학교가 정한 탐지기가 있으면 그 결과가 기준입니다. AIMarker는 판정 기준(AMJ-1.5)을 공개하고 같은 글은 언제나 같은 결과가 나오니, 제출 전에 AI 패턴이 남은 문장을 찾아 다듬은 뒤 학교 탐지기로 한 번 더 확인하세요.</p></details>
       <details><summary>인용과 각주가 깨지지 않나요?</summary><p>워드(DOCX)와 한글(HWP, HWPX)은 바뀐 문단만 갈아 끼우고 각주 번호 · 그림 · 표 · 탭 · 링크 · 인용 필드 자리를 지킵니다. 필드가 든 문단은 원래 글을 그대로 두고 알려 드립니다. PDF는 글자 자리가 고정된 형식이라 그림과 표 배치는 옮기지 못하고, 다듬은 글을 새로 조판한 PDF로 돌려드립니다.</p></details>
       <details><summary>카피킬러 결과지의 AI 작성률이 높게 나왔어요.</summary><p>카피킬러 결과지는 표절률과 AI 작성률을 따로 보여 줍니다. 표절률은 인용 표시와 출처로 정리하고, AI 작성률은 'AI 의심' 문장을 내 말로 다시 써야 내려갑니다. 순서는 <a class="k-a" href="{{root}}copykiller/">카피킬러 AI 작성률 낮추기</a>에 정리했습니다. AIMarker는 카피킬러와 관계가 없습니다.</p></details>
