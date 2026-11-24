@@ -1091,3 +1091,42 @@ html body .hz7-dlg-b .hz19-auto .ico { margin-top: 2px; padding: 2px; border-rad
   html body .hz7-dlg.hz18-dlg .hz18-packs label.sm span { padding: 9px 12px 8px; }
   html body .hz7-dlg.hz18-dlg .hz18-packs label.sm .tk { font-size: 18px; }
 }
+
+/* 13.38(2026.11.24 대표 '좀 너무 간단해서 그래픽이라던지 애니메이션이라던지 좀 더 개선해봐'): 진행 화면. 문서 그림(훑는 빛이 지나가면 AI 패턴 줄이 바뀜) · 네 단계 · 조각 점 · 반짝이는 막대. 예전 .hz7-prog 규칙 위에 덮어씀 */
+.hz38{position:relative;overflow:hidden;gap:14px;padding:22px 22px 18px;background:linear-gradient(180deg,#fff 0,var(--ds-blue-50,#f4f7ff) 100%);border:1px solid var(--ds-line,#e3e8f0);border-radius:16px;box-shadow:0 10px 30px -18px rgba(23,59,130,.35)}
+.hz38::before{content:"";position:absolute;top:-120px;right:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(closest-side,rgba(59,130,246,.16),transparent);animation:hz38glow 6s ease-in-out infinite;pointer-events:none}
+.hz38-top{position:relative;display:flex;gap:20px;align-items:center}
+.hz38-doc{position:relative;flex:0 0 132px;height:112px;padding:14px 12px;border-radius:12px;background:#fff;border:1px solid var(--ds-line,#e3e8f0);box-shadow:0 6px 18px -10px rgba(15,23,42,.35);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.hz38-ln{position:relative;display:block;height:7px;width:var(--w);border-radius:4px;background:#e8edf5;overflow:hidden}
+.hz38-ln::after{content:"";position:absolute;inset:0;border-radius:inherit;background-color:var(--ai,#e5484d);opacity:.5;animation:hz38fix 2.4s linear infinite;animation-delay:calc(var(--i) * .24s)}
+.hz38-chk .hz38-ln::after{background-color:#c9d3e3;animation-name:hz38scan}
+.hz38-chk .hz38-ln.f::after{animation-name:hz38flag}
+.hz38-beam{position:absolute;left:0;right:0;top:0;height:22px;background:linear-gradient(180deg,transparent,rgba(59,130,246,.26) 42%,rgba(59,130,246,.6) 50%,rgba(59,130,246,.26) 58%,transparent);animation:hz38beam 2.4s linear infinite;pointer-events:none}
+.hz38-tag{position:absolute;right:6px;bottom:6px;display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:999px;background:var(--ds-blue-600,#2563eb);color:#fff;font-size:10.5px;font-weight:650;line-height:1.5;letter-spacing:-.01em}
+.hz38-tag .dot{width:6px;height:6px;border-radius:50%;background:#fff;animation:hz38blink 1.2s ease-in-out infinite}
+.hz38-tx{position:relative;min-width:0;display:grid;gap:8px}
+.hz38-tx b{font-size:17px;font-weight:700;line-height:1.4;color:var(--ds-ink,#0f172a);letter-spacing:-.01em}
+.hz38-tx p{margin:0;font-size:13.5px;line-height:1.65;color:var(--ds-ink-2,#475569)}
+.hz38-st{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 0;padding:0;list-style:none}
+.hz38-st li{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 6px;border-radius:999px;background:#fff;border:1px solid var(--ds-line,#e3e8f0);font-size:12.5px;font-weight:600;line-height:1.3;color:var(--ds-mist,#64748b);animation:hz38step 4.8s ease-in-out infinite;animation-delay:calc(var(--d) * 1.2s)}
+.hz38-st li span{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#eef2f8;font-size:11px;font-weight:700;color:inherit}
+.hz38>i{position:relative;height:8px;border-radius:999px;background:#e6ebf3}
+.hz38>i em{position:relative;overflow:hidden;border-radius:999px;background:linear-gradient(90deg,var(--ds-blue-600,#2563eb),#38bdf8)}
+.hz38>i em::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);transform:translateX(-100%);animation:hz38sh 1.4s ease-in-out infinite}
+.hz38-ft{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap}
+.hz38-dots{display:flex;flex-wrap:wrap;gap:4px}
+.hz38-dots span{width:9px;height:9px;border-radius:50%;background:#dde4ef;transition:background-color .3s}
+.hz38-dots span.on{background:var(--ds-blue-600,#2563eb)}
+.hz38-dots span.nx{background:#93c5fd;animation:hz38blink 1s ease-in-out infinite}
+.hz38-pc{margin-left:auto;font-size:12.5px;font-weight:650;color:var(--ds-blue-600,#2563eb);font-variant-numeric:tabular-nums}
+.hz38-nt{position:relative;font-size:12px;line-height:1.5;color:var(--ds-mist,#64748b)}
+@keyframes hz38beam{0%{transform:translateY(-22px);opacity:0}6%,72%{opacity:1}80%,100%{transform:translateY(112px);opacity:0}}
+@keyframes hz38fix{0%,14%{background-color:var(--ai,#e5484d);opacity:.5}20%,86%{background-color:var(--ds-blue-600,#2563eb);opacity:.85}100%{background-color:var(--ai,#e5484d);opacity:.5}}
+@keyframes hz38scan{0%,14%{background-color:#c9d3e3;opacity:.6}20%,86%{background-color:#86efac;opacity:.75}100%{background-color:#c9d3e3;opacity:.6}}
+@keyframes hz38flag{0%,14%{background-color:#c9d3e3;opacity:.6}20%,86%{background-color:var(--ai,#e5484d);opacity:.8}100%{background-color:#c9d3e3;opacity:.6}}
+@keyframes hz38step{0%,22%{color:var(--ds-blue-600,#2563eb);border-color:var(--ds-blue-600,#2563eb);background:var(--ds-blue-50,#eef4ff);box-shadow:0 0 0 3px rgba(37,99,235,.12)}27%,100%{color:var(--ds-mist,#64748b);border-color:var(--ds-line,#e3e8f0);background:#fff;box-shadow:none}}
+@keyframes hz38sh{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes hz38blink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes hz38glow{0%,100%{transform:translate(0,0) scale(1);opacity:.9}50%{transform:translate(-30px,20px) scale(1.12);opacity:.6}}
+@media (max-width:560px){.hz38{padding:18px 16px 14px}.hz38-top{gap:14px;align-items:flex-start}.hz38-doc{flex-basis:86px;height:88px;padding:11px 9px}.hz38-ln{height:5px}.hz38-tag{display:none}.hz38-tx b{font-size:15.5px}.hz38-tx p{font-size:13px}.hz38-st li{font-size:11.5px;padding:4px 8px 4px 5px}}
+@media (prefers-reduced-motion:reduce){.hz38 *,.hz38::before,.hz38 *::after{animation:none!important}.hz38-ln::after{background-color:var(--ds-blue-600,#2563eb);opacity:.7}.hz38-chk .hz38-ln::after{background-color:#c9d3e3}.hz38-chk .hz38-ln.f::after{background-color:var(--ai,#e5484d)}.hz38-beam{display:none}}

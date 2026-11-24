@@ -66,7 +66,9 @@
   var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr', pl2: 'pl', pr2: 'pr', mx2: 'mx' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
   var SRV_PID = { pl: 'pl2', pr: 'pr2', mx: 'mx2' };   // 13.31 서버의 새 상품 번호(토큰 350 · 1,000 · 2,000). 예전 pl · pr · mx 는 서버에서 legacy(예전 코드의 환불 셈을 지키려고 번호를 새로 둠). 바로 결제(am.buy)는 새 번호로
   var CR0 = { unit: { per: 100, cr: 0.3, min: 1.5 }, pro: { per: 100, cr: 0.6, min: 3 } }, ASK = Infinity;   // 11.23 1.5배(새로 산 코드 값, 예전 코드는 서버 rm 2/3 을 곱함) · 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음 · 13.32 부터 묻지 않음(단추에 토큰 숫자가 적혀 있어 누르면 바로 실행)
+  var HUM_L = 'AI 작성률을 낮추는 중입니다.', HUM_SUB = 'AI 특유의 문장 패턴을 정밀하게 분석하고, 원문의 의미를 최대한 유지하면서 AI 특유의 패턴을 선별적으로 제거하는 휴머나이징 기술을 적용하고 있습니다.';   // 13.38 대표 문구(2026.11.24 20:05)
   var FREE_FIRST = false;   // 13.36 → 13.36b(2026.11.24 17:00 대표 '처음오는 손님한테는 그렇게 보이면 문제 없지 한번 결제해서 토큰 되어있는사람은 방금전처럼 … 수정해줘'): 코드가 없는 손님은 원래대로 'AI 작성률 무료 검사' 하나, 토큰 코드가 있는 사람은 13.30 두 단추(결과서 · 휴머나이징, 토큰 숫자) 화면. true 로 두면 코드가 있어도 무료 검사 하나
+  var SUM_EDIT = false;   // 13.37(2026.11.24 20:00 대표): 검사 결과 위 줄은 '뒤로' + 'AI 작성률 낮추기'. true 면 예전 '글 고치기' · '새 글'
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var n2 = function (n) { return Number(n || 0).toLocaleString('ko-KR'); };
@@ -187,15 +189,30 @@
     [].forEach.call(stepsEl.querySelectorAll('[data-step]'), function (li) { var k = +li.getAttribute('data-step'); li.classList.toggle('done', k < n || !!all); li.classList.toggle('on', k === n && !all); if (k === n && !all) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current'); });
   }
   function fileLabel() { var s = S.src; return s && (!s.edited || srcLike(cur())) ? s.name + (s.applied || cur() !== s.text ? ' · 고친 글' : '') : '붙여 넣은 글'; }
-  function collapse(on) {   // 결과가 나오면 넣은 글은 한 줄로 접어 결과가 먼저 보이게
+  function sumActs(noHum) {   // 13.37 검사 결과 위 줄 단추: '뒤로'(사이트 안 이전 화면) + 'AI 작성률 낮추기'(글 전체 휴머나이징과 같음)
+    var h = '<button type="button" class="k-btn k-btn-l k-btn-s hz37-back" data-act="sumback">' + ico('back') + '<span>뒤로</span></button>';
+    if (noHum || S.fx || !S.res) return h;
+    var t = Object.keys(S.edits).length ? buildText() : cur(), c = S.pass && isCr() ? ' · ' + tk(humCost(chunk(t).parts)) + '토큰' : '';
+    return h + '<button type="button" class="k-btn k-btn-p k-btn-s hz37-hum" data-act="sumhum">' + ico('pen') + '<span>AI 작성률 낮추기' + c + '</span></button>';
+  }
+  function collapse(on, noHum) {   // 결과가 나오면 넣은 글은 한 줄로 접어 결과가 먼저 보이게. 13.37 noHum: 처리 중 · 다듬은 결과에서는 'AI 작성률 낮추기'를 빼고 '뒤로'만
     if (!sumEl || !inEl) return;
     if (on) {
       var s = S.src && (!S.src.edited || srcLike(cur())) ? S.src : null;
-      sumEl.innerHTML = '<span class="ic">' + ico('file') + '</span><span class="nm"><b>' + esc(fileLabel()) + '</b><small>' + (s ? esc(s.kindKo) + ' · ' : '') + n2(cur().length) + '자</small></span><span class="sp"></span><button type="button" class="k-btn k-btn-l k-btn-s" data-act="edit">글 고치기</button><button type="button" class="k-btn k-btn-l k-btn-s" data-act="new">새 글</button>';
+      sumEl.innerHTML = '<span class="ic">' + ico('file') + '</span><span class="nm"><b>' + esc(fileLabel()) + '</b><small>' + (s ? esc(s.kindKo) + ' · ' : '') + n2(cur().length) + '자</small></span><span class="sp"></span>' + (SUM_EDIT ? '<button type="button" class="k-btn k-btn-l k-btn-s" data-act="edit">글 고치기</button><button type="button" class="k-btn k-btn-l k-btn-s" data-act="new">새 글</button>' : sumActs(noHum));
       sumEl.hidden = false; inEl.hidden = true; box.classList.add('folded');
     } else { sumEl.hidden = true; inEl.hidden = false; box.classList.remove('folded'); }
   }
   box.addEventListener('click', function (e) {
+    var sb = e.target.closest('[data-act="sumhum"], [data-act="sumback"]');   // 13.37
+    if (sb && box.contains(sb)) {
+      if (sb.getAttribute('data-act') === 'sumhum') { startHum(); return; }
+      if (HV.on && history.state && history.state.hz) { history.back(); return; }   // 다듬은 결과 → 검사 결과 → 글 넣기(13.32 뒤로가기와 같음)
+      if (S.busy) return;
+      viewIn(); histSet(null);
+      try { box.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' }); } catch (x3) { /* 그대로 */ }
+      return;
+    }
     var b = e.target.closest('[data-act="edit"], [data-act="new"]'); if (!b || !box.contains(b)) return;
     collapse(false);
     if (b.getAttribute('data-act') === 'new') { ta.value = ''; S.src = null; renderChip(); out.innerHTML = ''; S.res = null; S.fx = null; box.classList.remove('has-out', 'stale'); setStep(1); count(); histSet(null); try { window.dispatchEvent(new Event('am:hz-out')); } catch (x0) { /* 예전 브라우저 */ } }
@@ -207,7 +224,7 @@
      넣은 글은 한 줄로 접고 진행 단계부터 화면 위쪽에. 예전에는 긴 결과가 짧은 확인 상자 · 진행 막대로 바뀌며
      화면이 아래 구획으로 밀려 다른 곳으로 간 것처럼 보였음 */
   function runShow(kind) {
-    collapse(true); outShown(); histPush(kind);
+    collapse(true, true); outShown(); histPush(kind);
     try { var tgt = stepsEl || out, r = tgt.getBoundingClientRect(); if (r.top < 0 || r.top > window.innerHeight * .3) tgt.scrollIntoView({ behavior: 'auto', block: 'start' }); } catch (e) { /* 그대로 */ }
   }
   /* 13.32 뒤로가기: 검사 결과 · 다듬은 결과마다 방문 기록을 하나씩 남겨, 뒤로가기를 누르면 사이트를 나가지 않고
@@ -503,12 +520,24 @@
 
   /* ---------- 진행 · 오류 ---------- */
   function setBusy(on) { S.busy = on; btnC.disabled = on; btnP.disabled = on; }
-  function prog(label, i, n, sub) {
+  /* 13.38(2026.11.24 대표 '좀 너무 간단해서 그래픽이라던지 애니메이션이라던지 좀 더 개선해봐'): 진행 화면에 문서 그림(훑는 빛이 지나가면 AI 패턴 줄이 바뀜) ·
+     네 단계 · 조각 점 · 반짝이는 막대. 숫자(i / n)와 막대는 실제로 끝난 조각 수 그대로. 움직임 줄이기 설정이면 멈춘 그림 */
+  var P38 = { hum: ['문장 패턴 분석', 'AI 패턴 선별', '사람 말투로 다듬기', '의미 · 숫자 확인'], chk: ['문장 나누기', '앞뒤 문맥 살피기', 'AI 패턴 판정', '결과 정리'] };
+  function prog(label, i, n, sub, nt) {
     var pct = n ? Math.round(i / n * 100) : 30;
     var el = $('.hz7-prog', out);
-    if (!el) { out.innerHTML = '<div class="hz7-prog"><b></b><i><em></em></i><p>' + (sub || '문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고, AIMarker 판정 기준 1.6으로 판정합니다. 표지 · 목차 · 참고문헌 같은 줄은 빼고 본문 문장만 셉니다. 같은 글은 언제나 같은 결과가 나옵니다.') + '</p></div>'; el = $('.hz7-prog', out); stat(label); }
-    $('b', el).textContent = label + (n > 1 ? ' ' + i + ' / ' + n : ''); $('em', el).style.width = Math.max(6, pct) + '%';
+    if (!el || !$('em', el)) {
+      var k = /낮추|다듬|말투/.test(label) ? 'hum' : 'chk', W = [92, 74, 86, 60, 81, 48];
+      var doc = '<div class="hz38-doc" aria-hidden="true">' + W.map(function (w, j) { return '<span class="hz38-ln' + (j % 3 === 1 ? ' f' : '') + '" style="--i:' + j + ';--w:' + w + '%"></span>'; }).join('') + '<span class="hz38-beam"></span><span class="hz38-tag"><span class="dot"></span>' + (k === 'hum' ? 'AI 패턴 제거' : 'AI 패턴 탐지') + '</span></div>';
+      var st = P38[k].map(function (x, j) { return '<li style="--d:' + j + '"><span>' + (j + 1) + '</span>' + x + '</li>'; }).join('');
+      out.innerHTML = '<div class="hz7-prog hz38 hz38-' + k + '"><div class="hz38-top">' + doc + '<div class="hz38-tx"><b></b><p>' + (sub || '문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고, AIMarker 판정 기준 1.6으로 판정합니다. 표지 · 목차 · 참고문헌 같은 줄은 빼고 본문 문장만 셉니다. 같은 글은 언제나 같은 결과가 나옵니다.') + '</p><ol class="hz38-st">' + st + '</ol></div></div><i><em></em></i><div class="hz38-ft"><span class="hz38-dots"></span><span class="hz38-pc"></span></div>' + (nt ? '<small class="hz38-nt">' + nt + '</small>' : '') + '</div>';
+      el = $('.hz7-prog', out); stat(label);
+    }
+    $('b', el).textContent = label + (n > 1 ? (/[.]$/.test(label) ? ' (' + i + '/' + n + ')' : ' ' + i + ' / ' + n) : ''); $('em', el).style.width = Math.max(6, pct) + '%';
     el.classList.toggle('ind', n <= 1 && i < n);   // 한 번에 끝나는 검사는 흐르는 막대로
+    var dt = $('.hz38-dots', el), pc = $('.hz38-pc', el), m = Math.min(n, 40), on = n ? Math.round(i / n * m) : 0;
+    if (dt) dt.innerHTML = n > 1 ? Array.apply(null, Array(m)).map(function (x, j) { return '<span' + (j < on ? ' class="on"' : j === on ? ' class="nx"' : '') + '></span>'; }).join('') : '';
+    if (pc) pc.textContent = n > 1 ? '조각 ' + i + ' / ' + n + ' · ' + pct + '%' : '';
   }
   function note(msg) { out.innerHTML = '<div class="hz7-prog"><b>' + esc(msg) + '</b></div>'; stat(msg); }
   function stat(t) { var st = document.getElementById('hzStat'); if (st) st.textContent = t || ''; }   // 화면 읽기 프로그램에는 한 줄만 알림
@@ -1037,9 +1066,9 @@
     var C0 = chunk(t), C = full ? C0 : { parts: [C0.parts[0]], seps: [] };
     if (full && isCr()) { var needF = C.parts.reduce(function (a, p) { return a + (p.length <= HELP_MAX ? 0 : costOf('unit', p.length)); }, 0); if (needF > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, needF, ''); return; } }
     else if (full && S.ps && C.parts.length > S.ps.left) { out.innerHTML = '<div class="hz7-err"><b>남은 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 바꿔 이용권 ' + C.parts.length + '회가 필요합니다.' : '이 글을 바꾸려면 이용권 1회가 필요합니다.') + ' 지금 남은 횟수는 ' + S.ps.left + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button></div></div>'; return; }
-    setBusy(true); prog('사람 말투로 바꾸는 중', 0, C.parts.length, 'AI 말버릇만 사람 말투로 바꾸고, 뜻과 숫자 · 이름 · 인용은 그대로 둡니다. 긴 글은 6,000자씩 나눠 동시에 처리합니다.'); runShow('fx');
+    setBusy(true); prog(HUM_L, 0, C.parts.length, HUM_SUB, C.parts.length > 1 ? '긴 글은 6,000자씩 나눠 동시에 처리합니다.' : ''); runShow('fx');
     var tn = tone(), doneF = 0;
-    par(C.parts, function (part, i) { return call('am.style', { text: part, mode: 'fix', tone: tn, pass: full ? S.pass : '' }, 90000).then(function (r) { if (r.toneUsed && tn === 'auto') { tn = r.toneUsed; S.toneUsed = r.toneUsed; } prog('사람 말투로 바꾸는 중', ++doneF, C.parts.length); return r; }); }, function () { return tn !== 'auto'; })
+    par(C.parts, function (part, i) { return call('am.style', { text: part, mode: 'fix', tone: tn, pass: full ? S.pass : '' }, 90000).then(function (r) { if (r.toneUsed && tn === 'auto') { tn = r.toneUsed; S.toneUsed = r.toneUsed; } prog(HUM_L, ++doneF, C.parts.length); return r; }); }, function () { return tn !== 'auto'; })
       .then(function (rs) {
         if (!rs.every(function (r) { return r.full; })) { S.fx = { free: true, changes: rs[0].changes || 0, samples: rs[0].fixSamples || [], cut: C0.parts.length > 1, total: t.length }; renderFixFree(); toOut(); return; }
         var text = rs.map(function (r, i) { return (i ? C.seps[i - 1] : '') + r.text; }).join(''), applied = [], left = [], miss = [], tot = 0;
@@ -1059,7 +1088,7 @@
     if (again !== true) S.variant = 0;
     if (!S.pass || free) {   // 무료 맛보기: 첫 문단만(토큰이 모자랄 때도 고를 수 있음)
       var FT = freeTaste(t);
-      setBusy(true); prog(FT.part + '을 사람 말투로 다듬는 중', 0, 1, 'AI 말버릇만 사람 말투로 바꾸고, 뜻과 숫자 · 이름 · 인용은 그대로 둡니다.'); runShow('fx');
+      setBusy(true); prog(FT.part + '의 AI 작성률을 낮추는 중입니다.', 0, 1, HUM_SUB); runShow('fx');
       call('am.humanize', { text: FT.text, tone: tone() }, 60000).then(function (r) { S.fx = { kind: 'proFree', part: FT.part, src: r.src, text: r.text, total: t.length, shown: r.shown, changes: r.changes, samples: r.samples || [], tone: r.tone, toneNote: r.toneNote || '', taste: r.taste || null }; renderProFree(); toOut(); })
         .catch(function (e) { fail(e, null, function () { pro(); }); }).then(function () { setBusy(false); });
       return;
@@ -1068,9 +1097,9 @@
     var C = chunk(t);
     if (isCr()) { if (humCost(C.parts) > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, humCost(C.parts), '첫 문단 무료로 보기'); S.retry = function () { pro(false, true); }; return; } }
     else if (S.ps && C.parts.length > S.ps.proLeft) { out.innerHTML = '<div class="hz7-err"><b>휴머나이징 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 바꿔 휴머나이징 ' + C.parts.length + '회가 필요합니다.' : '이 글을 바꾸려면 휴머나이징 1회가 필요합니다.') + ' 남은 휴머나이징은 ' + S.ps.proLeft + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button></div></div>'; return; }
-    setBusy(true); prog('AI 문체를 사람 말투로 바꾸는 중', 0, C.parts.length, 'AI 말버릇만 사람 말투로 바꾸고, 뜻과 숫자 · 이름 · 인용은 그대로 둡니다. 긴 글은 6,000자씩 나눠 동시에 처리합니다.' + (isCr() ? ' 처리하지 못하면 토큰은 빠지지 않습니다.' : '')); runShow('fx');
+    setBusy(true); prog(HUM_L, 0, C.parts.length, HUM_SUB, (C.parts.length > 1 ? '긴 글은 6,000자씩 나눠 동시에 처리합니다. ' : '') + (isCr() ? '처리하지 못하면 토큰은 빠지지 않습니다.' : '')); runShow('fx');
     var tn = tone(), doneH = 0;
-    par(C.parts, function (part, i) { return call('am.humanize', { text: part, tone: tn, variant: S.variant, pass: S.pass }, 120000).then(function (r) { if (tn === 'auto' && r.tone) { tn = r.tone; S.toneUsed = r.tone; } prog('AI 문체를 사람 말투로 바꾸는 중', ++doneH, C.parts.length); return r; }); }, function () { return tn !== 'auto'; })
+    par(C.parts, function (part, i) { return call('am.humanize', { text: part, tone: tn, variant: S.variant, pass: S.pass }, 120000).then(function (r) { if (tn === 'auto' && r.tone) { tn = r.tone; S.toneUsed = r.tone; } prog(HUM_L, ++doneH, C.parts.length); return r; }); }, function () { return tn !== 'auto'; })
       .then(function (rs) {
         var text = rs.map(function (r, i) { return (i ? C.seps[i - 1] : '') + r.text; }).join(''), applied = [], miss = [], tot = 0, bc = 0, ba = 0, tmiss = 0, tnote = '';
         rs.forEach(function (r) { applied = applied.concat(r.applied || []); if (r.facts) { tot += r.facts.total || 0; (r.facts.missing || []).forEach(function (x) { if (miss.indexOf(x) < 0) miss.push(x); }); } if (r.ai) { bc += r.ai.chars || 0; ba += r.ai.aiChars || 0; } if (r.stats && r.stats.toneMiss) tmiss += r.stats.toneMiss; if (r.toneNote && !tnote) tnote = r.toneNote; });
