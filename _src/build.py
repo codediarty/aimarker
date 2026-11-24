@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261124e"
+VER = "20261124f"
 TODAY = "2026-11-24"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -230,8 +230,8 @@ CREDIT_COST = {"unit": (100, 0.3, 1.5), "pro": (100, 0.6, 3)}   # 2026.11.23 대
 CREDITS = [
     {"id": "lt", "name": "라이트", "cr": 100, "base": 100, "price": 9900, "per": "99원", "who": "AI 작성률 낮추기, 미니멀하게", "doc": "레포트", "pg": 10},
     {"id": "pl", "name": "플러스", "cr": 350, "base": 350, "price": 19900, "per": "약 57원", "who": "AI 작성률 낮추기, 합리적으로", "doc": "레포트", "pg": 35},
-    {"id": "pr", "name": "프로", "cr": 1000, "base": 1000, "price": 39900, "per": "약 40원", "who": "AI 작성률 낮추기, 더 효과적으로", "tag": "BEST 추천", "save": 30, "doc": "논문", "pg": 100},
-    {"id": "mx", "name": "맥스", "cr": 2000, "base": 2000, "price": 69900, "per": "약 34원", "who": "반복 변환으로 AI 작성률 극한까지 낮추기", "tag": "최고 혜택", "save": 40, "doc": "논문", "pg": 250},
+    {"id": "pr", "name": "프로", "cr": 1000, "base": 1000, "price": 39900, "per": "약 40원", "who": "AI 작성률 낮추기, 더 효과적으로", "tag": "추천 요금제", "save": 30, "doc": "논문", "pg": 100},
+    {"id": "mx", "name": "맥스", "cr": 2000, "base": 2000, "price": 69900, "per": "약 34원", "who": "반복 변환으로 AI 작성률 극한까지 낮추기", "tag": "최대 할인 혜택", "save": 39, "doc": "논문", "pg": 250},
 ]
 # 13.31(2026.11.22 대표) 플러스 300 → 350 · 프로 750 → 1,000 · 맥스 1,500 → 2,000토큰(값은 그대로), 칸 설명 네 줄도 대표 문구로.
 # 서버는 AM서버.gs 1.3.2 새 상품 pl2 · pr2 · mx2(아임웹 97 · 98 · 99). 예전 pl · pr · mx 코드는 산 토큰 그대로.
@@ -309,18 +309,19 @@ def pack17_html(t, root, mode="link"):
     """13.17 개인 충전 칸(새 요금): 배지 → 이름 · 쓰임 → 토큰 → 가격 · 토큰당 → 절약 → 레포트 몇 편 → 충전.
     프로(BEST 추천)는 파란 테두리, 맥스(최고 혜택)는 남색 테두리. mode 'buy': 그 자리에서 충전 창, 'link': 글 검사 페이지의 충전 창으로"""
     tag = t.get("tag", "")
-    cls = " best" if tag.startswith("BEST") else (" top" if tag else "")
+    cls = " best" if (tag.startswith("BEST") or tag == "추천 요금제") else (" top" if tag else "")   # 13.40 배지 이름이 바뀌어도 프로는 파란 테두리
     n = int(t["cr"] // report_cost())
     kind = "k-btn-p" if cls == " best" else "k-btn-l"
-    label = "%s 충전하기" % t["name"]
+    label = "토큰 충전하기"   # 13.40(2026.11.24 23:09 대표): 예전 "%s 충전하기" % 이름
     if mode == "buy":
         btn = '<button class="k-btn %s" type="button" data-buy="%s">%s</button>' % (kind, t["id"], label)
     else:
         btn = '<a class="k-btn %s" href="%shumanize/#buy-%s">%s</a>' % (kind, root, t["id"], label)
-    sv = ('<p class="tk17-sv">플러스 대비 토큰당 <b>약 %d%% 절약</b></p>' % t["save"]) if t.get("save") else ''
+    sv = ('<p class="tk17-sv">플러스 대비 이용 단가 <b>%d%% 절감</b></p>' % t["save"]) if t.get("save") else ''   # 13.40 대표 문구(예전 '플러스 대비 토큰당 약 N% 절약')
     # 2026.11.22 대표: 카피휴먼처럼 프로 · 맥스는 같은 토큰을 플러스 단가로 샀을 때의 금액을 줄 그어 보여 줌(CSS 묶음은 그대로 두려고 style 속성으로)
     st = ('<s title="정가" style="font-size:14.5px;font-weight:600;color:#8A94A6;text-decoration-thickness:1.5px;font-variant-numeric:tabular-nums">'
           '<span class="k-sr">정가 </span>%s원</s>' % format({1000: 60000, 2000: 120000}.get(t["cr"]) or int(round(t["cr"] * 19900 / 350)), ",")) if t.get("save") else ''   # 2026.11.23 22:23 대표: 정가 60,000원 · 120,000원. 2026.11.24 고침: 이 조건(if t.get("save"))이 주석 안으로 들어가 라이트 '정가 5,686원' · 플러스 '정가 19,900원'까지 줄 그어 보였음 → 프로 · 맥스만
+    st = ''   # 13.40(2026.11.24 23:09 대표 '취소선 가격 삭제'): 정가 줄 그은 금액을 보이지 않음(위 계산은 기록으로 남김)
     return ('<article class="tk17-pack%s" id="pk-%s">%s<p class="nm"><b>%s</b><span>%s</span></p>'
             '<p class="tk"><b>%s</b><small>토큰</small></p><p class="pr"><b>%s원</b>%s<span>토큰당 %s</span></p>%s'
             '<p class="use">%s</p>%s</article>'
@@ -333,9 +334,9 @@ def credit_table_html():
     rows = []
     for t in CREDITS:
         tag = t.get("tag", "")
-        sv = ('<small class="tk17-sv">플러스보다 약 %d%% 절약</small>' % t["save"]) if t.get("save") else ''
+        sv = ('<small class="tk17-sv">플러스 대비 이용 단가 %d%% 절감</small>' % t["save"]) if t.get("save") else ''
         rows.append('<tr%s><th scope="row">%s%s</th><td data-h="가격">%s원</td><td data-h="제공 토큰">%s토큰</td><td data-h="토큰당 가격"><span>%s%s</span></td><td data-h="이용 안내">%s</td></tr>'
-                    % (' class="best"' if tag.startswith("BEST") else (' class="top"' if tag else ''), t["name"], (' <em>%s</em>' % tag) if tag else '',
+                    % (' class="best"' if (tag.startswith("BEST") or tag == "추천 요금제") else (' class="top"' if tag else ''), t["name"], (' <em>%s</em>' % tag) if tag else '',
                        format(t["price"], ","), tk(t["cr"]), t["per"], sv, t["who"]))
     return ('<div class="tk17-cmp"><h3 class="k-h3">상품별 구성</h3><table class="tk17-tbl"><thead><tr><th scope="col">상품</th><th scope="col">가격</th>'
             '<th scope="col">제공 토큰</th><th scope="col">토큰당 가격</th><th scope="col">이용 안내</th></tr></thead><tbody>%s</tbody></table></div>') % "".join(rows)
@@ -376,8 +377,8 @@ def credit_cost_html():
 def credit_packs_html(root):
     """13.2 토큰 충전 칸: [개인 · 학생 | 회사 · 기관 · 학교] 탭(assets/tok.js). 스크립트가 없으면 두 묶음이 모두 보임.
     개인: 부가세 포함, 글 검사 페이지 충전 창. 회사: 부가세 별도, 세금계산서, 결제 시트"""
-    pgn = ('<p class="tk17-pgn rep">반복 변환할수록 AI 작성률은 계속 낮아집니다. 여러 번 변환하여 AI 작성 흔적을 극한까지 줄여보세요.</p>'
-           '<p class="tk17-pgn">절약률은 플러스의 토큰당 가격(약 57원)과 비교한 값이고, 줄 그은 금액은 정가입니다.</p>')   # 2026.11.22 카피휴먼과 같게   # 13.31 대표: 쪽수 기준 설명 대신 반복 변환 안내를 조금 크게
+    pgn = ('<p class="tk17-pgn rep">한 번의 변환으로 부족하다면 다시 변환해 보세요. 여러 문서의 AI 작성률을 낮추거나 추가 변환을 원하시는 분께는 프로와 맥스 요금제를 추천합니다.</p>'
+           '<p class="tk17-pgn">절감률은 플러스의 이용 단가(토큰당 약 57원)와 비교한 값입니다.</p>')   # 13.40(2026.11.24 23:09 대표 문구, '충분하지 않다면' → '부족하다면'). 예전: 반복 변환할수록 … 극한까지 줄여보세요 / 절약률 … 줄 그은 금액은 정가   # 2026.11.22 카피휴먼과 같게   # 13.31 대표: 쪽수 기준 설명 대신 반복 변환 안내를 조금 크게
     me = '<div class="tk17-packs">%s</div>%s%s%s' % ("".join(pack17_html(t, root) for t in CREDITS), pgn, credit_table_html(), credit_guide_html())   # 13.17 새 요금 칸 + 상품별 구성 + 이용 안내
     biz = []
     for t in CATALOG["credit"]["tiers"]:
@@ -387,8 +388,8 @@ def credit_packs_html(root):
         else:
             biz.append(pack_html(t, root, biz=True))
     return ('<div class="tk-seg" role="tablist" aria-label="누가 쓰나요">'
-            '<button type="button" role="tab" id="tkTabMe" aria-controls="tkPanMe" aria-selected="true"><b>개인 · 학생</b><small>누구나 · 부가세 포함</small></button>'
-            '<button type="button" role="tab" id="tkTabBiz" aria-controls="tkPanBiz" aria-selected="false"><b>회사 · 기관 · 학교</b><small>세금계산서 · 팀이 한 코드로</small></button></div>'
+            '<button type="button" role="tab" id="tkTabMe" aria-controls="tkPanMe" aria-selected="true"><b>개인 고객</b><small>개인, 학생, 프리랜서</small></button>'
+            '<button type="button" role="tab" id="tkTabBiz" aria-controls="tkPanBiz" aria-selected="false"><b>기업 및 기관 고객</b><small>기업, 공공기관, 교육기관</small></button></div>'
             '<div class="tk-pan tk17-pan" id="tkPanMe" role="tabpanel" aria-labelledby="tkTabMe">%s</div>'
             '<div class="cr13-packs tk-pan" id="tkPanBiz" role="tabpanel" aria-labelledby="tkTabBiz">%s</div>') % (me, "".join(biz))
 
