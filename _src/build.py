@@ -22,8 +22,8 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261123i"
-TODAY = "2026-11-23"
+VER = "20261124a"
+TODAY = "2026-11-24"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
 #   세 묶음(순서 그대로): assets/b-base.css = 글꼴 + am.css(모든 페이지 같음) → assets/b-<8자리>.css = (site4 · v8) + 페이지 styles(없으면 생략)

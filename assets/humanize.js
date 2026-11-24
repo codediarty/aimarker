@@ -840,10 +840,10 @@
     if (first) stat('검사 끝. ' + headM(M) + (b.key === 'short' ? '' : ', AI 작성률 ' + M.rate + '퍼센트'));
     if (lockDoc) { var d0 = $('#hzDoc'), s0 = d0 && d0.querySelector('.hz-s.ai:not(.lk)'); if (s0) d0.scrollTop = Math.max(0, s0.offsetTop - d0.offsetTop - 48); }
   }
-  function packFor(need) {   // 13.13 기본은 추천 칸(프로). 이 글에 모자라면 그 글을 덮는 칸, 그래도 모자라면 가장 큰 칸(작은 충전으로 이끌지 않음)
+  function packFor(need) {   // 13.13 기본은 추천 칸(프로). 13.35(11.24 대표 결정): 이 글에 드는 토큰을 알면 카피휴먼처럼 그 양 × 1.15 를 덮는 가장 작은 칸(짧은 글에 프로 39,900원이 먼저 뜨지 않게), 모르면 추천 칸, 다 모자라면 가장 큰 칸
     var L = prods().slice().sort(function (a, b) { return a.cr - b.cr; }), best = L.filter(function (p) { return p.best; })[0] || L[Math.min(2, L.length - 1)] || PRODS[2];
-    if (!(need > 0) || best.cr >= need) return best;
-    for (var i = 0; i < L.length; i++) if (L[i].cr >= need) return L[i];
+    if (!(need > 0)) return best;
+    for (var i = 0; i < L.length; i++) if (L[i].cr >= need * 1.15) return L[i];
     return L[L.length - 1] || best;
   }
   function srcText() { return (S.res && S.res.src) || cur(); }
