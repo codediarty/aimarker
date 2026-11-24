@@ -1432,13 +1432,13 @@
   function dlgOpen(d) { if (!d) return; if (typeof d.showModal === 'function') { if (!d.open) d.showModal(); } else d.setAttribute('open', ''); }
   function dlgClose(d) { if (d && d.open) { try { d.close(); } catch (e) { d.removeAttribute('open'); } } }
   var buyDlg = $('#hzBuy'), buyBody = $('#hzBuyBody'), buyTpl = buyBody ? buyBody.innerHTML : '', t0 = 0;
-  var BUY_ORD = { pr: 0, mx: 1, lt: 2, pl: 3 };   // 13.34(2026.11.23 22:13 대표 '9,900원짜리만 사고 싶게 생겼다 · 밸런스'): 큰 칸(프로 · 맥스)을 위 줄에 크게, 작은 칸(라이트 · 플러스)은 아래 줄에 작게(2 × 2)
+  var BUY_ORD = { lt: 0, pl: 1, pr: 2, mx: 3 };   // 13.39(2026.11.24 22:07 대표 '프로가 먼저 나오면 가격이 높아서 결제 이탈 · 똑같은 박스에 라이트 플러스 프로 맥스 순서로'): 값 순서, 네 칸 같은 크기. 예전(11.23 22:34) 순서 { pr: 0, mx: 1, lt: 2, pl: 3 }   // 13.34(2026.11.23 22:13 대표 '9,900원짜리만 사고 싶게 생겼다 · 밸런스'): 큰 칸(프로 · 맥스)을 위 줄에 크게, 작은 칸(라이트 · 플러스)은 아래 줄에 작게(2 × 2)
   function prodsHtml(sel, noBest, need) {   // 13.17 칸: 배지 · 이름 · 토큰 · 가격(토큰당) · 절약, 이 글이 있으면 '이 글 N번'
     var L = prods().slice().sort(function (a, b) { var x = BUY_ORD[a.id], y = BUY_ORD[b.id]; return (x == null ? 9 : x) - (y == null ? 9 : y); });
     return L.map(function (p) {
       var best = p.best && !noBest, k = need > 0 ? Math.floor(r1(p.cr / need) + 1e-9) : 0;
       var sm = need > 0 && chkBuy() ? (k ? '이 글 ' + (k >= 1000 ? '1,000번 넘게' : '약 ' + n2(k) + '번') : '이 글에는 모자라요') : need > 0 && !k ? '이 글의 AI 작성률을 낮추기엔 부족해요' : (p.who || p.desc || '');   // 13.34 카피휴먼 21:24 문구(라이트 '가볍게' · 플러스 '합리적으로' · 프로 '더 강력하게' · 맥스 '넉넉한 토큰으로 반복'). 결과서 충전은 그대로
-      var cls = (best ? 'best ' : p.top ? 'top ' : '') + (p.save ? 'big' : 'sm');
+      var cls = (best ? 'best ' : p.top ? 'top ' : '') + 'big';   // 13.39 네 칸 같은 크기(예전: p.save ? 'big' : 'sm')
       return '<label class="' + cls + '"><input type="radio" name="product" value="' + esc(p.id) + '"' + (p.id === sel ? ' checked' : '') + '><span>' +
         (best ? '<i class="tg">' + esc(p.badge || '추천') + '</i>' : p.top ? '<i class="tg top">' + esc(p.badge || '최고 혜택') + '</i>' : '') +
         '<b class="nm">' + esc(p.name) + '</b><b class="tk">' + tk(p.cr) + '<small>토큰</small>' + (p.bonus ? '<i class="bn">+' + tk(p.bonus) + '</i>' : '') + '</b>' +

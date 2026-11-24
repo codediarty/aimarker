@@ -22,7 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-VER = "20261124d"
+VER = "20261124e"
 TODAY = "2026-11-24"
 
 # 13.10 CSS 묶음(속도): 페이지마다 따로 읽던 CSS(최대 10개)를 두 파일로 합치고 줄임(rcssmin 이 있으면, 없으면 그대로 이어 붙임).
@@ -320,7 +320,7 @@ def pack17_html(t, root, mode="link"):
     sv = ('<p class="tk17-sv">플러스 대비 토큰당 <b>약 %d%% 절약</b></p>' % t["save"]) if t.get("save") else ''
     # 2026.11.22 대표: 카피휴먼처럼 프로 · 맥스는 같은 토큰을 플러스 단가로 샀을 때의 금액을 줄 그어 보여 줌(CSS 묶음은 그대로 두려고 style 속성으로)
     st = ('<s title="정가" style="font-size:14.5px;font-weight:600;color:#8A94A6;text-decoration-thickness:1.5px;font-variant-numeric:tabular-nums">'
-          '<span class="k-sr">정가 </span>%s원</s>' % format({1000: 60000, 2000: 120000}.get(t["cr"]) or int(round(t["cr"] * 19900 / 350)), ","))   # 2026.11.23 22:23 대표: 정가 60,000원 · 120,000원 if t.get("save") else ''
+          '<span class="k-sr">정가 </span>%s원</s>' % format({1000: 60000, 2000: 120000}.get(t["cr"]) or int(round(t["cr"] * 19900 / 350)), ",")) if t.get("save") else ''   # 2026.11.23 22:23 대표: 정가 60,000원 · 120,000원. 2026.11.24 고침: 이 조건(if t.get("save"))이 주석 안으로 들어가 라이트 '정가 5,686원' · 플러스 '정가 19,900원'까지 줄 그어 보였음 → 프로 · 맥스만
     return ('<article class="tk17-pack%s" id="pk-%s">%s<p class="nm"><b>%s</b><span>%s</span></p>'
             '<p class="tk"><b>%s</b><small>토큰</small></p><p class="pr"><b>%s원</b>%s<span>토큰당 %s</span></p>%s'
             '<p class="use">%s</p>%s</article>'

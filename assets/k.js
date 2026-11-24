@@ -542,3 +542,35 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { done(true); }, pick); else pick();
   });
 })();
+
+/* 13.39(2026.11.24 22:09 대표 '토큰 충전 누르면 위에 쓸데없이 공간이 남는 화면으로 가서 밑에 잘림'): 요금 쪽 #credits(· #credit · #personal)로 오면
+   칸 위 여백을 건너뛰어 '토큰 충전' 제목을 머리 · 차례 바로 아래에 두고, 화면이 낮으면 충전 칸 아래 끝까지 보이게 맞춤('개인 · 학생' 탭은 화면 안에).
+   방문자가 먼저 움직였으면(굴림 · 터치 · 키) 처음 맞춤은 하지 않음 */
+(function () {
+  var sec = document.getElementById('credits'); if (!sec) return;
+  var IDS = { credits: 1, credit: 1, personal: 1 }, moved = false, t = 0;
+  function hid() { try { return decodeURIComponent((location.hash || '').slice(1)); } catch (e) { return ''; } }
+  function fit() {
+    if (!IDS[hid()]) return;
+    var pk = sec.querySelector('.tk17-packs'), eb = sec.querySelector('.k-eyebrow'), seg = sec.querySelector('.tk-seg'), top = 0;
+    ['.k-hd', '.k-toc'].forEach(function (s) { var e = document.querySelector(s); if (!e) return; var cs = getComputedStyle(e); if (cs.position !== 'sticky' && cs.position !== 'fixed') return; var r = e.getBoundingClientRect(); if (r.height && r.top < 160) top = Math.max(top, r.bottom); });
+    var y = window.pageYOffset, want = (eb || sec).getBoundingClientRect().top + y - top - 16;
+    if (pk && pk.offsetParent) {   // 탭부터 충전 칸 끝까지가 한 화면에 들어갈 때만 칸 끝에 맞춤(휴대폰처럼 칸이 세로로 길면 제목부터 보이게)
+      var pr = pk.getBoundingClientRect(), sr = (seg || pk).getBoundingClientRect(), need = pr.bottom + y - window.innerHeight + 16;
+      if (pr.bottom - sr.top <= window.innerHeight - top - 28 && need > want) want = Math.min(need, sr.top + y - top - 12);
+    }
+    var de = document.documentElement, sb = de.style.scrollBehavior; de.style.scrollBehavior = 'auto';
+    window.scrollTo(0, Math.max(0, Math.round(want)));
+    de.style.scrollBehavior = sb;
+  }
+  function later(ms) { clearTimeout(t); t = setTimeout(fit, ms); }
+  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (ev) { window.addEventListener(ev, function () { moved = true; }, { passive: true, once: true }); });
+  if (IDS[hid()]) { later(180); if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (!moved) later(240); }); }
+  window.addEventListener('hashchange', function () { later(40); });
+  document.addEventListener('click', function (e) {   // 이미 #credits 인 채로 '토큰 충전'을 다시 누르면 hashchange 가 없으므로 여기서 맞춤
+    var a = e.target && e.target.closest && e.target.closest('a[href]'); if (!a) return;
+    var u; try { u = new URL(a.getAttribute('href'), location.href); } catch (x) { return; }
+    if (u.pathname !== location.pathname || !IDS[decodeURIComponent(u.hash.slice(1))]) return;
+    if (u.hash === location.hash) { e.preventDefault(); fit(); }
+  });
+})();
