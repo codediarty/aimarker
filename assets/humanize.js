@@ -1432,7 +1432,7 @@
   function dlgOpen(d) { if (!d) return; if (typeof d.showModal === 'function') { if (!d.open) d.showModal(); } else d.setAttribute('open', ''); }
   function dlgClose(d) { if (d && d.open) { try { d.close(); } catch (e) { d.removeAttribute('open'); } } }
   var buyDlg = $('#hzBuy'), buyBody = $('#hzBuyBody'), buyTpl = buyBody ? buyBody.innerHTML : '', t0 = 0;
-  var STRIKE = false;   // 13.40(2026.11.24 23:09 대표 '취소선 가격 삭제'): 프로 · 맥스 정가 줄 그은 금액을 보이지 않음
+  var STRIKE = true;   // 13.40(2026.11.24 23:09 대표 '취소선 가격 삭제')로 잠시 껐다가 13.41(23:38 대표 '프로랑 맥스는 취소선 … 기존처럼 60,000 120,000')로 다시 켬(save 가 있는 프로 · 맥스만)
   var BUY_ORD = { lt: 0, pl: 1, pr: 2, mx: 3 };   // 13.39(2026.11.24 22:07 대표 '프로가 먼저 나오면 가격이 높아서 결제 이탈 · 똑같은 박스에 라이트 플러스 프로 맥스 순서로'): 값 순서, 네 칸 같은 크기. 예전(11.23 22:34) 순서 { pr: 0, mx: 1, lt: 2, pl: 3 }   // 13.34(2026.11.23 22:13 대표 '9,900원짜리만 사고 싶게 생겼다 · 밸런스'): 큰 칸(프로 · 맥스)을 위 줄에 크게, 작은 칸(라이트 · 플러스)은 아래 줄에 작게(2 × 2)
   function prodsHtml(sel, noBest, need) {   // 13.17 칸: 배지 · 이름 · 토큰 · 가격(토큰당) · 절약, 이 글이 있으면 '이 글 N번'
     var L = prods().slice().sort(function (a, b) { var x = BUY_ORD[a.id], y = BUY_ORD[b.id]; return (x == null ? 9 : x) - (y == null ? 9 : y); });
