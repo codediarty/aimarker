@@ -66,6 +66,7 @@
   var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr', pl2: 'pl', pr2: 'pr', mx2: 'mx' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
   var SRV_PID = { pl: 'pl2', pr: 'pr2', mx: 'mx2' };   // 13.31 서버의 새 상품 번호(토큰 350 · 1,000 · 2,000). 예전 pl · pr · mx 는 서버에서 legacy(예전 코드의 환불 셈을 지키려고 번호를 새로 둠). 바로 결제(am.buy)는 새 번호로
   var CR0 = { unit: { per: 100, cr: 0.3, min: 1.5 }, pro: { per: 100, cr: 0.6, min: 3 } }, ASK = Infinity;   // 11.23 1.5배(새로 산 코드 값, 예전 코드는 서버 rm 2/3 을 곱함) · 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음 · 13.32 부터 묻지 않음(단추에 토큰 숫자가 적혀 있어 누르면 바로 실행)
+  var FREE_FIRST = true;   // 13.36(2026.11.24 대표 '첫화면은 무료로 검사하는걸로 … 검사하고 블라인드되면서 결제하게끔'): 토큰 코드가 있어도 첫 화면은 'AI 작성률 무료 검사' 단추 하나. 토큰 숫자 · 결과서 · 휴머나이징 단추는 검사 결과 칸에서. false 면 13.30 두 단추 화면
 
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var n2 = function (n) { return Number(n || 0).toLocaleString('ko-KR'); };
@@ -149,7 +150,7 @@
   };
   function count() {
     var t = cur(), n = t.length, lim;
-    if (S.pass) lim = ' / 한 번에 20만 자';   // 13.30
+    if (S.pass && !FREE_FIRST) lim = ' / 한 번에 20만 자';   // 13.30 · 13.36 첫 화면은 무료 검사 안내
     else lim = ' / 무료 검사 20만 자까지';
     $('#hzCount').textContent = n2(n);
     $('#hzLimit').textContent = lim;
@@ -162,10 +163,11 @@
   }
   function tags() {   // 12.1 단추: 무료면 'AI 작성률 무료 검사' 하나, 토큰이면 검사 · 휴머나이징 둘. 13.30 토큰이 있어도 검사 꼬리표는 '무료', 휴머나이징만 이 글에 드는 토큰
     var tc = $('#hzChkTag'), tp = $('#hzProTag'), cl = $('#hzChkL'), t = cur();
-    var nb = $('#hzNote'), nm = S.pass ? 'ex' : 'lk';   // 13.30 토큰 코드가 있으면 자물쇠 안내 대신 두 단추가 하는 일을 한 줄로
-    if (nb && nb._m !== nm) { nb._m = nm; nb.classList.toggle('hz-ex', !!S.pass); nb.innerHTML = S.pass ? ico('info') + '<span><b>결과서</b>는 AI 패턴이 걸린 문장을 하나하나 상세히 진단하고, <b>휴머나이징</b>은 글을 다듬어 AI 작성률을 낮춰 줍니다</span>' : ico('lock') + '<span>가입 없이 무료 · 글과 파일은 저장하지 않습니다</span>'; }
+    var nb = $('#hzNote'), nm = S.pass && !FREE_FIRST ? 'ex' : 'lk';   // 13.30 토큰 코드가 있으면 자물쇠 안내 대신 두 단추가 하는 일을 한 줄로
+    if (nb && nb._m !== nm) { nb._m = nm; nb.classList.toggle('hz-ex', nm === 'ex'); nb.innerHTML = nm === 'ex' ? ico('info') + '<span><b>결과서</b>는 AI 패턴이 걸린 문장을 하나하나 상세히 진단하고, <b>휴머나이징</b>은 글을 다듬어 AI 작성률을 낮춰 줍니다</span>' : ico('lock') + '<span>가입 없이 무료 · 글과 파일은 저장하지 않습니다</span>'; }
     var stale = box.classList.contains('stale');
-    if (isCr()) {
+    if (FREE_FIRST) { if (cl) cl.textContent = stale ? '바뀐 글 다시 검사' : 'AI 작성률 무료 검사'; if (tc) tc.hidden = true; btnP.hidden = true; }   // 13.36 토큰 코드가 있어도 첫 화면은 무료 검사 하나
+    else if (isCr()) {
       var P = t.replace(/\s+/g, '') ? chunk(t).parts : [];
       if (cl) cl.innerHTML = esc(RPT) + '<small>문장별 진단 · PDF</small>';   // 13.30 왼쪽은 토큰으로 받는 리포트(전체 검사: 모든 문장 위치 · 구간 · PDF). 무료 검사는 파일 · 붙여 넣기로 저절로
       if (tc) { tc.hidden = false; tc.textContent = P.length ? tk(chkCost(P)) + '토큰' : '1,000자 ' + tk(per1k('unit')) + '토큰'; }
@@ -311,7 +313,8 @@
   function md(s) { var m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/.exec(s || ''); return m ? (+m[2]) + '월 ' + (+m[3]) + '일 ' + m[4] + ':' + m[5] : s; }
   function renderPass() {
     var h;
-    if (S.pass && S.ps && S.ps.credit) {   // 12.0 토큰
+    if (FREE_FIRST && S.pass) h = '<span class="sp"></span><span>' + (S.ps ? (S.ps.credit ? '토큰 코드 적용됨' : '이용권 코드 적용됨') : '코드 확인 중') + '</span><button type="button" class="hz7-link" data-code>코드 바꾸기</button>';   // 13.36 첫 화면은 무료 검사처럼: 남은 토큰 · 충전은 검사 결과 칸에서
+    else if (S.pass && S.ps && S.ps.credit) {   // 12.0 토큰
       var c = S.ps;
       h = '<span class="chip on">' + ico('check') + (c.biz ? '기업 토큰' : '토큰') + '</span><span>남은 <b>' + tk(c.cr) + '</b>토큰' + (c.end ? ' · ' + ymd(c.end) + '까지' : '') + (c.cr <= 0 ? ' · 충전하면 이어서 씁니다' : '') + '</span><span class="sp"></span><button type="button" class="hz7-link' + (c.cr < ASK ? ' em' : '') + '" data-buy="topup">충전</button><button type="button" class="hz7-link" data-code>코드 바꾸기</button>';
     } else if (S.pass && S.ps) {
@@ -319,7 +322,7 @@
       h = '<span class="chip on">' + ico('check') + esc(p.name) + '</span><span>' + when + '남은 검사 <b>' + n2(p.left) + '</b>회' + (p.pro ? ', 휴머나이징 <b>' + n2(p.proLeft) + '</b>회' : '') + '</span><span class="sp"></span><button type="button" class="hz7-link" data-code>코드 바꾸기</button>';
     } else if (S.pass) h = '<span class="chip">코드 확인 중</span><span>' + esc(S.pass) + '</span>';
     else h = (S.passMsg ? '<span class="msg">' + esc(S.passMsg) + '</span>' : '') + '<span class="sp"></span><button type="button" class="hz7-link" data-code>토큰 코드 넣기</button>';
-    passEl.innerHTML = h; passEl.classList.toggle('free', !S.pass); count(); if (typeof proBtn === 'function') proBtn();
+    passEl.innerHTML = h; passEl.classList.toggle('free', !S.pass || FREE_FIRST); count(); if (typeof proBtn === 'function') proBtn();
   }
   function peek() {
     if (!S.pass) return renderPass();
@@ -574,7 +577,7 @@
     }).catch(function (e) { if (e && e.code === 'FREE_DAY' && !full && S.pass) freeDayPaid(t); else fail(e, function (free) { check(t, { free: free }); }, function () { check(t, opt); }); return null; })
       .then(function (M) { setBusy(false); return M; });
   }
-  btnC.addEventListener('click', function () { S.wantPdf = false; check(undefined, { paid: !!S.pass }); });   // 13.30 토큰 코드가 있으면 왼쪽 단추는 리포트(토큰), 없으면 무료 검사
+  btnC.addEventListener('click', function () { S.wantPdf = false; check(undefined, { paid: !!S.pass && !FREE_FIRST }); });   // 13.30 토큰 코드가 있으면 왼쪽 단추는 리포트(토큰), 없으면 무료 검사
   function freeDayPaid(t) {   // 13.30 토큰 코드로 오늘 무료 검사를 다 썼으면: 전체 검사(토큰 숫자가 적힌 단추)나 휴머나이징으로 바로 이어서
     var c = isCr() ? chkCost(chunk(t).parts) : 0, m = '긴 글은 6,000자마다 한 번으로 셉니다. 무료 검사는 내일 다시 할 수 있고, 지금 ' + RPT + '를 받으면 모든 문장의 위치와 결과상세내역서(PDF)까지 바로 열립니다.';
     S.fullT = t;
