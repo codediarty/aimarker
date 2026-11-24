@@ -1130,3 +1130,8 @@ html body .hz7-dlg-b .hz19-auto .ico { margin-top: 2px; padding: 2px; border-rad
 @keyframes hz38glow{0%,100%{transform:translate(0,0) scale(1);opacity:.9}50%{transform:translate(-30px,20px) scale(1.12);opacity:.6}}
 @media (max-width:560px){.hz38{padding:18px 16px 14px}.hz38-top{gap:14px;align-items:flex-start}.hz38-doc{flex-basis:86px;height:88px;padding:11px 9px}.hz38-ln{height:5px}.hz38-tag{display:none}.hz38-tx b{font-size:15.5px}.hz38-tx p{font-size:13px}.hz38-st li{font-size:11.5px;padding:4px 8px 4px 5px}}
 @media (prefers-reduced-motion:reduce){.hz38 *,.hz38::before,.hz38 *::after{animation:none!important}.hz38-ln::after{background-color:var(--ds-blue-600,#2563eb);opacity:.7}.hz38-chk .hz38-ln::after{background-color:#c9d3e3}.hz38-chk .hz38-ln.f::after{background-color:var(--ai,#e5484d)}.hz38-beam{display:none}}
+
+/* 13.41(2026.11.25 대표): 요금 칸은 칸 어디를 눌러도 충전으로(k.js) */
+.tk17-pack,.cr13-pack{cursor:pointer;transition:transform .15s ease}
+.tk17-pack:hover,.cr13-pack:hover{transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){.tk17-pack,.cr13-pack{transition:none}.tk17-pack:hover,.cr13-pack:hover{transform:none}}

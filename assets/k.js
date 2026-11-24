@@ -574,3 +574,18 @@
     if (u.hash === location.hash) { e.preventDefault(); fit(); }
   });
 })();
+
+/* 13.41(2026.11.25 대표 '충전하기 단추를 누르지 않아도 큰 칸 안 아무 데나 눌러도 들어가지게'): 요금 칸(개인 넷 · 기업 묶음)은
+   칸 안 어디를 눌러도 그 칸의 충전 단추를 누른 것과 같게. 충전 창 안의 고르기 칸은 지금처럼 고르기만(그 칸들은 label 이라 여기 걸리지 않음) */
+(function () {
+  var CARD = '.tk17-pack, .cr13-pack';
+  document.addEventListener('click', function (e) {
+    var t = e.target; if (!t || !t.closest) return;
+    var card = t.closest(CARD); if (!card) return;
+    if (t.closest('a[href], button, input, label, select, textarea, summary, [role=button], [data-buy]')) return;   // 단추 · 링크는 원래대로
+    if (card.closest('dialog, [role=dialog], form')) return;   // 창 안은 건드리지 않음
+    try { if (String(window.getSelection ? window.getSelection() : '').length) return; } catch (x) {}   // 글자를 끌어 고르는 중이면 그대로
+    var go = card.querySelector('a.k-btn[href], button.k-btn, [data-buy]'); if (!go) return;
+    e.preventDefault(); go.click();
+  });
+})();
