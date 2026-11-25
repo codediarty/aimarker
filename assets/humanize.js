@@ -1,4 +1,8 @@
 /* AIMarker AI 작성률 검사 · 휴머나이징 12.1 (2026.10.21 오후) → 13.13 (2026.10.31)
+   - 13.43(2026.11.25 밤 손님 '결제 후 사용하고 있는데 갑자기 무료 ai 표절률 검사가 안되네요' · 대표 '결제한사람들도 그런 버튼을 어디에 만들어야 부자연스럽지않을까?'):
+     13.42 에서 글을 넣으면 저절로 하던 무료 검사를 멈추면서(AUTO_RUN) 토큰 코드가 있는 손님은 무료 검사로 가는 길이 없어졌음.
+     두 단추(결과서 · 휴머나이징) 아래 설명 줄 오른쪽(좁은 화면은 설명 아래 왼쪽)에 'AI 작성률 무료 검사 · 토큰 차감 없음' 단추(#hzFree, freeBtn)를 더함.
+     누르면 코드가 없을 때와 같은 무료 검사(0토큰, check opt.free). 코드가 없는 손님 화면 · 두 단추 · 결과서 · 휴머나이징은 그대로
    - 13.42(2026.11.25 대표 '처리 실패가 되면 안 돼 · 성능은 예전과 똑같이 · 단추를 눌러야 시작 · 진행 화면은 전체 화면으로'):
      멈춘 조각은 정해 둔 시간 뒤 한 번 더 보내고(hedge, 유료는 서버 rid 로 한 번만 빠짐) · 실패한 작업을 이어서 하면 끝난 조각은 그대로(jobFor) ·
      파일 · 붙여 넣기 · 예시는 글만 넣고 단추를 기다림(AUTO_RUN) · 처리 중에는 화면 전체 진행 화면(stageOpen · stageEnd). 엔진 · 보내는 값은 그대로
@@ -213,6 +217,22 @@
     if (S.res && !S.busy) box.classList.toggle('stale', t !== S.res.src && !(S.fx && S.fx.text === t));
     tags();
   }
+  /* 13.43 토큰 코드가 있는 손님의 무료 검사 단추: 두 단추 아래 설명 줄(#hzNote) 안 오른쪽(좁은 화면은 설명 아래 왼쪽).
+     설명 줄은 모드가 바뀌면 다시 그려지므로(tags) 그때마다 다시 붙임. 누르면 코드가 없을 때와 같은 무료 검사
+     (0토큰 · 오늘 무료 횟수 안에서, 다 썼으면 freeDayPaid 안내) */
+  var btnF = null;
+  function freeBtn(on) {
+    var go = $('#hzGo'), nb = $('#hzNote'); if (!go) return;
+    if (!btnF && on) {
+      var sv = btnC.querySelector('svg');
+      btnF = document.createElement('button'); btnF.type = 'button'; btnF.id = 'hzFree'; btnF.className = 'hz43-free';
+      btnF.innerHTML = (sv ? sv.outerHTML : '') + '<span><b>AI 작성률 무료 검사</b><small>토큰 차감 없음</small></span>';
+      btnF.title = '토큰을 쓰지 않고 AI 작성률만 봅니다';
+      btnF.addEventListener('click', function () { if (S.busy) return; S.wantPdf = false; check(undefined, { free: true }); });
+    }
+    if (btnF) { var host = nb || go; if (btnF.parentNode !== host) host.appendChild(btnF); btnF.hidden = !on; btnF.disabled = !!S.busy; }
+    go.classList.toggle('hz43', !!on);
+  }
   function tags() {   // 12.1 단추: 무료면 'AI 작성률 무료 검사' 하나, 토큰이면 검사 · 휴머나이징 둘. 13.30 토큰이 있어도 검사 꼬리표는 '무료', 휴머나이징만 이 글에 드는 토큰
     var tc = $('#hzChkTag'), tp = $('#hzProTag'), cl = $('#hzChkL'), t = cur();
     var nb = $('#hzNote'), nm = S.pass && !FREE_FIRST ? 'ex' : 'lk';   // 13.30 토큰 코드가 있으면 자물쇠 안내 대신 두 단추가 하는 일을 한 줄로
@@ -230,6 +250,7 @@
     var go = $('#hzGo'), two = !btnP.hidden; if (go) go.classList.toggle('two', two);
     btnC.classList.toggle('k-btn-p', !two); btnC.classList.toggle('k-btn-l', two);   // 13.30 대표: 휴머나이징이 메인이라 파란 단추, 결과서는 흰 단추(무료 검사 하나일 때는 검사가 파란 단추)
     btnP.classList.toggle('k-btn-p', two); btnP.classList.toggle('k-btn-l', !two);
+    freeBtn(two && !!S.pass && !FREE_FIRST);   // 13.43
   }
   ta.addEventListener('input', function () { count(); if (S.src && cur() !== S.src.text) S.src.edited = true; });
 
@@ -580,7 +601,7 @@
   }
 
   /* ---------- 진행 · 오류 ---------- */
-  function setBusy(on) { S.busy = on; btnC.disabled = on; btnP.disabled = on; if (!on) stageEnd(); }   // 13.42 끝나면 전체 화면 진행 화면을 닫음
+  function setBusy(on) { S.busy = on; btnC.disabled = on; btnP.disabled = on; if (btnF) btnF.disabled = on; if (!on) stageEnd(); }   // 13.42 끝나면 전체 화면 진행 화면을 닫음
   /* 13.38(2026.11.24 대표 '좀 너무 간단해서 그래픽이라던지 애니메이션이라던지 좀 더 개선해봐'): 진행 화면에 문서 그림(훑는 빛이 지나가면 AI 패턴 줄이 바뀜) ·
      네 단계 · 조각 점 · 반짝이는 막대. 숫자(i / n)와 막대는 실제로 끝난 조각 수 그대로. 움직임 줄이기 설정이면 멈춘 그림 */
   var P38 = { hum: ['문장 패턴 분석', 'AI 패턴 선별', '사람 말투로 다듬기', '의미 · 숫자 확인'], chk: ['문장 나누기', '앞뒤 문맥 살피기', 'AI 패턴 판정', '결과 정리'] };
