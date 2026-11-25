@@ -7,10 +7,11 @@
   AM.root = document.body.getAttribute('data-root') || '';
 
   /* 서버 요청(text/plain이라 사전 확인 요청 없이 바로) */
-  AM.call = function (action, data, timeoutMs) {
+  AM.call = function (action, data, timeoutMs, sig) {   // 13.42 sig: 밖에서 멈출 수 있게(같은 조각을 여러 번 보낼 때 먼저 온 답을 쓰고 나머지는 멈춤)
     var body = Object.assign({ action: action, _o: location.hostname }, data || {});
     var ctl = 'AbortController' in window ? new AbortController() : null;
     var t = ctl ? setTimeout(function () { ctl.abort(); }, timeoutMs || 20000) : 0;
+    if (ctl && sig) { if (sig.aborted) ctl.abort(); else sig.addEventListener('abort', function () { ctl.abort(); }); }
     return fetch(AM.API, { method: 'POST', body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined, redirect: 'follow' })
       .then(function (r) { return r.json(); })
       .then(function (j) { return tokOf(action, j, data); })

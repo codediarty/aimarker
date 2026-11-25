@@ -1,4 +1,7 @@
 /* AIMarker AI 작성률 검사 · 휴머나이징 12.1 (2026.10.21 오후) → 13.13 (2026.10.31)
+   - 13.42(2026.11.25 대표 '처리 실패가 되면 안 돼 · 성능은 예전과 똑같이 · 단추를 눌러야 시작 · 진행 화면은 전체 화면으로'):
+     멈춘 조각은 정해 둔 시간 뒤 한 번 더 보내고(hedge, 유료는 서버 rid 로 한 번만 빠짐) · 실패한 작업을 이어서 하면 끝난 조각은 그대로(jobFor) ·
+     파일 · 붙여 넣기 · 예시는 글만 넣고 단추를 기다림(AUTO_RUN) · 처리 중에는 화면 전체 진행 화면(stageOpen · stageEnd). 엔진 · 보내는 값은 그대로
    - 13.30(2026.11.21 밤) 토큰 코드가 있어도 'AI 작성률 검사'는 무료 검사(코드 없을 때와 같은 범위 · 0토큰, 파일을 올리면 바로 검사).
      토큰은 휴머나이징과, 토큰 숫자가 적힌 '전체 검사 결과 보기'(모든 문장 위치 · 구간 · 결과상세내역서, check opt.paid)를 누를 때만 빠짐.
      같은 글을 이미 전체 검사했으면(조각이 모두 S.cache) 토큰 없이 전체 화면 그대로. 코드만 넣으면 무료 결과는 그대로 두고 단추만 토큰 화면으로(resume).
@@ -123,15 +126,62 @@
     stat(name + '에 ' + tk(need) + '토큰이 빠집니다. 계속하려면 ' + name + '하기를 누르세요.');
   }
   var RETRY = { 'am.style': 1, 'am.humanize': 1, 'am.passinfo': 1 };   // 응답이 없으면 한 번 더(무료 요청만. 이용권 요청은 늦게 끝나면 횟수가 두 번 빠질 수 있어 다시 보내지 않음)
-  function call(action, data, ms) {
+  /* 13.42(2026.11.25 대표 14:07 '처리 실패가 되면 안 돼 · 속도는 예전처럼' · 14:13 '제일 중요한 건 성능이 동일해야 돼'):
+     11.25 01:29 부터 구글 서버(Apps Script)가 요청 일부를 시작하지 못하고 멈춤(실행 기록 '0초 실패', 그 전 7일은 0건). 예전에는 그 조각 하나를
+     30~120초 기다리다 작업 전체를 실패로 끝냈음. 이제 검사 · 휴머나이징 조각은 정해 둔 시간 안에 답이 없으면 같은 요청을 한 번 더 보내고
+     먼저 온 답을 씀(나머지는 멈춤). 연결이 끊기면 바로 다시. 모두 세 번까지. 보내는 값(글 · 말투 · 버전 · 코드)은 그대로라 결과는 같음.
+     유료 조각은 서버가 같은 조각을 한 번만 빼는 서버(am.passinfo rid:1, AIMarker 서버 1.6.4)일 때만 작업 번호(rid)를 붙여 다시 보냄 */
+  var HX = { 'am.style': [10000, 20000], 'am.humanize': [20000, 30000] }, HX_TRY = 3;
+  function hedge(action, d, total, rid) {
+    if (rid) d.rid = rid;
+    var W = HX[action];
+    return new Promise(function (ok, no) {
+      var n = 0, live = 0, end = false, last = null, tm = 0, cs = [], t0 = Date.now();
+      var dl = setTimeout(function () { if (end) return; stop(); var e = new Error('timeout'); e.name = 'AbortError'; no(e); }, total + 1000);
+      function stop() { end = true; clearTimeout(tm); clearTimeout(dl); cs.forEach(function (c) { try { c.abort(); } catch (x) { /* 그대로 */ } }); }
+      function next(ms) {
+        if (end) return;
+        if (n < HX_TRY) { clearTimeout(tm); tm = setTimeout(fire, ms || 0); }
+        else if (!live) { stop(); no(last || { name: 'AbortError', message: '' }); }
+      }
+      function fire() {
+        if (end || n >= HX_TRY) return;
+        n++; live++; if (n > 1) slowNote();
+        var c = 'AbortController' in window ? new AbortController() : null; if (c) cs.push(c);
+        AM.call(action, d, Math.max(15000, total - (Date.now() - t0)), c && c.signal).then(function (r) {
+          live--; if (end) return;
+          if (r && (r.ok || (r.code && r.code !== 'SERVER'))) { stop(); ok(r); return; }   // 결과, 또는 서버가 정한 답(토큰 모자람 등)은 그대로
+          last = r; if (!live) next(800);
+        }, function (e) {
+          live--; if (end) return;
+          last = e; if (!live || (e && e.name === 'TypeError')) next(e && e.name === 'TypeError' ? 400 : 0);
+        });
+        clearTimeout(tm); if (n < HX_TRY) tm = setTimeout(fire, W[Math.min(n, W.length) - 1]);
+      }
+      fire();
+    });
+  }
+  /* 13.42 작업 하나 = 같은 글 · 같은 버전 · 같은 코드. 실패한 작업을 다시 하면 같은 작업 번호(rid)와 이미 받은 조각을 그대로 써서 남은 조각만 보냄
+     (서버는 같은 번호 · 같은 조각이면 토큰을 다시 빼지 않음). 성공한 뒤 다시 누르면 예전처럼 새 작업 */
+  function hstr(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); }
+  function jobKey(kind, t, v) { return kind + '|' + (v || 0) + '|' + S.pass + '|' + t.length + '|' + hstr(t); }
+  function contJob(kind, t, v) { var J = (S.jobs || {})[kind]; return J && J.fail && !J.ok && J.key === jobKey(kind, t, v) ? J : null; }
+  function jobFor(kind, t, v) {
+    S.jobs = S.jobs || {};
+    var J = contJob(kind, t, v);
+    if (J) { J.fail = false; J.cont = true; return J; }
+    J = S.jobs[kind] = { key: jobKey(kind, t, v), id: kind + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), done: {}, tn: '', cont: false, fail: false, ok: false };
+    return J;
+  }
+  function call(action, data, ms, rid) {
     var d = Object.assign({ cid: cid() }, data || {}), t = ms || 60000;
-    var p = RETRY[action] && !d.pass && AM.callRetry ? AM.callRetry(action, d, t, action === 'am.passinfo' ? null : slowNote) : AM.call(action, d, t);
+    var p = HX[action] && (!d.pass || (rid && S.info && S.info.rid)) ? hedge(action, d, t, d.pass ? rid : '') : RETRY[action] && !d.pass && AM.callRetry ? AM.callRetry(action, d, t, action === 'am.passinfo' ? null : slowNote) : AM.call(action, d, t);
     return p.then(function (r) { if (!r || !r.ok) throw r || { message: '응답이 없습니다. 잠시 뒤 다시 시도해 주세요.' }; if (r.pass && !(S.busy && d.pass && S.ps && r.pass.credit && S.ps.credit && typeof r.pass.cr === 'number' && typeof S.ps.cr === 'number' && r.pass.cr > S.ps.cr)) { S.ps = r.pass; renderPass(); } return r; });   // 13.30 동시에 보낸 조각의 답은 순서가 섞여 오므로 작업 중에는 남은 토큰이 더 적은 답만
   }
-  function slowNote() {   // 다시 보낼 때 진행 표시에 알림
-    var el = $('.hz7-prog', out), p = el && $('p', el);
-    if (p) p.textContent = '서버 응답이 늦어 한 번 더 보냈습니다. 조금만 더 기다려 주세요.';
-    stat('서버 응답이 늦어 한 번 더 보냈습니다');
+  function slowNote() {   // 13.42 늦은 조각을 다시 보낼 때 진행 화면에 한 줄(같은 조각은 토큰이 한 번만)
+    var el = stageEl && $('.hz42-slow', stageEl);
+    if (el) el.hidden = false;
+    stat('응답이 늦은 조각을 한 번 더 보냈습니다');
   }
   function ico(name) {
     var P = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', check: '<path d="M20 6 9 17l-5-5"/>', alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>', back: '<path d="M15 18l-6-6 6-6"/>', file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>', clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>', upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>', pen: '<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>', shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>', open: '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>' };
@@ -259,11 +309,22 @@
 
   /* ---------- 12.1 바로 검사(무료일 때만): 파일을 올리거나, 글을 붙여 넣거나, 예시를 고르면 ---------- */
   var autoT = 0;
+  /* 13.42(2026.11.25 대표 14:07 '휴머나이징 버튼을 눌러야지 진행되어야지 왜 자동으로 되는거야'): 파일 · 붙여 넣기 · 예시는 글만 넣고 기다림.
+     검사 · 휴머나이징은 단추를 눌러야 시작(시작 단추를 잠깐 빛내 알려 줌). AUTO_RUN 을 true 로 두면 예전처럼 바로 검사 */
+  var AUTO_RUN = false;
   function autoCheck(why) {
     clearTimeout(autoT);
-    if (S.busy) { count(); return; }   // 13.30 토큰이 있어도 검사는 무료라 똑같이 바로 검사
+    if (S.busy) { count(); return; }
     var t = cur(); if (t.replace(/\s+/g, '').length < 60) return;
+    if (!AUTO_RUN) { readyCue(why); return; }
     autoT = setTimeout(function () { if (!S.busy) check(); }, why === 'paste' ? 250 : 60);
+  }
+  function readyCue(why) {   // 13.42 글이 들어오면 시작 단추를 화면 안으로 · 잠깐 빛냄
+    var row = btnC && btnC.parentNode; if (!row) return;
+    row.classList.remove('hz42-cue'); void row.offsetWidth; row.classList.add('hz42-cue');
+    setTimeout(function () { row.classList.remove('hz42-cue'); }, 2600);
+    try { var r = row.getBoundingClientRect(); if (r.top < 70 || r.bottom > window.innerHeight - 10) row.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' }); } catch (e) { /* 그대로 */ }
+    stat((why === 'file' ? '파일에서 글을 꺼냈습니다. ' : '글을 넣었습니다. ') + '시작 단추를 누르면 시작합니다.');
   }
   ta.addEventListener('paste', function (e) {
     var cd = e.clipboardData, f = cd && cd.files && cd.files[0];
@@ -519,31 +580,69 @@
   }
 
   /* ---------- 진행 · 오류 ---------- */
-  function setBusy(on) { S.busy = on; btnC.disabled = on; btnP.disabled = on; }
+  function setBusy(on) { S.busy = on; btnC.disabled = on; btnP.disabled = on; if (!on) stageEnd(); }   // 13.42 끝나면 전체 화면 진행 화면을 닫음
   /* 13.38(2026.11.24 대표 '좀 너무 간단해서 그래픽이라던지 애니메이션이라던지 좀 더 개선해봐'): 진행 화면에 문서 그림(훑는 빛이 지나가면 AI 패턴 줄이 바뀜) ·
      네 단계 · 조각 점 · 반짝이는 막대. 숫자(i / n)와 막대는 실제로 끝난 조각 수 그대로. 움직임 줄이기 설정이면 멈춘 그림 */
   var P38 = { hum: ['문장 패턴 분석', 'AI 패턴 선별', '사람 말투로 다듬기', '의미 · 숫자 확인'], chk: ['문장 나누기', '앞뒤 문맥 살피기', 'AI 패턴 판정', '결과 정리'] };
+  /* 13.42(2026.11.25 대표 14:07 '화면이 전환되면서 전체적으로 있어보이게 디자인되어야지 저렇게 하단에 허접하게 하면 안 돼'):
+     처리 중에는 화면 전체를 덮는 진행 화면. 13.38 그림(문서 · 훑는 빛 · 네 단계 · 조각 점)을 가운데 크게, 둘레에 진행 고리 · 큰 백분율.
+     숫자와 고리 · 막대는 실제로 끝난 조각 수 그대로(한 번에 끝나는 일은 도는 고리). 다 끝나면 '완료' 표시를 잠깐 보이고 결과로,
+     실패하면 바로 닫고 안내. 움직임 줄이기 설정이면 멈춘 그림. 예전 13.38 칸(결과 자리 안)은 쓰지 않음 */
+  var stageEl = null, stageFocus = null, STAGE_SUB = '문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고, AIMarker 판정 기준 1.6으로 판정합니다. 표지 · 목차 · 참고문헌 같은 줄은 빼고 본문 문장만 셉니다. 같은 글은 언제나 같은 결과가 나옵니다.';
+  function stageOpen(k) {
+    if (stageEl) return stageEl;
+    S.stageErr = false;
+    var W = [92, 74, 86, 60, 81, 48];
+    var doc = '<div class="hz38-doc hz42-doc" aria-hidden="true">' + W.map(function (w, j) { return '<span class="hz38-ln' + (j % 3 === 1 ? ' f' : '') + '" style="--i:' + j + ';--w:' + w + '%"></span>'; }).join('') + '<span class="hz38-beam"></span><span class="hz38-tag"><span class="dot"></span>' + (k === 'hum' ? 'AI 패턴 제거' : 'AI 패턴 탐지') + '</span></div>';
+    var st = P38[k].map(function (x, j) { return '<li style="--d:' + j + '"><span>' + (j + 1) + '</span>' + x + '</li>'; }).join('');
+    var el = document.createElement('div');
+    el.className = 'hz42 hz38-' + k; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'hz42T'); el.setAttribute('aria-describedby', 'hz42S');
+    el.innerHTML = '<div class="hz42-card" tabindex="-1"><span class="hz42-eb"><i></i>' + (k === 'hum' ? '휴머나이징 엔진이 처리하고 있습니다' : 'AI 작성률을 판정하고 있습니다') + '</span>' +
+      '<div class="hz42-vis"><svg class="hz42-ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="tr" cx="60" cy="60" r="54"></circle><circle class="pg" cx="60" cy="60" r="54"></circle></svg>' + doc + '</div>' +
+      '<div class="hz42-pct" aria-hidden="true"><b>0</b><small>%</small></div><h2 id="hz42T"></h2><p class="hz42-sub" id="hz42S"></p><ol class="hz38-st hz42-st">' + st + '</ol>' +
+      '<div class="hz42-bar"><em></em></div><div class="hz42-ft"><span class="hz38-dots"></span><span class="hz38-pc"></span></div><small class="hz42-nt" hidden></small>' +
+      '<small class="hz42-slow" hidden>응답이 늦은 조각은 자동으로 한 번 더 보내고 있어요. 같은 조각은 토큰이 두 번 빠지지 않습니다.</small><small class="hz42-keep">끝날 때까지 이 창을 닫지 마세요.</small></div>';
+    stageFocus = document.activeElement;
+    document.body.appendChild(el); document.documentElement.classList.add('hz42-on');
+    try { $('.hz42-card', el).focus({ preventScroll: true }); } catch (e) { /* 그대로 */ }
+    if (RM) el.classList.add('in'); else requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('in'); }); });
+    stageEl = el; return el;
+  }
+  function stageEnd() {   // setBusy(false) 가 부름(결과나 안내가 결과 자리에 그려진 뒤)
+    var el = stageEl; if (!el) return; stageEl = null;
+    var ok = !S.stageErr && el.classList.contains('full'), f = stageFocus; S.stageErr = false; stageFocus = null;
+    if (ok) { el.classList.add('done'); var h = $('#hz42T', el), b = $('.hz42-pct b', el); if (h) h.textContent = '완료되었습니다'; if (b) b.textContent = '100'; stat('완료되었습니다'); }
+    setTimeout(function () {
+      el.classList.remove('in'); el.classList.add('out');
+      setTimeout(function () {
+        if (el.parentNode) el.parentNode.removeChild(el);
+        if (!stageEl) document.documentElement.classList.remove('hz42-on');
+        try { if (f && f.focus && document.contains(f) && !f.disabled) f.focus({ preventScroll: true }); } catch (x) { /* 그대로 */ }
+      }, RM ? 0 : 320);
+    }, ok ? (RM ? 120 : 480) : 0);
+  }
   function prog(label, i, n, sub, nt) {
-    var pct = n ? Math.round(i / n * 100) : 30;
-    var el = $('.hz7-prog', out);
-    if (!el || !$('em', el)) {
-      var k = /낮추|다듬|말투/.test(label) ? 'hum' : 'chk', W = [92, 74, 86, 60, 81, 48];
-      var doc = '<div class="hz38-doc" aria-hidden="true">' + W.map(function (w, j) { return '<span class="hz38-ln' + (j % 3 === 1 ? ' f' : '') + '" style="--i:' + j + ';--w:' + w + '%"></span>'; }).join('') + '<span class="hz38-beam"></span><span class="hz38-tag"><span class="dot"></span>' + (k === 'hum' ? 'AI 패턴 제거' : 'AI 패턴 탐지') + '</span></div>';
-      var st = P38[k].map(function (x, j) { return '<li style="--d:' + j + '"><span>' + (j + 1) + '</span>' + x + '</li>'; }).join('');
-      out.innerHTML = '<div class="hz7-prog hz38 hz38-' + k + '"><div class="hz38-top">' + doc + '<div class="hz38-tx"><b></b><p>' + (sub || '문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고, AIMarker 판정 기준 1.6으로 판정합니다. 표지 · 목차 · 참고문헌 같은 줄은 빼고 본문 문장만 셉니다. 같은 글은 언제나 같은 결과가 나옵니다.') + '</p><ol class="hz38-st">' + st + '</ol></div></div><i><em></em></i><div class="hz38-ft"><span class="hz38-dots"></span><span class="hz38-pc"></span></div>' + (nt ? '<small class="hz38-nt">' + nt + '</small>' : '') + '</div>';
-      el = $('.hz7-prog', out); stat(label);
-    }
-    $('b', el).textContent = label + (n > 1 ? (/[.]$/.test(label) ? ' (' + i + '/' + n + ')' : ' ' + i + ' / ' + n) : ''); $('em', el).style.width = Math.max(6, pct) + '%';
-    el.classList.toggle('ind', n <= 1 && i < n);   // 한 번에 끝나는 검사는 흐르는 막대로
+    var pct = n ? Math.round(i / n * 100) : 0, k = /낮추|다듬|말투/.test(label) ? 'hum' : 'chk', el = stageOpen(k), one = n <= 1 && i < n;
+    if (sub !== undefined || !el.getAttribute('data-s')) { $('.hz42-sub', el).textContent = sub || STAGE_SUB; el.setAttribute('data-s', '1'); }
+    if (nt) { var ne = $('.hz42-nt', el); ne.textContent = nt; ne.hidden = false; }
+    var h = $('#hz42T', el); if (h.textContent !== label) { h.textContent = label; stat(label); }
+    el.classList.toggle('ind', one);   // 한 번에 끝나는 일은 도는 고리 · 흐르는 막대
+    el.classList.toggle('full', n > 0 && i >= n);
+    $('.hz42-pct b', el).textContent = String(pct);
+    var pg = $('.hz42-ring .pg', el); if (pg) pg.style.strokeDashoffset = String(339.29 * (1 - (one ? 0.22 : pct / 100)));
+    $('.hz42-bar em', el).style.width = (one ? 36 : Math.max(4, pct)) + '%';
     var dt = $('.hz38-dots', el), pc = $('.hz38-pc', el), m = Math.min(n, 40), on = n ? Math.round(i / n * m) : 0;
     if (dt) dt.innerHTML = n > 1 ? Array.apply(null, Array(m)).map(function (x, j) { return '<span' + (j < on ? ' class="on"' : j === on ? ' class="nx"' : '') + '></span>'; }).join('') : '';
-    if (pc) pc.textContent = n > 1 ? '조각 ' + i + ' / ' + n + ' · ' + pct + '%' : '';
+    if (pc) pc.textContent = n > 1 ? '조각 ' + i + ' / ' + n + ' 끝남' : '';
   }
   function note(msg) { out.innerHTML = '<div class="hz7-prog"><b>' + esc(msg) + '</b></div>'; stat(msg); }
   function stat(t) { var st = document.getElementById('hzStat'); if (st) st.textContent = t || ''; }   // 화면 읽기 프로그램에는 한 줄만 알림
   function fail(e, retry, redo) {
+    S.stageErr = true;   // 13.42 진행 화면은 '완료' 없이 바로 닫음
     var code = e && e.code, slow = !!e && (e.name === 'AbortError' || e.name === 'TypeError');   // 시간 초과 · 연결 끊김
     var m = slow ? (e.name === 'TypeError' ? '서버에 연결하지 못했습니다. 넣은 글은 그대로 있으니 잠시 뒤 다시 시도해 주세요.' : '서버 응답이 늦어 결과를 받지 못했습니다. 넣은 글은 그대로 있으니 다시 시도해 주세요.') : (e && (e.message || e.msg)) || '지금은 처리하지 못했어요. 잠시 뒤 다시 시도해 주세요.';
+    if (slow && redo && S.contN) m += ' 다시 시도를 누르면 끝난 ' + S.contN + '조각은 그대로 두고 남은 부분만 이어서 처리합니다.' + (S.pass ? ' 같은 조각은 토큰이 두 번 빠지지 않습니다.' : '');   // 13.42
+    S.contN = 0;
     var acts = slow && redo ? '<button class="btn btn-p btn-s" type="button" data-redo>다시 시도</button>' : '';
     var again = retry ? '<button class="btn btn-g btn-s" type="button" data-again>무료 검사로 보기</button>' : '';
     if (code === 'PASS') { clearPass(); S.passMsg = m; renderPass(); acts = '<button class="btn btn-g btn-s" type="button" data-code>코드 다시 넣기</button>' + again; }
@@ -556,8 +655,8 @@
   function need(t) {   // 13.24 넣은 글이 없으면: 파일 먼저(올리기 단추를 안내 안에), 터치 화면은 글 칸에 커서를 두지 않음(자판이 안내를 가림)
     if (String(t).replace(/\s+/g, '')) return true;
     collapse(false);
-    out.innerHTML = '<div class="hz7-err hz20-need"><b>검사할 파일을 먼저 넣어 주세요</b><span>한글, 워드, PDF 파일을 올리거나 글을 붙여 넣으면 바로 검사합니다.</span>' + (fileIn ? '<div class="row"><button class="btn btn-p btn-s" type="button" data-act="pick">' + ico('upload') + '<span>파일 올리기</span></button></div>' : '') + '</div>';
-    stat('검사할 파일을 먼저 넣어 주세요. 파일을 올리거나 글을 붙여 넣으면 바로 검사합니다.');
+    out.innerHTML = '<div class="hz7-err hz20-need"><b>검사할 파일을 먼저 넣어 주세요</b><span>한글, 워드, PDF 파일을 올리거나 글을 붙여 넣은 뒤 검사 단추를 누르면 바로 검사합니다.</span>' + (fileIn ? '<div class="row"><button class="btn btn-p btn-s" type="button" data-act="pick">' + ico('upload') + '<span>파일 올리기</span></button></div>' : '') + '</div>';
+    stat('검사할 파일을 먼저 넣어 주세요. 파일을 올리거나 글을 붙여 넣은 뒤 검사 단추를 누르면 바로 검사합니다.');
     var touch = window.matchMedia && matchMedia('(hover: none), (pointer: coarse)').matches, el = (touch && out.querySelector('[data-act="pick"]')) || ta;
     try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
     return false;
@@ -581,8 +680,9 @@
     /* 13.30 토큰 코드가 있어도 기본은 무료 검사(0토큰). 전체 검사(토큰)는 '전체 검사 결과 보기'처럼 토큰 숫자가 적힌 단추로 고를 때만(opt.paid).
        같은 글을 이미 전체 검사했으면(조각이 모두 S.cache) 토큰 없이 전체 화면 그대로 */
     var full = !!S.pass && !opt.free && (!!opt.paid || C.parts.every(function (p) { return !!S.cache['c|' + p]; }));
+    var JC = full ? jobFor('c', t, 0) : null;   // 13.42 결과서(토큰)는 작업 번호를 붙여 보냄(실패한 작업을 이어서 하면 같은 번호)
     if (full && isCr()) {   // 12.0 토큰: 모자라면 충전 안내, 10토큰 이상이면 한 번 묻기
-      var needC = chkCost(C.parts);
+      var needC = JC && JC.cont ? 0 : chkCost(C.parts);   // 13.42 이어서 하는 작업은 남은 토큰을 서버가 셈
       if (needC > crLeft()) { out.innerHTML = lowHtml(RPT, t.length, needC, '무료 검사 결과로 보기'); S.retry = function () { check(t, { free: true }); }; stat('토큰이 모자랍니다'); return Promise.resolve(null); }
       if (needC >= ASK && !opt.ok) { ask(RPT, t.length, needC, function () { check(t, Object.assign({}, opt, { ok: true })); }); return Promise.resolve(null); }
     } else if (full && S.ps) {   // 예전 이용권: 남은 횟수보다 많이 필요하면 미리 알림(중간에 멈춰 횟수만 쓰지 않게)
@@ -596,14 +696,15 @@
       var key = 'c|' + part;
       if (full && S.cache[key]) { prog(lbl, ++done, C.parts.length); return Promise.resolve(S.cache[key]); }
       if (!full && S.fcache[key]) { prog(lbl, ++done, C.parts.length); return Promise.resolve(S.fcache[key]); }   // 13.13 같은 글을 다시 보면 무료 횟수를 쓰지 않음
-      return call('am.style', { text: part, mode: 'check', tone: tnC, pass: full ? S.pass : '' }, 90000).then(function (r) { if (full && r.full) S.cache[key] = r; else if (!full) S.fcache[key] = r; prog(lbl, ++done, C.parts.length); return r; });
+      return call('am.style', { text: part, mode: 'check', tone: tnC, pass: full ? S.pass : '' }, 120000, JC ? JC.id + '.' + i : '').then(function (r) { if (full && r.full) S.cache[key] = r; else if (!full) S.fcache[key] = r; prog(lbl, ++done, C.parts.length); return r; });
     }).then(function (rs) {
       var isFull = rs.every(function (r) { return r.full; });
       return merge(rs, isFull, t);
     }).then(function (M) {
+      if (JC) JC.ok = true;
       M.src = t; M.C = C; if (!M.full) freeShow(M);
       S.res = M; S.edits = {}; S.sel = -1; S.side = 'ai'; S.fx = null; S.fxLast = null; box.classList.remove('stale'); renderRes(); histPush('res'); if (M.full && S.wantPdf) { S.wantPdf = false; setTimeout(function () { try { report(); } catch (e) { /* 저장 단추로 */ } }, 600); } collapse(true); setStep(2); outShown(); toOut(); return M;
-    }).catch(function (e) { if (e && e.code === 'FREE_DAY' && !full && S.pass) freeDayPaid(t); else fail(e, function (free) { check(t, { free: free }); }, function () { check(t, opt); }); return null; })
+    }).catch(function (e) { if (JC) JC.fail = true; S.contN = C.parts.filter(function (p) { return !!(full ? S.cache : S.fcache)['c|' + p]; }).length; if (e && e.code === 'FREE_DAY' && !full && S.pass) freeDayPaid(t); else fail(e, function (free) { check(t, { free: free }); }, function () { check(t, opt); }); return null; })
       .then(function (M) { setBusy(false); return M; });
   }
   btnC.addEventListener('click', function () { S.wantPdf = false; check(undefined, { paid: !!S.pass && !FREE_FIRST }); });   // 13.30 토큰 코드가 있으면 왼쪽 단추는 리포트(토큰), 없으면 무료 검사
@@ -1063,13 +1164,17 @@
     if (!need(t) || S.busy) return;
     var full = !!S.pass;
     if (full && t.length > PAID_MAX) { out.innerHTML = '<div class="hz7-err">한 번에 20만 자까지 바꿉니다.</div>'; return; }
-    var C0 = chunk(t), C = full ? C0 : { parts: [C0.parts[0]], seps: [] };
-    if (full && isCr()) { var needF = C.parts.reduce(function (a, p) { return a + (p.length <= HELP_MAX ? 0 : costOf('unit', p.length)); }, 0); if (needF > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, needF, ''); return; } }
+    var C0 = chunk(t), C = full ? C0 : { parts: [C0.parts[0]], seps: [] }, JF = full ? jobFor('f', t, 0) : null;   // 13.42
+    if (full && isCr() && !JF.cont) { var needF = C.parts.reduce(function (a, p) { return a + (p.length <= HELP_MAX ? 0 : costOf('unit', p.length)); }, 0); if (needF > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, needF, ''); return; } }
     else if (full && S.ps && C.parts.length > S.ps.left) { out.innerHTML = '<div class="hz7-err"><b>남은 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 바꿔 이용권 ' + C.parts.length + '회가 필요합니다.' : '이 글을 바꾸려면 이용권 1회가 필요합니다.') + ' 지금 남은 횟수는 ' + S.ps.left + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button></div></div>'; return; }
     setBusy(true); prog(HUM_L, 0, C.parts.length, HUM_SUB, C.parts.length > 1 ? '긴 글은 6,000자씩 나눠 동시에 처리합니다.' : ''); runShow('fx');
-    var tn = tone(), doneF = 0;
-    par(C.parts, function (part, i) { return call('am.style', { text: part, mode: 'fix', tone: tn, pass: full ? S.pass : '' }, 90000).then(function (r) { if (r.toneUsed && tn === 'auto') { tn = r.toneUsed; S.toneUsed = r.toneUsed; } prog(HUM_L, ++doneF, C.parts.length); return r; }); }, function () { return tn !== 'auto'; })
+    var tn = (JF && JF.tn) || tone(), doneF = JF ? Object.keys(JF.done).length : 0;
+    par(C.parts, function (part, i) {
+      if (JF && JF.done[i]) return Promise.resolve(JF.done[i]);   // 13.42 이미 받은 조각
+      return call('am.style', { text: part, mode: 'fix', tone: tn, pass: full ? S.pass : '' }, 120000, JF ? JF.id + '.' + i : '').then(function (r) { if (r.toneUsed && tn === 'auto') { tn = r.toneUsed; S.toneUsed = r.toneUsed; if (JF) JF.tn = r.toneUsed; } if (JF) JF.done[i] = r; prog(HUM_L, ++doneF, C.parts.length); return r; });
+    }, function () { return tn !== 'auto'; })
       .then(function (rs) {
+        if (JF) JF.ok = true;
         if (!rs.every(function (r) { return r.full; })) { S.fx = { free: true, changes: rs[0].changes || 0, samples: rs[0].fixSamples || [], cut: C0.parts.length > 1, total: t.length }; renderFixFree(); toOut(); return; }
         var text = rs.map(function (r, i) { return (i ? C.seps[i - 1] : '') + r.text; }).join(''), applied = [], left = [], miss = [], tot = 0;
         rs.forEach(function (r) { applied = applied.concat(r.applied || []); left = left.concat(r.left || []); if (r.facts) { tot += r.facts.total || 0; (r.facts.missing || []).forEach(function (x) { if (miss.indexOf(x) < 0) miss.push(x); }); } });
@@ -1079,7 +1184,7 @@
           A.src = text; S.fx = { kind: 'fix', fallback: S.fallback || false, src: t, text: text, applied: applied, left: left, facts: { total: tot, missing: miss }, beforeRate: before.chars ? Math.round(before.ai / before.chars * 100) : 0, beforeBand: bandBefore(t), after: A, toneNote: tnote };
           renderFix(); toOut();
         });
-      }).catch(function (e) { fail(e, null, fix); }).then(function () { setBusy(false); });
+      }).catch(function (e) { if (JF) { JF.fail = true; S.contN = Object.keys(JF.done).length; } fail(e, null, fix); }).then(function () { setBusy(false); });
   }
   function pro(again, free) {
     if (!S.proReady) return;
@@ -1094,20 +1199,24 @@
       return;
     }
     if (t.length > PAID_MAX) { out.innerHTML = '<div class="hz7-err">한 번에 20만 자까지 휴머나이징합니다.</div>'; return; }
-    var C = chunk(t);
-    if (isCr()) { if (humCost(C.parts) > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, humCost(C.parts), '첫 문단 무료로 보기'); S.retry = function () { pro(false, true); }; return; } }
-    else if (S.ps && C.parts.length > S.ps.proLeft) { out.innerHTML = '<div class="hz7-err"><b>휴머나이징 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 바꿔 휴머나이징 ' + C.parts.length + '회가 필요합니다.' : '이 글을 바꾸려면 휴머나이징 1회가 필요합니다.') + ' 남은 휴머나이징은 ' + S.ps.proLeft + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button></div></div>'; return; }
-    setBusy(true); prog(HUM_L, 0, C.parts.length, HUM_SUB, (C.parts.length > 1 ? '긴 글은 6,000자씩 나눠 동시에 처리합니다. ' : '') + (isCr() ? '처리하지 못하면 토큰은 빠지지 않습니다.' : '')); runShow('fx');
-    var tn = tone(), doneH = 0;
-    par(C.parts, function (part, i) { return call('am.humanize', { text: part, tone: tn, variant: S.variant, pass: S.pass }, 120000).then(function (r) { if (tn === 'auto' && r.tone) { tn = r.tone; S.toneUsed = r.tone; } prog(HUM_L, ++doneH, C.parts.length); return r; }); }, function () { return tn !== 'auto'; })
+    var C = chunk(t), J = jobFor('h', t, S.variant), todo = C.parts.filter(function (p, i) { return !J.done[i]; });   // 13.42 실패한 작업을 이어서 하면 끝난 조각은 그대로(서버도 같은 조각은 한 번만 뺌)
+    if (isCr()) { if (!J.cont && humCost(todo) > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, humCost(todo), '첫 문단 무료로 보기'); S.retry = function () { pro(false, true); }; return; } }
+    else if (S.ps && todo.length > S.ps.proLeft) { out.innerHTML = '<div class="hz7-err"><b>휴머나이징 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 바꿔 휴머나이징 ' + C.parts.length + '회가 필요합니다.' : '이 글을 바꾸려면 휴머나이징 1회가 필요합니다.') + ' 남은 휴머나이징은 ' + S.ps.proLeft + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button></div></div>'; return; }
+    setBusy(true); prog(HUM_L, C.parts.length - todo.length, C.parts.length, HUM_SUB, (C.parts.length > 1 ? '긴 글은 6,000자씩 나눠 동시에 처리합니다. ' : '') + (isCr() ? '처리하지 못한 조각은 토큰이 빠지지 않습니다.' : '')); runShow('fx');
+    var tn = J.tn || tone(), doneH = C.parts.length - todo.length; if (J.tn) S.toneUsed = J.tn;
+    par(C.parts, function (part, i) {
+      if (J.done[i]) return Promise.resolve(J.done[i]);   // 13.42 이미 받은 조각
+      return call('am.humanize', { text: part, tone: tn, variant: S.variant, pass: S.pass }, 150000, J.id + '.' + i).then(function (r) { if (tn === 'auto' && r.tone) { tn = r.tone; S.toneUsed = r.tone; J.tn = r.tone; } J.done[i] = r; prog(HUM_L, ++doneH, C.parts.length); return r; });
+    }, function () { return tn !== 'auto'; })
       .then(function (rs) {
+        J.ok = true;
         var text = rs.map(function (r, i) { return (i ? C.seps[i - 1] : '') + r.text; }).join(''), applied = [], miss = [], tot = 0, bc = 0, ba = 0, tmiss = 0, tnote = '';
         rs.forEach(function (r) { applied = applied.concat(r.applied || []); if (r.facts) { tot += r.facts.total || 0; (r.facts.missing || []).forEach(function (x) { if (miss.indexOf(x) < 0) miss.push(x); }); } if (r.ai) { bc += r.ai.chars || 0; ba += r.ai.aiChars || 0; } if (r.stats && r.stats.toneMiss) tmiss += r.stats.toneMiss; if (r.toneNote && !tnote) tnote = r.toneNote; });
         return merge(rs.map(function (r) { return { aiAfter: r.aiAfter }; }), true, text).then(function (A) {
           A.src = text; S.fx = { kind: 'pro', src: t, text: text, applied: applied, left: [], facts: { total: tot, missing: miss }, beforeRate: bc ? Math.round(ba / bc * 100) : 0, beforeBand: bandBefore(t), after: A, tone: tn, variant: S.variant, toneMiss: tmiss, toneNote: tnote };
           renderFix(); toOut();
         });
-      }).catch(function (e) { fail(e, null, function () { pro(true); }); }).then(function () { setBusy(false); });
+      }).catch(function (e) { J.fail = true; S.contN = Object.keys(J.done).length; fail(e, null, function () { pro(true); }); }).then(function () { setBusy(false); });
   }
   /* 12.1 ③ 글 전체 휴머나이징: 토큰이 있으면 바로, 없으면 이 글에 맞는 충전 창(코드를 넣거나 결제하고 오면 이어서) */
   function startHum() {
@@ -1218,9 +1327,9 @@
     if (!need(t) || S.busy) return;
     if (isCr()) {   // 12.0 토큰: 이 글의 휴머나이징 토큰을 보고 모자라면 충전, 100 이상이면 한 번 묻기
       if (!S.proReady) return fix();
-      var Pc = chunk(t).parts, needH = humCost(Pc);
-      if (needH > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, needH, '첫 문단 무료로 보기'); S.retry = function () { pro(false, true); }; stat('토큰이 모자랍니다'); return; }
-      if (needH >= ASK && !S.okHum) { ask('AI 휴머나이징', t.length, needH, function () { S.okHum = true; try { hum(again); } finally { S.okHum = false; } }); return; }
+      var Pc = chunk(t).parts, Jc = contJob('h', t, again === true ? S.variant : 0), needH = humCost(Jc ? Pc.filter(function (p, i) { return !Jc.done[i]; }) : Pc);   // 13.42
+      if (!Jc && needH > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, needH, '첫 문단 무료로 보기'); S.retry = function () { pro(false, true); }; stat('토큰이 모자랍니다'); return; }
+      if (!Jc && needH >= ASK && !S.okHum) { ask('AI 휴머나이징', t.length, needH, function () { S.okHum = true; try { hum(again); } finally { S.okHum = false; } }); return; }
       return pro(again);
     }
     var n = chunk(t).parts.length;
@@ -1617,8 +1726,8 @@
       return call('am.pass', { pass: S.pass }, 20000).then(function (p) { S.ps = p.pass; renderPass(); }).catch(function () { renderPass(); }).then(function () {
         if (d && d.act) S.intent = d.act;
         if (resume()) return;
-        if (String(ta.value || '').replace(/\s+/g, '')) return check(cur());
-        out.innerHTML = paidBar() + '<div class="hz7-prog"><b>토큰이 준비되었습니다</b><p>검사할 글을 넣으면 AI 작성률은 무료로 바로 검사하고, 휴머나이징과 ' + RPT + '(모든 문장 위치 · PDF)는 남은 토큰에서 빠집니다.</p></div>';
+        if (String(ta.value || '').replace(/\s+/g, '')) { out.innerHTML = paidBar() + '<div class="hz7-prog"><b>토큰이 준비되었습니다</b><p>넣어 둔 글은 그대로 있습니다. 시작 단추를 누르면 시작합니다. AI 작성률 검사는 무료이고, 휴머나이징과 ' + RPT + '는 남은 토큰에서 빠집니다.</p></div>'; readyCue('pay'); return; }   // 13.42 결제 뒤에도 단추를 눌러야 시작
+        out.innerHTML = paidBar() + '<div class="hz7-prog"><b>토큰이 준비되었습니다</b><p>검사할 글을 넣고 단추를 누르면 AI 작성률은 무료로 검사하고, 휴머나이징과 ' + RPT + '(모든 문장 위치 · PDF)는 남은 토큰에서 빠집니다.</p></div>';
       });
     }).catch(function (e) {
       cleanUrl();
