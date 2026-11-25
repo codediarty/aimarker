@@ -372,3 +372,93 @@
     calc();
   });
 })();
+
+/* ================================================================
+ * 13.43 머리 '토큰 충전' 옆 남은 토큰 · 메일 단추 코드 먼저(2026.11.25 대표)
+ *  - '결제한 사람들 토큰 얼마 남았는지 가시성 좋게', 'AIMarker · 형제 · 카피휴먼 모두 토큰 충전 옆에 잔여 토큰',
+ *    '뭐가 됐든 메일로 온 링크로 들어가게 되면 그 토큰으로 적용이 되어야지'
+ *  - 주소에 코드(?pass=)가 있으면 어느 페이지든 그 코드를 이 브라우저 코드로 먼저 저장(글 검사 화면은 그 화면이 이어서 확인)
+ *  - 이 브라우저에 토큰 코드(am_pass)가 있으면 어느 페이지에서나 '토큰 충전' 바로 옆에 '남은 토큰 N'. 코드가 없으면 넣지 않음
+ *  - 마지막으로 본 값을 바로 보여 주고 서버(am.pass, 차감 없음)로 새로 읽음. 검사 · 휴머나이징 응답에 실린 남은 토큰으로도 바로 바뀜
+ *  - 10토큰 미만은 붉은색. 누르면 '토큰 충전'과 같은 곳. 휴머나이징 흐름 · 엔진은 그대로(서버 응답을 읽기만 함)
+ * ================================================================ */
+(function () {
+  'use strict';
+  var AM = window.AM; if (!AM || typeof AM.call !== 'function') return;
+  var KEY = 'am_pass', LAST = 'am_tok_last', LOW = 10, el = null, got = 0, lastRef = 0, inflight = '', bad = {};
+  var ICO = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3M17 6l3 3M14 9l2 2"/></svg>';
+  function sget(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function sput(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* 저장 없이 */ } }
+  function norm(c) { return String(c || '').toUpperCase().replace(/[^0-9A-Z]/g, ''); }
+  function fmtC(c) { return norm(c).replace(/(.{4})(?=.)/g, '$1-'); }
+  function code() { var c = norm(sget(KEY)); return c.length === 16 ? c : ''; }
+  function memo() { try { var o = JSON.parse(sget(LAST) || '{}'); return o && typeof o === 'object' ? o : {}; } catch (e) { return {}; } }
+  function memoGet(c) { var o = memo()[c.slice(-6)]; return o && typeof o.l === 'number' ? o.l : null; }
+  function memoPut(c, l) {
+    var o = memo(); o[c.slice(-6)] = { l: l, t: Date.now() };
+    Object.keys(o).sort(function (a, b) { return (o[b].t || 0) - (o[a].t || 0); }).slice(5).forEach(function (k) { delete o[k]; });
+    sput(LAST, JSON.stringify(o));
+  }
+  function fmt(x) { x = +x || 0; return x >= 100 ? Math.floor(x).toLocaleString('ko-KR') : (Math.round(x * 10) / 10).toLocaleString('ko-KR', { maximumFractionDigits: 1 }); }
+  function full(x) { return (Math.round((+x || 0) * 10) / 10).toLocaleString('ko-KR', { maximumFractionDigits: 1 }); }
+
+  /* 메일 단추 주소의 코드: 글 검사 화면이 아니면 여기서 저장하고 주소에서 지움(글 검사 화면은 그 화면이 같은 코드를 넣고 지움) */
+  try {
+    var q = new URLSearchParams(location.search), qc = norm(q.get('pass'));
+    if (/^[2-9A-HJ-NP-Z]{16}$/.test(qc)) {
+      sput(KEY, fmtC(qc));
+      if (!document.getElementById('hzText')) { q.delete('pass'); var rest = q.toString(); history.replaceState(null, '', location.pathname + (rest ? '?' + rest : '') + location.hash); }
+    }
+  } catch (eQ) { /* 주소 그대로 */ }
+
+  function host() { return document.querySelector('.k-hd-r') || document.querySelector('.hd .hd-r'); }
+  function buyLink(h) { var a = [].slice.call(h.querySelectorAll('a')).filter(function (x) { return x !== el && /^\s*토큰 충전\s*$/.test(x.textContent || ''); }); return a[0] || null; }
+  function paint(l) {
+    var c = code(), h = host();
+    if (!h) return;
+    if (!c || bad[c]) { if (el && el.parentNode) el.parentNode.removeChild(el); el = null; document.documentElement.classList.remove('am-tok-on'); return; }
+    if (l == null) l = memoGet(c);
+    if (!el || !el.parentNode) {
+      var a = buyLink(h);
+      el = document.createElement('a'); el.className = 'am-tok';
+      el.href = a ? a.getAttribute('href') : (AM.root || '/') + 'pricing/';
+      if (a && a.parentNode === h) h.insertBefore(el, a.nextSibling); else h.insertBefore(el, h.querySelector('.k-menu-btn, .menu-btn, #menuBtn'));
+    }
+    el.classList.toggle('low', l != null && l < LOW); el.classList.toggle('wait', l == null);
+    el.innerHTML = ICO + '<span class="am-tok-l"><span class="am-tok-p">남은 </span>토큰</span><b>' + (l != null ? fmt(l) : '<i class="am-tok-d"></i>') + '</b>';
+    var t = '남은 토큰 ' + (l != null ? full(l) : '확인 중') + ' · 지금 쓰는 코드 끝 ' + c.slice(-4) + (l != null && l < LOW ? ' · 토큰이 얼마 남지 않았습니다. 눌러서 충전하세요.' : ' · 눌러서 충전');
+    el.title = t; el.setAttribute('aria-label', t);
+    document.documentElement.classList.add('am-tok-on');
+  }
+  /* 서버 응답을 지켜봄: 토큰 코드 상태(pass)가 실린 응답이면 그 코드의 남은 토큰을 기억하고, 지금 코드면 바로 칸을 바꿈 */
+  var call0 = AM.call;
+  AM.call = function (action, data) {
+    var p = norm(data && data.pass), mine = p.length === 16 && action === 'am.pass';
+    if (mine) inflight = p;
+    return call0.apply(this, arguments).then(function (j) {
+      if (mine && inflight === p) inflight = '';
+      try {
+        if (p.length === 16 && j && j.pass && typeof j.pass.cr === 'number') {
+          if (j.pass.credit) { delete bad[p]; memoPut(p, j.pass.cr); got = Date.now(); } else bad[p] = 1;   // 예전 이용권(횟수제)은 토큰이 아니라 칸을 띄우지 않음
+          if (p === code()) paint(j.pass.credit ? j.pass.cr : null); else setTimeout(function () { if (p === code()) paint(); }, 80);   // 새 코드를 넣는 중이면 저장된 뒤에
+        } else if (p.length === 16 && j && j.ok === false && j.code === 'PASS') { bad[p] = 1; setTimeout(function () { paint(); }, 80); }
+      } catch (e) { /* 칸만 못 바꿈 */ }
+      return j;
+    }, function (e) { if (mine && inflight === p) inflight = ''; throw e; });
+  };
+  function refresh() {
+    var c = code(); paint();
+    if (!c || inflight === c) return;
+    lastRef = Date.now();
+    AM.call('am.pass', { pass: fmtC(c) }, 20000).catch(function () { /* 다음에 */ });
+  }
+  function start() {
+    paint();
+    if (!code()) return;
+    setTimeout(function () { if (inflight !== code() && Date.now() - got > 5000) refresh(); }, 900);   // 글 검사 화면은 그 화면이 먼저 읽으므로 겹치지 않게
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  window.addEventListener('storage', function (e) { if (e.key === KEY) { delete bad[code()]; refresh(); } });
+  window.addEventListener('focus', function () { if (code() && Date.now() - lastRef > 30000 && Date.now() - got > 30000) refresh(); });
+  AM.tokPaint = paint;
+})();

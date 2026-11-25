@@ -1189,3 +1189,19 @@ html.hz42-on,html.hz42-on body{overflow:hidden}
 @keyframes hz42cue{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,0)}50%{box-shadow:0 0 0 7px rgba(37,99,235,.28)}}
 @media (max-width:560px){.hz42{padding:0;align-items:stretch}.hz42-card{width:100%;min-height:100%;border-radius:0;padding:28px 20px 22px;display:flex;flex-direction:column;justify-content:center;align-items:center}.hz42-vis{width:150px;height:150px}.hz42 .hz42-doc{width:80px;height:96px;padding:11px 9px}.hz42-pct b{font-size:40px}.hz42 h2{font-size:19px}.hz42-sub{font-size:13.5px}.hz42-bar,.hz42-ft{width:100%}}
 @media (prefers-reduced-motion:reduce){.hz42,.hz42-card,.hz42-bar em,.hz42-ring .pg,.hz42 .hz42-doc{transition:none!important}.hz42 *,.hz42::before,.hz42 *::before,.hz42 *::after,.hz42-cue .hz12-run,.hz42-cue .hz12-run2{animation:none!important}}
+
+/* 13.43 머리 '토큰 충전' 옆 남은 토큰(2026.11.25 대표 '결제한 사람들 토큰 얼마 남았는지 가시성 좋게') · am.js 가 코드가 있을 때만 넣음 */
+.am-tok { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 13px; border-radius: 999px; border: 1px solid #bfe3d2; background: #ecf8f2; color: #33405a; font-size: 14px; font-weight: 650; line-height: 1; white-space: nowrap; text-decoration: none !important; flex: none; transition: border-color .15s; }
+.am-tok:hover { border-color: #0e9a6a; color: #33405a; }
+.am-tok:focus-visible { outline: 2px solid #0e9a6a; outline-offset: 2px; }
+.am-tok svg { width: 15px; height: 15px; flex: none; fill: none; stroke: #0e9a6a; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.am-tok b { color: #08805a; font-size: 15.5px; font-weight: 800; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.am-tok.low { border-color: #f2c3c6; background: #fdeff0; }
+.am-tok.low:hover { border-color: #d12c35; }
+.am-tok.low svg { stroke: #d12c35; }
+.am-tok.low b { color: #c4242d; }
+.am-tok .am-tok-d { display: inline-block; width: 22px; height: 8px; vertical-align: middle; background: radial-gradient(circle, currentColor 2.5px, transparent 3px) 0 50% / 8px 8px repeat-x; opacity: .5; animation: amTokP 1s ease-in-out infinite; }
+@keyframes amTokP { 50% { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .am-tok .am-tok-d { animation: none; } }
+@media (max-width: 640px) { .am-tok { height: 36px; padding: 0 11px; gap: 5px; } .am-tok .am-tok-p { display: none; } }
+@media (max-width: 400px) { .am-tok .am-tok-l { display: none; } .am-tok b { font-size: 15px; } }
