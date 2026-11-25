@@ -244,7 +244,7 @@
 body .hz7-dlg.hz18-dlg .hz18-packs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 560px) { body .hz7-dlg.hz18-dlg .hz18-packs { grid-template-columns: minmax(0, 1fr); } }
 
-/* 13.43(2026.11.25 밤) 토큰 코드가 있는 손님의 무료 검사 단추(#hzFree, humanize.js freeBtn): 두 단추 아래 설명 줄 안 오른쪽 · 좁은 화면은 설명 아래 왼쪽 */
+/* 13.43(2026.11.25 밤) 토큰 코드가 있는 손님의 무료 검사 단추(#hzFree, humanize.js freeBtn): 두 단추 아래 설명 줄 안 오른쪽 · 좁으면 설명 아래 오른쪽 */
 .hz43-free { display: inline-flex; align-items: center; gap: 7px; min-height: 38px; margin: 0; padding: 0 14px 0 12px; border: 1px solid var(--ds-line-2, #d9dfe8); border-radius: 999px; background: #fff; color: var(--ds-ink-2, #3a4256); font: inherit; font-size: 13px; line-height: 1.2; letter-spacing: -.01em; cursor: pointer; white-space: nowrap; transition: border-color .15s, background-color .15s; }
 .hz43-free[hidden] { display: none; }
 #hzFree svg { width: 15px; height: 15px; flex: 0 0 auto; margin: 0; color: var(--brand, var(--ds-blue-600, #0b63f6)); }
@@ -257,4 +257,3 @@ body .hz7-dlg.hz18-dlg .hz18-packs { grid-template-columns: repeat(3, minmax(0, 
 #hzGo.hz43 .hz12-note { flex: 1 1 100%; flex-wrap: wrap; align-items: center; row-gap: 8px; }
 #hzGo.hz43 .hz12-note > span { flex: 1 1 calc(100% - 24px); flex-basis: min(400px, calc(100% - 24px)); min-width: 0; }
 #hzGo.hz43 .hz12-note > .hz43-free { flex: 0 0 auto; margin-left: auto; }
-@media (max-width: 640px) { #hzGo.hz43 .hz12-note > .hz43-free { margin-left: 0; } }
