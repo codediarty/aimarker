@@ -609,11 +609,11 @@ MENU_GROUPS = [("마킹과 검색", [("label/", "fingerprint", "AI 마킹", "코
 #   13.12c(10.30) 지피티킬러 낮추기 · 직접 쓴 글이 AI로 나왔을 때 · AI 검사기 우회 대신 고쳐 쓰기를 더함(우회 안내는 휴대폰 메뉴에 넣지 않음)
 GUIDES = [("ai-rate/", "ai-rate", "AI 작성률 낮추기 · AI 낮추는 방법", "AI 패턴을 찾아 그 문장만 사람 문장으로", True, "AI 작성률 낮추기"),
           ("copykiller/", "copykiller", "카피킬러 AI 낮추기 · 표절률 낮추기", "AI 의심 문장과 표절률을 나눠 고치는 순서", True, "카피킬러 AI 낮추기"),
-          ("gptkiller/", "gptkiller", "GPT킬러 · 지피티킬러 낮추기", "GPT킬러 점수, 잡힌 문장만 다시 쓰는 순서", True, "GPT킬러 낮추기"),
+          ("gptkiller/", "gptkiller", "GPT킬러 · 지피티킬러 낮추기", "GPT킬러 점수, 잡힌 문장만 다시 쓰는 순서", True, "GPT킬러 낮추기", "GPT킬러 낮추기 · 지피티킬러 낮추기"),
           ("ai-detector/", "ai-detector", "GPT킬러 · AI 탐지기 대비", "탐지기가 보는 패턴과 고쳐 쓰는 법", True, "GPT킬러 · AI 탐지기"),
-          ("ai-plagiarism/", "ai-plagiarism", "AI 표절률 낮추기", "챗GPT 표절률이 출처로 안 내려가는 까닭", True, "AI 표절률 낮추기"),
+          ("ai-plagiarism/", "ai-plagiarism", "AI 표절률 낮추기", "챗GPT 표절률이 출처로 안 내려가는 까닭", True, "AI 표절률 낮추기", "AI 표절 검사 · AI 표절률 낮추기 · AI 표절 낮추기"),
           ("ai-tone/", "ai-tone", "챗GPT · AI 티 안 나게 하는 법", "한국어 글의 AI 티 7가지와 고친 예", True, "챗GPT 티 안 나게"),
-          ("humanizer/", "humanizer", "AI 휴머나이저 · AI 글 인간화", "뜻은 그대로, AI 말버릇만 바꿉니다", False, "AI 휴머나이저"),
+          ("humanizer/", "humanizer", "AI 휴머나이저 · AI 글 인간화", "뜻은 그대로, AI 말버릇만 바꿉니다", False, "AI 휴머나이저", "AI 휴머나이저 · 휴먼라이저 · 휴먼나이저 · AI 글 인간화"),
           ("false-positive/", "false-positive", "직접 쓴 글이 AI로 나왔을 때", "GPT킬러 오탐, 이력 챙기기와 고쳐 쓰기", True, "직접 쓴 글 오탐"),
           ("ai-bypass/", "ai-bypass", "AI 탐지 · 검사기 우회 대신 고쳐 쓰기", "우회 꼼수가 남기는 흔적과 AI 패턴 줄이기", False, "AI 탐지 우회"),
           ("prompt/", "prompt", "AI 작성률 낮추는 프롬프트", "복사해 쓰는 예시 다섯 가지와 한계", True, "휴머나이징 프롬프트"),
@@ -621,6 +621,8 @@ GUIDES = [("ai-rate/", "ai-rate", "AI 작성률 낮추기 · AI 낮추는 방법
           ("academic/", "academic", "레포트 · 논문 AI 검사", "한글 · 워드 · PDF 그대로, 각주는 그대로", True, "레포트 · 논문 · 과제"),
           ("ai-check/", "ai-check", "AI 작성률 검사 · AI 검사기 무료", "가입 없이 글 전체, 뚜렷한 문장부터", False, "AI 작성률 검사")]
 GUIDE_KEYS = [g[1] for g in GUIDES]
+# 13.43(2026.11.25 밤 대표 '휴먼라이저, 휴먼나이저, ai 표절 검사, ai 표절 낮추기, gpt킬러 낮추기 추가'): 일곱째 값이 있으면 바닥글 'AI 글 검사 안내' 와 /humanize/ 안내 모음에 그 이름(검색어를 더한 이름). 휴대폰 메뉴 · 칩은 예전 이름 그대로
+def guide_label(g): return g[6] if len(g) > 6 and g[6] else g[2]
 B2C_MENU = ([("humanize/", "AI 작성률 검사 · 휴머나이징", "글이나 한글 · 워드 · PDF 파일을 넣고 바로 확인")] + [(g[0], g[2], g[3]) for g in GUIDES if g[4]] +
             [("personal/", "개인용 한눈에", "학생 · 취업 준비생 · 창작자"), ("proof/", "AI 활용 증빙서", "어떤 AI를 어디에 사용했는지 정리")])
 NAV = [("humanize/", "AI 휴머나이징"), ("label/", "AI 마킹"), ("local/", "기업 AI 검색 등록"), ("products", "기업용"), ("pricing/", "요금"), ("company/", "회사")]   # 13.9 '개발자'는 기업용 펼침 · 바닥글로, 그 자리에 기업 AI 검색 등록
@@ -658,7 +660,7 @@ def guide_hub(root):
     """13.12 /humanize/ 안내 모음: 검색어별 안내 페이지를 한 줄 설명과 함께(내부 링크 · AI 검색이 읽는 목차)"""
     return ('<section class="k-sec lp-hub" id="guides" aria-labelledby="gdT"><div class="k-wrap"><div class="k-head"><h2 class="k-h2" id="gdT">AI 작성률 · 휴머나이징 안내 모음</h2>'
             '<p class="k-lead">많이 찾는 질문마다 한 페이지로 정리했습니다. 페이지마다 맨 위에 같은 무료 검사 도구가 있습니다.</p></div><ul class="lp-hub-l">%s</ul></div></section>'
-            % "".join('<li><a href="%s%s"><b>%s</b><span>%s</span></a></li>' % (root, g[0], g[2], g[3]) for g in GUIDES))
+            % "".join('<li><a href="%s%s"><b>%s</b><span>%s</span></a></li>' % (root, g[0], guide_label(g), g[3]) for g in GUIDES))
 
 
 def ico(name, cls="ico"):
@@ -751,7 +753,7 @@ def footer(root):
            '<span><b>원장</b>하루치를 OpenTimestamps에 고정, <a href="%sverify/">확인하기</a></span></div>' % (root, root))
     # 13.12 AI 글 검사 안내 페이지 줄(모든 페이지에서 검색어 안내로 이어지게)
     std += ('<div class="k-ft-std k-ft-gd"><span><b>AI 글 검사 안내</b>%s</span></div>'
-            % ", ".join('<a href="%s%s">%s</a>' % (root, g[0], g[2]) for g in GUIDES))
+            % ", ".join('<a href="%s%s">%s</a>' % (root, g[0], guide_label(g)) for g in GUIDES))
     return ('<footer class="k-ft"><div class="k-wrap"><div class="k-ft-top"><div class="k-ft-brand">%s'
             '<p>AIMarker(AI Marker · 에이아이마커)는 글의 AI 작성률 검사와 휴머나이징, AI가 만든 이미지 · 영상 · 글의 AI 마크, 회사와 브랜드가 AI 검색에 정확히 소개되도록 돕는 GEO까지 한곳에서 하는 AI 콘텐츠 신뢰 플랫폼입니다.</p>%s'
             '<button type="button" class="k-install ft" data-install hidden>%s<span><b>AIMarker 앱 설치</b><small>휴대폰 · PC 홈 화면에</small></span></button>'
