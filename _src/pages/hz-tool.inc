@@ -1,14 +1,14 @@
 <div class="hz12" id="hz">
   <ol class="hz12-steps" id="hzSteps" aria-label="진행 순서">
-    <li class="on" data-step="1"><i>1</i><span>글 넣기</span></li>
-    <li data-step="2"><i>2</i><span class="f">AI 작성률 확인</span><span class="s">검사</span></li>
-    <li data-step="3"><i>3</i><span class="f">자연스럽게 다듬기</span><span class="s">다듬기</span></li>
+    <li class="on" data-step="1"><i>1</i><span>텍스트 입력</span></li>
+    <li data-step="2"><i>2</i><span class="f">AI 작성률 검사</span><span class="s">검사</span></li>
+    <li data-step="3"><i>3</i><span class="f">AI 작성률 낮추기</span><span class="s">낮추기</span></li>
   </ol>
   <div class="hz12-card">
     <div class="hz12-in" id="hzIn">
       <div class="hz12-drop" id="hzDrop">
-        <label class="k-sr" for="hzText">검사할 글</label>
-        <textarea id="hzText" maxlength="200000" spellcheck="false" placeholder="검사할 글을 붙여 넣으세요"></textarea>
+        <label class="k-sr" for="hzText">검사하거나 개선할 글</label>
+        <textarea id="hzText" maxlength="200000" spellcheck="false" placeholder="검사하거나 개선할 글을 입력해 주세요"></textarea>
         <div class="hz12-empty" id="hzEmpty">
           <button type="button" class="hz12-up" id="hzPick">{{ico:upload}}<span>파일 올리기</span></button>
           <p class="dnd">또는 여기로 끌어다 놓으세요</p>
@@ -26,8 +26,8 @@
     </div>
     <div class="hz12-sum" id="hzSum" hidden></div>
     <div class="hz12-go" id="hzGo">
-      <button class="k-btn k-btn-p k-btn-lg hz12-run" type="button" id="hzCheck">{{ico:search}}<span id="hzChkL">AI 작성률 무료 검사</span><em class="hz7-pill" id="hzChkTag" hidden></em></button>
-      <button class="k-btn k-btn-l k-btn-lg hz12-run2" type="button" id="hzPro" hidden>{{ico:pen}}<span>휴머나이징<small>AI 작성률 낮추기</small></span><em class="hz7-pill" id="hzProTag"></em></button>
+      <button class="k-btn k-btn-p k-btn-lg hz12-run" type="button" id="hzCheck">{{ico:search}}<span id="hzChkL">무료 AI 작성률 검사</span><em class="hz7-pill" id="hzChkTag" hidden></em></button>
+      <button class="k-btn k-btn-l k-btn-lg hz12-run2" type="button" id="hzPro" hidden>{{ico:pen}}<span>AI 작성률 낮추기<small>자연스러운 문장으로 변환</small></span><em class="hz7-pill" id="hzProTag"></em></button>
       <p class="hz12-note" id="hzNote">{{ico:lock}}<span>가입 없이 무료 · 글과 파일은 저장하지 않습니다</span></p>
       <div class="hz7-pass hz12-pass" id="hzPass" aria-live="polite"></div>
     </div>

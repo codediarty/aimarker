@@ -69,7 +69,8 @@
     { id: 'mx', name: '맥스', price: 69900, cr: 2000, base: 2000, per: '약 34원', save: 39, badge: '최대 할인 혜택', top: 1, who: '넉넉한 토큰으로 반복 낮추기', doc: '논문', pg: 250 }
   ];   // 13.24 doc · pg = '레포트(라이트 · 플러스) · 논문(프로 · 맥스) 검사와 휴머나이징 약 몇 페이지'(대표가 정한 값. 1페이지 약 1,200자로 셈한 값보다 적거나 같음: build.py CREDITS 와 같게)
   var PG_CHARS = 1200;
-  var RPT = 'AI 작성률 결과서';   // 13.30 토큰으로 받는 전체 검사의 이름(왼쪽 단추 · 무료 결과의 안내 단추). 대표: '리포트'보다 '결과서'
+  var RPT = 'AI 작성률 상세 검사';   // 2026.11.26 대표: 'AI 작성률 결과서' → 'AI 작성률 상세 검사'
+  var RPT_OLD = 'AI 작성률 결과서';   // 13.30 토큰으로 받는 전체 검사의 이름(왼쪽 단추 · 무료 결과의 안내 단추). 대표: '리포트'보다 '결과서'
   var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr', pl2: 'pl', pr2: 'pr', mx2: 'mx' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
   var SRV_PID = { pl: 'pl2', pr: 'pr2', mx: 'mx2' };   // 13.31 서버의 새 상품 번호(토큰 350 · 1,000 · 2,000). 예전 pl · pr · mx 는 서버에서 legacy(예전 코드의 환불 셈을 지키려고 번호를 새로 둠). 바로 결제(am.buy)는 새 번호로
   var CR0 = { unit: { per: 100, cr: 0.3, min: 1.5 }, pro: { per: 100, cr: 0.6, min: 3 } }, ASK = Infinity;   // 11.23 1.5배(새로 산 코드 값, 예전 코드는 서버 rm 2/3 을 곱함) · 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음 · 13.32 부터 묻지 않음(단추에 토큰 숫자가 적혀 있어 누르면 바로 실행)
@@ -226,7 +227,7 @@
     if (!btnF && on) {
       var sv = btnC.querySelector('svg');
       btnF = document.createElement('button'); btnF.type = 'button'; btnF.id = 'hzFree'; btnF.className = 'hz43-free';
-      btnF.innerHTML = (sv ? sv.outerHTML : '') + '<span><b>AI 작성률 무료 검사</b><small>토큰 차감 없음</small></span>';
+      btnF.innerHTML = (sv ? sv.outerHTML : '') + '<span><b>무료 AI 작성률 검사</b><small>무료 이용</small></span>';
       btnF.title = '토큰을 쓰지 않고 AI 작성률만 봅니다';
       btnF.addEventListener('click', function () { if (S.busy) return; S.wantPdf = false; check(undefined, { free: true }); });
     }
@@ -236,17 +237,17 @@
   function tags() {   // 12.1 단추: 무료면 'AI 작성률 무료 검사' 하나, 토큰이면 검사 · 휴머나이징 둘. 13.30 토큰이 있어도 검사 꼬리표는 '무료', 휴머나이징만 이 글에 드는 토큰
     var tc = $('#hzChkTag'), tp = $('#hzProTag'), cl = $('#hzChkL'), t = cur();
     var nb = $('#hzNote'), nm = S.pass && !FREE_FIRST ? 'ex' : 'lk';   // 13.30 토큰 코드가 있으면 자물쇠 안내 대신 두 단추가 하는 일을 한 줄로
-    if (nb && nb._m !== nm) { nb._m = nm; nb.classList.toggle('hz-ex', nm === 'ex'); nb.innerHTML = nm === 'ex' ? ico('info') + '<span><b>결과서</b>는 AI 패턴이 걸린 문장을 하나하나 상세히 진단하고, <b>휴머나이징</b>은 글을 다듬어 AI 작성률을 낮춰 줍니다</span>' : ico('lock') + '<span>가입 없이 무료 · 글과 파일은 저장하지 않습니다</span>'; }
+    if (nb && nb._m !== nm) { nb._m = nm; nb.classList.toggle('hz-ex', nm === 'ex'); nb.innerHTML = nm === 'ex' ? ico('info') + '<span>AI 작성률을 확인하고, 원문의 의미를 유지하면서 문장을 자연스럽게 개선하세요.</span>' : ico('lock') + '<span>가입 없이 무료 · 글과 파일은 저장하지 않습니다</span>'; }
     var stale = box.classList.contains('stale');
-    if (FREE_FIRST) { if (cl) cl.textContent = stale ? '바뀐 글 다시 검사' : 'AI 작성률 무료 검사'; if (tc) tc.hidden = true; btnP.hidden = true; }   // 13.36 토큰 코드가 있어도 첫 화면은 무료 검사 하나
+    if (FREE_FIRST) { if (cl) cl.textContent = stale ? '바뀐 글 다시 검사' : '무료 AI 작성률 검사'; if (tc) tc.hidden = true; btnP.hidden = true; }   // 13.36 토큰 코드가 있어도 첫 화면은 무료 검사 하나
     else if (isCr()) {
       var P = t.replace(/\s+/g, '') ? chunk(t).parts : [];
-      if (cl) cl.innerHTML = esc(RPT) + '<small>문장별 진단 · PDF</small>';   // 13.30 왼쪽은 토큰으로 받는 리포트(전체 검사: 모든 문장 위치 · 구간 · PDF). 무료 검사는 파일 · 붙여 넣기로 저절로
+      if (cl) cl.innerHTML = esc(RPT) + '<small>문장별 분석 결과 제공</small>';   // 13.30 왼쪽은 토큰으로 받는 리포트(전체 검사: 모든 문장 위치 · 구간 · PDF). 무료 검사는 파일 · 붙여 넣기로 저절로
       if (tc) { tc.hidden = false; tc.textContent = P.length ? tk(chkCost(P)) + '토큰' : '1,000자 ' + tk(per1k('unit')) + '토큰'; }
       if (tp) tp.textContent = P.length ? tk(humCost(P)) + '토큰' : '1,000자 ' + tk(per1k('pro')) + '토큰';
       btnP.hidden = false;
-    } else if (S.pass) { if (cl) cl.innerHTML = esc(RPT) + '<small>문장별 진단 · PDF</small>'; if (tc) { tc.hidden = false; tc.textContent = '이용권'; } if (tp) tp.textContent = '이용권'; btnP.hidden = false; }
-    else { if (cl) cl.textContent = stale ? '바뀐 글 다시 검사' : 'AI 작성률 무료 검사'; if (tc) tc.hidden = true; btnP.hidden = true; }
+    } else if (S.pass) { if (cl) cl.innerHTML = esc(RPT) + '<small>문장별 분석 결과 제공</small>'; if (tc) { tc.hidden = false; tc.textContent = '이용권'; } if (tp) tp.textContent = '이용권'; btnP.hidden = false; }
+    else { if (cl) cl.textContent = stale ? '바뀐 글 다시 검사' : '무료 AI 작성률 검사'; if (tc) tc.hidden = true; btnP.hidden = true; }
     var go = $('#hzGo'), two = !btnP.hidden; if (go) go.classList.toggle('two', two);
     btnC.classList.toggle('k-btn-p', !two); btnC.classList.toggle('k-btn-l', two);   // 13.30 대표: 휴머나이징이 메인이라 파란 단추, 결과서는 흰 단추(무료 검사 하나일 때는 검사가 파란 단추)
     btnP.classList.toggle('k-btn-p', two); btnP.classList.toggle('k-btn-l', !two);
@@ -710,7 +711,7 @@
       var needN = C.parts.filter(function (p) { return !S.cache['c|' + p]; }).length;
       if (needN > S.ps.left) { out.innerHTML = '<div class="hz7-err"><b>남은 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 검사해 이용권 ' + needN + '회가 필요합니다.' : '이 글을 검사하려면 이용권 ' + needN + '회가 필요합니다.') + ' 지금 남은 횟수는 ' + S.ps.left + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button><button class="btn btn-g btn-s" type="button" data-again>무료 검사 결과로 보기</button></div></div>'; S.retry = function () { check(t, { free: true }); }; return Promise.resolve(null); }
     }
-    var lbl = full ? RPT + ' 만드는 중' : 'AI 작성률 무료 검사 중';
+    var lbl = full ? RPT + ' 중' : '무료 AI 작성률 검사 중';
     setBusy(true); prog(lbl, 0, C.parts.length, full && isCr() ? '문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고 결과서를 만듭니다. 긴 글은 6,000자씩 나눠 동시에 처리합니다. 처리하지 못하면 토큰은 빠지지 않습니다.' : ''); if (full) runShow('res');
     var done = 0, tnC = tone();   // 13.30 동시에 보내도 진행 표시는 끝난 조각 수, 말투는 시작할 때 값 하나로
     return par(C.parts, function (part, i) {
