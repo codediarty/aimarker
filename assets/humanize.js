@@ -718,7 +718,7 @@
       var key = 'c|' + part;
       if (full && S.cache[key]) { prog(lbl, ++done, C.parts.length); return Promise.resolve(S.cache[key]); }
       if (!full && S.fcache[key]) { prog(lbl, ++done, C.parts.length); return Promise.resolve(S.fcache[key]); }   // 13.13 같은 글을 다시 보면 무료 횟수를 쓰지 않음
-      return call('am.style', { text: part, mode: 'check', tone: tnC, pass: full ? S.pass : '' }, 120000, JC ? JC.id + '.' + i : '').then(function (r) { if (full && r.full) S.cache[key] = r; else if (!full) S.fcache[key] = r; prog(lbl, ++done, C.parts.length); return r; });
+      return call('am.style', { text: part, mode: 'check', tone: tnC, pass: full ? S.pass : '', ci: i }, 120000, JC ? JC.id + '.' + i : '').then(function (r) { if (full && r.full) S.cache[key] = r; else if (!full) S.fcache[key] = r; prog(lbl, ++done, C.parts.length); return r; });
     }).then(function (rs) {
       var isFull = rs.every(function (r) { return r.full; });
       return merge(rs, isFull, t);
@@ -1594,6 +1594,12 @@
     if (ix && /^https?:\/\//.test(String(ix))) return String(ix);   // 13.3 상품 번호 대신 결제 페이지 주소 전체를 적어도 됨
     return ix && A.shop ? String(A.shop).replace('%s', encodeURIComponent(ix)) : '';
   }
+  function utmLink(u, pid) {   // 13.45(2026.11.26 대표 20:28 '세기 · 모니터링'): 결제 페이지 주소 끝에 utm 만 붙임. 이미 있으면 그대로
+    u = String(u || ''); if (!u || /[?&]utm_source=/.test(u)) return u;
+    var q = 'utm_source=' + encodeURIComponent(location.hostname.replace(/^www\./, '')) + '&utm_medium=buy_modal&utm_campaign=' + encodeURIComponent(pid || '') + (S.intent ? '&utm_content=' + encodeURIComponent(S.intent) : '');
+    var h = u.indexOf('#'), b = h < 0 ? u : u.slice(0, h);
+    return b + (b.indexOf('?') < 0 ? '?' : '&') + q + (h < 0 ? '' : u.slice(h));
+  }
   function topupOn() { var f = $('#hzBuyForm'), r = f && f.querySelector('input[name="to"]:checked'); return !!(r && r.value === 'this' && isCr()); }
   function buyBtnLabel() {   // 13.6 결제 페이지가 있으면(지금은 상품 34~37 모두) KAIEC 식 안내 + 단추 하나. 이메일 칸은 바로 결제(토스)나 결제 페이지가 없을 때만
     var f = $('#hzBuyForm'); if (!f) return;
@@ -1676,6 +1682,7 @@
       var msg = f.querySelector('.msg'), mail = (f.querySelector('[name="contact"]') || {}).value, pid = (f.querySelector('input[name="product"]:checked') || {}).value || 'pr', btn = f.querySelector('button[type="submit"]'), to = topupOn() ? S.pass : '';
       mail = String(mail || '').trim();
       var shop = !payReady() && shopLink(pid), pk = prod(pid);
+      if (shop) shop = utmLink(shop, pid);   // 13.45 아임웹 유입 통계에서 어느 사이트 · 어느 창에서 왔는지 보이게(결제 · 상품은 그대로)
       if (shop && pk) {   // 13.6 결제 페이지가 있으면 KAIEC 처럼 바로: 묻는 것 없이 새 창으로 성균관컨설팅 결제 페이지(이름 · 이메일 · 동의는 그곳 주문서에서). 사이트 쪽 주문 기록은 남기지 않음(결제 내역이 기준)
         btn.disabled = true;
         var win = true; try { window.open(shop, '_blank', 'noopener'); } catch (eW) { win = false; }
