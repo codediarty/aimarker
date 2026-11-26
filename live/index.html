@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>실시간 현황판</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* VOICE: 관제실 현황판. 숫자가 먼저, 장식 없이 또렷하게
+   IDEA: 방 안에 지금 머무는 사람을 점 하나씩으로 보여 주는 관제 화면
+   PICTURE: 사이트마다 사람 점이 모인 무리(살아 움직임), 결제가 나면 그 무리에서 축하가 터짐
+   COLOUR and TYPE: 흰 바탕 · 먹색 글자 · 접속은 빨강 하나 · 결제는 초록 하나, 사이트 색은 점과 칩에만 / Pretendard 네 크기
+   LAYOUT: 머리 줄 → 큰 접속 숫자와 사람 점 → 오늘 숫자 다섯 → 사이트 표 → 결제 · 보는 쪽 · 들어온 곳 · 시간대 */
+:root{--bg:#fff;--ink:#0f1623;--sub:#5b6475;--line:#e6e8ee;--soft:#f4f5f8;--live:#ff3b30;--pay:#0e9f6e;--gold:#f5b301}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1117;--ink:#eef1f6;--sub:#9aa3b5;--line:#232a36;--soft:#151a23}}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Pretendard Variable",Pretendard,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(14px,3vw,32px)}
+header{position:sticky;top:0;z-index:5;background:var(--bg);background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 0}
+.onair{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:15px;padding-left:4px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--live);box-shadow:0 0 0 0 rgba(255,59,48,.6);animation:pulse 1.6s infinite}
+.dot.off{background:#9aa3b5;animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,59,48,.55)}70%{box-shadow:0 0 0 10px rgba(255,59,48,0)}100%{box-shadow:0 0 0 0 rgba(255,59,48,0)}}
+.clock{color:var(--sub);font-size:14px}
+.sp{flex:1}
+.btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:9px 16px;min-height:40px;cursor:pointer}
+.btn[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:focus-visible{outline:3px solid #7aa2ff;outline-offset:2px}
+.hero{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:clamp(16px,3vw,36px);align-items:stretch;padding:clamp(18px,3vw,30px) 0 8px}
+.big .lb{font-size:15px;color:var(--sub);font-weight:600}
+.big .v{font-size:clamp(64px,9vw,112px);font-weight:800;line-height:1;letter-spacing:-.03em;color:var(--live);margin:6px 0 10px}
+.big .s{font-size:14px;color:var(--sub)}
+.big .s b{color:var(--ink)}
+.big .v.pre{font-size:clamp(30px,3.6vw,44px);white-space:nowrap;color:var(--sub);margin:14px 0 12px}
+.field{position:relative;min-height:280px;border-radius:18px;background:var(--soft);overflow:hidden}
+.field canvas{position:absolute;inset:0;width:100%;height:100%}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;padding:16px 0}
+.kpi{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi .lb{font-size:13px;color:var(--sub);font-weight:600}
+.kpi .v{font-size:clamp(24px,2.6vw,32px);font-weight:800;letter-spacing:-.02em;margin-top:2px;white-space:nowrap}
+.kpi .y{font-size:13px;color:var(--sub);margin-top:2px}
+.kpi.pay .v{color:var(--pay)}
+.goal{position:relative;height:8px;border-radius:99px;background:var(--soft);margin-top:8px;overflow:visible}
+.goal i{position:absolute;inset:0 auto 0 0;border-radius:99px;background:var(--pay)}
+.goal b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);opacity:.55}
+h2{font-size:18px;margin:22px 0 10px;letter-spacing:-.01em}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-weight:600;color:var(--sub);text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+.chip{display:inline-flex;align-items:center;gap:8px;font-weight:700}
+.chip i{width:10px;height:10px;border-radius:3px;flex:none}
+.livec{color:var(--live);font-weight:800}
+.mini{display:inline-flex;gap:3px;vertical-align:middle;margin-left:6px}
+.mini i{width:6px;height:6px;border-radius:50%}
+.cv{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.cv .goal{width:90px;margin:0}
+.muted{color:var(--sub)}
+tr.flash{animation:fl 2.4s ease-out}
+@keyframes fl{0%{background:rgba(14,159,110,.25)}100%{background:transparent}}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.card h3{font-size:15px;margin:0 0 8px}
+.list{list-style:none;margin:0;padding:0}
+.list li{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.list li:last-child{border-bottom:0}
+.list .w{margin-left:auto;font-weight:700;white-space:nowrap}
+.list .t{color:var(--sub);font-size:13px;white-space:nowrap}
+.list .pth{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{color:var(--sub);font-size:14px;padding:6px 0}
+.hours{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));gap:4px;align-items:end;height:120px;padding-top:6px}
+.hours i{display:block;background:#c9cfdb;border-radius:4px 4px 0 0;min-height:2px}
+.hours i.now{background:var(--live)}
+.hl{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));gap:4px;font-size:11px;color:var(--sub);text-align:center}
+footer{color:var(--sub);font-size:13px;padding:22px 0 40px;line-height:1.7}
+#cel{position:fixed;inset:0;z-index:20;pointer-events:none}
+.toast{position:fixed;left:50%;top:22%;z-index:21;transform:translate(-50%,-10px) scale(.9);opacity:0;pointer-events:none;background:var(--bg);border:2px solid var(--pay);border-radius:22px;padding:22px 30px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.25);transition:all .35s cubic-bezier(.2,1.4,.4,1);min-width:min(420px,88vw)}
+.toast.on{opacity:1;transform:translate(-50%,0) scale(1)}
+.toast .k{font-size:15px;font-weight:700;color:var(--pay)}
+.toast .a{font-size:clamp(38px,7vw,56px);font-weight:800;letter-spacing:-.02em;margin:4px 0}
+.toast .s{font-size:16px;font-weight:600}
+.toast .s i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:baseline}
+.lock{max-width:420px;width:calc(100% - 32px);margin:12vh auto;padding:28px;border:1px solid var(--line);border-radius:18px;text-align:center}.lock h1{font-size:22px;margin:0 0 6px}.lock p{color:var(--sub);margin:0 0 16px;font-size:14px}.lock input{font:inherit;font-size:16px;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);margin-bottom:10px}.lock .btn{width:100%;background:var(--ink);color:var(--bg);border-color:var(--ink);min-height:46px}.lock .err{color:var(--live);font-size:14px;min-height:20px;margin-top:8px}
+@media (max-width:980px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpis .kpi:last-child{grid-column:1/-1}.grid3{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:720px){.hero{grid-template-columns:minmax(0,1fr)}.field{min-height:360px}th.hm,td.hm{display:none}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}tr.flash{animation:none}.toast{transition:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap hd">
+  <span class="onair"><span class="dot" id="dot"></span>실시간 현황판</span>
+  <span class="clock num" id="clock"></span>
+  <span class="sp"></span>
+  <span class="clock" id="upd">불러오는 중</span>
+  <button class="btn" id="snd" type="button" aria-pressed="false">소리 켜기</button>
+</div></header>
+<div class="lock" id="lock" hidden><h1>실시간 현황판</h1><p>현황판 열쇠를 넣어 주세요. 이 기기에만 기억합니다.</p><form id="lockF"><input id="lockK" type="password" autocomplete="off" aria-label="현황판 열쇠" placeholder="열쇠"><button class="btn" type="submit">열기</button></form><div class="err" id="lockE"></div></div>
+<main class="wrap" id="app">
+  <section class="hero">
+    <div class="big">
+      <div class="lb">지금 머무는 사람</div>
+      <div class="v num" id="liveN">0</div>
+      <div class="s" id="liveS">사이트 화면을 보고 있는 사람(30초마다 확인)</div>
+    </div>
+    <div class="field" id="field"><canvas id="cv" aria-label="사이트별 지금 머무는 사람 점"></canvas></div>
+  </section>
+  <section class="kpis" id="kpis"></section>
+  <h2>사이트별 오늘</h2>
+  <div class="scroll"><table id="tbl"><thead><tr><th>사이트</th><th>지금</th><th>오늘 방문</th><th class="hm">무료 검사</th><th>결제</th><th>매출</th><th>전환율</th></tr></thead><tbody></tbody></table></div>
+  <h2>오늘 흐름</h2>
+  <div class="grid3">
+    <div class="card"><h3>오늘 결제</h3><ul class="list" id="feed"></ul></div>
+    <div class="card"><h3>지금 보는 쪽</h3><ul class="list" id="pages"></ul></div>
+    <div class="card"><h3>오늘 들어온 곳</h3><ul class="list" id="refs"></ul></div>
+  </div>
+  <h2>시간대별 방문(오늘, 모든 사이트)</h2>
+  <div class="card"><div class="hours" id="hours"></div><div class="hl" id="hl"></div></div>
+  <footer id="foot">방문은 사이트마다 따로 셉니다(같은 사람이 두 사이트에 오면 두 번). 무료 검사와 토큰 결제는 AIMarker · 카피휴먼 서버 기록, 그 밖의 결제는 성균관컨설팅 결제 완료 화면 신호입니다. 전환율은 토큰 사이트는 무료 검사한 사람 대비 결제, 나머지는 방문한 사람 대비 결제이며 막대의 세로줄이 목표 10%입니다.</footer>
+</main>
+<canvas id="cel"></canvas>
+<div class="toast" id="toast" role="status" aria-live="polite"><div class="k">결제 완료</div><div class="a num" id="tA"></div><div class="s" id="tS"></div></div>
+<script>
+{
+const LVU = "https://script.google.com/macros/s/AKfycbynqa4gSpMjYlnOHPH6xaM3d2vys7aVMJHLuxQL_9osna0026p-Z6uywH2d4d0fzUbK_w/exec";   // 현황판 서버(방문 신호 · 숫자)
+let KEY = "", CFG = null, SITES = [], BY = {};
+const LVSTART = Date.UTC(2026, 11, 2, 15, 0);   // 2026.12.03 00:00 한국 시간
+try { const m = /[#&]k=([A-Za-z0-9]{6,64})/.exec(location.hash); if (m) { KEY = m[1]; localStorage.setItem("lv_key", KEY); history.replaceState(null, "", location.pathname); } else KEY = localStorage.getItem("lv_key") || ""; } catch (e) {}
+function setCfg(meta) { CFG = meta; SITES = meta.sites || []; BY = {}; SITES.forEach((s, i) => { BY[s.k] = Object.assign({ i }, s); }); field.relayout(); }
+const $ = id => document.getElementById(id);
+const esc = v => String(v == null ? "" : v).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const won = n => Math.round(n || 0).toLocaleString("ko-KR");
+const kst = t => new Date(t + 9 * 3600e3);
+const dayKey = t => kst(t).toISOString().slice(0, 10);
+const hhmm = t => kst(t).toISOString().slice(11, 16);
+let LV = null, AM = null, CH = null, lastOk = 0, sound = false;
+const T0 = Date.now();   // 처음 15초는 이미 있던 결제를 '본 것'으로만 표시(축하하지 않음)
+const seenKey = "lv_seen_" + dayKey(Date.now());
+let seen = {}; try { seen = JSON.parse(localStorage.getItem(seenKey) || "{}") || {}; } catch (e) { seen = {}; }
+const saveSeen = () => { try { localStorage.setItem(seenKey, JSON.stringify(seen)); } catch (e) {} };
+
+function tick() {
+  const k = kst(Date.now()), wd = "일월화수목금토"[k.getUTCDay()];
+  $("clock").textContent = (k.getUTCMonth() + 1) + "월 " + k.getUTCDate() + "일(" + wd + ") " + k.toISOString().slice(11, 19);
+  if (lastOk) { const s = Math.round((Date.now() - lastOk) / 1000); $("upd").textContent = "갱신 " + (s < 5 ? "방금" : s + "초 전"); $("dot").classList.toggle("off", s > 60); }
+}
+setInterval(tick, 1000); tick();
+
+/* ---------- 값 모으기 ---------- */
+function model() {
+  const now = Date.now(), today = dayKey(now), rows = [];
+  const amc = Object.assign({}, (AM && AM.amc && AM.amc.today) || {}, (CH && CH.amc && CH.amc.today) || {});
+  const amcY = Object.assign({}, (AM && AM.amc && AM.amc.yday) || {}, (CH && CH.amc && CH.amc.yday) || {});
+  const sv = [].concat((AM && AM.pay) || [], (CH && CH.pay) || []);
+  const evs = [];
+  sv.forEach(e => evs.push({ id: "s" + e.id, t: e.t, s: e.s, w: e.w, n: e.n }));
+  ((LV && LV.ev) || []).forEach(e => evs.push({ id: "c" + e.t + e.s + e.w, t: e.t, s: e.s, w: e.w, n: e.n || "결제" }));
+  const todayEv = evs.filter(e => dayKey(e.t) === today), ydEv = evs.filter(e => dayKey(e.t) === dayKey(now - 864e5));
+  let T = { live: 0, uv: 0, uvY: 0, chk: 0, chkY: 0, pay: 0, payY: 0, w: 0, wY: 0, tokPay: 0 };
+  SITES.forEach(S => {
+    const L = ((LV && LV.sites) || []).find(x => x.k === S.k) || {};
+    const a = amc[S.k] || {}, ay = amcY[S.k] || {};
+    const pe = todayEv.filter(e => e.s === S.k), py = ydEv.filter(e => e.s === S.k);
+    const pay = pe.length, w = pe.reduce((x, e) => x + (e.w || 0), 0);
+    const chk = Number(a.chkU || 0), base = S.g === "tok" ? chk : Number(L.uv || 0);
+    rows.push({ S, live: L.live || 0, livePg: L.livePg || [], uv: L.uv || 0, pv: L.pv || 0, chk, hum: Number(a.hum || 0), pay, w, cv: base ? pay / base : 0, base, ref: L.ref || [], h: L.h || {}, y: L.y || {} });
+    T.live += L.live || 0; T.uv += L.uv || 0; T.uvY += (L.y && L.y.uv) || 0; T.chk += chk; T.chkY += Number(ay.chkU || 0);
+    T.pay += pay; T.w += w; T.payY += py.length; T.wY += py.reduce((x, e) => x + (e.w || 0), 0); if (S.g === "tok") T.tokPay += pay;
+  });
+  todayEv.sort((a, b) => b.t - a.t);
+  return { rows, T, todayEv };
+}
+
+/* ---------- 그리기 ---------- */
+function kpi(lb, v, y, cls, extra) { return '<div class="kpi ' + (cls || "") + '"><div class="lb">' + lb + '</div><div class="v num">' + v + '</div><div class="y">' + (y || "&nbsp;") + '</div>' + (extra || "") + '</div>'; }
+function goalBar(r) { const p = Math.min(1, r / 0.2); return '<div class="goal" title="목표 10%"><i style="width:' + (p * 100).toFixed(1) + '%"></i><b style="left:50%"></b></div>'; }
+let lastPay = {};
+function render() {
+  const M = model(), T = M.T, cv = T.chk ? T.tokPay / T.chk : 0;
+  const pre = Date.now() < LVSTART;   // 방문 신호는 2026.12.03 00:00(한국)부터(사이트 개인정보처리방침 '바뀌면 7일 전 알림')
+  $("liveN").textContent = pre ? "12월 3일부터" : T.live; $("liveN").classList.toggle("pre", pre);
+  const top = M.rows.filter(r => r.live).sort((a, b) => b.live - a.live).slice(0, 3).map(r => esc(r.S.n) + " <b>" + r.live + "</b>").join(" · ");
+  $("liveS").innerHTML = pre ? "방문 · 지금 머무는 사람은 12월 3일 0시부터 셉니다(각 사이트 개인정보처리방침의 7일 전 알림). 결제 · 무료 검사 숫자는 지금 바로 보입니다." : (top || "지금은 조용합니다");
+  $("kpis").innerHTML =
+    kpi("오늘 방문", pre ? "12.3부터" : won(T.uv) + "명", pre ? "방문 신호 시작 전" : "어제 " + won(T.uvY) + "명") +
+    kpi("무료 검사", won(T.chk) + "명", "어제 " + won(T.chkY) + "명") +
+    kpi("결제", won(T.pay) + "건", "어제 " + won(T.payY) + "건", "pay") +
+    kpi("매출", won(T.w) + "원", "어제 " + won(T.wY) + "원", "pay") +
+    kpi("전환율(토큰 사이트)", (cv * 100).toFixed(1) + "%", "무료 검사 " + won(T.chk) + "명 → 결제 " + T.tokPay + "건 · 목표 10%", "", goalBar(cv));
+  $("tbl").tBodies[0].innerHTML = M.rows.map(r => {
+    const dots = Array.from({ length: Math.min(8, r.live) }, () => '<i style="background:' + r.S.c + '"></i>').join("");
+    const fl = lastPay[r.S.k] !== undefined && r.pay > lastPay[r.S.k] ? ' class="flash"' : "";
+    return '<tr' + fl + '><td><span class="chip"><i style="background:' + r.S.c + '"></i>' + esc(r.S.n) + '</span></td>' +
+      '<td class="num"><span class="livec">' + r.live + '</span><span class="mini">' + dots + '</span></td>' +
+      '<td class="num">' + won(r.uv) + '<span class="muted"> / ' + won(r.pv) + '쪽</span></td>' +
+      '<td class="num hm">' + (r.S.g === "tok" ? won(r.chk) + '<span class="muted"> · 휴머나이징 ' + won(r.hum) + '</span>' : '<span class="muted">-</span>') + '</td>' +
+      '<td class="num">' + r.pay + '건</td><td class="num">' + won(r.w) + '원</td>' +
+      '<td><div class="cv"><span class="num">' + (r.base ? (r.cv * 100).toFixed(1) + "%" : "-") + '</span>' + goalBar(r.cv) + '</div></td></tr>';
+  }).join("");
+  M.rows.forEach(r => { lastPay[r.S.k] = r.pay; });
+  $("feed").innerHTML = M.todayEv.slice(0, 10).map(e => { const S = BY[e.s] || { n: e.s, c: "#999" }; return '<li><span class="t num">' + hhmm(e.t) + '</span><span class="chip"><i style="background:' + S.c + '"></i>' + esc(S.n) + '</span><span class="muted pth">' + esc(e.n) + '</span><span class="w num">' + won(e.w) + '원</span></li>'; }).join("") || '<li class="empty">아직 오늘 결제가 없습니다</li>';
+  const pg = []; M.rows.forEach(r => r.livePg.forEach(p => pg.push({ S: r.S, p: p[0], n: p[1] })));
+  pg.sort((a, b) => b.n - a.n);
+  $("pages").innerHTML = pg.slice(0, 8).map(x => '<li><span class="chip"><i style="background:' + x.S.c + '"></i></span><span class="pth">' + esc(x.S.n) + ' ' + esc(x.p) + '</span><span class="w num">' + x.n + '명</span></li>').join("") || '<li class="empty">지금 보는 사람이 없습니다</li>';
+  const rf = {}; M.rows.forEach(r => r.ref.forEach(x => { rf[x[0]] = (rf[x[0]] || 0) + x[1]; }));
+  $("refs").innerHTML = Object.keys(rf).sort((a, b) => rf[b] - rf[a]).slice(0, 8).map(k => '<li><span class="pth">' + esc(k) + '</span><span class="w num">' + rf[k] + '번</span></li>').join("") || '<li class="empty">아직 기록이 없습니다</li>';
+  const hs = Array(24).fill(0); M.rows.forEach(r => Object.keys(r.h).forEach(k => { hs[+k] += r.h[k]; }));
+  const mx = Math.max(1, ...hs), hn = kst(Date.now()).getUTCHours();
+  $("hours").innerHTML = hs.map((v, i) => '<i class="' + (i === hn ? "now" : "") + '" style="height:' + (v / mx * 100).toFixed(1) + '%" title="' + i + '시 ' + v + '쪽"></i>').join("");
+  if (!$("hl").children.length) $("hl").innerHTML = hs.map((v, i) => '<span>' + (i % 3 ? "" : i) + '</span>').join("");
+  field.set(M.rows);
+  const fresh = M.todayEv.filter(e => !seen[e.id]);
+  fresh.forEach(e => { seen[e.id] = 1; });
+  if (fresh.length) saveSeen();
+  if (Date.now() - T0 > 15000) fresh.filter(e => Date.now() - e.t < 30 * 60000).reverse().forEach(e => celebrate(e, T.w));
+}
+
+/* ---------- 사람 점(그림) ---------- */
+const field = (() => {
+  const cv = $("cv"), ctx = cv.getContext("2d"), box = $("field"); let W = 0, H = 0, cols = [], dots = {}, bursts = [];
+  const rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function layout() {
+    const r = box.getBoundingClientRect(), dpr = devicePixelRatio || 1; W = r.width; H = r.height;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const per = W < 520 ? 3 : W < 820 ? 4 : 6, rowsN = Math.ceil(SITES.length / per), cw = W / per, ch = (H - 8) / rowsN;
+    cols = SITES.map((S, i) => { const row = Math.floor(i / per), inRow = Math.min(per, SITES.length - row * per), off = (W - inRow * cw) / 2; return { S, x: off + cw * (i % per + .5), y: 4 + ch * (row + .5) - 9, r: Math.min(cw * .36, ch * .34) }; });
+  }
+  function set(rows) {
+    rows.forEach(r => {
+      const a = dots[r.S.k] = dots[r.S.k] || [];
+      while (a.length < r.live) a.push({ a: Math.random() * 6.28, d: .5 + Math.random() * .42, sp: (Math.random() < .5 ? -1 : 1) * (.002 + Math.random() * .006), born: performance.now() });
+      if (a.length > r.live) a.splice(r.live);
+    });
+  }
+  function burst(k) { const c = cols.find(c => c.S.k === k); if (c) bursts.push({ x: c.x, y: c.y, t: performance.now(), c: c.S.c }); }
+  function draw(now) {
+    ctx.clearRect(0, 0, W, H);
+    const ink = getComputedStyle(document.body).color, sub = getComputedStyle(document.documentElement).getPropertyValue("--sub").trim() || "#5b6475";
+    cols.forEach(c => {
+      const a = dots[c.S.k] || [], R = c.r;
+      ctx.beginPath(); ctx.arc(c.x, c.y, R, 0, 6.283); ctx.strokeStyle = c.S.c + "55"; ctx.lineWidth = 1.5; ctx.setLineDash([3, 4]); ctx.stroke(); ctx.setLineDash([]);
+      a.forEach(p => {
+        if (!rm) p.a += p.sp;
+        const age = Math.min(1, (now - p.born) / 600), rr = Math.max(3, Math.min(7, R / 6)) * (0.4 + 0.6 * age);
+        const x = c.x + Math.cos(p.a) * p.d * (R - 4), y = c.y + Math.sin(p.a) * p.d * (R - 4);
+        ctx.beginPath(); ctx.arc(x, y, rr, 0, 6.283); ctx.fillStyle = c.S.c; ctx.fill();
+        if (age < 1) { ctx.beginPath(); ctx.arc(x, y, rr + 10 * age, 0, 6.283); ctx.strokeStyle = c.S.c + "66"; ctx.lineWidth = 2; ctx.stroke(); }
+      });
+      ctx.fillStyle = a.length ? ink : sub; ctx.textAlign = "center"; ctx.font = "800 " + Math.round(Math.max(15, Math.min(26, R * .5))) + "px Pretendard Variable, Pretendard, sans-serif";
+      ctx.fillText(String(a.length), c.x, c.y + Math.max(5, R * .17));
+      ctx.fillStyle = sub; ctx.font = "600 " + (W < 520 ? 11 : 12) + "px Pretendard Variable, Pretendard, sans-serif";
+      ctx.fillText(c.S.n, c.x, c.y + R + 17);
+    });
+    bursts = bursts.filter(b => now - b.t < 1600);
+    bursts.forEach(b => { const k = (now - b.t) / 1600; ctx.beginPath(); ctx.arc(b.x, b.y, 20 + 120 * k, 0, 6.283); ctx.strokeStyle = "rgba(14,159,110," + (1 - k) + ")"; ctx.lineWidth = 4 * (1 - k) + 1; ctx.stroke(); });
+    requestAnimationFrame(draw);
+  }
+  new ResizeObserver(layout).observe(box); layout(); requestAnimationFrame(draw);
+  return { set, burst, relayout: layout };
+})();
+
+/* ---------- 결제 축하 ---------- */
+const celQ = []; let celOn = false;
+function celebrate(e, total) { celQ.push({ e, total }); if (!celOn) nextCel(); }
+function nextCel() {
+  const it = celQ.shift(); if (!it) { celOn = false; return; } celOn = true;
+  const S = BY[it.e.s] || { n: it.e.s, c: "#0e9f6e" };
+  $("tA").textContent = "+" + won(it.e.w) + "원";
+  $("tS").innerHTML = '<i style="background:' + S.c + '"></i>' + esc(S.n) + (it.e.n ? " · " + esc(it.e.n) : "") + '<div class="muted" style="font-size:14px;margin-top:6px">오늘 매출 ' + won(it.total) + '원</div>';
+  $("toast").classList.add("on"); field.burst(it.e.s); confetti(S.c); chime();
+  setTimeout(() => { $("toast").classList.remove("on"); setTimeout(nextCel, 500); }, 4200);
+}
+function confetti(c) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv = $("cel"), x = cv.getContext("2d"), dpr = devicePixelRatio || 1; cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cols = [c, "#0e9f6e", "#f5b301", "#ff3b30", "#2563eb"], P = Array.from({ length: 160 }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 200, y: innerHeight * .3, vx: (Math.random() - .5) * 16, vy: -Math.random() * 14 - 4, r: Math.random() * 6.28, vr: (Math.random() - .5) * .3, c: cols[Math.floor(Math.random() * cols.length)], w: 6 + Math.random() * 6 }));
+  const t0 = performance.now();
+  (function f(now) {
+    const k = (now - t0) / 3200; x.clearRect(0, 0, innerWidth, innerHeight); if (k > 1) return;
+    P.forEach(p => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr; x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.globalAlpha = 1 - k * .8; x.fillStyle = p.c; x.fillRect(-p.w / 2, -3, p.w, 6); x.restore(); });
+    requestAnimationFrame(f);
+  })(t0);
+}
+let AC = null;
+function chime() {
+  if (!sound) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const t = AC.currentTime;
+    [[880, 0], [1175, .12], [1568, .24]].forEach(([f, d]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(.0001, t + d); g.gain.exponentialRampToValueAtTime(.25, t + d + .02); g.gain.exponentialRampToValueAtTime(.0001, t + d + .5); o.connect(g).connect(AC.destination); o.start(t + d); o.stop(t + d + .55); });
+  } catch (e) {}
+}
+try { if (localStorage.getItem("lv_snd") === "1") { sound = true; $("snd").setAttribute("aria-pressed", "true"); $("snd").textContent = "소리 끄기"; } } catch (e) {}
+$("snd").addEventListener("click", () => { sound = !sound; $("snd").setAttribute("aria-pressed", sound); $("snd").textContent = sound ? "소리 끄기" : "소리 켜기"; try { localStorage.setItem("lv_snd", sound ? "1" : ""); } catch (e) {} if (sound) chime(); });
+
+/* ---------- 받아 오기 ---------- */
+function lock(msg) { $("app").hidden = true; $("lock").hidden = false; $("lockE").textContent = msg || ""; setTimeout(() => $("lockK").focus(), 50); }
+$("lockF").addEventListener("submit", ev => { ev.preventDefault(); const v = $("lockK").value.trim(); if (!/^[A-Za-z0-9]{6,64}$/.test(v)) { $("lockE").textContent = "열쇠를 다시 확인해 주세요."; return; } KEY = v; try { localStorage.setItem("lv_key", KEY); } catch (e) {} $("lockE").textContent = "확인 중"; pollLv(true); });
+function pollLv(force) {
+  if (!KEY) { lock(); return; }
+  if (document.hidden && !force) return;
+  fetch(LVU + "?a=d&k=" + encodeURIComponent(KEY), { cache: "no-store" }).then(r => r.json()).then(d => {
+    if (!d || !d.ok) { try { localStorage.removeItem("lv_key"); } catch (e) {} KEY = ""; lock("열쇠가 맞지 않습니다."); return; }
+    $("lock").hidden = true; $("app").hidden = false;
+    const first = !CFG; if (d.meta) setCfg(d.meta);
+    LV = d; lastOk = Date.now(); render(); if (first) pollSrv();
+  }).catch(() => { $("dot").classList.add("off"); });
+}
+function pollSrv() {
+  if (document.hidden || !CFG) return;
+  [["am", CFG.am], ["ch", CFG.ch]].forEach(([n, u]) => {
+    if (!u) return;
+    fetch(u, { method: "POST", body: JSON.stringify({ action: "am.dash", k: KEY, _o: "dash" }) }).then(r => r.json()).then(d => { if (d && d.ok) { if (n === "am") AM = d; else CH = d; render(); } }).catch(() => {});
+  });
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { pollLv(); pollSrv(); } });
+pollLv(); setInterval(pollLv, 10000); setInterval(pollSrv, 30000);
+}
+</script>
+</body>
+</html>
