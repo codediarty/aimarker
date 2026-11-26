@@ -74,7 +74,7 @@
   var OLD_ID = { t10: 'lt', t40: 'pr', t80: 'mx', c3: 'lt', c10: 'pl', c30: 'pr', c50: 'mx', s1: 'pr', d1: 'pr', m1: 'pr', q1: 'pr', pl2: 'pl', pr2: 'pr', mx2: 'mx' };   // 13.17 예전 칸 주소(#buy-t40 · ?pack=c30)는 새 칸으로
   var SRV_PID = { pl: 'pl2', pr: 'pr2', mx: 'mx2' };   // 13.31 서버의 새 상품 번호(토큰 350 · 1,000 · 2,000). 예전 pl · pr · mx 는 서버에서 legacy(예전 코드의 환불 셈을 지키려고 번호를 새로 둠). 바로 결제(am.buy)는 새 번호로
   var CR0 = { unit: { per: 100, cr: 0.3, min: 1.5 }, pro: { per: 100, cr: 0.6, min: 3 } }, ASK = Infinity;   // 11.23 1.5배(새로 산 코드 값, 예전 코드는 서버 rm 2/3 을 곱함) · 13.2 토큰 단가(서버 credit.cost 가 오면 am.js 가 토큰으로 바꾼 그 값) · 이만큼 넘으면 한 번 물음 · 13.32 부터 묻지 않음(단추에 토큰 숫자가 적혀 있어 누르면 바로 실행)
-  var HUM_L = 'AI 작성률을 낮추는 중입니다.', HUM_SUB = 'AI 특유의 문장 패턴을 정밀하게 분석하고, 원문의 의미를 최대한 유지하면서 AI 특유의 패턴을 선별적으로 제거하는 휴머나이징 기술을 적용하고 있습니다.';   // 13.38 대표 문구(2026.11.24 20:05)
+  var HUM_L = 'AI 작성률을 낮추는 중입니다.', HUM_SUB = 'AI 특유의 언어 패턴과 문장 구조를 정밀하게 분석하고, 원문의 의미와 문맥을 유지하며 자연어 표현을 최적화하고 있습니다.';   // 13.38 대표 문구(2026.11.24 20:05)
   var FREE_FIRST = false;   // 13.36 → 13.36b(2026.11.24 17:00 대표 '처음오는 손님한테는 그렇게 보이면 문제 없지 한번 결제해서 토큰 되어있는사람은 방금전처럼 … 수정해줘'): 코드가 없는 손님은 원래대로 'AI 작성률 무료 검사' 하나, 토큰 코드가 있는 사람은 13.30 두 단추(결과서 · 휴머나이징, 토큰 숫자) 화면. true 로 두면 코드가 있어도 무료 검사 하나
   var SUM_EDIT = false;   // 13.37(2026.11.24 20:00 대표): 검사 결과 위 줄은 '뒤로' + 'AI 작성률 낮추기'. true 면 예전 '글 고치기' · '새 글'
 
@@ -186,7 +186,7 @@
   function slowNote() {   // 13.42 늦은 조각을 다시 보낼 때 진행 화면에 한 줄(같은 조각은 토큰이 한 번만)
     var el = stageEl && $('.hz42-slow', stageEl);
     if (el) el.hidden = false;
-    stat('응답이 늦은 조각을 한 번 더 보냈습니다');
+    stat('응답이 늦은 구간을 한 번 더 보냈습니다');
   }
   function ico(name) {
     var P = { lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>', check: '<path d="M20 6 9 17l-5-5"/>', alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>', back: '<path d="M15 18l-6-6 6-6"/>', file: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>', card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>', clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>', info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>', arrow: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>', x: '<path d="M18 6 6 18M6 6l12 12"/>', download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>', upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>', pen: '<path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>', shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>', open: '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>' };
@@ -605,7 +605,7 @@
   function setBusy(on) { S.busy = on; btnC.disabled = on; btnP.disabled = on; if (btnF) btnF.disabled = on; if (!on) stageEnd(); }   // 13.42 끝나면 전체 화면 진행 화면을 닫음
   /* 13.38(2026.11.24 대표 '좀 너무 간단해서 그래픽이라던지 애니메이션이라던지 좀 더 개선해봐'): 진행 화면에 문서 그림(훑는 빛이 지나가면 AI 패턴 줄이 바뀜) ·
      네 단계 · 조각 점 · 반짝이는 막대. 숫자(i / n)와 막대는 실제로 끝난 조각 수 그대로. 움직임 줄이기 설정이면 멈춘 그림 */
-  var P38 = { hum: ['문장 패턴 분석', 'AI 패턴 선별', '사람 말투로 다듬기', '의미 · 숫자 확인'], chk: ['문장 나누기', '앞뒤 문맥 살피기', 'AI 패턴 판정', '결과 정리'] };
+  var P38 = { hum: ['언어 구조 분석', 'AI 패턴 식별', '자연어 최적화', '원문 정합성 검증'], chk: ['문장 단위 분할', '문맥 기반 판독', 'AI 패턴 판정', '판정 결과 산출'] };
   /* 13.42(2026.11.25 대표 14:07 '화면이 전환되면서 전체적으로 있어보이게 디자인되어야지 저렇게 하단에 허접하게 하면 안 돼'):
      처리 중에는 화면 전체를 덮는 진행 화면. 13.38 그림(문서 · 훑는 빛 · 네 단계 · 조각 점)을 가운데 크게, 둘레에 진행 고리 · 큰 백분율.
      숫자와 고리 · 막대는 실제로 끝난 조각 수 그대로(한 번에 끝나는 일은 도는 고리). 다 끝나면 '완료' 표시를 잠깐 보이고 결과로,
@@ -619,11 +619,11 @@
     var st = P38[k].map(function (x, j) { return '<li style="--d:' + j + '"><span>' + (j + 1) + '</span>' + x + '</li>'; }).join('');
     var el = document.createElement('div');
     el.className = 'hz42 hz38-' + k; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'hz42T'); el.setAttribute('aria-describedby', 'hz42S');
-    el.innerHTML = '<div class="hz42-card" tabindex="-1"><span class="hz42-eb"><i></i>' + (k === 'hum' ? '휴머나이징 엔진이 처리하고 있습니다' : 'AI 작성률을 판정하고 있습니다') + '</span>' +
+    el.innerHTML = '<div class="hz42-card" tabindex="-1"><span class="hz42-eb"><i></i>' + (k === 'hum' ? '휴머나이징 엔진 가동 중' : 'AI 판별 엔진 가동 중') + '</span>' +
       '<div class="hz42-vis"><svg class="hz42-ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="tr" cx="60" cy="60" r="54"></circle><circle class="pg" cx="60" cy="60" r="54"></circle></svg>' + doc + '</div>' +
       '<div class="hz42-pct" aria-hidden="true"><b>0</b><small>%</small></div><h2 id="hz42T"></h2><p class="hz42-sub" id="hz42S"></p><ol class="hz38-st hz42-st">' + st + '</ol>' +
       '<div class="hz42-bar"><em></em></div><div class="hz42-ft"><span class="hz38-dots"></span><span class="hz38-pc"></span></div><small class="hz42-nt" hidden></small>' +
-      '<small class="hz42-slow" hidden>응답이 늦은 조각은 자동으로 한 번 더 보내고 있어요. 같은 조각은 토큰이 두 번 빠지지 않습니다.</small><small class="hz42-keep">끝날 때까지 이 창을 닫지 마세요.</small></div>';
+      '<small class="hz42-slow" hidden>응답이 늦은 구간은 자동으로 다시 처리하고 있어요. 같은 구간은 토큰이 두 번 빠지지 않습니다.</small><small class="hz42-keep">처리가 완료될 때까지 이 창을 유지해 주세요.</small></div>';
     stageFocus = document.activeElement;
     document.body.appendChild(el); document.documentElement.classList.add('hz42-on');
     try { $('.hz42-card', el).focus({ preventScroll: true }); } catch (e) { /* 그대로 */ }
@@ -655,7 +655,7 @@
     $('.hz42-bar em', el).style.width = (one ? 36 : Math.max(4, pct)) + '%';
     var dt = $('.hz38-dots', el), pc = $('.hz38-pc', el), m = Math.min(n, 40), on = n ? Math.round(i / n * m) : 0;
     if (dt) dt.innerHTML = n > 1 ? Array.apply(null, Array(m)).map(function (x, j) { return '<span' + (j < on ? ' class="on"' : j === on ? ' class="nx"' : '') + '></span>'; }).join('') : '';
-    if (pc) pc.textContent = n > 1 ? '조각 ' + i + ' / ' + n + ' 끝남' : '';
+    if (pc) pc.textContent = n > 1 ? (k === 'hum' ? '언어 패턴 최적화' : 'AI 패턴 판정') + ' (' + i + '/' + n + ')' : '';
   }
   function note(msg) { out.innerHTML = '<div class="hz7-prog"><b>' + esc(msg) + '</b></div>'; stat(msg); }
   function stat(t) { var st = document.getElementById('hzStat'); if (st) st.textContent = t || ''; }   // 화면 읽기 프로그램에는 한 줄만 알림
@@ -663,7 +663,7 @@
     S.stageErr = true;   // 13.42 진행 화면은 '완료' 없이 바로 닫음
     var code = e && e.code, slow = !!e && (e.name === 'AbortError' || e.name === 'TypeError');   // 시간 초과 · 연결 끊김
     var m = slow ? (e.name === 'TypeError' ? '서버에 연결하지 못했습니다. 넣은 글은 그대로 있으니 잠시 뒤 다시 시도해 주세요.' : '서버 응답이 늦어 결과를 받지 못했습니다. 넣은 글은 그대로 있으니 다시 시도해 주세요.') : (e && (e.message || e.msg)) || '지금은 처리하지 못했어요. 잠시 뒤 다시 시도해 주세요.';
-    if (slow && redo && S.contN) m += ' 다시 시도를 누르면 끝난 ' + S.contN + '조각은 그대로 두고 남은 부분만 이어서 처리합니다.' + (S.pass ? ' 같은 조각은 토큰이 두 번 빠지지 않습니다.' : '');   // 13.42
+    if (slow && redo && S.contN) m += ' 다시 시도를 누르면 처리가 끝난 ' + S.contN + '개 구간은 그대로 두고 남은 구간만 이어서 처리합니다.' + (S.pass ? ' 같은 구간은 토큰이 두 번 빠지지 않습니다.' : '');   // 13.42
     S.contN = 0;
     var acts = slow && redo ? '<button class="btn btn-p btn-s" type="button" data-redo>다시 시도</button>' : '';
     var again = retry ? '<button class="btn btn-g btn-s" type="button" data-again>무료 검사로 보기</button>' : '';
@@ -712,7 +712,7 @@
       if (needN > S.ps.left) { out.innerHTML = '<div class="hz7-err"><b>남은 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 검사해 이용권 ' + needN + '회가 필요합니다.' : '이 글을 검사하려면 이용권 ' + needN + '회가 필요합니다.') + ' 지금 남은 횟수는 ' + S.ps.left + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button><button class="btn btn-g btn-s" type="button" data-again>무료 검사 결과로 보기</button></div></div>'; S.retry = function () { check(t, { free: true }); }; return Promise.resolve(null); }
     }
     var lbl = full ? RPT + ' 중' : '무료 AI 작성률 검사 중';
-    setBusy(true); prog(lbl, 0, C.parts.length, full && isCr() ? '문장마다 앞뒤 문장과 함께 AI 글 패턴을 살피고 결과서를 만듭니다. 긴 글은 6,000자씩 나눠 동시에 처리합니다. 처리하지 못하면 토큰은 빠지지 않습니다.' : ''); if (full) runShow('res');
+    setBusy(true); prog(lbl, 0, C.parts.length, full && isCr() ? '문장마다 앞뒤 문맥과 함께 AI 글 패턴을 정밀하게 분석하고 결과서를 만듭니다. 처리하지 못하면 토큰은 빠지지 않습니다.' : ''); if (full) runShow('res');
     var done = 0, tnC = tone();   // 13.30 동시에 보내도 진행 표시는 끝난 조각 수, 말투는 시작할 때 값 하나로
     return par(C.parts, function (part, i) {
       var key = 'c|' + part;
@@ -1190,7 +1190,7 @@
     var C0 = chunk(t), C = full ? C0 : { parts: [C0.parts[0]], seps: [] }, JF = full ? jobFor('f', t, 0) : null;   // 13.42
     if (full && isCr() && !JF.cont) { var needF = C.parts.reduce(function (a, p) { return a + (p.length <= HELP_MAX ? 0 : costOf('unit', p.length)); }, 0); if (needF > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, needF, ''); return; } }
     else if (full && S.ps && C.parts.length > S.ps.left) { out.innerHTML = '<div class="hz7-err"><b>남은 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 바꿔 이용권 ' + C.parts.length + '회가 필요합니다.' : '이 글을 바꾸려면 이용권 1회가 필요합니다.') + ' 지금 남은 횟수는 ' + S.ps.left + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button></div></div>'; return; }
-    setBusy(true); prog(HUM_L, 0, C.parts.length, HUM_SUB, C.parts.length > 1 ? '긴 글은 6,000자씩 나눠 동시에 처리합니다.' : ''); runShow('fx');
+    setBusy(true); prog(HUM_L, 0, C.parts.length, HUM_SUB, '언어적 특성과 문맥 구조를 기반으로 정밀 최적화를 수행하고 있습니다.'); runShow('fx');
     var tn = (JF && JF.tn) || tone(), doneF = JF ? Object.keys(JF.done).length : 0;
     par(C.parts, function (part, i) {
       if (JF && JF.done[i]) return Promise.resolve(JF.done[i]);   // 13.42 이미 받은 조각
@@ -1225,7 +1225,7 @@
     var C = chunk(t), J = jobFor('h', t, S.variant), todo = C.parts.filter(function (p, i) { return !J.done[i]; });   // 13.42 실패한 작업을 이어서 하면 끝난 조각은 그대로(서버도 같은 조각은 한 번만 뺌)
     if (isCr()) { if (!J.cont && humCost(todo) > crLeft()) { out.innerHTML = lowHtml('AI 휴머나이징', t.length, humCost(todo), '첫 문단 무료로 보기'); S.retry = function () { pro(false, true); }; return; } }
     else if (S.ps && todo.length > S.ps.proLeft) { out.innerHTML = '<div class="hz7-err"><b>휴머나이징 횟수가 모자라요</b><span>' + (C.parts.length > 1 ? '이 글은 6,000자씩 ' + C.parts.length + '번으로 나눠 바꿔 휴머나이징 ' + C.parts.length + '회가 필요합니다.' : '이 글을 바꾸려면 휴머나이징 1회가 필요합니다.') + ' 남은 휴머나이징은 ' + S.ps.proLeft + '회입니다.</span><div class="row"><button class="btn btn-p btn-s" type="button" data-buy="best">토큰 충전</button></div></div>'; return; }
-    setBusy(true); prog(HUM_L, C.parts.length - todo.length, C.parts.length, HUM_SUB, (C.parts.length > 1 ? '긴 글은 6,000자씩 나눠 동시에 처리합니다. ' : '') + (isCr() ? '처리하지 못한 조각은 토큰이 빠지지 않습니다.' : '')); runShow('fx');
+    setBusy(true); prog(HUM_L, C.parts.length - todo.length, C.parts.length, HUM_SUB, '언어적 특성과 문맥 구조를 기반으로 정밀 최적화를 수행하고 있습니다.'); runShow('fx');
     var tn = J.tn || tone(), doneH = C.parts.length - todo.length; if (J.tn) S.toneUsed = J.tn;
     par(C.parts, function (part, i) {
       if (J.done[i]) return Promise.resolve(J.done[i]);   // 13.42 이미 받은 조각
