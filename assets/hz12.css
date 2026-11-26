@@ -257,3 +257,11 @@ body .hz7-dlg.hz18-dlg .hz18-packs { grid-template-columns: repeat(3, minmax(0, 
 #hzGo.hz43 .hz12-note { flex: 1 1 100%; flex-wrap: wrap; align-items: center; row-gap: 8px; }
 #hzGo.hz43 .hz12-note > span { flex: 1 1 calc(100% - 24px); flex-basis: min(400px, calc(100% - 24px)); min-width: 0; }
 #hzGo.hz43 .hz12-note > .hz43-free { flex: 0 0 auto; margin-left: auto; }
+
+/* 13.44(2026.11.26) 검사 결과의 결제 단추 아래 한 줄: 성균관컨설팅 안전결제(토큰 코드가 없을 때만, 충전 창의 같은 줄과 같은 말) */
+.hz12-next .hz44-safe { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin: -4px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--ds-slate, #5f6b85); word-break: keep-all; }
+.hz12-next .hz44-safe .ico { width: 14px; height: 14px; flex: none; margin: 0; color: var(--ds-green-ink, #0e8a5f); }
+.hz12-next .hz44-safe b { font-weight: 750; color: var(--ds-ink-2, #2b3550); }
+.hz12-next .hz44-safe { flex-wrap: nowrap; align-items: flex-start; }
+.hz12-next .hz44-safe .ico { margin-top: 2px; }
+.hz12-next .hz44-safe > span { flex: 1 1 0; min-width: 0; }

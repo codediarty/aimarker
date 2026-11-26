@@ -1050,6 +1050,7 @@
     return '<section class="hz12-next ' + bandCls(k) + (hot ? ' hot' : sig ? ' sig' : ' calm') + '" aria-labelledby="hzNextT"><div class="l"><h3 id="hzNextT">' + (hot ? esc(title).replace('인간화(휴머나이징)해 드립니다', '<span class="nb"><em>인간화(휴머나이징)</em>해 드립니다</span>') : esc(title)) + '</h3><p class="sub">' + (hot ? '<b>AI 문장 패턴을 자연스럽게 다듬어 드려요.</b> ' : '') + esc(sub) + '</p>' +
       '<ul>' + li.map(function (x) { return '<li>' + ico('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></div>' +
       '<div class="r"><button class="btn btn-p btn-l" type="button" data-act="humall">' + ico('pen') + '<span>' + (S.pass ? '글 전체 휴머나이징 · ' + tk(cost) + '토큰' : '충전하고 글 전체 휴머나이징') + '</span></button><p class="price"><span class="lead">AI 작성률을 줄이고 원문의 의미는 유지합니다.</span>' + price + '</p>' +
+      (S.pass ? '' : '<p class="hz44-safe">' + ico('lock') + '<span><b>성균관컨설팅 안전결제</b> · 회원가입 없이 · 카드 · 토스페이 · 계좌이체</span></p>') +   // 13.44(2026.11.26 대표 '운영사 · 안전결제는 적절한 위치에, 조잡하지 않게'): 토큰 코드가 없을 때 결제 단추 아래 한 줄
       (S.pass ? '' : '<button class="btn btn-g" type="button" data-act="humfree">' + freeTaste(t).part + ' 무료로 먼저 보기</button><button type="button" class="hz7-link" data-code data-intent="hum">토큰 코드가 있어요</button>') + rptHtml(M, t) +
       '</div></section>';   // 13.31 대표: 휴머나이징 단추 밑에 한 줄, '규정대로 밝히세요' 줄은 자리만 차지해 뺌
   }
