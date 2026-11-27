@@ -24,7 +24,12 @@ header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88
 .dot.off{background:var(--faint);animation:none}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--live) 55%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
 .clock{color:var(--sub);font-size:14px}
-.sp{flex:1}
+.sp{flex:1;display:flex;justify-content:center;min-width:0}
+.cum{display:inline-flex;align-items:baseline;gap:8px;padding:4px 16px;border-radius:999px;border:1px solid color-mix(in srgb,var(--pay) 38%,transparent);background:color-mix(in srgb,var(--pay) 9%,transparent);white-space:nowrap}
+.cum .k{font-size:13px;font-weight:700;color:var(--sub)}
+.cum b{font-size:22px;font-weight:850;letter-spacing:-.02em;color:var(--pay);line-height:1.2}
+.cum .u{font-size:14px;font-weight:700;color:var(--pay)}
+.cum.up{animation:fl 2.6s ease-out}
 .pill{font-size:12.5px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:4px 10px;white-space:nowrap}
 .pill b{color:var(--ink);font-weight:700}
 .btn{font:inherit;font-size:14px;font-weight:700;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 15px;min-height:38px;cursor:pointer}
@@ -141,15 +146,15 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
 .lock input{font:inherit;font-size:16px;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);margin-bottom:10px}
 .lock .btn{width:100%}.lock .err{color:var(--live);font-size:13.5px;min-height:20px;margin-top:8px}
 @media (max-width:1100px){.hero{grid-template-columns:1fr 1fr}.facts{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.row3{grid-template-columns:1fr 1fr}}
-@media (max-width:640px){.hero{grid-template-columns:1fr}.facts{grid-template-columns:1fr}.row3{grid-template-columns:1fr}.pill.hm,th.hm,td.hm{display:none}.card{padding:16px}}
-@media (prefers-reduced-motion:reduce){.dot,.livebar i,.feed li.new,tr.flash td,.sl li.up{animation:none}.toast{transition:none}}
+@media (max-width:640px){.hd .sp{order:2;flex-basis:100%;justify-content:flex-start}.hd .pill,.hd .btn{order:3}.cum b{font-size:20px}.hero{grid-template-columns:1fr}.facts{grid-template-columns:1fr}.row3{grid-template-columns:1fr}.pill.hm,th.hm,td.hm{display:none}.card{padding:16px}}
+@media (prefers-reduced-motion:reduce){.dot,.livebar i,.feed li.new,tr.flash td,.sl li.up,.cum.up{animation:none}.toast{transition:none}}
 </style>
 </head>
 <body>
 <header><div class="wrap hd">
   <span class="onair"><span class="dot" id="dot"></span>실시간 현황판</span>
   <span class="clock tnum" id="clock"></span>
-  <span class="sp"></span>
+  <span class="sp"><span class="cum" id="cum" hidden><span class="k">누적 매출</span><b class="tnum" id="cumV">0</b><span class="u">원</span></span></span>
   <span class="pill hm" id="srcN">불러오는 중</span>
   <span class="pill" id="upd">연결 중</span>
   <button class="btn" id="snd" type="button" aria-pressed="false">소리 켜기</button>
@@ -363,6 +368,14 @@ function render() {
   const M = model(), T = M.T, now = Date.now();
   const cv = T.chk ? T.tokPay / T.chk : 0, aov = T.pay ? T.w / T.pay : 0, first = dayKey(now) === "2026-11-27";
   countTo("rev", T.w, v => won(v) + "<small>원</small>");
+  { const CU = AM && AM.cum && typeof AM.cum.w === "number" ? AM.cum : null, el = $("cum");   // 누적 매출(AIMarker 서버 1.2.0)
+    el.hidden = !CU;
+    if (CU) {
+      const before = shown.cumV; countTo("cumV", CU.w, v => won(v));
+      if (before != null && CU.w > before) { el.classList.remove("up"); void el.offsetWidth; el.classList.add("up"); }
+      const fd = String(CU.from || ""), fm = fd ? Number(fd.slice(4, 6)) + "월 " + Number(fd.slice(6, 8)) + "일" : "";
+      el.title = "누적 매출 " + won(CU.w) + "원 = " + fm + " 전까지 " + won(CU.base) + "원 + " + fm + "부터 아임웹 실제 결제(" + CU.days + "일)" + (CU.miss ? " · " + CU.miss + "일은 아임웹에서 확인 중" : "");
+    } }
   $("payN").textContent = T.pay ? "· " + T.pay + "건" : "";
   const diff = T.w - T.wYs;
   $("revS").innerHTML = (T.pay ? "객단가 <b>" + won(aov) + "원</b> · " : "") + "어제 이 시각 " + won(T.wYs) + "원 " + (T.wYs || T.w ? (diff >= 0 ? '<span class="up">▲ ' + won(diff) + "</span>" : '<span class="down">▼ ' + won(-diff) + "</span>") : "");
@@ -440,7 +453,7 @@ function render() {
     const S = BY[e.s] || { n: e.s, c: "#8a93a6" }, k = e.t + "|" + e.s + "|" + e.p, nw = !seenV[k] && now - T0 > 15000; seenV[k] = 1;
     return "<li" + (nw ? ' class="new"' : "") + '><span class="t tnum">' + hhmm(e.t) + '</span><span class="n"><span class="chip" style="font-size:13px"><i style="background:' + S.c + '"></i>' + esc(S.n) + "</span><span>" + esc(pageName(e.p)) + '</span></span><span class="src">' + esc(srcName(e.r)) + (e.f ? "<b>처음</b>" : "") + "</span></li>";
   }).join("") || '<li class="empty">아직 오늘 들어온 사람이 없습니다</li>';
-  $("foot").innerHTML = "결제 · 매출은 성균관컨설팅 아임웹 상점의 실제 결제 주문입니다(취소 · 입금 대기는 뺌, 2분마다 확인, 손님이 결제하는 중에는 잠시 앞 값). 무료 검사 · 맛보기는 AIMarker · 카피휴먼 서버가 센 사람 수(같은 브라우저는 6시간에 한 번)입니다. 방문은 사이트마다 따로 셉니다(같은 사람이 두 사이트에 오면 두 번). 11월 27일은 9시 15분부터 셌고 성균관컨설팅 · 논문AI 는 11시쯤, 한국AI윤리위원회는 11시 35분쯤부터 셌습니다(28일부터는 모두 0시부터). 지금 접속은 화면을 보고 있는 사람(보는 동안 30초마다 신호, 1분 15초 안에 신호가 온 사람)이고, 0명인 사이트 옆 시간은 마지막으로 들어온 때입니다. 방금 들어온 사람은 수집기가 받은 최근 40명(브라우저 번호 없이 사이트 · 페이지 · 들어온 곳만)입니다. 성균관컨설팅 방문은 아임웹 통계와 세는 방법이 다릅니다. 아임웹 홈 화면의 방문자는 아임웹 안내로는 IP 기준이라 더 크게 나오고, 같은 아임웹의 유입 경로 분석 방문자 수는 그보다 적습니다(11월 26일: 홈 75명 · 유입 경로 분석 59명). 현황판은 검색 로봇 · 관리자 화면 · 디자인 모드를 빼고 브라우저마다 하루 한 번 세서 유입 경로 분석 숫자에 더 가깝습니다. 하루는 한국 시간 0시부터 다음 날 0시 전까지입니다.";
+  $("foot").innerHTML = "결제 · 매출은 성균관컨설팅 아임웹 상점의 실제 결제 주문입니다(취소 · 입금 대기는 뺌, 2분마다 확인, 손님이 결제하는 중에는 잠시 앞 값). 무료 검사 · 맛보기는 AIMarker · 카피휴먼 서버가 센 사람 수(같은 브라우저는 6시간에 한 번)입니다. 방문은 사이트마다 따로 셉니다(같은 사람이 두 사이트에 오면 두 번). 11월 27일은 9시 15분부터 셌고 성균관컨설팅 · 논문AI 는 11시쯤, 한국AI윤리위원회는 11시 35분쯤부터 셌습니다(28일부터는 모두 0시부터). 지금 접속은 화면을 보고 있는 사람(보는 동안 30초마다 신호, 1분 15초 안에 신호가 온 사람)이고, 0명인 사이트 옆 시간은 마지막으로 들어온 때입니다. 방금 들어온 사람은 수집기가 받은 최근 40명(브라우저 번호 없이 사이트 · 페이지 · 들어온 곳만)입니다. 성균관컨설팅 방문은 아임웹 통계와 세는 방법이 다릅니다. 아임웹 홈 화면의 방문자는 아임웹 안내로는 IP 기준이라 더 크게 나오고, 같은 아임웹의 유입 경로 분석 방문자 수는 그보다 적습니다(11월 26일: 홈 75명 · 유입 경로 분석 59명). 현황판은 검색 로봇 · 관리자 화면 · 디자인 모드를 빼고 브라우저마다 하루 한 번 세서 유입 경로 분석 숫자에 더 가깝습니다. 누적 매출은 11월 27일 전까지의 매출을 시작 금액으로 두고, 11월 27일부터 날마다 아임웹 실제 결제(오늘 매출과 같은 규칙)를 더한 값입니다. 하루는 한국 시간 0시부터 다음 날 0시 전까지입니다.";
   /* 새 결제 축하 */
   const fresh = M.todayEv.filter(e => !seen[e.id]);
   fresh.forEach(e => { seen[e.id] = 1; });
