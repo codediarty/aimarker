@@ -250,6 +250,7 @@ function model() {
   const ORD = AM && AM.ord && AM.ord.ok ? AM.ord : null;   // 결제 · 매출은 아임웹 주문(상점 전체). 못 읽을 때만 서버 기록 방식
   const sv = ORD ? (ORD.list || []) : [].concat((AM && AM.pay) || [], (CH && CH.pay) || []);
   const evs = sv.map(e => ({ id: "s" + e.id, t: e.t, s: e.s, w: e.w || 0, n: e.n || "" }));
+  if (!ORD) ((LV && LV.ev) || []).forEach(e => evs.push({ id: "c" + e.t + e.s + e.w, t: e.t, s: e.s, w: e.w || 0, n: e.n || "결제" }));   // 1.1처럼: 아임웹을 못 읽을 때만 현황판 결제 신호도 셈
   const todayEv = evs.filter(e => dayKey(e.t) === today).sort((a, b) => b.t - a.t), ydEv = evs.filter(e => dayKey(e.t) === yday);
   const T = { live: 0, uv: 0, uvY: 0, pv: 0, nv: 0, chk: 0, chkY: 0, taste: 0, tokUv: 0, tokPay: 0 };
   SITES.forEach(S => {
