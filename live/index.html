@@ -53,6 +53,46 @@ main{padding:18px 0 40px}
 .sub b{color:var(--ink);font-weight:700}
 .up{color:var(--pay);font-weight:800}.down{color:var(--live);font-weight:800}
 .spark{display:block;width:100%;height:58px;margin-top:10px}
+/* 오늘 매출 칸(대표 11.27 16:23 '아래가 너무 비는데', '결제 딱 되면 임팩트'): 누적 매출 그래프를 칸에 맞게 키우고, 아래에 사이트별 비중 */
+.rc{display:flex;flex-direction:column;position:relative;overflow:hidden}
+.fxb{margin-left:auto;font:inherit;font-size:11.5px;font-weight:700;color:var(--faint);background:none;border:1px solid var(--line);border-radius:99px;padding:1px 9px;cursor:pointer}
+.fxb:hover{color:var(--ink);border-color:var(--sub)}
+.fxb:focus-visible{outline:3px solid #7aa2ff;outline-offset:2px}
+.revw{position:relative}
+.big{transform-origin:left center}
+.cumc{position:relative;flex:1;min-height:130px;margin-top:10px}
+.cumc svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.cumc .ax{font-size:10.5px;fill:var(--faint)}
+.cumc .lbl{font-size:11px;font-weight:700}
+.mixh{display:flex;justify-content:space-between;font-size:12px;color:var(--faint);margin-top:12px}
+.mix{display:flex;gap:2px;height:10px;margin-top:5px;border-radius:99px;overflow:hidden;background:var(--soft)}
+.mix i{display:block;height:100%;min-width:3px}
+.mixs{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 16px;font-size:12.5px}
+.mixs li{display:flex;align-items:center;gap:6px;min-width:0}
+.mixs li i{width:8px;height:8px;border-radius:2px;flex:none}
+.mixs li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--sub)}
+.mixs li b{margin-left:auto;font-weight:750;white-space:nowrap}
+.mixs li em{font-style:normal;color:var(--faint);font-size:11.5px;white-space:nowrap;margin-left:2px}
+.mixs li.muted{color:var(--faint)}
+/* 결제 임팩트: 칸이 흔들리며 빛나고, 숫자가 튀고, 동전이 터지고, '+금액'이 떠오름 */
+.rc.hit{border-color:var(--pay);box-shadow:var(--shadow),0 0 0 2px color-mix(in srgb,var(--pay) 45%,transparent),0 0 50px color-mix(in srgb,var(--pay) 35%,transparent);animation:rhit 1.1s cubic-bezier(.2,.9,.25,1)}
+@keyframes rhit{0%{transform:none}8%{transform:scale(1.025) translateX(-4px)}16%{transform:scale(1.025) translateX(4px)}24%{transform:scale(1.02) translateX(-2px)}34%{transform:scale(1.012) translateX(1px)}100%{transform:none}}
+.rc.hit.gold{border-color:var(--gold);box-shadow:var(--shadow),0 0 0 2px color-mix(in srgb,var(--gold) 50%,transparent),0 0 56px color-mix(in srgb,var(--gold) 42%,transparent)}
+.rc::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.18),transparent);transform:skewX(-18deg);pointer-events:none;opacity:0}
+.rc.hit::after{animation:rshine .95s ease-out}
+@keyframes rshine{0%{left:-60%;opacity:1}100%{left:130%;opacity:1}}
+.big.pop{animation:rpop .8s cubic-bezier(.2,1.4,.4,1)}
+@keyframes rpop{0%{transform:scale(1)}30%{transform:scale(1.12);text-shadow:0 0 34px color-mix(in srgb,var(--pay) 75%,transparent)}100%{transform:scale(1)}}
+.rpop{position:absolute;z-index:3;font-size:clamp(22px,2.6vw,30px);font-weight:850;color:var(--pay);white-space:nowrap;pointer-events:none;animation:rup 2.4s cubic-bezier(.2,.9,.25,1) forwards;text-shadow:0 2px 16px color-mix(in srgb,var(--pay) 55%,transparent)}
+@keyframes rup{0%{opacity:0;transform:translateY(12px) scale(.7)}12%{opacity:1;transform:translateY(-8px) scale(1.15)}70%{opacity:1}100%{opacity:0;transform:translateY(-62px) scale(1)}}
+.coin{position:absolute;z-index:2;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff6bf,#ffd43b 40%,#e8a200 75%);box-shadow:inset 0 0 0 2px rgba(160,100,0,.55),0 0 8px rgba(255,200,40,.6);pointer-events:none;animation:coin var(--d,1s) cubic-bezier(.15,.7,.3,1) forwards}
+@keyframes coin{0%{transform:translate(0,0) scale(.4) rotate(0);opacity:1}70%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1) rotate(var(--r));opacity:0}}
+.ring{position:absolute;z-index:1;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid var(--pay);pointer-events:none;animation:ring .9s ease-out forwards}
+@keyframes ring{0%{transform:scale(.3);opacity:.9}100%{transform:scale(6);opacity:0}}
+#flash{position:fixed;inset:0;z-index:19;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--pay) 30%,transparent),transparent 65%)}
+#flash.gold{background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--gold) 38%,transparent),transparent 65%)}
+#flash.on{animation:flash .9s ease-out}
+@keyframes flash{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
 .livebar{display:flex;flex-wrap:wrap;gap:4px;margin-top:12px;min-height:14px}
 .sl{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:3px 11px;font-size:12.5px;line-height:1.5;color:var(--faint)}
 .sl li{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
@@ -208,7 +248,7 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
 .pwd .err{color:var(--live);font-size:13px;min-height:19px}.pwd .ok{color:var(--pay)}.pwd .row{display:flex;gap:8px;margin-top:6px}.pwd .row .btn{flex:1}
 @media (max-width:1100px){.hero{grid-template-columns:1fr 1fr}.facts{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.row3{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){.hero>.card:first-child{order:-2}.hero>.gc{order:-1}.hd .sp{order:2;flex-basis:100%;justify-content:flex-start}.hd .pill,.hd .btn{order:3}.cum b{font-size:20px}.hero{grid-template-columns:1fr}.facts{grid-template-columns:1fr}.row3{grid-template-columns:1fr}.pill.hm,th.hm,td.hm{display:none}.card{padding:16px}}
-@media (prefers-reduced-motion:reduce){.dot,.livebar i,.feed li.new,tr.flash td,.sl li.up,.cum.up,.gfill::before,.gfeed li.new,.gpop{animation:none}.toast,.toast .tgb i,.gfill,.glap,.gtxt{transition:none}.gpop{display:none}}
+@media (prefers-reduced-motion:reduce){.rc.hit,.rc.hit::after,.big.pop,.rpop,#flash.on{animation:none}.coin,.ring,.rpop{display:none}.dot,.livebar i,.feed li.new,tr.flash td,.sl li.up,.cum.up,.gfill::before,.gfeed li.new,.gpop{animation:none}.toast,.toast .tgb i,.gfill,.glap,.gtxt{transition:none}.gpop{display:none}}
 </style>
 </head>
 <body>
@@ -225,11 +265,14 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
 <dialog class="pwd" id="pwD"><form id="pwSetF"><h2>비밀번호 정하기</h2><p>8자리로 정하면 다른 기기(카카오톡 등)에서는 aimarker.kr/live 를 열고 비밀번호만 넣으면 됩니다. 비밀번호는 서버에 보내지 않고 이 화면에서만 씁니다.</p><input id="pwN1" type="password" maxlength="8" autocomplete="new-password" aria-label="새 비밀번호 8자리" placeholder="새 비밀번호 8자리"><input id="pwN2" type="password" maxlength="8" autocomplete="new-password" aria-label="새 비밀번호 한 번 더" placeholder="한 번 더"><div class="err" id="pwSE" role="status"></div><div class="row"><button class="btn" type="button" id="pwX">닫기</button><button class="btn pri" type="submit" id="pwS">저장</button></div></form></dialog>
 <main class="wrap" id="app">
   <section class="hero">
-    <div class="card">
-      <div class="lb">오늘 매출 <span class="muted" id="payN"></span></div>
-      <div class="big money" id="rev">0<small>원</small></div>
+    <div class="card rc" id="rc">
+      <div class="lb">오늘 매출 <span class="muted" id="payN"></span><button class="fxb" id="fxB" type="button" title="결제가 들어오면 보이는 효과를 미리 봅니다(숫자는 바뀌지 않음). 한 번 더 누르면 목표 달성 효과">효과 보기</button></div>
+      <div class="revw" id="revW"><div class="big money" id="rev">0<small>원</small></div></div>
       <div class="sub" id="revS">&nbsp;</div>
-      <svg class="spark" id="spark" viewBox="0 0 300 58" preserveAspectRatio="none" aria-label="오늘과 어제의 시간에 따른 누적 매출"></svg>
+      <div class="cumc" id="cumC" role="img" aria-label="오늘과 어제의 시간에 따른 누적 매출"></div>
+      <div class="mixh"><span>사이트별 오늘 매출</span><span id="mixN"></span></div>
+      <div class="mix" id="mix" aria-hidden="true"></div>
+      <ul class="mixs" id="mixS" aria-label="사이트별 오늘 매출"></ul>
     </div>
     <div class="card">
       <div class="lb">지금 접속 <span class="badge">LIVE</span></div>
@@ -294,6 +337,7 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
   <footer id="foot"></footer>
 </main>
 <canvas id="cel"></canvas>
+<div id="flash" aria-hidden="true"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"><div class="k" id="tK">결제 완료</div><div class="a" id="tA"></div><div class="s" id="tS"></div><div class="tg" id="tG" hidden><div class="tgb"><i id="tGf"></i></div><div class="tgt" id="tGt"></div></div></div>
 <div class="tip" id="tip" role="tooltip"></div>
 <script>
@@ -465,17 +509,60 @@ function roundTop(x, y, w, h, r) { if (h <= r) return "M" + x + "," + (y + h) + 
 function niceStep(mx) { const raw = mx / 4, p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; }
 const shortWon = v => v >= 10000 ? (v / 10000).toFixed(v % 10000 ? 1 : 0).replace(/\.0$/, "") + "만" : won(v);
 
-/* ---------- 누적 매출 작은 선(오늘 · 어제) ---------- */
-function spark(M) {
-  const now = Date.now(), d0 = Date.parse(dayKey(now) + "T00:00:00+09:00"), W = 300, H = 58;
-  const cum = (evs, off) => { const pts = [[0, 0]]; let s = 0; evs.slice().sort((a, b) => a.t - b.t).forEach(e => { const x = (e.t + off - d0) / 864e5; if (x < 0 || x > 1) return; pts.push([x, s]); s += e.w; pts.push([x, s]); }); return { pts, s }; };
-  const a = cum(M.todayEv, 0), b = cum(M.ydEv, 864e5), nowX = (now - d0) / 864e5;
+/* ---------- 오늘 누적 매출 그래프(오늘 · 어제 · 목표선, 결제마다 점) ---------- */
+function cumDraw(M) {
+  const el = $("cumC"), now = Date.now(), d0 = Date.parse(dayKey(now) + "T00:00:00+09:00");
+  const W = Math.max(200, Math.round(el.clientWidth || 300)), H = Math.max(110, Math.round(el.clientHeight || 140)), padB = 18, padT = 16;
+  const cum = (evs, off) => { const pts = [[0, 0]], dots = []; let s = 0; evs.slice().sort((a, b) => a.t - b.t).forEach(e => { const x = (e.t + off - d0) / 864e5; if (x < 0 || x > 1) return; pts.push([x, s]); s += e.w; pts.push([x, s]); dots.push([x, s, e]); }); return { pts, s, dots }; };
+  const a = cum(M.todayEv, 0), b = cum(M.ydEv, 864e5), nowX = Math.min(1, Math.max(0, (now - d0) / 864e5)), goal = GL ? GL.goal : 0;
   a.pts.push([nowX, a.s]); b.pts.push([1, b.s]);
-  const mx = Math.max(1, a.s, b.s), P = pts => pts.map(([x, v], i) => (i ? "L" : "M") + (x * W).toFixed(1) + "," + (H - 3 - v / mx * (H - 8)).toFixed(1)).join("");
-  $("spark").innerHTML = '<path d="' + P(b.pts) + '" fill="none" stroke="var(--gray)" stroke-width="2" vector-effect="non-scaling-stroke"/>' +
-    '<path d="' + P(a.pts) + "L" + (nowX * W).toFixed(1) + "," + H + "L0," + H + 'z" fill="var(--payS)" opacity=".7"/>' +
-    '<path d="' + P(a.pts) + '" fill="none" stroke="var(--pay)" stroke-width="2.5" vector-effect="non-scaling-stroke"/>' +
-    '<circle cx="' + (nowX * W).toFixed(1) + '" cy="' + (H - 3 - a.s / mx * (H - 8)).toFixed(1) + '" r="3.5" fill="var(--pay)"/>';
+  const mx = Math.max(1, a.s, b.s, goal) * 1.08, X = x => (x * W).toFixed(1), Y = v => (H - padB - v / mx * (H - padB - padT)).toFixed(1);
+  const P = pts => pts.map(([x, v], i) => (i ? "L" : "M") + X(x) + "," + Y(v)).join(""), still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let g = '<defs><linearGradient id="cumG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--pay)" stop-opacity=".38"/><stop offset="1" stop-color="var(--pay)" stop-opacity="0"/></linearGradient></defs>';
+  g += '<line x1="0" x2="' + W + '" y1="' + (H - padB) + '" y2="' + (H - padB) + '" stroke="var(--line)"/>';
+  [0, 6, 12, 18, 24].forEach(h => { const x = h / 24 * W; g += '<text class="ax" x="' + x.toFixed(1) + '" y="' + (H - 4) + '" text-anchor="' + (h === 0 ? "start" : h === 24 ? "end" : "middle") + '">' + h + "시</text>"; });
+  if (goal) { const y = Y(goal); g += '<line x1="0" x2="' + W + '" y1="' + y + '" y2="' + y + '" stroke="var(--gold)" stroke-width="1.5" stroke-dasharray="5 5"/><text class="lbl" x="2" y="' + (+y - 5) + '" fill="var(--goldT)">목표 ' + shortWon(goal) + "원</text>"; }
+  g += '<path d="' + P(b.pts) + '" fill="none" stroke="var(--gray)" stroke-width="2" stroke-linejoin="round"/>';
+  if (b.s) g += '<text class="lbl" x="' + (W - 2) + '" y="' + (+Y(b.s) - 6) + '" text-anchor="end" fill="var(--faint)">어제 ' + shortWon(b.s) + "원</text>";
+  const ap = P(a.pts);
+  g += '<path d="' + ap + "L" + X(nowX) + "," + (H - padB) + "L0," + (H - padB) + 'z" fill="url(#cumG)"/>';
+  g += '<path d="' + ap + '" fill="none" stroke="var(--pay)" stroke-width="2.6" stroke-linejoin="round"/>';
+  a.dots.forEach(([x, v, e]) => {
+    g += '<circle cx="' + X(x) + '" cy="' + Y(v) + '" r="3.2" fill="var(--card)" stroke="var(--pay)" stroke-width="2"/>';
+    if (!still && !seen[e.id] && now - T0 > 15000) g += '<circle cx="' + X(x) + '" cy="' + Y(v) + '" r="4" fill="none" stroke="var(--pay)" stroke-width="2.5"><animate attributeName="r" values="4;24" dur="1.2s" repeatCount="3" fill="freeze"/><animate attributeName="opacity" values=".95;0" dur="1.2s" repeatCount="3" fill="freeze"/></circle>';
+  });
+  if (!still) g += '<circle cx="' + X(nowX) + '" cy="' + Y(a.s) + '" r="5" fill="none" stroke="var(--pay)" stroke-width="2"><animate attributeName="r" values="5;14" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0" dur="2s" repeatCount="indefinite"/></circle>';
+  g += '<circle cx="' + X(nowX) + '" cy="' + Y(a.s) + '" r="4.5" fill="var(--pay)"/>';
+  a.dots.forEach(([x, v], i) => { g += '<circle cx="' + X(x) + '" cy="' + Y(v) + '" r="10" fill="transparent" data-i="' + i + '"/>'; });
+  el.innerHTML = '<svg viewBox="0 0 ' + W + " " + H + '" aria-hidden="true">' + g + "</svg>";
+  el.querySelectorAll("circle[data-i]").forEach(c => { const [, v, e] = a.dots[+c.dataset.i], S = BY[e.s] || { n: e.s || "성균관컨설팅" };
+    c.addEventListener("mousemove", ev => showTip(ev, hhmm(e.t) + " · " + esc(S.n) + " +" + won(e.w) + "원<br>이때까지 오늘 " + won(v) + "원")); c.addEventListener("mouseleave", hideTip); });
+}
+/* ---------- 사이트별 오늘 매출 비중 ---------- */
+function mixDraw(M) {
+  const rows = M.rows.filter(r => r.w > 0).sort((a, b) => b.w - a.w), tot = rows.reduce((x, r) => x + r.w, 0);
+  $("mixN").textContent = rows.length ? rows.length + "곳" : "";
+  if (!tot) { $("mix").innerHTML = ""; $("mixS").innerHTML = '<li class="muted">오늘 첫 결제를 기다리는 중</li>'; return; }
+  const top = rows.slice(0, 4), rest = rows.slice(4).reduce((x, r) => x + r.w, 0);
+  const segs = top.map(r => ({ n: r.S.n, c: r.S.c, w: r.w, k: r.pay })).concat(rest ? [{ n: "그 밖의 사이트", c: "var(--gray)", w: rest, k: rows.slice(4).reduce((x, r) => x + r.pay, 0) }] : []);
+  const tt = x => esc(x.n) + " " + won(x.w) + "원 · " + x.k + "건 · 오늘 매출의 " + pct(x.w / tot);
+  $("mix").innerHTML = segs.map(x => '<i style="flex:' + x.w + " 1 0;background:" + x.c + '" title="' + tt(x) + '"></i>').join("");
+  $("mixS").innerHTML = segs.map(x => '<li title="' + tt(x) + '"><i style="background:' + x.c + '"></i><span>' + esc(x.n) + '</span><b class="tnum">' + shortWon(x.w) + "원</b><em>" + pct(x.w / tot) + "</em></li>").join("");
+}
+/* ---------- 결제 임팩트(오늘 매출 칸) ---------- */
+function revImpact(amount, gold) {
+  const rc = $("rc"), rev = $("rev"), wr = $("revW"), fl = $("flash");
+  rc.classList.remove("hit"); rev.classList.remove("pop"); fl.classList.remove("on"); void rc.offsetWidth;
+  rc.classList.toggle("gold", !!gold); rc.classList.add("hit"); setTimeout(() => rc.classList.remove("hit", "gold"), 1400);
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  rev.classList.add("pop"); fl.classList.toggle("gold", !!gold); fl.classList.add("on");
+  const rg = document.createRange(); rg.selectNodeContents(rev); const tr = rg.getBoundingClientRect(), br = wr.getBoundingClientRect();
+  const cx = tr.left - br.left + tr.width * 0.45, cy = tr.top - br.top + tr.height * 0.55, add = (cls, css, ms, txt) => { const e = document.createElement("span"); e.className = cls; e.style.cssText = css; if (txt) e.textContent = txt; wr.appendChild(e); setTimeout(() => e.remove(), ms); };
+  add("ring", "left:" + cx + "px;top:" + cy + "px", 1000);
+  setTimeout(() => add("ring", "left:" + cx + "px;top:" + cy + "px;border-color:" + (gold ? "var(--gold)" : "var(--pay)"), 1000), 160);
+  for (let i = 0; i < (gold ? 26 : 16); i++) { const an = (-180 + Math.random() * 180) * Math.PI / 180, ds = 70 + Math.random() * 130;
+    add("coin", "left:" + (cx + (Math.random() - .5) * 40) + "px;top:" + cy + "px;--dx:" + (Math.cos(an) * ds * 1.6).toFixed(0) + "px;--dy:" + (Math.sin(an) * ds).toFixed(0) + "px;--r:" + ((Math.random() - .5) * 720).toFixed(0) + "deg;--d:" + (0.8 + Math.random() * 0.6).toFixed(2) + "s", 1600); }
+  add("rpop tnum", "left:" + Math.max(0, Math.min(tr.right - br.left + 8, br.width - 170)) + "px;top:" + Math.max(-6, tr.top - br.top - 10) + "px" + (gold ? ";color:var(--goldT)" : ""), 2500, "+" + won(amount) + "원");
 }
 
 /* ---------- 숫자 올라가기 ---------- */
@@ -510,7 +597,6 @@ function render() {
   $("payN").textContent = T.pay ? "· " + T.pay + "건" : "";
   const diff = T.w - T.wYs;
   $("revS").innerHTML = (T.pay ? "객단가 <b>" + won(aov) + "원</b> · " : "") + "어제 이 시각 " + won(T.wYs) + "원 " + (T.wYs || T.w ? (diff >= 0 ? '<span class="up">▲ ' + won(diff) + "</span>" : '<span class="down">▼ ' + won(-diff) + "</span>") : "");
-  spark(M);
   countTo("live", T.live, v => v + "<small>명</small>");
   const busy = M.rows.filter(r => r.live).sort((a, b) => b.live - a.live).slice(0, 3);
   $("liveS").innerHTML = busy.length ? busy.map(r => esc(r.S.n) + " <b>" + r.live + "</b>").join(" · ") : "지금은 조용합니다";
@@ -529,6 +615,7 @@ function render() {
   const mh = Math.max(1, ...M.hrV), hn = hourOf(now);
   $("uvH").innerHTML = M.hrV.map((v, i) => '<i style="height:' + Math.max(4, v / mh * 100).toFixed(0) + '%;' + (i > hn ? "opacity:.15" : "") + '" title="' + i + "시 " + v + '쪽"></i>').join("");
   goalDraw(M);
+  cumDraw(M); mixDraw(M);
   /* 눈여겨볼 것 */
   const F = [];
   const topS = M.rows.find(r => r.w > 0);
@@ -606,13 +693,13 @@ document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click
 
 /* ---------- 결제 축하 ---------- */
 const celQ = []; let celOn = false;
-function celebrate(e, total, before, goal) { celQ.push({ e, total, before: before || 0, goal: goal || 0 }); if (!celOn) nextCel(); }
+function celebrate(e, total, before, goal, demo) { celQ.push({ e, total, before: before || 0, goal: goal || 0, demo: !!demo }); if (!celOn) nextCel(); }
 function nextCel() {
   const it = celQ.shift(); if (!it) { celOn = false; return; } celOn = true;
   const S = BY[it.e.s] || { n: "성균관컨설팅", c: "#0e9f6e" }, g = it.goal, hit = !!(g && it.before < g && it.total >= g), ts = $("toast");
-  $("tK").textContent = hit ? "오늘 목표 달성!" : "결제 완료";
+  $("tK").textContent = (it.demo ? "미리 보기 · " : "") + (hit ? "오늘 목표 달성!" : "결제 완료");
   $("tA").textContent = "+" + won(it.e.w) + "원";
-  $("tS").innerHTML = '<i style="background:' + S.c + '"></i>' + esc(S.n) + " · " + esc(prodOf(it.e.n)) + '<div class="muted" style="font-size:14px;margin-top:6px">오늘 매출 ' + won(it.total) + "원</div>";
+  $("tS").innerHTML = '<i style="background:' + S.c + '"></i>' + esc(S.n) + " · " + esc(it.demo ? "효과 미리 보기" : prodOf(it.e.n)) + '<div class="muted" style="font-size:14px;margin-top:6px">' + (it.demo ? "실제 매출은 바뀌지 않습니다" : "오늘 매출 " + won(it.total) + "원") + "</div>";
   const tG = $("tG"), f = $("tGf"); tG.hidden = !g; ts.classList.toggle("gold", hit); ts.classList.toggle("over", !!(g && it.total >= g));
   if (g) {   // 도네이션 목표처럼: 축하 창 안에서 막대가 결제 전에서 결제 뒤로 차오름
     const p0 = it.before / g, p1 = it.total / g;
@@ -620,7 +707,8 @@ function nextCel() {
     requestAnimationFrame(() => { f.style.width = Math.min(100, p1 * 100).toFixed(2) + "%"; });
     $("tGt").innerHTML = "오늘 목표 <b>" + pct(p0) + "</b> → <b>" + pct(p1) + "</b>" + (hit ? " · 평균을 넘었어요" : p1 < 1 ? " · 목표까지 " + won(g - it.total) + "원" : "");
   }
-  ts.classList.add("on"); confetti(hit ? "#f5b301" : S.c, hit); chime(hit);
+  ts.classList.add("on"); confetti(hit ? "#f5b301" : S.c, hit); chime(hit); revImpact(it.e.w, hit);
+  if (it.demo) goalPopDemo(it.e.w, hit);
   setTimeout(() => { ts.classList.remove("on"); setTimeout(nextCel, 500); }, hit ? 6500 : 4500);
 }
 function confetti(c, big) {
@@ -639,10 +727,20 @@ function chime(big) {
   if (!sound) return;
   try {
     AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const t = AC.currentTime;
-    (big ? [[784, 0], [988, .12], [1175, .24], [1568, .36], [1976, .52]] : [[880, 0], [1175, .12], [1568, .24]]).forEach(([f, d]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(.0001, t + d); g.gain.exponentialRampToValueAtTime(.25, t + d + .02); g.gain.exponentialRampToValueAtTime(.0001, t + d + .5); o.connect(g).connect(AC.destination); o.start(t + d); o.stop(t + d + .55); });
+    [[2637, 0, .12], [3136, .06, .16]].forEach(([f, d, l]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = "triangle"; o.frequency.value = f; g.gain.setValueAtTime(.0001, t + d); g.gain.exponentialRampToValueAtTime(.18, t + d + .01); g.gain.exponentialRampToValueAtTime(.0001, t + d + l); o.connect(g).connect(AC.destination); o.start(t + d); o.stop(t + d + l + .02); });   // 동전 '찰랑'
+    (big ? [[784, .1], [988, .22], [1175, .34], [1568, .46], [1976, .62]] : [[880, .1], [1175, .22], [1568, .34]]).forEach(([f, d]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(.0001, t + d); g.gain.exponentialRampToValueAtTime(.25, t + d + .02); g.gain.exponentialRampToValueAtTime(.0001, t + d + .5); o.connect(g).connect(AC.destination); o.start(t + d); o.stop(t + d + .55); });
   } catch (e) {}
 }
 try { if (localStorage.getItem("lv_snd") === "1") { sound = true; $("snd").setAttribute("aria-pressed", "true"); $("snd").textContent = "소리 끄기"; } } catch (e) {}
+/* 효과 미리 보기(숫자는 바꾸지 않음): 한 번은 보통 결제, 한 번 더 누르면 목표 달성 */
+let demoN = 0;
+function goalPopDemo(w, gold) { const card = $("gc"), bar = $("gBar"); if (!card || !bar || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const fp = Math.min(1, GL && GL.w != null ? GL.w / GL.goal : 0), el = document.createElement("span"); el.className = "gpop tnum"; el.textContent = "+" + won(w) + "원"; if (gold) el.style.color = "var(--goldT)";
+  el.style.left = (bar.offsetLeft + Math.min(Math.max(bar.clientWidth * fp, 60), bar.clientWidth - 60)) + "px"; el.style.top = (bar.offsetTop - 8) + "px"; card.appendChild(el); setTimeout(() => el.remove(), 2700); }
+$("fxB").addEventListener("click", () => {
+  const cur = shown.rev || 0, g = GL ? GL.goal : 0, toGoal = demoN++ % 2 === 1 && g && cur < g, w = toGoal ? Math.max(9900, g - cur + 9900) : 9900;
+  celebrate({ id: "demo" + Date.now(), t: Date.now(), s: "aimarker.kr", w, n: "효과 미리 보기" }, cur + w, cur, g, true);
+});
 $("snd").addEventListener("click", () => { sound = !sound; $("snd").setAttribute("aria-pressed", sound); $("snd").textContent = sound ? "소리 끄기" : "소리 켜기"; try { localStorage.setItem("lv_snd", sound ? "1" : ""); } catch (e) {} if (sound) chime(); });
 
 /* ---------- 받아 오기 ---------- */
