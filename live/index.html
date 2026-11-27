@@ -81,6 +81,8 @@ h2 .note{font-size:12.5px;color:var(--faint);font-weight:500}
 .feed .n span{display:block;font-size:12.5px;color:var(--sub);font-weight:500;overflow:hidden;text-overflow:ellipsis}
 .feed .w{font-weight:800;color:var(--pay);white-space:nowrap}
 .feed li.new{animation:fl 2.6s ease-out}
+.vfeed .src{font-size:12.5px;color:var(--sub);white-space:nowrap;text-align:right}
+.vfeed .src b{display:inline-block;margin-left:5px;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:700;color:var(--blue);background:color-mix(in srgb,var(--blue) 12%,transparent)}
 @keyframes fl{0%{background:color-mix(in srgb,var(--pay) 22%,transparent)}100%{background:transparent}}
 .chip{display:inline-flex;align-items:center;gap:7px;font-weight:700}
 .chip i{width:9px;height:9px;border-radius:3px;flex:none}
@@ -191,9 +193,15 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
     <div class="card"><h2>토큰 사이트 흐름 <span class="note">오늘 · 사람 수</span></h2><ul class="bars ord" id="fun"></ul></div>
     <div class="card"><h2 style="justify-content:space-between">어디서 · 무엇을 <span class="tabs" role="tablist"><button type="button" role="tab" aria-selected="true" data-t="pg">지금 보는 쪽</button><button type="button" role="tab" aria-selected="false" data-t="ref">들어온 곳</button><button type="button" role="tab" aria-selected="false" data-t="top">많이 본 쪽</button></span></h2><ul class="bars blue" id="where"></ul></div>
   </section>
-  <section class="card" style="margin-top:14px">
-    <h2>시간대별 방문 <span class="note">오늘 · 모든 사이트의 페이지 보기</span></h2>
-    <div class="chart" id="hrVis"></div>
+  <section class="row2">
+    <div class="card">
+      <h2>시간대별 방문 <span class="note">오늘 · 모든 사이트의 페이지 보기</span></h2>
+      <div class="chart" id="hrVis"></div>
+    </div>
+    <div class="card">
+      <h2>방금 들어온 사람 <span class="note" id="vfeedN"></span></h2>
+      <ul class="feed vfeed" id="vfeed"></ul>
+    </div>
   </section>
   <footer id="foot"></footer>
 </main>
@@ -204,8 +212,8 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
 {
 const LVU = "https://script.google.com/macros/s/AKfycbynqa4gSpMjYlnOHPH6xaM3d2vys7aVMJHLuxQL_9osna0026p-Z6uywH2d4d0fzUbK_w/exec";   // 현황판 서버(방문 신호 · 숫자)
 const LVSTART = Date.UTC(2026, 10, 26, 15, 0);   // 방문 신호 2026.11.27 00:00(한국)부터(대표 11.27 결정)
-const NOLV = { "kaiec.kr": 1 };   // 방문 신호를 아직 붙이지 않은 곳(결제만 셈). 붙이면 여기서 빼기(성균관컨설팅 · 논문AI 는 11.27 오전 11시쯤 붙임)
-const LVSINCE = { "skkc.co.kr": "11시쯤", "nonmunai.kr": "11시쯤" };   // 11.27 하루만: 신호를 늦게 붙인 사이트의 첫날 시작 시각
+const NOLV = {};   // 방문 신호를 아직 붙이지 않은 곳(결제만 셈). 붙이면 여기서 빼기(성균관컨설팅 · 논문AI 는 11.27 오전 11시쯤 붙임)
+const LVSINCE = { "skkc.co.kr": "11시쯤", "nonmunai.kr": "11시쯤", "kaiec.kr": "11시 40분쯤" };   // 11.27 하루만: 신호를 늦게 붙인 사이트의 첫날 시작 시각
 const noLv = S => S.lv === 0 || !!NOLV[S.k];
 let KEY = "", CFG = null, SITES = [], BY = {};
 try { const m = /[#&]k=([A-Za-z0-9]{6,64})/.exec(location.hash); if (m) { KEY = m[1]; localStorage.setItem("lv_key", KEY); history.replaceState(null, "", location.pathname); } else KEY = localStorage.getItem("lv_key") || ""; } catch (e) {}
@@ -220,6 +228,13 @@ const ago = t => { const m = Math.floor((Date.now() - t) / 60000); return m < 1 
 const pct = r => (r * 100).toFixed(r && r < 0.1 ? 1 : 0) + "%";
 function setCfg(meta) { CFG = meta; SITES = meta.sites || []; BY = {}; SITES.forEach((s, i) => { BY[s.k] = Object.assign({ i }, s); }); }
 let LV = null, AM = null, CH = null, lastOk = 0, sound = false, whereTab = "pg";
+const SRCN = [[/(^|\.)search\.naver\.com$/, "네이버 검색"], [/(^|\.)blog\.naver\.com$/, "네이버 블로그"], [/(^|\.)cafe\.naver\.com$/, "네이버 카페"], [/(^|\.)naver\.com$/, "네이버"],
+  [/(^|\.)google\./, "구글"], [/(^|\.)bing\.com$/, "빙"], [/(^|\.)daum\.net$/, "다음"], [/(^|\.)(chatgpt\.com|openai\.com)$/, "ChatGPT"], [/perplexity/, "Perplexity"],
+  [/(^|\.)youtube\.com$/, "유튜브"], [/instagram/, "인스타그램"], [/(^|\.)(facebook\.com|fb\.com)$/, "페이스북"], [/kakao/, "카카오"]];
+const srcName = r => { r = String(r || ""); if (!r) return "직접 · 즐겨찾기"; if (BY[r]) return BY[r].n + "에서"; for (const [re, n] of SRCN) if (re.test(r)) return n; return r; };
+const PGN = { "/": "첫 화면", "/pricing/": "요금", "/shop_view/": "상품 보기", "/shop_payment/": "결제 화면", "/shop_payment_complete/": "결제 완료", "/privacy/": "개인정보처리방침", "/live/": "현황판" };
+const pageName = p => { p = String(p || "/"); let q = p; try { q = decodeURIComponent(p); } catch (e) { q = p; } return PGN[q] || PGN[q + "/"] || q; };
+const seenV = {};
 const T0 = Date.now();   // 처음 15초는 이미 있던 결제를 '본 것'으로만(축하하지 않음)
 const seenKey = "lv_seen_" + dayKey(Date.now());
 let seen = {}; try { seen = JSON.parse(localStorage.getItem(seenKey) || "{}") || {}; } catch (e) { seen = {}; }
@@ -360,12 +375,15 @@ function render() {
   if (M.todayEv[0]) { const e = M.todayEv[0], S = BY[e.s] || { n: "성균관컨설팅" }; F.push(["마지막 결제", ago(e.t) + " · " + esc(S.n) + " " + esc(prodOf(e.n))]); }
   const bp = M.prods[0]; if (bp) F.push(["가장 많이 팔린 상품", esc(bp.k) + " · " + bp.n + "건"]);
   if (busy[0]) F.push(["지금 가장 붐비는 곳", esc(busy[0].S.n) + " · " + busy[0].live + "명"]);
+  { const m = {}; M.rows.forEach(r => r.ref.forEach(x => { const k = srcName(x[0]); m[k] = (m[k] || 0) + x[1]; })); const top = Object.keys(m).sort((a, b) => m[b] - m[a])[0]; if (top) F.push(["가장 많이 들어온 길", esc(top) + " · " + m[top] + "번"]); }
   const hum = M.rows.reduce((x, r) => x + r.hum, 0); if (hum) F.push(["오늘 유료 휴머나이징", won(hum) + "번 실행"]);
   if (T.payY) F.push(["어제 하루", T.payY + "건 · " + won(T.wY) + "원"]);
-  $("facts").innerHTML = F.slice(0, 4).map(f => '<div class="fact">' + f[0] + "<b>" + f[1] + "</b></div>").join("") || '<div class="fact">오늘 첫 결제를 기다리는 중<b>—</b></div>';
+  const PRI = ["오늘 매출 1위", "마지막 결제", "가장 많이 들어온 길", "지금 가장 붐비는 곳", "가장 많이 팔린 상품", "결제가 가장 많은 때"];
+  F.sort((a, b) => (PRI.indexOf(a[0]) + 99) % 99 - (PRI.indexOf(b[0]) + 99) % 99);
+  $("facts").innerHTML = F.slice(0, 4).map(f => '<div class="fact">' + f[0] + "<b>" + f[1] + "</b></div>").join("") || '<div class="fact">오늘 첫 결제를 기다리는 중<b>아직 없음</b></div>';
   /* 시간대별 매출 */
   barChart($("hrRev"), [{ vals: M.hrY, color: "var(--gray)", name: "어제" }, { vals: M.hrT, color: "var(--pay)", name: "오늘" }], { h: 220, grow: 1, label: "시간대별 매출, 오늘과 어제", fmt: shortWon, fmtTip: v => won(v) + "원" });
-  barChart($("hrVis"), [{ vals: M.hrV, color: "var(--blue)", name: "페이지" }], { h: 150, label: "오늘 시간대별 방문", fmt: v => won(v), fmtTip: v => won(v) + "쪽" });
+  barChart($("hrVis"), [{ vals: M.hrV, color: "var(--blue)", name: "페이지" }], { h: 220, grow: 1, label: "오늘 시간대별 방문", fmt: v => won(v), fmtTip: v => won(v) + "쪽" });
   /* 실시간 결제 */
   $("feedN").textContent = T.pay ? "오늘 " + T.pay + "건" : "";
   $("feed").innerHTML = M.todayEv.slice(0, 14).map(e => { const S = BY[e.s] || { n: e.s ? e.s : "성균관컨설팅", c: "#8a93a6" }; return '<li' + (!seen[e.id] && now - T0 > 15000 ? ' class="new"' : "") + '><span class="t tnum">' + hhmm(e.t) + '</span><span class="n"><span class="chip" style="font-size:13px"><i style="background:' + S.c + '"></i>' + esc(S.n) + "</span><span>" + esc(prodOf(e.n)) + '</span></span><span class="w tnum">+' + won(e.w) + "원</span></li>"; }).join("") || '<li class="empty">아직 오늘 결제가 없습니다</li>';
@@ -394,7 +412,14 @@ function render() {
   $("fun").innerHTML = steps.map((s, i) => '<li style="--k:' + i + '"><span class="k">' + s[0] + '</span><span class="v tnum">' + won(s[1]) + "<span>" + s[2] + '</span></span><span class="b"><i style="width:' + Math.min(100, s[1] / f0 * 100).toFixed(1) + '%"></i></span></li>').join("");
   /* 어디서 · 무엇을 */
   drawWhere(M);
-  $("foot").innerHTML = "결제 · 매출은 성균관컨설팅 아임웹 상점의 실제 결제 주문입니다(취소 · 입금 대기는 뺌, 2분마다 확인, 손님이 결제하는 중에는 잠시 앞 값). 무료 검사 · 맛보기는 AIMarker · 카피휴먼 서버가 센 사람 수(같은 브라우저는 6시간에 한 번)입니다. 방문은 사이트마다 따로 셉니다(같은 사람이 두 사이트에 오면 두 번). 한국AI윤리위원회는 아직 방문을 세지 않아 방문 칸이 '-'로 보입니다(결제는 셈). 성균관컨설팅 · 논문AI 는 11월 27일 오전 11시쯤부터 셉니다. 성균관컨설팅 방문은 아임웹 통계와 세는 방법이 달라(검색 로봇 · 관리자 화면 · 디자인 모드는 빼고, 브라우저마다 하루 한 번) 숫자가 조금 다를 수 있습니다. 하루는 한국 시간 0시부터 다음 날 0시 전까지입니다.";
+  /* 방금 들어온 사람(수집기 1.3.0) */
+  const vsAll = (LV && LV.vs) || [], vs = vsAll.slice().sort((a, b) => b.t - a.t).slice(0, 14);
+  $("vfeedN").textContent = vsAll.length ? "최근 " + vsAll.length + "명 · 새로 오면 맨 위에" : "";
+  $("vfeed").innerHTML = vs.map(e => {
+    const S = BY[e.s] || { n: e.s, c: "#8a93a6" }, k = e.t + "|" + e.s + "|" + e.p, nw = !seenV[k] && now - T0 > 15000; seenV[k] = 1;
+    return "<li" + (nw ? ' class="new"' : "") + '><span class="t tnum">' + hhmm(e.t) + '</span><span class="n"><span class="chip" style="font-size:13px"><i style="background:' + S.c + '"></i>' + esc(S.n) + "</span><span>" + esc(pageName(e.p)) + '</span></span><span class="src">' + esc(srcName(e.r)) + (e.f ? "<b>처음</b>" : "") + "</span></li>";
+  }).join("") || '<li class="empty">아직 오늘 들어온 사람이 없습니다</li>';
+  $("foot").innerHTML = "결제 · 매출은 성균관컨설팅 아임웹 상점의 실제 결제 주문입니다(취소 · 입금 대기는 뺌, 2분마다 확인, 손님이 결제하는 중에는 잠시 앞 값). 무료 검사 · 맛보기는 AIMarker · 카피휴먼 서버가 센 사람 수(같은 브라우저는 6시간에 한 번)입니다. 방문은 사이트마다 따로 셉니다(같은 사람이 두 사이트에 오면 두 번). 성균관컨설팅 · 논문AI · 한국AI윤리위원회는 11월 27일 오전 11시쯤부터 셉니다. 방금 들어온 사람은 수집기가 받은 최근 40명(브라우저 번호 없이 사이트 · 페이지 · 들어온 곳만)입니다. 성균관컨설팅 방문은 아임웹 통계와 세는 방법이 달라(검색 로봇 · 관리자 화면 · 디자인 모드는 빼고, 브라우저마다 하루 한 번) 숫자가 조금 다를 수 있습니다. 하루는 한국 시간 0시부터 다음 날 0시 전까지입니다.";
   /* 새 결제 축하 */
   const fresh = M.todayEv.filter(e => !seen[e.id]);
   fresh.forEach(e => { seen[e.id] = 1; });
@@ -403,9 +428,9 @@ function render() {
 }
 function drawWhere(M) {
   let L = [];
-  if (whereTab === "pg") M.rows.forEach(r => r.livePg.forEach(p => L.push([r.S, p[0], p[1], "명"])));
-  else if (whereTab === "ref") { const m = {}; M.rows.forEach(r => r.ref.forEach(x => { m[x[0]] = (m[x[0]] || 0) + x[1]; })); L = Object.keys(m).map(k => [null, k, m[k], "번"]); }
-  else M.rows.forEach(r => r.pg.forEach(p => L.push([r.S, p[0], p[1], "쪽"])));
+  if (whereTab === "pg") M.rows.forEach(r => r.livePg.forEach(p => L.push([r.S, pageName(p[0]), p[1], "명"])));
+  else if (whereTab === "ref") { const m = {}; M.rows.forEach(r => r.ref.forEach(x => { const k = srcName(x[0]); m[k] = (m[k] || 0) + x[1]; })); L = Object.keys(m).map(k => [null, k, m[k], "번"]); }
+  else M.rows.forEach(r => r.pg.forEach(p => L.push([r.S, pageName(p[0]), p[1], "쪽"])));
   L.sort((a, b) => b[2] - a[2]); L = L.slice(0, 7);
   const mx = Math.max(1, ...L.map(x => x[2]));
   $("where").innerHTML = L.map(x => '<li><span class="k">' + (x[0] ? '<span class="chip" style="font-weight:650"><i style="background:' + x[0].c + '"></i>' + esc(x[0].n) + "</span> " : "") + esc(x[1]) + '</span><span class="v tnum">' + x[2] + x[3] + '</span><span class="b"><i style="width:' + (x[2] / mx * 100).toFixed(1) + '%"></i></span></li>').join("") ||
