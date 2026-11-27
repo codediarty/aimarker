@@ -11,8 +11,8 @@
 <style>
 /* 실시간 현황판 2.0(2026.11.27, 대표 '디자인도 별로 · 더 흥미로운 정보'): 매출이 먼저, 지금 접속 · 오늘 방문 · 전환이 한 줄,
    그 아래 시간대 · 실시간 결제 · 사이트 순위 · 상품 · 흐름. 차트는 한 색(오늘)과 회색(어제)만, 사이트 색은 이름 옆 작은 칩에만 */
-:root{--bg:#f6f7fb;--card:#fff;--ink:#101828;--sub:#5b6475;--faint:#8a93a6;--line:#e6e9f0;--soft:#eef1f6;--pay:#0e9f6e;--payS:#d7f2e6;--live:#e11d48;--blue:#2563eb;--gray:#c3c9d5;--shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.06)}
-@media (prefers-color-scheme:dark){:root{--bg:#0a0d14;--card:#111622;--ink:#eef1f7;--sub:#a3abbd;--faint:#717a8f;--line:#1f2635;--soft:#171d2b;--pay:#2fd08c;--payS:#123a2b;--live:#ff4d6d;--blue:#5b8cff;--gray:#3a4357;--shadow:0 1px 0 rgba(255,255,255,.02),0 10px 30px rgba(0,0,0,.35)}}
+:root{--bg:#f6f7fb;--card:#fff;--ink:#101828;--sub:#5b6475;--faint:#8a93a6;--line:#e6e9f0;--soft:#eef1f6;--pay:#0e9f6e;--payS:#d7f2e6;--live:#e11d48;--blue:#2563eb;--gray:#c3c9d5;--gold:#e8a200;--gold2:#ffd43b;--goldT:#9a6700;--shadow:0 1px 2px rgba(16,24,40,.05),0 8px 24px rgba(16,24,40,.06)}
+@media (prefers-color-scheme:dark){:root{--bg:#0a0d14;--card:#111622;--ink:#eef1f7;--sub:#a3abbd;--faint:#717a8f;--line:#1f2635;--soft:#171d2b;--pay:#2fd08c;--payS:#123a2b;--live:#ff4d6d;--blue:#5b8cff;--gray:#3a4357;--gold:#ffc53d;--gold2:#ffe58a;--goldT:#ffc53d;--shadow:0 1px 0 rgba(255,255,255,.02),0 10px 30px rgba(0,0,0,.35)}}
 *{box-sizing:border-box;min-width:0}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Pretendard Variable",Pretendard,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
 .tnum{font-variant-numeric:tabular-nums}
@@ -74,8 +74,51 @@ main{padding:18px 0 40px}
 .goal + .gl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--faint);margin-top:4px}
 /* 눈여겨볼 것 */
 .facts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:14px 0}
-.d14c{display:flex;flex-direction:column}.d14{flex:1;min-height:120px;margin-top:10px;position:relative}.d14 svg{display:block;width:100%;height:100%}
-.d14 .ax{font-size:10.5px;fill:var(--faint)}.d14 .ax.now{fill:var(--ink);font-weight:700}
+/* 오늘 목표(대표 11.27 15:15 '최근 한달 하루 평균 = 100%, 유튜버 도네이션 받듯이'): 도네이션 목표 막대처럼 */
+.gc{display:flex;flex-direction:column;position:relative}
+.gtag{margin-left:auto;font-size:11.5px;font-weight:650;color:var(--faint);border:1px solid var(--line);border-radius:99px;padding:1px 8px;white-space:nowrap;cursor:help}
+.gtop{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.gst{font-size:12.5px;font-weight:800;padding:3px 10px;border-radius:99px;color:var(--pay);background:color-mix(in srgb,var(--pay) 14%,transparent);white-space:nowrap}
+.gst:empty{display:none}
+.gbar{position:relative;height:30px;border-radius:99px;background:var(--soft);margin-top:12px;box-shadow:inset 0 1px 3px rgba(0,0,0,.18)}
+.gtk{position:absolute;top:9px;bottom:9px;width:2px;margin-left:-1px;border-radius:2px;background:color-mix(in srgb,var(--ink) 16%,transparent)}
+.gfill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:99px;overflow:hidden;background:linear-gradient(90deg,#0c9f68,var(--pay) 55%,#7cf0c0);box-shadow:0 0 14px color-mix(in srgb,var(--pay) 45%,transparent);transition:width 1.4s cubic-bezier(.2,.9,.25,1)}
+.gfill::before{content:"";position:absolute;inset:0;background-image:linear-gradient(45deg,rgba(255,255,255,.22) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.22) 50%,rgba(255,255,255,.22) 75%,transparent 75%,transparent);background-size:26px 26px;animation:gmove 1s linear infinite}
+.gfill::after{content:"";position:absolute;left:9px;right:9px;top:3px;height:9px;border-radius:99px;background:linear-gradient(rgba(255,255,255,.5),rgba(255,255,255,0))}
+@keyframes gmove{from{background-position:26px 0}to{background-position:0 0}}
+.glap{position:absolute;left:4px;top:8px;bottom:8px;width:0;border-radius:99px;background:linear-gradient(90deg,#ff6b6b,#f783ac);box-shadow:0 0 12px rgba(255,107,107,.65);transition:width 1.4s cubic-bezier(.2,.9,.25,1)}
+.gtxt{position:absolute;top:50%;left:0;transform:translate(-100%,-50%);padding:0 11px;font-size:13px;font-weight:850;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.45);white-space:nowrap;pointer-events:none;transition:left 1.4s cubic-bezier(.2,.9,.25,1)}
+.gtxt.out{transform:translate(0,-50%);color:var(--ink);text-shadow:none}
+.gsc{display:flex;justify-content:space-between;font-size:11.5px;color:var(--faint);margin-top:5px}
+.gsc b{color:var(--sub);font-weight:700}
+.gleft{font-size:13.5px;color:var(--sub);margin-top:8px}
+.gleft b{color:var(--ink);font-weight:750}
+.gfeed{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:5px;flex:1}
+.gfeed li{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;font-size:12.5px;padding:5px 9px;border-radius:10px;background:color-mix(in srgb,var(--pay) 7%,transparent)}
+.gfeed li.empty{display:block;background:none;padding:4px 0}
+.gfeed .t{color:var(--faint)}
+.gfeed .n{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gfeed .n .chip{font-weight:650;display:flex;min-width:0}.gfeed .n .chip b{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gfeed .w{font-weight:800}
+.gfeed .c{font-weight:800;font-size:11.5px;color:var(--pay);background:color-mix(in srgb,var(--pay) 15%,transparent);border-radius:99px;padding:1px 7px}
+.gfeed li.new{animation:gin .9s cubic-bezier(.2,1.3,.4,1)}
+@keyframes gin{0%{opacity:0;transform:translateY(-8px) scale(.95);background:color-mix(in srgb,var(--pay) 35%,transparent)}}
+.gdl{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--faint);margin-top:10px}
+.gdl b{color:var(--ink);font-weight:750}
+.gdays{display:grid;grid-template-columns:repeat(31,minmax(0,1fr));gap:2px;height:14px;margin-top:5px}
+.gdays i{border-radius:3px;background:var(--soft)}
+.gdays i.on{background:linear-gradient(var(--gold2),var(--gold))}
+.gdays i.nul{background:none;outline:1px dashed var(--line);outline-offset:-1px}
+.gdays i.now{background:linear-gradient(to top,var(--pay) var(--h,0%),var(--soft) var(--h,0%));outline:1.5px solid var(--ink);outline-offset:-1.5px}
+.gdays i.now.on{background:linear-gradient(var(--gold2),var(--gold))}
+.gpop{position:absolute;z-index:2;font-weight:850;font-size:16px;color:var(--pay);pointer-events:none;white-space:nowrap;animation:gpop 2.6s ease-out forwards;text-shadow:0 2px 12px color-mix(in srgb,var(--pay) 45%,transparent)}
+@keyframes gpop{0%{opacity:0;transform:translate(-50%,8px) scale(.8)}15%{opacity:1;transform:translate(-50%,-6px) scale(1.12)}100%{opacity:0;transform:translate(-50%,-44px) scale(1)}}
+.gc.done{border-color:color-mix(in srgb,var(--gold) 55%,var(--line));box-shadow:var(--shadow),0 0 0 1px color-mix(in srgb,var(--gold) 25%,transparent),0 12px 40px color-mix(in srgb,var(--gold) 18%,transparent)}
+.gc.done .gst{color:#4a3000;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.gc.done .gfill{background:linear-gradient(90deg,#f08c00,var(--gold) 50%,var(--gold2));box-shadow:0 0 18px color-mix(in srgb,var(--gold) 55%,transparent)}
+.gc.done .gtxt{color:#3d2800;text-shadow:0 1px 0 rgba(255,255,255,.35)}
+.gc.done .gpop{color:var(--goldT)}
+.gc.done .mid{color:var(--goldT)}
 .fact{border:1px dashed var(--line);border-radius:14px;padding:10px 14px;font-size:13.5px;color:var(--sub);background:color-mix(in srgb,var(--card) 60%,transparent)}
 .fact b{display:block;color:var(--ink);font-size:15.5px;font-weight:750;letter-spacing:-.01em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* 둘째 줄 */
@@ -145,6 +188,14 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
 .toast .a{font-size:clamp(40px,7vw,60px);font-weight:800;letter-spacing:-.03em;margin:2px 0}
 .toast .s{font-size:16px;font-weight:650}
 .toast .s i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px}
+.toast .tg{margin:14px auto 0;width:min(320px,70vw)}
+.toast .tgb{position:relative;height:14px;border-radius:99px;background:var(--soft);overflow:hidden}
+.toast .tgb i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:99px;background:linear-gradient(90deg,#0c9f68,var(--pay),#7cf0c0);transition:width 1.6s cubic-bezier(.2,.9,.25,1) .3s}
+.toast .tgt{font-size:14px;color:var(--sub);margin-top:7px;font-weight:650}
+.toast .tgt b{color:var(--ink)}
+.toast.over .tgb i{background:linear-gradient(90deg,#f08c00,var(--gold),var(--gold2))}
+.toast.gold{border-color:var(--gold);box-shadow:0 30px 80px rgba(0,0,0,.35),0 0 60px color-mix(in srgb,var(--gold) 35%,transparent)}
+.toast.gold .k{color:var(--goldT);font-size:18px}
 .lock{max-width:420px;width:calc(100% - 32px);margin:12vh auto;padding:28px;background:var(--card);border:1px solid var(--line);border-radius:18px;text-align:center}
 .lock h1{font-size:22px;margin:0 0 6px}.lock p{color:var(--sub);margin:0 0 16px;font-size:14px}
 .lock input{font:inherit;font-size:16px;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);margin-bottom:10px}
@@ -156,8 +207,8 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
 .pwd input{font:inherit;font-size:16px;width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);margin-bottom:8px}
 .pwd .err{color:var(--live);font-size:13px;min-height:19px}.pwd .ok{color:var(--pay)}.pwd .row{display:flex;gap:8px;margin-top:6px}.pwd .row .btn{flex:1}
 @media (max-width:1100px){.hero{grid-template-columns:1fr 1fr}.facts{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.row3{grid-template-columns:1fr 1fr}}
-@media (max-width:640px){.hd .sp{order:2;flex-basis:100%;justify-content:flex-start}.hd .pill,.hd .btn{order:3}.cum b{font-size:20px}.hero{grid-template-columns:1fr}.facts{grid-template-columns:1fr}.row3{grid-template-columns:1fr}.pill.hm,th.hm,td.hm{display:none}.card{padding:16px}}
-@media (prefers-reduced-motion:reduce){.dot,.livebar i,.feed li.new,tr.flash td,.sl li.up,.cum.up{animation:none}.toast{transition:none}}
+@media (max-width:640px){.hero>.card:first-child{order:-2}.hero>.gc{order:-1}.hd .sp{order:2;flex-basis:100%;justify-content:flex-start}.hd .pill,.hd .btn{order:3}.cum b{font-size:20px}.hero{grid-template-columns:1fr}.facts{grid-template-columns:1fr}.row3{grid-template-columns:1fr}.pill.hm,th.hm,td.hm{display:none}.card{padding:16px}}
+@media (prefers-reduced-motion:reduce){.dot,.livebar i,.feed li.new,tr.flash td,.sl li.up,.cum.up,.gfill::before,.gfeed li.new,.gpop{animation:none}.toast,.toast .tgb i,.gfill,.glap,.gtxt{transition:none}.gpop{display:none}}
 </style>
 </head>
 <body>
@@ -194,11 +245,19 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
       <div class="minih" id="uvH" aria-label="오늘 시간대별 방문"></div>
       <ul class="sl" id="uvL" aria-label="사이트별 오늘 방문"></ul>
     </div>
-    <div class="card d14c">
-      <div class="lb">최근 14일 매출</div>
-      <div class="mid" id="d14">0<small>원</small></div>
-      <div class="sub" id="d14S">&nbsp;</div>
-      <div class="d14" id="d14C" aria-label="최근 14일 날마다 매출"></div>
+    <div class="card gc" id="gc">
+      <div class="lb">오늘 목표 달성 <span class="gtag" id="gTag">30일 평균 기준</span></div>
+      <div class="gtop"><div class="mid" id="gP">-</div><span class="gst" id="gSt"></span></div>
+      <div class="sub" id="gS">&nbsp;</div>
+      <div class="gbar" id="gBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="오늘 목표 달성">
+        <span class="gtk" style="left:25%"></span><span class="gtk" style="left:50%"></span><span class="gtk" style="left:75%"></span>
+        <div class="gfill" id="gFill"></div><div class="glap" id="gLap"></div><span class="gtxt out" id="gTxt"></span>
+      </div>
+      <div class="gsc"><span>0</span><span>50%</span><span id="gGoal">100% = 30일 평균</span></div>
+      <div class="gleft" id="gLeft">&nbsp;</div>
+      <ul class="gfeed" id="gFeed" aria-label="오늘 들어온 결제와 목표에 더한 만큼"></ul>
+      <div class="gdl"><span id="gDl">30일 중 목표 넘긴 날</span><b id="gHit"></b></div>
+      <div class="gdays" id="gDays" aria-label="최근 30일 날마다 목표를 넘겼는지"></div>
     </div>
   </section>
   <section class="facts" id="facts" aria-label="지금 눈여겨볼 것"></section>
@@ -235,7 +294,7 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
   <footer id="foot"></footer>
 </main>
 <canvas id="cel"></canvas>
-<div class="toast" id="toast" role="status" aria-live="polite"><div class="k">결제 완료</div><div class="a" id="tA"></div><div class="s" id="tS"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"><div class="k" id="tK">결제 완료</div><div class="a" id="tA"></div><div class="s" id="tS"></div><div class="tg" id="tG" hidden><div class="tgb"><i id="tGf"></i></div><div class="tgt" id="tGt"></div></div></div>
 <div class="tip" id="tip" role="tooltip"></div>
 <script>
 {
@@ -348,26 +407,59 @@ function barChart(el, series, opt) {   // series: [{ vals, color, name }] 같은
     r.addEventListener("mouseleave", hideTip);
   });
 }
-function d14Draw(T) {   // 최근 14일 매출(AIMarker 서버 1.3.0 hist, 오늘은 화면의 오늘 매출로)
-  const el = $("d14C"), H0 = AM && Array.isArray(AM.hist) ? AM.hist.slice(-14) : [];
-  if (!H0.length) { $("d14").innerHTML = won(T.w) + "<small>원</small>"; $("d14S").textContent = "지난 날 매출을 아임웹에서 불러오는 중"; el.innerHTML = ""; return; }
-  const today = dayKey(Date.now()).replace(/-/g, ""), D = H0.map(x => ({ d: x.d, w: x.d === today ? T.w : x.w }));
-  const known = D.filter(x => typeof x.w === "number"), sum = known.reduce((a, x) => a + x.w, 0), past = known.filter(x => x.d !== today), avg = past.length ? past.reduce((a, x) => a + x.w, 0) / past.length : 0;
-  const best = known.reduce((m, x) => (x.w > (m ? m.w : -1) ? x : m), null), wd = d => "일월화수목금토"[new Date(+d.slice(0, 4), +d.slice(4, 6) - 1, +d.slice(6)).getDay()], md = d => +d.slice(4, 6) + "/" + +d.slice(6);
-  countTo("d14", sum, v => won(v) + "<small>원</small>");
-  $("d14S").innerHTML = "하루 평균 <b>" + won(Math.round(avg)) + "원</b>" + (avg ? " · 오늘은 평균의 <b>" + pct(T.w / avg) + "</b>" : "") + (best && best.w ? " · 최고 " + md(best.d) + "(" + wd(best.d) + ") " + shortWon(best.w) + "원" : "") + (known.length < D.length ? ' · <span style="color:var(--faint)">' + (D.length - known.length) + "일 불러오는 중</span>" : "");
-  const W = Math.max(220, Math.round(el.clientWidth || 300)), Hh = Math.max(120, Math.round(el.clientHeight || 140)), padB = 18, padT = 6, n = D.length, gw = W / n, bw = Math.max(4, gw * 0.62);
-  const mx = Math.max(1, ...known.map(x => x.w)), y = v => padT + (Hh - padT - padB) * (1 - v / mx);
-  let g = avg ? '<line x1="0" x2="' + W + '" y1="' + y(avg).toFixed(1) + '" y2="' + y(avg).toFixed(1) + '" stroke="var(--faint)" stroke-dasharray="3 4" stroke-width="1"/>' : "";
-  D.forEach((x, i) => {
-    const cx = gw * i + (gw - bw) / 2, isT = x.d === today;
-    if (typeof x.w === "number") { const yy = y(x.w), h = Math.max(x.w > 0 ? 2 : 0, Hh - padB - yy); if (h > 0) g += '<path d="' + roundTop(cx, Hh - padB - h, bw, h, Math.min(4, bw / 2)) + '" fill="var(--pay)" opacity="' + (isT ? 1 : 0.42) + '"/>'; }
-    else g += '<rect x="' + cx + '" y="' + (Hh - padB - 10) + '" width="' + bw + '" height="10" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="2 3"/>';
-    if (isT || i % 2 === (n - 1) % 2) g += '<text class="ax' + (isT ? " now" : "") + '" x="' + (gw * i + gw / 2) + '" y="' + (Hh - 4) + '" text-anchor="middle">' + (isT ? "오늘" : md(x.d)) + "</text>";
-    g += '<rect x="' + gw * i + '" y="0" width="' + gw + '" height="' + Hh + '" fill="transparent" data-i="' + i + '"/>';
-  });
-  el.innerHTML = '<svg viewBox="0 0 ' + W + " " + Hh + '" role="img" aria-label="최근 14일 날마다 매출">' + g + "</svg>";
-  el.querySelectorAll("rect[data-i]").forEach(r => { const x = D[+r.dataset.i]; r.addEventListener("mousemove", ev => showTip(ev, md(x.d) + "(" + wd(x.d) + ") " + (typeof x.w === "number" ? won(x.w) + "원" : "불러오는 중"))); r.addEventListener("mouseleave", hideTip); });
+/* ---------- 오늘 목표(도네이션 목표 막대): 오늘을 뺀 최근 30일 하루 평균 = 100% ---------- */
+let GL = null;   // { goal, n, days, hit, best } 지난 그림의 목표(결제 축하 창이 씀)
+const wdOf = d => "일월화수목금토"[new Date(+d.slice(0, 4), +d.slice(4, 6) - 1, +d.slice(6)).getDay()], mdOf = d => +d.slice(4, 6) + "/" + +d.slice(6);
+function goalOf() {
+  const H = AM && Array.isArray(AM.hist) ? AM.hist : [], today = dayKey(Date.now()).replace(/-/g, "");
+  const days = H.filter(x => x && x.d < today).slice(-30), known = days.filter(x => typeof x.w === "number");
+  if (known.length < 3) return null;   // 지난 날이 너무 적으면 목표를 세우지 않음
+  const goal = Math.max(1, Math.round(known.reduce((a, x) => a + x.w, 0) / known.length));
+  return { goal, n: known.length, miss: days.length - known.length, days, hit: known.filter(x => x.w >= goal).length, best: known.reduce((m, x) => (x.w > m.w ? x : m), known[0]) };
+}
+function goalDraw(M) {
+  const T = M.T, now = Date.now(), G = goalOf(), card = $("gc"), bar = $("gBar"), fill = $("gFill"), lap = $("gLap"), txt = $("gTxt");
+  const prevW = GL && GL.w != null ? GL.w : null;
+  GL = G ? Object.assign(G, { w: T.w }) : null;
+  const evs = M.todayEv.slice(0, 3);
+  $("gFeed").innerHTML = evs.map(e => { const S = BY[e.s] || { n: e.s ? e.s : "성균관컨설팅", c: "#8a93a6" }, c = G ? e.w / G.goal : 0;
+    return '<li' + (!seen[e.id] && now - T0 > 15000 ? ' class="new"' : "") + ' title="' + hhmm(e.t) + " · " + esc(S.n) + " · " + esc(prodOf(e.n)) + '"><span class="n"><span class="chip"><i style="background:' + S.c + '"></i><b>' + esc(S.n) + '</b></span></span><span class="w tnum">+' + won(e.w) + "원</span>" + (G ? '<span class="c tnum" title="목표의 ' + (c * 100).toFixed(1) + '%">+' + (c * 100).toFixed(c < 0.1 ? 1 : 0) + "%</span>" : "<span></span>") + "</li>"; }).join("") || '<li class="empty muted">오늘 첫 결제를 기다리는 중</li>';
+  if (!G) {
+    card.classList.remove("done"); $("gP").textContent = "-"; $("gSt").textContent = "";
+    $("gS").textContent = "지난 날 매출을 아임웹에서 불러오는 중"; fill.style.width = "0"; lap.style.width = "0"; txt.textContent = ""; $("gGoal").textContent = "목표"; $("gLeft").innerHTML = "&nbsp;";
+    $("gHit").textContent = ""; $("gDays").innerHTML = ""; return;
+  }
+  const p = T.w / G.goal, done = p >= 1, fp = Math.min(1, p);
+  card.classList.toggle("done", done);
+  $("gTag").textContent = G.n + "일 평균 기준";
+  $("gTag").title = (G.days[0] ? mdOf(G.days[0].d) : "") + " ~ " + (G.days.length ? mdOf(G.days[G.days.length - 1].d) : "") + " 하루 평균 " + won(G.goal) + "원(오늘 뺌" + (G.miss ? ", " + G.miss + "일은 아임웹에서 확인 중" : "") + ")";
+  countTo("gP", Math.round(p * 100), v => v + "<small>%</small>");
+  $("gP").classList.toggle("money", !done && p > 0);
+  $("gSt").textContent = !T.w ? "첫 결제를 기다리는 중" : p < 0.3 ? "출발" : p < 0.5 ? "쌓이는 중" : p < 0.8 ? "절반 넘음" : p < 1 ? "목표 코앞" : p < 1.5 ? "목표 달성" : p < 2 ? "평균의 1.5배 넘음" : "평균의 " + (Math.floor(p * 10) / 10) + "배";
+  $("gS").innerHTML = "오늘 <b>" + won(T.w) + "원</b> / 목표 " + won(G.goal) + "원";
+  fill.style.width = (fp * 100).toFixed(2) + "%";
+  lap.style.width = p > 1 ? "max(6px, calc(" + (Math.min(1, p - 1) * 100).toFixed(2) + "% - 8px))" : "0";
+  txt.textContent = pct(p); txt.classList.toggle("out", fp < 0.22); txt.style.left = (fp * 100).toFixed(2) + "%";
+  bar.setAttribute("aria-valuenow", Math.round(p * 100)); bar.setAttribute("aria-valuemax", Math.max(100, Math.round(p * 100)));
+  bar.setAttribute("aria-valuetext", "오늘 " + won(T.w) + "원, 목표 " + won(G.goal) + "원의 " + pct(p));
+  bar.title = "목표(최근 " + G.n + "일 하루 평균) " + won(G.goal) + "원의 " + pct(p) + (p > 1 ? " · 분홍 막대는 100%를 넘은 만큼" : "");
+  $("gGoal").innerHTML = "100% = " + G.n + "일 평균";
+  const aov = T.pay ? T.w / T.pay : (M.T.payY ? M.T.wY / M.T.payY : 0), left = G.goal - T.w;
+  $("gLeft").innerHTML = !done ? "목표까지 <b>" + won(left) + "원</b>" + (aov ? ' · <span title="오늘 객단가 ' + won(aov) + '원으로 셈">약 <b>' + Math.max(1, Math.ceil(left / aov)) + "건</b> 더</span>" : "")
+    : "목표보다 <b>+" + won(-left) + "원</b>" + (p < 2 ? ' · <span title="평균의 2배 ' + won(G.goal * 2) + '원까지 ' + won(G.goal * 2 - T.w) + '원">2배까지 <b>' + shortWon(G.goal * 2 - T.w) + "원</b></span>" : " · 평균의 2배 넘음");
+  $("gDl").textContent = G.n + "일 중 목표 넘긴 날";
+  $("gHit").textContent = G.hit + "일";
+  $("gHit").title = G.best ? "가장 많이 판 날 " + mdOf(G.best.d) + "(" + wdOf(G.best.d) + ") " + won(G.best.w) + "원" : "";
+  const cells = G.days.map(x => { const r = typeof x.w === "number" ? x.w / G.goal : null;
+    return '<i class="' + (r === null ? "nul" : r >= 1 ? "on" : "") + '" title="' + mdOf(x.d) + "(" + wdOf(x.d) + ") " + (r === null ? "아임웹에서 확인 중" : won(x.w) + "원 · 목표의 " + pct(r)) + '"></i>'; });
+  cells.push('<i class="now' + (done ? " on" : "") + '" style="--h:' + (fp * 100).toFixed(0) + '%" title="오늘 ' + won(T.w) + "원 · 목표의 " + pct(p) + '"></i>');
+  $("gDays").style.gridTemplateColumns = "repeat(" + cells.length + ",minmax(0,1fr))";
+  $("gDays").innerHTML = cells.join("");
+  if (prevW != null && T.w > prevW && now - T0 > 15000 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {   // 막대 끝에서 '+금액'이 떠오름
+    const el = document.createElement("span"); el.className = "gpop tnum"; el.textContent = "+" + won(T.w - prevW) + "원";
+    el.style.left = (bar.offsetLeft + Math.min(Math.max(bar.clientWidth * fp, 60), bar.clientWidth - 60)) + "px"; el.style.top = (bar.offsetTop - 8) + "px";
+    card.appendChild(el); setTimeout(() => el.remove(), 2700);
+  }
 }
 function roundTop(x, y, w, h, r) { if (h <= r) return "M" + x + "," + (y + h) + "h" + w + "v" + (-h) + "h" + (-w) + "z"; return "M" + x + "," + (y + h) + "v" + (-(h - r)) + "q0," + (-r) + " " + r + "," + (-r) + "h" + (w - 2 * r) + "q" + r + ",0 " + r + "," + r + "v" + (h - r) + "z"; }
 function niceStep(mx) { const raw = mx / 4, p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; }
@@ -436,7 +528,7 @@ function render() {
   $("uvS").innerHTML = "페이지 <b>" + won(T.pv) + "</b>쪽" + (T.uv ? " · 처음 온 사람 <b>" + pct(T.nv / T.uv) + "</b>" : "") + (first ? '<br>오늘은 9시 15분부터 셈(성균관컨설팅 · 논문AI 11시쯤, 위원회 11시 35분쯤부터). 내일부터 0시부터' : " · 어제 " + won(T.uvY) + "명");
   const mh = Math.max(1, ...M.hrV), hn = hourOf(now);
   $("uvH").innerHTML = M.hrV.map((v, i) => '<i style="height:' + Math.max(4, v / mh * 100).toFixed(0) + '%;' + (i > hn ? "opacity:.15" : "") + '" title="' + i + "시 " + v + '쪽"></i>').join("");
-  d14Draw(T);
+  goalDraw(M);
   /* 눈여겨볼 것 */
   const F = [];
   const topS = M.rows.find(r => r.w > 0);
@@ -491,12 +583,12 @@ function render() {
     const S = BY[e.s] || { n: e.s, c: "#8a93a6" }, k = e.t + "|" + e.s + "|" + e.p, nw = !seenV[k] && now - T0 > 15000; seenV[k] = 1;
     return "<li" + (nw ? ' class="new"' : "") + '><span class="t tnum">' + hhmm(e.t) + '</span><span class="n"><span class="chip" style="font-size:13px"><i style="background:' + S.c + '"></i>' + esc(S.n) + "</span><span>" + esc(pageName(e.p)) + '</span></span><span class="src">' + esc(srcName(e.r)) + (e.f ? "<b>처음</b>" : "") + "</span></li>";
   }).join("") || '<li class="empty">아직 오늘 들어온 사람이 없습니다</li>';
-  $("foot").innerHTML = "결제 · 매출은 성균관컨설팅 아임웹 상점의 실제 결제 주문입니다(취소 · 입금 대기는 뺌, 2분마다 확인, 손님이 결제하는 중에는 잠시 앞 값). 무료 검사 · 맛보기는 AIMarker · 카피휴먼 서버가 센 사람 수(같은 브라우저는 6시간에 한 번)입니다. 방문은 사이트마다 따로 셉니다(같은 사람이 두 사이트에 오면 두 번). 11월 27일은 9시 15분부터 셌고 성균관컨설팅 · 논문AI 는 11시쯤, 한국AI윤리위원회는 11시 35분쯤부터 셌습니다(28일부터는 모두 0시부터). 지금 접속은 화면을 보고 있는 사람(보는 동안 30초마다 신호, 1분 15초 안에 신호가 온 사람)이고, 0명인 사이트 옆 시간은 마지막으로 들어온 때입니다. 방금 들어온 사람은 수집기가 받은 최근 40명(브라우저 번호 없이 사이트 · 페이지 · 들어온 곳만)입니다. 성균관컨설팅 방문은 아임웹 통계와 세는 방법이 다릅니다. 아임웹 홈 화면의 방문자는 아임웹 안내로는 IP 기준이라 더 크게 나오고, 같은 아임웹의 유입 경로 분석 방문자 수는 그보다 적습니다(11월 26일: 홈 75명 · 유입 경로 분석 59명). 현황판은 검색 로봇 · 관리자 화면 · 디자인 모드를 빼고 브라우저마다 하루 한 번 세서 유입 경로 분석 숫자에 더 가깝습니다. 누적 매출은 11월 27일 전까지의 매출을 시작 금액으로 두고, 11월 27일부터 날마다 아임웹 실제 결제(오늘 매출과 같은 규칙)를 더한 값입니다. 순이익은 누적 매출에서 20%를 뺀 금액입니다. 하루는 한국 시간 0시부터 다음 날 0시 전까지입니다.";
+  $("foot").innerHTML = "결제 · 매출은 성균관컨설팅 아임웹 상점의 실제 결제 주문입니다(취소 · 입금 대기는 뺌, 2분마다 확인, 손님이 결제하는 중에는 잠시 앞 값). 무료 검사 · 맛보기는 AIMarker · 카피휴먼 서버가 센 사람 수(같은 브라우저는 6시간에 한 번)입니다. 방문은 사이트마다 따로 셉니다(같은 사람이 두 사이트에 오면 두 번). 11월 27일은 9시 15분부터 셌고 성균관컨설팅 · 논문AI 는 11시쯤, 한국AI윤리위원회는 11시 35분쯤부터 셌습니다(28일부터는 모두 0시부터). 지금 접속은 화면을 보고 있는 사람(보는 동안 30초마다 신호, 1분 15초 안에 신호가 온 사람)이고, 0명인 사이트 옆 시간은 마지막으로 들어온 때입니다. 방금 들어온 사람은 수집기가 받은 최근 40명(브라우저 번호 없이 사이트 · 페이지 · 들어온 곳만)입니다. 성균관컨설팅 방문은 아임웹 통계와 세는 방법이 다릅니다. 아임웹 홈 화면의 방문자는 아임웹 안내로는 IP 기준이라 더 크게 나오고, 같은 아임웹의 유입 경로 분석 방문자 수는 그보다 적습니다(11월 26일: 홈 75명 · 유입 경로 분석 59명). 현황판은 검색 로봇 · 관리자 화면 · 디자인 모드를 빼고 브라우저마다 하루 한 번 세서 유입 경로 분석 숫자에 더 가깝습니다. 누적 매출은 11월 27일 전까지의 매출을 시작 금액으로 두고, 11월 27일부터 날마다 아임웹 실제 결제(오늘 매출과 같은 규칙)를 더한 값입니다. 순이익은 누적 매출에서 20%를 뺀 금액입니다. 오늘 목표는 오늘을 뺀 최근 30일의 하루 평균 매출(같은 아임웹 실제 결제 기준)을 100%로 둔 것이고, 100%를 넘으면 막대가 금색으로 바뀌고 넘은 만큼은 분홍 막대로 보입니다. 하루는 한국 시간 0시부터 다음 날 0시 전까지입니다.";
   /* 새 결제 축하 */
   const fresh = M.todayEv.filter(e => !seen[e.id]);
   fresh.forEach(e => { seen[e.id] = 1; });
   if (fresh.length) saveSeen();
-  if (now - T0 > 15000) fresh.filter(e => now - e.t < 30 * 60000).reverse().forEach(e => celebrate(e, T.w));
+  if (now - T0 > 15000) { const fr = fresh.filter(e => now - e.t < 30 * 60000).reverse(), g = GL ? GL.goal : 0; let run = T.w - fr.reduce((a, e) => a + e.w, 0); fr.forEach(e => { const b = run; run += e.w; celebrate(e, run, b, g); }); }
 }
 function drawWhere(M) {
   let L = [];
@@ -514,32 +606,40 @@ document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click
 
 /* ---------- 결제 축하 ---------- */
 const celQ = []; let celOn = false;
-function celebrate(e, total) { celQ.push({ e, total }); if (!celOn) nextCel(); }
+function celebrate(e, total, before, goal) { celQ.push({ e, total, before: before || 0, goal: goal || 0 }); if (!celOn) nextCel(); }
 function nextCel() {
   const it = celQ.shift(); if (!it) { celOn = false; return; } celOn = true;
-  const S = BY[it.e.s] || { n: "성균관컨설팅", c: "#0e9f6e" };
+  const S = BY[it.e.s] || { n: "성균관컨설팅", c: "#0e9f6e" }, g = it.goal, hit = !!(g && it.before < g && it.total >= g), ts = $("toast");
+  $("tK").textContent = hit ? "오늘 목표 달성!" : "결제 완료";
   $("tA").textContent = "+" + won(it.e.w) + "원";
   $("tS").innerHTML = '<i style="background:' + S.c + '"></i>' + esc(S.n) + " · " + esc(prodOf(it.e.n)) + '<div class="muted" style="font-size:14px;margin-top:6px">오늘 매출 ' + won(it.total) + "원</div>";
-  $("toast").classList.add("on"); confetti(S.c); chime();
-  setTimeout(() => { $("toast").classList.remove("on"); setTimeout(nextCel, 500); }, 4200);
+  const tG = $("tG"), f = $("tGf"); tG.hidden = !g; ts.classList.toggle("gold", hit); ts.classList.toggle("over", !!(g && it.total >= g));
+  if (g) {   // 도네이션 목표처럼: 축하 창 안에서 막대가 결제 전에서 결제 뒤로 차오름
+    const p0 = it.before / g, p1 = it.total / g;
+    f.style.transition = "none"; f.style.width = Math.min(100, p0 * 100).toFixed(2) + "%"; void f.offsetWidth; f.style.transition = "";
+    requestAnimationFrame(() => { f.style.width = Math.min(100, p1 * 100).toFixed(2) + "%"; });
+    $("tGt").innerHTML = "오늘 목표 <b>" + pct(p0) + "</b> → <b>" + pct(p1) + "</b>" + (hit ? " · 평균을 넘었어요" : p1 < 1 ? " · 목표까지 " + won(g - it.total) + "원" : "");
+  }
+  ts.classList.add("on"); confetti(hit ? "#f5b301" : S.c, hit); chime(hit);
+  setTimeout(() => { ts.classList.remove("on"); setTimeout(nextCel, 500); }, hit ? 6500 : 4500);
 }
-function confetti(c) {
+function confetti(c, big) {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const cv = $("cel"), x = cv.getContext("2d"), dpr = devicePixelRatio || 1; cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
-  const cols = [c, "#0e9f6e", "#f5b301", "#ff4d6d", "#5b8cff"], P = Array.from({ length: 170 }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 220, y: innerHeight * .28, vx: (Math.random() - .5) * 16, vy: -Math.random() * 14 - 4, r: Math.random() * 6.28, vr: (Math.random() - .5) * .3, c: cols[Math.floor(Math.random() * cols.length)], w: 6 + Math.random() * 6 }));
+  const cols = big ? [c, "#f5b301", "#ffd43b", "#ff922b", "#ff4d6d", "#ffffff"] : [c, "#0e9f6e", "#f5b301", "#ff4d6d", "#5b8cff"], P = Array.from({ length: big ? 320 : 170 }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 220, y: innerHeight * .28, vx: (Math.random() - .5) * 16, vy: -Math.random() * 14 - 4, r: Math.random() * 6.28, vr: (Math.random() - .5) * .3, c: cols[Math.floor(Math.random() * cols.length)], w: 6 + Math.random() * 6 }));
   const t0 = performance.now();
   (function f(now) {
-    const k = (now - t0) / 3200; x.clearRect(0, 0, innerWidth, innerHeight); if (k > 1) return;
+    const k = (now - t0) / (big ? 4400 : 3200); x.clearRect(0, 0, innerWidth, innerHeight); if (k > 1) return;
     P.forEach(p => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr; x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.globalAlpha = 1 - k * .8; x.fillStyle = p.c; x.fillRect(-p.w / 2, -3, p.w, 6); x.restore(); });
     requestAnimationFrame(f);
   })(t0);
 }
 let AC = null;
-function chime() {
+function chime(big) {
   if (!sound) return;
   try {
     AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const t = AC.currentTime;
-    [[880, 0], [1175, .12], [1568, .24]].forEach(([f, d]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(.0001, t + d); g.gain.exponentialRampToValueAtTime(.25, t + d + .02); g.gain.exponentialRampToValueAtTime(.0001, t + d + .5); o.connect(g).connect(AC.destination); o.start(t + d); o.stop(t + d + .55); });
+    (big ? [[784, 0], [988, .12], [1175, .24], [1568, .36], [1976, .52]] : [[880, 0], [1175, .12], [1568, .24]]).forEach(([f, d]) => { const o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(.0001, t + d); g.gain.exponentialRampToValueAtTime(.25, t + d + .02); g.gain.exponentialRampToValueAtTime(.0001, t + d + .5); o.connect(g).connect(AC.destination); o.start(t + d); o.stop(t + d + .55); });
   } catch (e) {}
 }
 try { if (localStorage.getItem("lv_snd") === "1") { sound = true; $("snd").setAttribute("aria-pressed", "true"); $("snd").textContent = "소리 끄기"; } } catch (e) {}
