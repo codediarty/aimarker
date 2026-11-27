@@ -129,7 +129,7 @@ footer{color:var(--sub);font-size:13px;padding:22px 0 40px;line-height:1.7}
 {
 const LVU = "https://script.google.com/macros/s/AKfycbynqa4gSpMjYlnOHPH6xaM3d2vys7aVMJHLuxQL_9osna0026p-Z6uywH2d4d0fzUbK_w/exec";   // 현황판 서버(방문 신호 · 숫자)
 let KEY = "", CFG = null, SITES = [], BY = {};
-const LVSTART = Date.UTC(2026, 11, 2, 15, 0);   // 2026.12.03 00:00 한국 시간
+const LVSTART = Date.UTC(2026, 10, 26, 15, 0);   // 2026.11.27 00:00 한국 시간(대표 11.27 결정, 처음엔 12.03)
 try { const m = /[#&]k=([A-Za-z0-9]{6,64})/.exec(location.hash); if (m) { KEY = m[1]; localStorage.setItem("lv_key", KEY); history.replaceState(null, "", location.pathname); } else KEY = localStorage.getItem("lv_key") || ""; } catch (e) {}
 function setCfg(meta) { CFG = meta; SITES = meta.sites || []; BY = {}; SITES.forEach((s, i) => { BY[s.k] = Object.assign({ i }, s); }); field.relayout(); }
 const $ = id => document.getElementById(id);
@@ -162,7 +162,7 @@ function model() {
   sv.forEach(e => evs.push({ id: "s" + e.id, t: e.t, s: e.s, w: e.w, n: e.n }));
   if (!ORD) ((LV && LV.ev) || []).forEach(e => evs.push({ id: "c" + e.t + e.s + e.w, t: e.t, s: e.s, w: e.w, n: e.n || "결제" }));
   const todayEv = evs.filter(e => dayKey(e.t) === today), ydEv = evs.filter(e => dayKey(e.t) === dayKey(now - 864e5));
-  let T = { live: 0, uv: 0, uvY: 0, chk: 0, chkY: 0, pay: 0, payY: 0, w: 0, wY: 0, tokPay: 0 };
+  let T = { live: 0, uv: 0, uvY: 0, pv: 0, chk: 0, chkY: 0, pay: 0, payY: 0, w: 0, wY: 0, tokPay: 0 };
   SITES.forEach(S => {
     const L = ((LV && LV.sites) || []).find(x => x.k === S.k) || {};
     const a = amc[S.k] || {}, ay = amcY[S.k] || {};
@@ -170,7 +170,7 @@ function model() {
     const pay = pe.length, w = pe.reduce((x, e) => x + (e.w || 0), 0);
     const chk = Number(a.chkU || 0), base = S.g === "tok" ? chk : Number(L.uv || 0);
     rows.push({ S, live: L.live || 0, livePg: L.livePg || [], uv: L.uv || 0, pv: L.pv || 0, chk, hum: Number(a.hum || 0), pay, w, cv: base ? pay / base : 0, base, ref: L.ref || [], h: L.h || {}, y: L.y || {} });
-    T.live += L.live || 0; T.uv += L.uv || 0; T.uvY += (L.y && L.y.uv) || 0; T.chk += chk; T.chkY += Number(ay.chkU || 0);
+    T.live += L.live || 0; T.uv += L.uv || 0; T.pv += L.pv || 0; T.uvY += (L.y && L.y.uv) || 0; T.chk += chk; T.chkY += Number(ay.chkU || 0);
     T.pay += pay; T.w += w; T.payY += py.length; T.wY += py.reduce((x, e) => x + (e.w || 0), 0); if (S.g === "tok") T.tokPay += pay;
   });
   const sum = a => a.reduce((x, e) => x + (e.w || 0), 0);
@@ -185,7 +185,7 @@ function goalBar(r) { const p = Math.min(1, r / 0.2); return '<div class="goal" 
 let lastPay = {};
 function render() {
   const M = model(), T = M.T, cv = T.chk ? T.tokPay / T.chk : 0;
-  const pre = Date.now() < LVSTART;   // 방문 신호는 2026.12.03 00:00(한국)부터(사이트 개인정보처리방침 '바뀌면 7일 전 알림')
+  const pre = Date.now() < LVSTART;   // 방문 신호는 2026.11.27 00:00(한국)부터
   const dl = Math.max(1, Math.round((Date.parse(dayKey(LVSTART)) - Date.parse(dayKey(Date.now()))) / 864e5));
   $("liveL").textContent = pre ? "방문자 집계 시작까지" : "지금 머무는 사람";
   $("liveN").textContent = pre ? "D-" + dl : T.live; $("liveN").classList.toggle("pre", pre);
@@ -194,7 +194,7 @@ function render() {
   const top = M.rows.filter(r => r.live).sort((a, b) => b.live - a.live).slice(0, 3).map(r => esc(r.S.n) + " <b>" + r.live + "</b>").join(" · ");
   $("liveS").innerHTML = pre ? "방문자 수와 지금 머무는 사람은 <b>12월 3일 0시</b>부터 셉니다. 각 사이트 개인정보처리방침에 '바뀌면 7일 전에 알린다'고 되어 있어 11월 26일에 알리고 7일 뒤부터 셉니다. 결제 · 매출 · 무료 검사는 지금도 바로 보입니다." : (top || "지금은 조용합니다");
   $("kpis").innerHTML =
-    kpi("오늘 방문", pre ? "D-" + dl : won(T.uv) + "명", pre ? "12월 3일 0시부터 셈" : "어제 " + won(T.uvY) + "명") +
+    kpi("오늘 방문", pre ? "D-" + dl : won(T.uv) + "명", pre ? "12월 3일 0시부터 셈" : dayKey(Date.now()) === "2026-11-27" ? "오늘은 오전 9시쯤부터 셈 · 페이지 " + won(T.pv) + "쪽" : "어제 " + won(T.uvY) + "명 · 페이지 " + won(T.pv) + "쪽") +
     kpi("무료 검사", won(T.chk) + "명", "어제 " + won(T.chkY) + "명") +
     kpi("결제", won(T.pay) + "건", "어제 " + won(T.payY) + "건", "pay") +
     kpi("매출", won(T.w) + "원", "어제 " + won(T.wY) + "원", "pay") +
