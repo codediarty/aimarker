@@ -24,12 +24,14 @@ header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88
 .dot.off{background:var(--faint);animation:none}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--live) 55%,transparent)}70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
 .clock{color:var(--sub);font-size:14px}
-.sp{flex:1;display:flex;justify-content:center;min-width:0}
+.sp{flex:1;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
 .cum{display:inline-flex;align-items:baseline;gap:8px;padding:4px 16px;border-radius:999px;border:1px solid color-mix(in srgb,var(--pay) 38%,transparent);background:color-mix(in srgb,var(--pay) 9%,transparent);white-space:nowrap}
 .cum .k{font-size:13px;font-weight:700;color:var(--sub)}
 .cum b{font-size:22px;font-weight:850;letter-spacing:-.02em;color:var(--pay);line-height:1.2}
 .cum .u{font-size:14px;font-weight:700;color:var(--pay)}
 .cum.up{animation:fl 2.6s ease-out}
+.cum.net{border-color:var(--line);background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.cum.net b,.cum.net .u{color:var(--ink)}
 .pill{font-size:12.5px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:4px 10px;white-space:nowrap}
 .pill b{color:var(--ink);font-weight:700}
 .btn{font:inherit;font-size:14px;font-weight:700;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 15px;min-height:38px;cursor:pointer}
@@ -71,7 +73,9 @@ main{padding:18px 0 40px}
 .goal b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);opacity:.6}
 .goal + .gl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--faint);margin-top:4px}
 /* 눈여겨볼 것 */
-.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.facts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:14px 0}
+.d14c{display:flex;flex-direction:column}.d14{flex:1;min-height:120px;margin-top:10px;position:relative}.d14 svg{display:block;width:100%;height:100%}
+.d14 .ax{font-size:10.5px;fill:var(--faint)}.d14 .ax.now{fill:var(--ink);font-weight:700}
 .fact{border:1px dashed var(--line);border-radius:14px;padding:10px 14px;font-size:13.5px;color:var(--sub);background:color-mix(in srgb,var(--card) 60%,transparent)}
 .fact b{display:block;color:var(--ink);font-size:15.5px;font-weight:750;letter-spacing:-.01em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* 둘째 줄 */
@@ -145,6 +149,12 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
 .lock h1{font-size:22px;margin:0 0 6px}.lock p{color:var(--sub);margin:0 0 16px;font-size:14px}
 .lock input{font:inherit;font-size:16px;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);margin-bottom:10px}
 .lock .btn{width:100%}.lock .err{color:var(--live);font-size:13.5px;min-height:20px;margin-top:8px}
+.lock details{margin-top:14px;font-size:13px;color:var(--faint);text-align:left}.lock summary{cursor:pointer;text-align:center;list-style:none}.lock summary::-webkit-details-marker{display:none}.lock details form{margin-top:10px}
+.lock .btn.pri,.pwd .btn.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pwd{border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);padding:24px;width:min(380px,calc(100% - 32px))}.pwd::backdrop{background:rgba(0,0,0,.45)}
+.pwd h2{font-size:18px;margin:0 0 6px}.pwd p{font-size:13.5px;color:var(--sub);margin:0 0 14px;line-height:1.55}
+.pwd input{font:inherit;font-size:16px;width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);margin-bottom:8px}
+.pwd .err{color:var(--live);font-size:13px;min-height:19px}.pwd .ok{color:var(--pay)}.pwd .row{display:flex;gap:8px;margin-top:6px}.pwd .row .btn{flex:1}
 @media (max-width:1100px){.hero{grid-template-columns:1fr 1fr}.facts{grid-template-columns:1fr 1fr}.row2{grid-template-columns:1fr}.row3{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){.hd .sp{order:2;flex-basis:100%;justify-content:flex-start}.hd .pill,.hd .btn{order:3}.cum b{font-size:20px}.hero{grid-template-columns:1fr}.facts{grid-template-columns:1fr}.row3{grid-template-columns:1fr}.pill.hm,th.hm,td.hm{display:none}.card{padding:16px}}
 @media (prefers-reduced-motion:reduce){.dot,.livebar i,.feed li.new,tr.flash td,.sl li.up,.cum.up{animation:none}.toast{transition:none}}
@@ -154,12 +164,14 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
 <header><div class="wrap hd">
   <span class="onair"><span class="dot" id="dot"></span>실시간 현황판</span>
   <span class="clock tnum" id="clock"></span>
-  <span class="sp"><span class="cum" id="cum" hidden><span class="k">누적 매출</span><b class="tnum" id="cumV">0</b><span class="u">원</span></span></span>
+  <span class="sp"><span class="cum" id="cum" hidden><span class="k">누적 매출</span><b class="tnum" id="cumV">0</b><span class="u">원</span></span><span class="cum net" id="net" hidden><span class="k">순이익</span><b class="tnum" id="netV">0</b><span class="u">원</span></span></span>
   <span class="pill hm" id="srcN">불러오는 중</span>
   <span class="pill" id="upd">연결 중</span>
   <button class="btn" id="snd" type="button" aria-pressed="false">소리 켜기</button>
+  <button class="btn" id="pwBtn" type="button" hidden>비밀번호</button>
 </div></header>
-<div class="lock" id="lock" hidden><h1>실시간 현황판</h1><p>현황판 열쇠를 넣어 주세요. 이 기기에만 기억합니다.</p><form id="lockF"><input id="lockK" type="password" autocomplete="off" aria-label="현황판 열쇠" placeholder="열쇠"><button class="btn" type="submit">열기</button></form><div class="err" id="lockE"></div></div>
+<div class="lock" id="lock" hidden><h1>실시간 현황판</h1><p>비밀번호 8자리를 넣어 주세요. 이 기기에 기억합니다.</p><form id="pwF"><input id="pwK" type="password" maxlength="8" autocomplete="current-password" aria-label="비밀번호 8자리" placeholder="비밀번호 8자리"><button class="btn pri" type="submit">들어가기</button></form><div class="err" id="lockE"></div><details><summary>열쇠로 열기</summary><form id="lockF"><input id="lockK" type="password" autocomplete="off" aria-label="현황판 열쇠" placeholder="열쇠"><button class="btn" type="submit">열기</button></form></details></div>
+<dialog class="pwd" id="pwD"><form id="pwSetF"><h2>비밀번호 정하기</h2><p>8자리로 정하면 다른 기기(카카오톡 등)에서는 aimarker.kr/live 를 열고 비밀번호만 넣으면 됩니다. 비밀번호는 서버에 보내지 않고 이 화면에서만 씁니다.</p><input id="pwN1" type="password" maxlength="8" autocomplete="new-password" aria-label="새 비밀번호 8자리" placeholder="새 비밀번호 8자리"><input id="pwN2" type="password" maxlength="8" autocomplete="new-password" aria-label="새 비밀번호 한 번 더" placeholder="한 번 더"><div class="err" id="pwSE" role="status"></div><div class="row"><button class="btn" type="button" id="pwX">닫기</button><button class="btn pri" type="submit" id="pwS">저장</button></div></form></dialog>
 <main class="wrap" id="app">
   <section class="hero">
     <div class="card">
@@ -182,11 +194,11 @@ footer{color:var(--faint);font-size:12.5px;padding:18px 0 34px;line-height:1.75}
       <div class="minih" id="uvH" aria-label="오늘 시간대별 방문"></div>
       <ul class="sl" id="uvL" aria-label="사이트별 오늘 방문"></ul>
     </div>
-    <div class="card">
-      <div class="lb">무료 검사 → 결제</div>
-      <div class="mid" id="cv">0<small>%</small></div>
-      <div class="sub" id="cvS">&nbsp;</div>
-      <div class="goal" id="cvG"><i></i><b style="left:50%"></b></div><div class="gl"><span>0%</span><span>목표 10%</span><span>20%</span></div>
+    <div class="card d14c">
+      <div class="lb">최근 14일 매출</div>
+      <div class="mid" id="d14">0<small>원</small></div>
+      <div class="sub" id="d14S">&nbsp;</div>
+      <div class="d14" id="d14C" aria-label="최근 14일 날마다 매출"></div>
     </div>
   </section>
   <section class="facts" id="facts" aria-label="지금 눈여겨볼 것"></section>
@@ -336,6 +348,27 @@ function barChart(el, series, opt) {   // series: [{ vals, color, name }] 같은
     r.addEventListener("mouseleave", hideTip);
   });
 }
+function d14Draw(T) {   // 최근 14일 매출(AIMarker 서버 1.3.0 hist, 오늘은 화면의 오늘 매출로)
+  const el = $("d14C"), H0 = AM && Array.isArray(AM.hist) ? AM.hist.slice(-14) : [];
+  if (!H0.length) { $("d14").innerHTML = won(T.w) + "<small>원</small>"; $("d14S").textContent = "지난 날 매출을 아임웹에서 불러오는 중"; el.innerHTML = ""; return; }
+  const today = dayKey(Date.now()).replace(/-/g, ""), D = H0.map(x => ({ d: x.d, w: x.d === today ? T.w : x.w }));
+  const known = D.filter(x => typeof x.w === "number"), sum = known.reduce((a, x) => a + x.w, 0), past = known.filter(x => x.d !== today), avg = past.length ? past.reduce((a, x) => a + x.w, 0) / past.length : 0;
+  const best = known.reduce((m, x) => (x.w > (m ? m.w : -1) ? x : m), null), wd = d => "일월화수목금토"[new Date(+d.slice(0, 4), +d.slice(4, 6) - 1, +d.slice(6)).getDay()], md = d => +d.slice(4, 6) + "/" + +d.slice(6);
+  countTo("d14", sum, v => won(v) + "<small>원</small>");
+  $("d14S").innerHTML = "하루 평균 <b>" + won(Math.round(avg)) + "원</b>" + (avg ? " · 오늘은 평균의 <b>" + pct(T.w / avg) + "</b>" : "") + (best && best.w ? " · 최고 " + md(best.d) + "(" + wd(best.d) + ") " + shortWon(best.w) + "원" : "") + (known.length < D.length ? ' · <span style="color:var(--faint)">' + (D.length - known.length) + "일 불러오는 중</span>" : "");
+  const W = Math.max(220, Math.round(el.clientWidth || 300)), Hh = Math.max(120, Math.round(el.clientHeight || 140)), padB = 18, padT = 6, n = D.length, gw = W / n, bw = Math.max(4, gw * 0.62);
+  const mx = Math.max(1, ...known.map(x => x.w)), y = v => padT + (Hh - padT - padB) * (1 - v / mx);
+  let g = avg ? '<line x1="0" x2="' + W + '" y1="' + y(avg).toFixed(1) + '" y2="' + y(avg).toFixed(1) + '" stroke="var(--faint)" stroke-dasharray="3 4" stroke-width="1"/>' : "";
+  D.forEach((x, i) => {
+    const cx = gw * i + (gw - bw) / 2, isT = x.d === today;
+    if (typeof x.w === "number") { const yy = y(x.w), h = Math.max(x.w > 0 ? 2 : 0, Hh - padB - yy); if (h > 0) g += '<path d="' + roundTop(cx, Hh - padB - h, bw, h, Math.min(4, bw / 2)) + '" fill="var(--pay)" opacity="' + (isT ? 1 : 0.42) + '"/>'; }
+    else g += '<rect x="' + cx + '" y="' + (Hh - padB - 10) + '" width="' + bw + '" height="10" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="2 3"/>';
+    if (isT || i % 2 === (n - 1) % 2) g += '<text class="ax' + (isT ? " now" : "") + '" x="' + (gw * i + gw / 2) + '" y="' + (Hh - 4) + '" text-anchor="middle">' + (isT ? "오늘" : md(x.d)) + "</text>";
+    g += '<rect x="' + gw * i + '" y="0" width="' + gw + '" height="' + Hh + '" fill="transparent" data-i="' + i + '"/>';
+  });
+  el.innerHTML = '<svg viewBox="0 0 ' + W + " " + Hh + '" role="img" aria-label="최근 14일 날마다 매출">' + g + "</svg>";
+  el.querySelectorAll("rect[data-i]").forEach(r => { const x = D[+r.dataset.i]; r.addEventListener("mousemove", ev => showTip(ev, md(x.d) + "(" + wd(x.d) + ") " + (typeof x.w === "number" ? won(x.w) + "원" : "불러오는 중"))); r.addEventListener("mouseleave", hideTip); });
+}
 function roundTop(x, y, w, h, r) { if (h <= r) return "M" + x + "," + (y + h) + "h" + w + "v" + (-h) + "h" + (-w) + "z"; return "M" + x + "," + (y + h) + "v" + (-(h - r)) + "q0," + (-r) + " " + r + "," + (-r) + "h" + (w - 2 * r) + "q" + r + ",0 " + r + "," + r + "v" + (h - r) + "z"; }
 function niceStep(mx) { const raw = mx / 4, p = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; }
 const shortWon = v => v >= 10000 ? (v / 10000).toFixed(v % 10000 ? 1 : 0).replace(/\.0$/, "") + "만" : won(v);
@@ -375,6 +408,12 @@ function render() {
       if (before != null && CU.w > before) { el.classList.remove("up"); void el.offsetWidth; el.classList.add("up"); }
       const fd = String(CU.from || ""), fm = fd ? Number(fd.slice(4, 6)) + "월 " + Number(fd.slice(6, 8)) + "일" : "";
       el.title = "누적 매출 " + won(CU.w) + "원 = " + fm + " 전까지 " + won(CU.base) + "원 + " + fm + "부터 아임웹 실제 결제(" + CU.days + "일)" + (CU.miss ? " · " + CU.miss + "일은 아임웹에서 확인 중" : "");
+    }
+    const nt = $("net"); nt.hidden = !CU;   // 순이익 = 누적 매출에서 20%를 뺀 금액(대표 11.27)
+    if (CU) {
+      const nw = Math.round(CU.w * 0.8), b2 = shown.netV; countTo("netV", nw, v => won(v));
+      if (b2 != null && nw > b2) { nt.classList.remove("up"); void nt.offsetWidth; nt.classList.add("up"); }
+      nt.title = "순이익 " + won(nw) + "원 = 누적 매출 " + won(CU.w) + "원에서 20%를 뺀 금액";
     } }
   $("payN").textContent = T.pay ? "· " + T.pay + "건" : "";
   const diff = T.w - T.wYs;
@@ -397,9 +436,7 @@ function render() {
   $("uvS").innerHTML = "페이지 <b>" + won(T.pv) + "</b>쪽" + (T.uv ? " · 처음 온 사람 <b>" + pct(T.nv / T.uv) + "</b>" : "") + (first ? '<br>오늘은 9시 15분부터 셈(성균관컨설팅 · 논문AI 11시쯤, 위원회 11시 35분쯤부터). 내일부터 0시부터' : " · 어제 " + won(T.uvY) + "명");
   const mh = Math.max(1, ...M.hrV), hn = hourOf(now);
   $("uvH").innerHTML = M.hrV.map((v, i) => '<i style="height:' + Math.max(4, v / mh * 100).toFixed(0) + '%;' + (i > hn ? "opacity:.15" : "") + '" title="' + i + "시 " + v + '쪽"></i>').join("");
-  $("cv").innerHTML = (cv * 100).toFixed(1) + "<small>%</small>";
-  $("cvS").innerHTML = "무료 검사 <b>" + won(T.chk) + "명</b> → 토큰 결제 <b>" + T.tokPay + "건</b>" + (T.taste ? " · 맛보기 " + won(T.taste) + "명" : "");
-  $("cvG").querySelector("i").style.width = Math.min(100, cv / 0.2 * 100).toFixed(1) + "%";
+  d14Draw(T);
   /* 눈여겨볼 것 */
   const F = [];
   const topS = M.rows.find(r => r.w > 0);
@@ -412,9 +449,10 @@ function render() {
   { const m = {}; M.rows.forEach(r => r.ref.forEach(x => { const k = srcName(x[0]); m[k] = (m[k] || 0) + x[1]; })); const top = Object.keys(m).sort((a, b) => m[b] - m[a])[0]; if (top) F.push(["가장 많이 들어온 길", esc(top) + " · " + m[top] + "번"]); }
   const hum = M.rows.reduce((x, r) => x + r.hum, 0); if (hum) F.push(["오늘 유료 휴머나이징", won(hum) + "번 실행"]);
   if (T.payY) F.push(["어제 하루", T.payY + "건 · " + won(T.wY) + "원"]);
-  const PRI = ["오늘 매출 1위", "마지막 결제", "가장 많이 들어온 길", "지금 가장 붐비는 곳", "가장 많이 팔린 상품", "결제가 가장 많은 때"];
+  if (T.chk) F.push(["무료 검사 → 결제", (cv * 100).toFixed(1) + '% <span style="font-weight:600;color:var(--faint);font-size:13px">· ' + won(T.chk) + "명 → " + T.tokPay + "건 · 목표 10%</span>"]);
+  const PRI = ["오늘 매출 1위", "마지막 결제", "가장 많이 들어온 길", "지금 가장 붐비는 곳", "무료 검사 → 결제", "가장 많이 팔린 상품", "결제가 가장 많은 때"];
   F.sort((a, b) => (PRI.indexOf(a[0]) + 99) % 99 - (PRI.indexOf(b[0]) + 99) % 99);
-  $("facts").innerHTML = F.slice(0, 4).map(f => '<div class="fact">' + f[0] + "<b>" + f[1] + "</b></div>").join("") || '<div class="fact">오늘 첫 결제를 기다리는 중<b>아직 없음</b></div>';
+  $("facts").innerHTML = F.slice(0, 5).map(f => '<div class="fact">' + f[0] + "<b>" + f[1] + "</b></div>").join("") || '<div class="fact">오늘 첫 결제를 기다리는 중<b>아직 없음</b></div>';
   /* 시간대별 매출 */
   barChart($("hrRev"), [{ vals: M.hrY, color: "var(--gray)", name: "어제" }, { vals: M.hrT, color: "var(--pay)", name: "오늘" }], { h: 220, grow: 1, label: "시간대별 매출, 오늘과 어제", fmt: shortWon, fmtTip: v => won(v) + "원" });
   barChart($("hrVis"), [{ vals: M.hrV, color: "var(--blue)", name: "페이지" }], { h: 220, grow: 1, label: "오늘 시간대별 방문", fmt: v => won(v), fmtTip: v => won(v) + "쪽" });
@@ -453,7 +491,7 @@ function render() {
     const S = BY[e.s] || { n: e.s, c: "#8a93a6" }, k = e.t + "|" + e.s + "|" + e.p, nw = !seenV[k] && now - T0 > 15000; seenV[k] = 1;
     return "<li" + (nw ? ' class="new"' : "") + '><span class="t tnum">' + hhmm(e.t) + '</span><span class="n"><span class="chip" style="font-size:13px"><i style="background:' + S.c + '"></i>' + esc(S.n) + "</span><span>" + esc(pageName(e.p)) + '</span></span><span class="src">' + esc(srcName(e.r)) + (e.f ? "<b>처음</b>" : "") + "</span></li>";
   }).join("") || '<li class="empty">아직 오늘 들어온 사람이 없습니다</li>';
-  $("foot").innerHTML = "결제 · 매출은 성균관컨설팅 아임웹 상점의 실제 결제 주문입니다(취소 · 입금 대기는 뺌, 2분마다 확인, 손님이 결제하는 중에는 잠시 앞 값). 무료 검사 · 맛보기는 AIMarker · 카피휴먼 서버가 센 사람 수(같은 브라우저는 6시간에 한 번)입니다. 방문은 사이트마다 따로 셉니다(같은 사람이 두 사이트에 오면 두 번). 11월 27일은 9시 15분부터 셌고 성균관컨설팅 · 논문AI 는 11시쯤, 한국AI윤리위원회는 11시 35분쯤부터 셌습니다(28일부터는 모두 0시부터). 지금 접속은 화면을 보고 있는 사람(보는 동안 30초마다 신호, 1분 15초 안에 신호가 온 사람)이고, 0명인 사이트 옆 시간은 마지막으로 들어온 때입니다. 방금 들어온 사람은 수집기가 받은 최근 40명(브라우저 번호 없이 사이트 · 페이지 · 들어온 곳만)입니다. 성균관컨설팅 방문은 아임웹 통계와 세는 방법이 다릅니다. 아임웹 홈 화면의 방문자는 아임웹 안내로는 IP 기준이라 더 크게 나오고, 같은 아임웹의 유입 경로 분석 방문자 수는 그보다 적습니다(11월 26일: 홈 75명 · 유입 경로 분석 59명). 현황판은 검색 로봇 · 관리자 화면 · 디자인 모드를 빼고 브라우저마다 하루 한 번 세서 유입 경로 분석 숫자에 더 가깝습니다. 누적 매출은 11월 27일 전까지의 매출을 시작 금액으로 두고, 11월 27일부터 날마다 아임웹 실제 결제(오늘 매출과 같은 규칙)를 더한 값입니다. 하루는 한국 시간 0시부터 다음 날 0시 전까지입니다.";
+  $("foot").innerHTML = "결제 · 매출은 성균관컨설팅 아임웹 상점의 실제 결제 주문입니다(취소 · 입금 대기는 뺌, 2분마다 확인, 손님이 결제하는 중에는 잠시 앞 값). 무료 검사 · 맛보기는 AIMarker · 카피휴먼 서버가 센 사람 수(같은 브라우저는 6시간에 한 번)입니다. 방문은 사이트마다 따로 셉니다(같은 사람이 두 사이트에 오면 두 번). 11월 27일은 9시 15분부터 셌고 성균관컨설팅 · 논문AI 는 11시쯤, 한국AI윤리위원회는 11시 35분쯤부터 셌습니다(28일부터는 모두 0시부터). 지금 접속은 화면을 보고 있는 사람(보는 동안 30초마다 신호, 1분 15초 안에 신호가 온 사람)이고, 0명인 사이트 옆 시간은 마지막으로 들어온 때입니다. 방금 들어온 사람은 수집기가 받은 최근 40명(브라우저 번호 없이 사이트 · 페이지 · 들어온 곳만)입니다. 성균관컨설팅 방문은 아임웹 통계와 세는 방법이 다릅니다. 아임웹 홈 화면의 방문자는 아임웹 안내로는 IP 기준이라 더 크게 나오고, 같은 아임웹의 유입 경로 분석 방문자 수는 그보다 적습니다(11월 26일: 홈 75명 · 유입 경로 분석 59명). 현황판은 검색 로봇 · 관리자 화면 · 디자인 모드를 빼고 브라우저마다 하루 한 번 세서 유입 경로 분석 숫자에 더 가깝습니다. 누적 매출은 11월 27일 전까지의 매출을 시작 금액으로 두고, 11월 27일부터 날마다 아임웹 실제 결제(오늘 매출과 같은 규칙)를 더한 값입니다. 순이익은 누적 매출에서 20%를 뺀 금액입니다. 하루는 한국 시간 0시부터 다음 날 0시 전까지입니다.";
   /* 새 결제 축하 */
   const fresh = M.todayEv.filter(e => !seen[e.id]);
   fresh.forEach(e => { seen[e.id] = 1; });
@@ -508,14 +546,54 @@ try { if (localStorage.getItem("lv_snd") === "1") { sound = true; $("snd").setAt
 $("snd").addEventListener("click", () => { sound = !sound; $("snd").setAttribute("aria-pressed", sound); $("snd").textContent = sound ? "소리 끄기" : "소리 켜기"; try { localStorage.setItem("lv_snd", sound ? "1" : ""); } catch (e) {} if (sound) chime(); });
 
 /* ---------- 받아 오기 ---------- */
-function lock(msg) { $("app").hidden = true; $("lock").hidden = false; $("lockE").textContent = msg || ""; setTimeout(() => $("lockK").focus(), 50); }
+function lock(msg) { $("app").hidden = true; $("lock").hidden = false; $("pwBtn").hidden = true; $("lockE").textContent = msg || ""; setTimeout(() => $("pwK").focus(), 50); }
+/* 비밀번호 8자리(현황판 서버 1.5.0): 비밀번호로 만든 확인값만 보내고, 서버가 돌려준 '잠근 열쇠'를 이 화면에서 풂 */
+const b64u = buf => btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(buf)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const ub64 = s => { s = String(s).replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+async function pwKeys(pw, salt, it) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveBits"]);
+  const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: it }, base, 512));
+  return { ek: await crypto.subtle.importKey("raw", bits.slice(0, 32), "AES-GCM", false, ["encrypt", "decrypt"]), v: Array.from(bits.slice(32), b => b.toString(16).padStart(2, "0")).join("") };
+}
+const pwGet = q => fetch(LVU + "?" + new URLSearchParams(q).toString(), { cache: "no-store" }).then(r => r.json());
+$("pwF").addEventListener("submit", async ev => {
+  ev.preventDefault(); const pw = $("pwK").value, E = $("lockE");
+  if (pw.length !== 8) { E.textContent = "비밀번호 8자리를 넣어 주세요."; return; }
+  if (!(window.crypto && crypto.subtle)) { E.textContent = "이 브라우저에서는 비밀번호로 열 수 없어요. 크롬이나 사파리로 열어 주세요."; return; }
+  E.textContent = "확인 중";
+  try {
+    const st = await pwGet({ a: "pws" });
+    if (!st || !st.ok) { E.textContent = st && st.none ? "아직 비밀번호가 없어요. 열쇠가 든 현황판 주소로 한 번 열고 위의 '비밀번호'를 눌러 정해 주세요." : "잠시 뒤 다시 눌러 주세요."; return; }
+    const K = await pwKeys(pw, ub64(st.salt), st.it), r = await pwGet({ a: "pwl", v: K.v });
+    if (!r || !r.ok) { E.textContent = r && r.wait ? "여러 번 틀려서 한 시간 동안 막혔어요." : "비밀번호가 맞지 않아요."; return; }
+    const key = new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: ub64(r.iv) }, K.ek, ub64(r.ct)));
+    if (!/^[A-Za-z0-9]{6,64}$/.test(key)) { E.textContent = "비밀번호를 다시 정해 주세요."; return; }
+    KEY = key; try { localStorage.setItem("lv_key", KEY); } catch (e) {} $("pwK").value = ""; E.textContent = "여는 중"; pollLv(true);
+  } catch (e) { E.textContent = "연결이 잠시 원활하지 않아요. 다시 눌러 주세요."; }
+});
+$("pwBtn").addEventListener("click", () => { $("pwSE").textContent = ""; $("pwSE").classList.remove("ok"); $("pwN1").value = ""; $("pwN2").value = ""; try { $("pwD").showModal(); } catch (e) { $("pwD").setAttribute("open", ""); } setTimeout(() => $("pwN1").focus(), 50); });
+$("pwX").addEventListener("click", () => { try { $("pwD").close(); } catch (e) { $("pwD").removeAttribute("open"); } });
+$("pwSetF").addEventListener("submit", async ev => {
+  ev.preventDefault(); const a = $("pwN1").value, b = $("pwN2").value, E = $("pwSE"); E.classList.remove("ok");
+  if (a.length !== 8) { E.textContent = "8자리로 넣어 주세요."; return; }
+  if (a !== b) { E.textContent = "두 번 넣은 비밀번호가 달라요."; return; }
+  if (!KEY || !(window.crypto && crypto.subtle)) { E.textContent = "이 화면에서는 정할 수 없어요."; return; }
+  E.textContent = "저장하는 중";
+  try {
+    const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12)), it = 150000;
+    const K = await pwKeys(a, salt, it), ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, K.ek, new TextEncoder().encode(KEY));
+    const r = await pwGet({ a: "pwset", k: KEY, salt: b64u(salt), iv: b64u(iv), ct: b64u(ct), v: K.v, it: String(it) });
+    if (!r || !r.ok) { E.textContent = r && r.key ? "열쇠가 맞지 않아요. 현황판 주소로 다시 열어 주세요." : "저장하지 못했어요. 다시 눌러 주세요."; return; }
+    E.classList.add("ok"); E.textContent = "정했어요. 다른 기기에서는 비밀번호만 넣으면 됩니다."; setTimeout(() => { try { $("pwD").close(); } catch (e) { $("pwD").removeAttribute("open"); } }, 2200);
+  } catch (e) { E.textContent = "저장하지 못했어요. 다시 눌러 주세요."; }
+});
 $("lockF").addEventListener("submit", ev => { ev.preventDefault(); const v = $("lockK").value.trim(); if (!/^[A-Za-z0-9]{6,64}$/.test(v)) { $("lockE").textContent = "열쇠를 다시 확인해 주세요."; return; } KEY = v; try { localStorage.setItem("lv_key", KEY); } catch (e) {} $("lockE").textContent = "확인 중"; pollLv(true); });
 function pollLv(force) {
   if (!KEY) { lock(); return; }
   if (document.hidden && !force) return;
   fetch(LVU + "?a=d&k=" + encodeURIComponent(KEY), { cache: "no-store" }).then(r => r.json()).then(d => {
     if (!d || !d.ok) { try { localStorage.removeItem("lv_key"); } catch (e) {} KEY = ""; lock("열쇠가 맞지 않습니다."); return; }
-    $("lock").hidden = true; $("app").hidden = false;
+    $("lock").hidden = true; $("app").hidden = false; $("pwBtn").hidden = false;
     const first = !CFG; if (d.meta) setCfg(d.meta);
     LV = d; lastOk = Date.now(); render(); if (first) pollSrv();
   }).catch(() => { $("dot").classList.add("off"); });
